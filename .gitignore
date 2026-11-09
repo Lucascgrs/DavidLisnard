@@ -1,0 +1,13 @@
+# Données personnelles et secrets : ne jamais les partager (RGPD)
+donnees/
+sessions/
+config/cles.json
+config/compte.json
+config/planification.json
+config/*.bak
+
+# Modèles entraînés (plusieurs Go)
+modeles/
+
+__pycache__/
+*.tmp

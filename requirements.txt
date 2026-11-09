@@ -1,0 +1,23 @@
+# Python 3.14, Windows. Installer avec : python -m pip install -r requirements.txt
+
+# Collecte
+requests>=2.32
+playwright>=1.50        # pilote le Chrome installé (Instagram) et l'application WhatsApp ; pas de navigateur à télécharger
+openpyxl>=3.1
+psutil>=7.0
+pywin32>=308            # fenêtre WhatsApp en plein écran
+tzdata>=2025.1          # fuseau Europe/Paris sous Windows
+
+# Interface
+sv-ttk>=2.6
+matplotlib>=3.9
+
+# Analyse (versions de l'entraînement des modèles en service : scikit-learn 1.9, torch 2.13, transformers 5.22).
+# Changer de version majeure de scikit-learn peut empêcher de relire les modèles enregistrés.
+numpy>=2.0
+scipy>=1.14
+scikit-learn>=1.9
+joblib>=1.4
+torch>=2.5
+transformers>=4.45
+sentence-transformers>=3.0

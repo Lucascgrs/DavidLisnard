@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "mot_cle": "Lisnard",
+  "youtube": {
+    "relire_si_moins_de_jours": 30,
+    "chaines": [
+      {"nom": "David Lisnard", "id": "UC2XZY-bjIEmyLZ9MPJQytZg", "regle": "toutes", "groupe": "officiel"},
+      {"nom": "Nouvelle Énergie avec David Lisnard", "id": "UCtcYJQAVosqW1EvVa2g0o2g", "regle": "toutes", "groupe": "officiel"},
+      {"nom": "Nouvelle Énergie Île-de-France", "id": "UC2_fovTDV9rC4gxbsrtveEg", "regle": "toutes", "groupe": "officiel"},
+      {"nom": "Mindset Lisnard", "id": "UCLi2NwESlzA9mQMjnZfSIcg", "regle": "toutes", "groupe": "soutien"},
+      {"nom": "Lisnard président", "id": "UCJM_8k_40mzx947iF6rGMhA", "regle": "toutes", "groupe": "soutien"},
+      {"nom": "LISNARVERSE", "id": "UC3cOTMV0YDFRbm5RAk3l6YA", "regle": "toutes", "groupe": "soutien"},
+      {"nom": "CNEWS", "id": "UCXKJrYczY2_fJEZgFPGY0HQ", "regle": "mention", "groupe": "media"},
+      {"nom": "BFMTV", "id": "UCXwDLMDV86ldKoFVc_g8P0g", "regle": "mention", "groupe": "media"},
+      {"nom": "RMC", "id": "UCgGb7tN3tIH5_Kk05D1J_bA", "regle": "mention", "groupe": "media"},
+      {"nom": "Sud Radio", "id": "UCESTwDXpoMgiYBHipMdKTkQ", "regle": "mention", "groupe": "media"},
+      {"nom": "Public Sénat", "id": "UCTa1bPArjpvNMgSHAb_pflA", "regle": "mention", "groupe": "media"},
+      {"nom": "Europe 1", "id": "UCIMGfEAERXjmWwQeg15BFsg", "regle": "mention", "groupe": "media"},
+      {"nom": "M6 Info", "id": "UC3Sk_YpjPd_Lz_oPQfhPQXQ", "regle": "mention", "groupe": "media"},
+      {"nom": "LCI", "id": "UCewhc0fvja891XkpIPGRMxQ", "regle": "mention", "groupe": "media"},
+      {"nom": "franceinfo", "id": "UCO6K_kkdP-lnSCiO3tPx7WA", "regle": "mention", "groupe": "media"},
+      {"nom": "LCP - Assemblée nationale", "id": "UCHGFbA0KWBgf6gMbyUCZeCQ", "regle": "mention", "groupe": "media"},
+      {"nom": "Le point de rupture", "id": "UCIEShFPsZ4eb6fw9WUPeKRA", "regle": "mention", "groupe": "commentateur"},
+      {"nom": "DME En Direct", "id": "UCbEy0LafOIvzAKyFz3AYaaw", "regle": "mention", "groupe": "commentateur"},
+      {"nom": "CharbOfficiel", "id": "UC435o6Slzyf4NuNPLoNMd9A", "regle": "mention", "groupe": "commentateur"},
+      {"nom": "Antoine GEHANT", "id": "UCeoBwXf6B9qYyG1a-c9_2NQ", "regle": "mention", "groupe": "commentateur"},
+      {"nom": "Sardoche Clips", "id": "UCIm7ntKsAnxns-r1Qa9Akpw", "regle": "mention", "groupe": "commentateur"},
+      {"nom": "Et si l'économie sauvait l'écologie ?", "id": "UCJ6g0VC-AWqiy1DY5w9RQFA", "regle": "mention", "groupe": "commentateur"}
+    ]
+  },
+  "whatsapp": {
+    "communaute": "Nouvelle Énergie 34",
+    "discussion": "NE 34 - Échanges entre adhérents"
+  },
+  "instagram": {
+    "comptes": ["davidlisnard"],
+    "depuis": "2026-07-31",
+    "posts_par_lancement": 50,
+    "relire_si_moins_de_jours": 21,
+    "abandon_si_10_posts_depassent_minutes": 30
+  }
+}
