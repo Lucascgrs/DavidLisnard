@@ -37,6 +37,7 @@ class OngletModele:
         ttk.Button(b, text="Rapport détaillé", command=lambda: ouvrir(stockage.RAPPORT)).pack(side="left")
         ttk.Button(b, text="Grille d'annotation", command=lambda: ouvrir(DOCS / "GRILLE.md")).pack(side="left", padx=6)
         ttk.Button(b, text="Réentraîner le modèle", command=self.reentrainer).pack(side="left")
+        ttk.Button(b, text="Mettre à jour le site", command=self.publier).pack(side="left", padx=6)
         self.v_auto = tk.BooleanVar(value=stockage.reglages()["apres_collecte"])
         ttk.Checkbutton(b, text="Analyser automatiquement les nouveaux commentaires après chaque collecte",
                         variable=self.v_auto, command=lambda: stockage.sauver_reglages(
@@ -54,6 +55,18 @@ class OngletModele:
                        env={"HF_HUB_OFFLINE": "1"})
         self.app.message("Réentraînement lancé (3 à 4 heures, suivi dans donnees/analyse/reentrainement.log). La "
                          "nouvelle version sera utilisée à la prochaine analyse.")
+
+    def publier(self):
+        from web import acces
+        if not acces.pret_a_publier():
+            messagebox.showinfo("Site", "Le site n'est pas encore installé : lancer « python -m web tout » une fois.")
+            return
+        if en_cours("web"):
+            self.app.message("Une publication du site est déjà en cours.")
+            return
+        lancer_en_fond(["-u", "-m", "web", "publier"], sortie=stockage.ANALYSE / "publication_site.log")
+        site = acces.lire().get("site_url", "le site")
+        self.app.message(f"Publication lancée : notes et statistiques à jour sur {site} d'ici une minute.")
 
     def _vider(self):
         for w in self.corps.winfo_children():

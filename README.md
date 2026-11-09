@@ -76,6 +76,13 @@ DavidLisnard/
 │   ├── onglet_analyse.py            onglet Analyse et ses sous-onglets :
 │   │   analyse_commentaires.py, analyse_synthese.py, analyse_modele.py
 │   └── theme.py                     thème Windows 11, couleurs, composants
+├── web/                             le site public, « python -m web » (voir « Site public »)
+│   ├── export.py                    ce qui est publié : commentaires, publications, statistiques
+│   ├── publication.py               installer la base, publier les données, mettre les pages en ligne
+│   ├── supabase.py, vercel.py       les deux services (API, sans Node)
+│   ├── acces.py                     jetons et clés (config/web.json, privé)
+│   ├── schema.sql                   tables, recherche en français, filtres, droits de lecture
+│   └── site/                        les pages : index (le projet), statistiques, commentaires ; css/, js/
 ├── docs/
 │   ├── GRILLE.md                    ce que veut dire chaque note (la référence de l'annotation)
 │   ├── PLAN_COLLECTE.md             conception et historique de la collecte
@@ -101,6 +108,15 @@ python -m collecte --reessayer instagram    relancer une source marquée abandon
 python -m analyse                           note ce qui ne l'est pas encore (aussi lancé après chaque collecte)
 python -m analyse --sources youtube --du 2026-01-01
 python -m analyse --refaire                 renote tout avec le modèle en service
+```
+
+**Site public**
+
+```
+python -m web tout                          installer la base, publier les données, mettre les pages en ligne
+python -m web publier                       envoyer ce qui a changé (aussi fait après chaque collecte)
+python -m web deployer                      remettre les pages en ligne après une modification de web/site/
+python -m web apercu                        les pages en local (http://localhost:8000), sur les données en ligne
 ```
 
 **Annotation et entraînement**
@@ -233,13 +249,35 @@ Chaque commentaire a aussi :
 - `exports/` : les exports Excel ;
 - `avancement.json` : l'analyse en cours.
 
+## Site public
+
+Le site montre le travail à tout le monde : explication du projet, statistiques filtrables par semaine,
+commentaires filtrables (curseurs, puces) avec la vidéo d'origine. Adresse : `site_url` dans `config/web.json`.
+
+- **Pages** (`web/site/`, HTML + JavaScript sans bibliothèque ni étape de construction) hébergées par **Vercel**.
+- **Données** dans **Supabase** (PostgreSQL) : tables `commentaires`, `publications`, `syntheses`. Le public lit avec
+  la clé publique, en lecture seule (règles RLS de `web/schema.sql`) ; seul `python -m web publier` écrit, avec la clé
+  secrète. Les filtres de la page Commentaires sont appliqués par la base (fonctions `selection` et `evolution`) ;
+  la page Statistiques recalcule tout dans le navigateur à partir du « cube » (comptages par semaine et par compte).
+- **Pas d'API à héberger** (ni Railway ni autre) : les pages interrogent Supabase directement. Les deux offres
+  gratuites suffisent (base d'environ 150 Mo sur 500).
+- **Ce qui est publié** : les commentaires notés de YouTube et d'Instagram, sans auteur. WhatsApp (discussion privée
+  d'adhérents) ne l'est jamais.
+- **Mise à jour** : après chaque collecte qui ramène du neuf, la publication suit la notation (seules les lignes
+  nouvelles ou changées partent, grâce à `donnees/web/publie.json`). Bouton « Mettre à jour le site » dans l'onglet
+  Analyse → Modèle.
+- **Mise en place** (une fois) : coller un jeton Vercel (vercel.com/account/settings/tokens) et un jeton Supabase
+  (supabase.com/dashboard/account/tokens) dans `config/web.json`, puis `python -m web tout`.
+- Un projet Supabase gratuit sans aucune visite pendant 7 jours est mis en pause : `python -m web installer` le relance.
+
 ## Précautions
 
 - Ces fichiers relient des personnes à des opinions politiques : ce sont des données sensibles au sens du RGPD.
   C'est particulièrement vrai pour la discussion WhatsApp, qui est privée et où `auteur_id` contient le numéro de
   téléphone.
-- Tout reste en local. `donnees/`, `sessions/`, `modeles/`, `config/cles.json` et `config/compte.json` sont exclus
-  du partage par `.gitignore`.
+- Tout reste en local, sauf ce que publie le site : texte et notes des commentaires publics YouTube et Instagram,
+  sans auteur ni identifiant d'auteur (`web/export.py`). `donnees/`, `sessions/`, `modeles/`, `config/cles.json`,
+  `config/compte.json` et `config/web.json` sont exclus du partage par `.gitignore`.
 - Pseudonymiser les auteurs avant toute analyse partagée : la copie de travail de l'analyse l'est déjà.
 
 ## Ancienne organisation (avant le 2026-11-09)

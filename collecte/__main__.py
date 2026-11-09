@@ -6,7 +6,7 @@
 
 Résultats : donnees/<source>/ (un CSV par compte + <source>_tout.xlsx), donnees/bilan.md, donnees/journal.log.
 Une source qui échoue n'arrête pas les suivantes. Si du neuf a été collecté, les nouveaux commentaires sont ensuite
-notés par le modèle (option de l'onglet Analyse, cochée par défaut).
+notés par le modèle (option de l'onglet Analyse, cochée par défaut), puis publiés sur le site (« python -m web »).
 """
 import argparse
 import importlib
@@ -99,6 +99,23 @@ def noter_les_nouveaux(journal: Journal) -> None:
         journal(f"### Analyse impossible : {type(e).__name__}: {e}")
 
 
+def publier_le_site(journal: Journal) -> None:
+    """Après les notes : met à jour le site public, si son installation est faite (python -m web installer). Une
+    erreur ici ne fait jamais échouer la collecte."""
+    from web import acces
+    if not acces.pret_a_publier():
+        return
+    try:
+        with verrou("web"):
+            from web.publication import publier
+            journal("### Publication sur le site")
+            publier(journal=journal)
+    except DejaEnCours:
+        journal("== site : une publication est déjà en cours")
+    except BaseException as e:
+        journal(f"### Publication sur le site impossible : {type(e).__name__}: {e}")
+
+
 def main():
     if sys.stdout:  # absent quand on est lancé sans console
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -121,6 +138,7 @@ def main():
         journal(f"### Fini. Bilan : {ecrire_bilan(resultats)}")
     if any(r.get("nouveaux") for r in resultats):
         noter_les_nouveaux(journal)
+        publier_le_site(journal)
 
 
 if __name__ == "__main__":

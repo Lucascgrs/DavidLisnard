@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Statistiques · Lisnard vu par les commentaires</title>
+  <meta name="description" content="Comment David Lisnard est perçu dans les commentaires YouTube et Instagram : tonalité, reproches, évolution semaine par semaine.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/statistiques.js"></script>
+</head>
+<body>
+  <header class="entete">
+    <div class="large">
+      <a class="marque" href="index.html" aria-label="Accueil">
+        <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" style="fill:var(--texte)"/><path d="M9 21v-4M14 21v-9M19 21v-6M24 21v-11" style="stroke:var(--fond)" stroke-width="3" stroke-linecap="round"/></svg>
+        <span>Lisnard vu par les commentaires</span>
+      </a>
+      <nav class="nav" aria-label="Pages">
+        <a href="index.html">Le projet</a>
+        <a href="statistiques.html" aria-current="page">Statistiques</a>
+        <a href="commentaires.html">Commentaires</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="large">
+    <div class="titre-page">
+      <p class="surtitre">Statistiques</p>
+      <h1>Comment il est perçu</h1>
+      <p>Tout se recalcule selon les filtres : période, sources, types de comptes. Glisser les poignées pour choisir les semaines.</p>
+    </div>
+
+    <section class="carte section" id="filtres" aria-label="Filtres"><div class="chargement">Chargement des données…</div></section>
+    <div class="chiffres" id="chiffres"></div>
+    <section class="carte section" id="perception"></section>
+    <section class="carte section" id="evolution"></section>
+    <section class="carte section" id="comptes"></section>
+    <section class="carte section" id="exemples"></section>
+  </main>
+
+  <footer class="pied">
+    <div class="large">
+      <span>Projet indépendant, sans lien avec David Lisnard ni son équipe. Commentaires publics, sans nom d'auteur.</span>
+      <span id="maj"></span>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lisnard vu par les commentaires</title>
+  <meta name="description" content="Plus de 150 000 commentaires publics sur David Lisnard, lus et notés par un modèle d'intelligence artificielle : comment il est perçu, ce qu'on lui reproche, ce qu'on salue.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/projet.js"></script>
+</head>
+<body>
+  <header class="entete">
+    <div class="large">
+      <a class="marque" href="index.html" aria-label="Accueil">
+        <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" style="fill:var(--texte)"/><path d="M9 21v-4M14 21v-9M19 21v-6M24 21v-11" style="stroke:var(--fond)" stroke-width="3" stroke-linecap="round"/></svg>
+        <span>Lisnard vu par les commentaires</span>
+      </a>
+      <nav class="nav" aria-label="Pages">
+        <a href="index.html" aria-current="page">Le projet</a>
+        <a href="statistiques.html">Statistiques</a>
+        <a href="commentaires.html">Commentaires</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="large une">
+      <p class="surtitre">Analyse de commentaires</p>
+      <h1>Ce que les internautes disent de David&nbsp;Lisnard</h1>
+      <p class="chapo">
+        <span id="chapo-n">Plus de 150 000</span> commentaires publics, laissés sous ses vidéos et ses posts, mais aussi
+        sous les émissions où il est invité, lus et notés un par un par un modèle d'intelligence artificielle entraîné
+        pour cela. Le but : savoir comment il est perçu, ce qu'on lui reproche, ce qu'on salue, et comment cela évolue.
+      </p>
+      <div class="actions">
+        <a class="bouton plein" href="statistiques.html">Voir les statistiques</a>
+        <a class="bouton" href="commentaires.html">Parcourir les commentaires</a>
+      </div>
+      <div class="grands-chiffres" id="grands-chiffres"></div>
+    </section>
+
+    <section class="large">
+      <div class="carte en-bref" id="en-bref"><div class="chargement">Chargement…</div></div>
+    </section>
+
+    <section class="large bloc-texte">
+      <h2>Comment ça marche</h2>
+      <p>Quatre étapes, de la collecte des commentaires à leurs notes. Les nouveaux commentaires suivent le même chemin à chaque mise à jour.</p>
+      <div class="etapes">
+        <div class="etape">
+          <h3>Collecte</h3>
+          <p>Les commentaires sont récupérés sur sa chaîne YouTube et son compte Instagram, sur les chaînes de son mouvement, et sous les vidéos où il apparaît sur <span id="n-comptes">une vingtaine de</span> chaînes de médias et de commentateurs. À chaque passage, seuls les nouveaux sont ajoutés.</p>
+        </div>
+        <div class="etape">
+          <h3>Annotation</h3>
+          <p><span id="n-annotations">Plus de 14 000</span> commentaires ont d'abord été lus et notés un par un, selon une grille écrite à l'avance, avec Claude, l'assistant d'IA d'Anthropic. Ces notes ont été contrôlées : constance en renotant les mêmes commentaires, dérives d'échelle corrigées.</p>
+        </div>
+        <div class="etape">
+          <h3>Apprentissage</h3>
+          <p>Un modèle de langue multilingue a été réentraîné sur ces exemples. Il lit chaque commentaire avec son contexte : le titre de la vidéo et, pour une réponse, le commentaire auquel elle répond, sans quoi « Exactement » ou « 😂 » ne veulent rien dire.</p>
+        </div>
+        <div class="etape">
+          <h3>Notation</h3>
+          <p>Le modèle note ensuite tous les commentaires : cinq notes de 0 à 20, le sujet (parle-t-il de lui ?) et une fiabilité. Les statistiques et les filtres de ce site reposent sur ces notes.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="large bloc-texte">
+      <h2>Les cinq notes</h2>
+      <p>Chaque note va de 0 à 20. Pour la forme, le « système » et les idées, 10 veut dire que le commentaire n'en parle pas, ce qui est le cas le plus courant : en dessous, c'est un reproche ; au-dessus, un éloge.</p>
+      <div class="notes-expliquees">
+        <div class="note-expliquee">
+          <h3>Tonalité</h3>
+          <p>Hostile, neutre ou favorable envers lui.</p>
+          <div class="regle-mini"></div><div class="regle-bornes"><span>0 hostile</span><span>10 neutre</span><span>20 fervent</span></div>
+          <div class="exemple" style="--c: var(--bas)"><b>3</b> « Ce mec est un vendu ! »</div>
+          <div class="exemple" style="--c: var(--milieu)"><b>10</b> « Svp BFM, parlez plus du programme »</div>
+          <div class="exemple" style="--c: var(--haut)"><b>17</b> « Heureuse de pouvoir enfin voter pour un candidat qui fait sens »</div>
+        </div>
+        <div class="note-expliquee">
+          <h3>Forme</h3>
+          <p>Sa manière de parler, son charisme, sa communication.</p>
+          <div class="regle-mini"></div><div class="regle-bornes"><span>0 reproche fort</span><span>10 pas évoquée</span><span>20 éloge fort</span></div>
+          <div class="exemple" style="--c: var(--bas)"><b>5</b> « Trop technique, on ne comprend rien »</div>
+          <div class="exemple" style="--c: var(--haut)"><b>15</b> « Il parle clair, calme et posé »</div>
+        </div>
+        <div class="note-expliquee">
+          <h3>Système</h3>
+          <p>Est-il vu comme un homme du système, proche de Macron et de l'establishment, ou comme quelqu'un d'indépendant ?</p>
+          <div class="regle-mini"></div><div class="regle-bornes"><span>0 « système »</span><span>10 pas évoqué</span><span>20 hors système</span></div>
+          <div class="exemple" style="--c: var(--bas)"><b>0</b> « C'est Macron en plus vieux »</div>
+          <div class="exemple" style="--c: var(--haut)"><b>15</b> « Enfin quelqu'un de libre »</div>
+        </div>
+        <div class="note-expliquee">
+          <h3>Idées</h3>
+          <p>Son programme et ses positions.</p>
+          <div class="regle-mini"></div><div class="regle-bornes"><span>0 rejet</span><span>10 pas évoquées</span><span>20 adhésion</span></div>
+          <div class="exemple" style="--c: var(--bas)"><b>2</b> « Aucune vision »</div>
+          <div class="exemple" style="--c: var(--haut)"><b>15</b> « Oui à la baisse des dépenses »</div>
+        </div>
+        <div class="note-expliquee">
+          <h3>Pertinence</h3>
+          <p>Ce que le commentaire apprend sur la façon dont il est perçu.</p>
+          <div class="regle-mini pert"></div><div class="regle-bornes"><span>0 hors sujet</span><span>8 avis sans argument</span><span>20 argumenté</span></div>
+          <div class="exemple"><b>5</b> « 👍 »</div>
+          <div class="exemple"><b>8</b> « Bravo ! »</div>
+          <div class="exemple"><b>12</b> « Bravo pour la sécurité à Cannes »</div>
+        </div>
+        <div class="note-expliquee">
+          <h3>Sujet et fiabilité</h3>
+          <p>Le commentaire parle-t-il de lui ? S'il vise une autre personnalité, le journaliste ou un autre internaute, ses notes restent neutres et il est compté à part.</p>
+          <p>La fiabilité (bonne, moyenne, faible) dit à quel point le modèle est sûr de lui, surtout sur le sujet.</p>
+        </div>
+      </div>
+      <div class="encadre">
+        <p><b>Et l'ironie ?</b> « Bravo, encore un énarque 👏 » n'est pas un compliment : le modèle a appris à noter l'intention réelle (ici, tonalité 4 et reproche « système »). Quand on ne peut pas trancher, comme « Le sauveur 😂 » sans autre contexte, le commentaire reçoit une pertinence très basse et il est écarté des statistiques.</p>
+      </div>
+    </section>
+
+    <section class="large bloc-texte">
+      <h2>Ce que vaut le modèle</h2>
+      <p id="qualite-intro">Mesuré sur des commentaires qu'il n'avait jamais vus, en comparant ses notes aux notes de référence.</p>
+      <div class="carte" id="qualite"><div class="chargement">Chargement…</div></div>
+    </section>
+
+    <section class="large bloc-texte">
+      <h2>Ce qu'il faut garder en tête</h2>
+      <ul>
+        <li><b>Ce n'est pas un sondage.</b> Ceux qui commentent ne représentent pas les Français. Sous ses propres posts, ce sont surtout ses abonnés qui écrivent ; sous les émissions, un public plus mélangé.</li>
+        <li><b>Des périodes inégales.</b> Instagram n'est suivi que depuis <span id="debut-instagram">août 2026</span>. YouTube remonte plus loin, mais l'essentiel des commentaires date de 2026.</li>
+        <li><b>Le modèle se trompe parfois</b>, surtout sur l'ironie et sur le sujet : environ <span id="erreur-sujet">un commentaire sur cinq</span> est mal classé entre « parle de lui » et « parle d'autre chose ». La fiabilité affichée aide à faire le tri, et chaque commentaire peut être relu en entier.</li>
+        <li><b>Des chiffres à lire en tendance.</b> Une semaine avec peu de commentaires peut donner des parts au hasard : les graphiques n'affichent pas les périodes trop maigres.</li>
+      </ul>
+    </section>
+
+    <section class="large bloc-texte">
+      <h2>Données et vie privée</h2>
+      <ul>
+        <li>Seuls des commentaires publics, publiés sur YouTube et Instagram, sont repris.</li>
+        <li>Aucun nom d'auteur, aucune photo ni aucun lien vers un profil n'est publié. Le lien « voir sur YouTube » mène à la page publique d'origine.</li>
+        <li>Les vidéos ne se chargent qu'au clic, en mode de confidentialité renforcée de YouTube. Le site ne dépose aucun cookie et ne mesure pas l'audience.</li>
+      </ul>
+      <div class="encadre"><p><b>Projet indépendant.</b> Ce site n'a aucun lien avec David Lisnard, son équipe ou son mouvement. Il ne prend pas parti : il mesure, avec les limites dites plus haut.</p></div>
+    </section>
+  </main>
+
+  <footer class="pied">
+    <div class="large">
+      <span>Projet indépendant, sans lien avec David Lisnard ni son équipe. Commentaires publics, sans nom d'auteur.</span>
+      <span id="maj"></span>
+    </div>
+  </footer>
+</body>
+</html>

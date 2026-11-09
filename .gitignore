@@ -11,3 +11,4 @@ modeles/
 
 __pycache__/
 *.tmp
+config/web.json

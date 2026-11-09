@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Commentaires · Lisnard vu par les commentaires</title>
+  <meta name="description" content="Tous les commentaires analysés, à filtrer par période, source, compte et note, avec la vidéo d'origine.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/commentaires.js"></script>
+</head>
+<body>
+  <header class="entete">
+    <div class="large">
+      <a class="marque" href="index.html" aria-label="Accueil">
+        <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" style="fill:var(--texte)"/><path d="M9 21v-4M14 21v-9M19 21v-6M24 21v-11" style="stroke:var(--fond)" stroke-width="3" stroke-linecap="round"/></svg>
+        <span>Lisnard vu par les commentaires</span>
+      </a>
+      <nav class="nav" aria-label="Pages">
+        <a href="index.html">Le projet</a>
+        <a href="statistiques.html">Statistiques</a>
+        <a href="commentaires.html" aria-current="page">Commentaires</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="large">
+    <div class="titre-page">
+      <p class="surtitre">Commentaires</p>
+      <h1>Tous les commentaires</h1>
+      <p>Chercher un mot, choisir les semaines, garder les plus hostiles ou les plus argumentés… Cliquer sur un commentaire pour voir ses notes et la vidéo d'où il vient.</p>
+    </div>
+
+    <div class="explorateur">
+      <aside class="filtres" id="filtres" aria-label="Filtres"><div class="chargement">Chargement…</div></aside>
+      <div>
+        <div class="barre-resultats">
+          <button type="button" class="bouton ouvrir-filtres" id="ouvrir-filtres">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Filtres
+          </button>
+          <span class="total" id="total" aria-live="polite"></span>
+          <label class="sr" for="tri">Trier</label>
+          <select id="tri"></select>
+        </div>
+        <div class="filtres-actifs" id="actifs"></div>
+        <details class="carte evolution-selection" id="evolution">
+          <summary>Évolution de cette sélection</summary>
+          <div id="evolution-graph" style="margin-top:16px"></div>
+        </details>
+        <div class="liste-commentaires" id="liste"></div>
+        <div id="suite"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="pied">
+    <div class="large">
+      <span>Projet indépendant, sans lien avec David Lisnard ni son équipe. Commentaires publics, sans nom d'auteur.</span>
+      <span id="maj"></span>
+    </div>
+  </footer>
+</body>
+</html>
