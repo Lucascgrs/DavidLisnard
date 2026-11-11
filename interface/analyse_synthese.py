@@ -1,5 +1,9 @@
 """Sous-onglet « Synthèse », sur la sélection filtrée de l'onglet Commentaires : chiffres clés, perception
-(critiques · non évoqué · éloges), évolution par mois, comparaison des sources, exemples."""
+(critiques · non évoqué · éloges), évolution par mois, comparaison des sources, exemples.
+
+Deux vues : une voix par commentaire (par défaut), ou pondérée par les « j'aime » (case en haut) : chaque commentaire
+pèse alors 1 + ses « j'aime », lui-même et ceux qui l'approuvent. Les nombres de commentaires, eux, ne changent pas.
+Les doublons sont déjà écartés par l'onglet Commentaires."""
 import tkinter as tk
 from collections import defaultdict
 from tkinter import ttk
@@ -17,10 +21,19 @@ def pc(n, total) -> str:
     return f"{100 * n / total:.0f} %" if total else "—"
 
 
-def parts(lignes, critere) -> tuple[float, float]:
+def poids(l, pondere: bool) -> int:
+    return l["_poids"] if pondere else 1
+
+
+def parts(lignes, critere, pondere: bool = False) -> tuple[float, float]:
     """Part des notes ≤ 6 (critique, reproche) et ≥ 14 (éloge)."""
-    return (sum(1 for l in lignes if l[critere] <= 6) / len(lignes),
-            sum(1 for l in lignes if l[critere] >= 14) / len(lignes))
+    total = sum(poids(l, pondere) for l in lignes)
+    return (sum(poids(l, pondere) for l in lignes if l[critere] <= 6) / total,
+            sum(poids(l, pondere) for l in lignes if l[critere] >= 14) / total)
+
+
+def moyenne(lignes, critere, pondere: bool = False) -> float:
+    return sum(poids(l, pondere) * l[critere] for l in lignes) / sum(poids(l, pondere) for l in lignes)
 
 
 class OngletSynthese:
@@ -38,6 +51,9 @@ class OngletSynthese:
         ttk.Checkbutton(haut, text="Écarter les commentaires inexploitables (pertinence < 5 : ironie indécidable, "
                         "émojis seuls, hors sujet)", variable=self.v_exploitables,
                         command=lambda: self.afficher(self.selection)).pack(side="right")
+        self.v_likes = tk.BooleanVar(value=False)
+        ttk.Checkbutton(haut, text="Pondérer par les « j'aime »", variable=self.v_likes,
+                        command=lambda: self.afficher(self.selection)).pack(side="right", padx=(0, 16))
         ext, self.corps = defilant(f)
         ext.pack(fill="both", expand=True)
 
@@ -52,6 +68,9 @@ class OngletSynthese:
                 f"{nombre(len(notes))} analysés"
         if ecarter and notes:
             texte += f", dont {nombre(len(base))} exploitables"
+        self.pondere = self.v_likes.get()
+        if self.pondere:
+            texte += " · chaque commentaire pèse 1 + ses « j'aime »"
         self.resume.config(text=texte)
         if not base:
             ext, _ = carte(self.corps, "Rien à résumer", "Le modèle n'a pas encore analysé cette sélection, ou les "
@@ -69,18 +88,20 @@ class OngletSynthese:
         C = COULEURS
         ligne = tk.Frame(self.corps, bg=C["fond"])
         ligne.pack(fill="x", padx=14, pady=(2, 8))
-        ton = sum(l["tonalite"] for l in sur) / len(sur) if sur else None
+        p = self.pondere
+        ton = moyenne(sur, "tonalite", p) if sur else None
         verdict = "—" if ton is None else "plutôt favorable" if ton >= 12 else "plutôt hostile" if ton <= 8 else "partagée"
-        fav, host = sum(1 for l in sur if l["tonalite"] >= 14), sum(1 for l in sur if l["tonalite"] <= 6)
-        argu = sum(1 for l in base if l["pertinence"] >= 12)
+        host, fav = parts(sur, "tonalite", p) if sur else (0, 0)
+        total_base = sum(poids(l, p) for l in base)
+        argu = sum(poids(l, p) for l in base if l["pertinence"] >= 12)
         chiffres = [
             ("Commentaires analysés", nombre(len(base)), f"sur {nombre(n)} dans la sélection", None),
             ("Parlent de Lisnard", pc(len(sur), len(base)), f"{nombre(len(sur))} commentaires", C["accent"]),
             ("Tonalité moyenne", "—" if ton is None else f"{ton:.1f}".replace(".", ",") + " /20", verdict,
              None if ton is None else C["vert"] if ton >= 12 else C["rouge"] if ton <= 8 else C["texte"]),
-            ("Favorables", pc(fav, len(sur)), "tonalité de 14 ou plus", C["vert"]),
-            ("Hostiles", pc(host, len(sur)), "tonalité de 6 ou moins", C["rouge"]),
-            ("Argumentés", pc(argu, len(base)), "donnent au moins une raison (pertinence ≥ 12)", C["texte"]),
+            ("Favorables", pc(fav, 1 if sur else 0), "tonalité de 14 ou plus", C["vert"]),
+            ("Hostiles", pc(host, 1 if sur else 0), "tonalité de 6 ou moins", C["rouge"]),
+            ("Argumentés", pc(argu, total_base), "donnent au moins une raison (pertinence ≥ 12)", C["texte"]),
         ]
         for i, (titre, valeur, legende, couleur) in enumerate(chiffres):
             Chiffre(ligne, titre, valeur, legende, couleur).cadre.grid(row=0, column=i, sticky="nsew",
@@ -100,7 +121,7 @@ class OngletSynthese:
         lignes = [("tonalite", "hostile · neutre · favorable"), ("forme", "élocution, charisme, communication"),
                   ("systeme", "trop proche de Macron, de l'establishment"), ("idees", "son programme, ses positions")]
         for r, (c, explication) in enumerate(lignes):
-            bas, haut = parts(sur, c)
+            bas, haut = parts(sur, c, self.pondere)
             milieu = max(0.0, 1 - bas - haut)
             etiquette = tk.Frame(grille, bg=C["carte"])
             etiquette.grid(row=r, column=0, sticky="w", pady=7, padx=(0, 16))
@@ -138,13 +159,13 @@ class OngletSynthese:
             tk.Label(tete, text=SOURCES.get(s, s), font=police(11, True), bg=C["carte"], fg=C["texte"]).pack(side="left")
             tk.Label(tete, text=f"{nombre(len(ls))} commentaires", font=police(9), bg=C["carte"], fg=C["doux"]).pack(
                 side="left", padx=8)
-            m = sum(l["tonalite"] for l in ls) / len(ls)
+            m = moyenne(ls, "tonalite", self.pondere)
             puce(tete, f"{m:.1f} /20".replace(".", ","), "vert" if m >= 12 else "rouge" if m <= 8 else "neutre").pack(
                 side="right")
-            b, h = parts(ls, "tonalite")
+            b, h = parts(ls, "tonalite", self.pondere)
             Repartition(bloc, [(b, PARTS["bas"], f"{100 * b:.0f} %"), (max(0, 1 - b - h), PARTS["milieu"], ""),
                                (h, PARTS["haut"], f"{100 * h:.0f} %")], hauteur=18).pack(fill="x", pady=(4, 0))
-            tk.Label(bloc, text=f"reproche « système » : {100 * parts(ls, 'systeme')[0]:.0f} %", font=police(8),
+            tk.Label(bloc, text=f"reproche « système » : {100 * parts(ls, 'systeme', self.pondere)[0]:.0f} %", font=police(8),
                      bg=C["carte"], fg=C["doux"]).pack(anchor="w")
 
     def _graphique(self, parent, sur):
@@ -169,8 +190,8 @@ class OngletSynthese:
         ax2.spines[:].set_visible(False)
         ax.set_zorder(ax2.get_zorder() + 1)
         ax.patch.set_visible(False)
-        fav = [100 * parts(par_mois[m], "tonalite")[1] for m in mois]
-        hos = [100 * parts(par_mois[m], "tonalite")[0] for m in mois]
+        fav = [100 * parts(par_mois[m], "tonalite", self.pondere)[1] for m in mois]
+        hos = [100 * parts(par_mois[m], "tonalite", self.pondere)[0] for m in mois]
         ax.plot(x, fav, color=PARTS["haut"], lw=2.2, marker="o", ms=4, label="favorables")
         ax.plot(x, hos, color=PARTS["bas"], lw=2.2, marker="o", ms=4, label="hostiles")
         ax.set_ylim(0, 100)

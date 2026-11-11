@@ -2,6 +2,11 @@
 
 Une ligne = un commentaire (ou un message WhatsApp). Les fichiers ne font que grandir : une ligne déjà enregistrée
 n'est jamais réécrite ni supprimée.
+
+Les « j'aime » sont ceux du moment de la collecte : un commentaire lu une heure après sa publication en a peu.
+Quand une publication est relue, le nombre de « j'aime » des commentaires déjà enregistrés est comparé : s'il a
+changé, la nouvelle valeur va dans donnees/<source>/likes.json ({identifiant: j'aime}), que l'analyse lit en
+priorité. Les CSV, eux, ne sont pas retouchés.
 """
 import csv
 import re
@@ -39,8 +44,12 @@ class Depot:
         self.dossier.mkdir(parents=True, exist_ok=True)
         self.fichier_etat = self.dossier / "etat.json"
         self.etat = lire_json(self.fichier_etat, {})
+        self.fichier_likes = self.dossier / "likes.json"
+        self.likes: dict[str, str] = lire_json(self.fichier_likes, {}) or {}  # j'aime mis à jour depuis la collecte
+        self._likes_changes = False
         self._ids: dict[str, set] = {}          # fichier → identifiants déjà enregistrés
         self._reponses: dict[str, dict] = {}    # fichier → {parent_id: nombre de réponses connues}
+        self._likes_csv: dict[str, dict] = {}   # fichier → {identifiant: j'aime écrits dans le CSV}
         self.nouveaux = 0
         self.par_compte: dict[str, int] = {}
 
@@ -49,34 +58,49 @@ class Depot:
         if arret_demande(self.source):
             raise ArretDemande()
 
-    def csv_de(self, compte_source: str) -> Path:
-        return self.dossier / f"{nom_fichier(compte_source)}.csv"
+    def csv_de(self, compte_source: str, fichier: str | None = None) -> Path:
+        """Le CSV d'un compte suivi. `fichier` : un fichier commun à plusieurs comptes (les chaînes YouTube trouvées
+        par la recherche vont toutes dans autres_chaines.csv, chacune sous son nom dans la colonne compte_source)."""
+        return self.dossier / f"{nom_fichier(fichier or compte_source)}.csv"
 
     def _charger(self, chemin: Path) -> None:
         if str(chemin) in self._ids:
             return
-        ids, rep = set(), {}
+        ids, rep, likes = set(), {}, {}
         if chemin.exists():
             with open(chemin, encoding="utf-8-sig", newline="") as f:
                 for ligne in csv.DictReader(f, delimiter=";"):
                     ids.add(ligne["commentaire_id"])
+                    likes[ligne["commentaire_id"]] = ligne.get("likes") or ""
                     if ligne.get("parent_id"):
                         rep[ligne["parent_id"]] = rep.get(ligne["parent_id"], 0) + 1
-        self._ids[str(chemin)], self._reponses[str(chemin)] = ids, rep
+        self._ids[str(chemin)], self._reponses[str(chemin)], self._likes_csv[str(chemin)] = ids, rep, likes
 
-    def connus(self, compte_source: str) -> set:
-        chemin = self.csv_de(compte_source)
+    def connus(self, compte_source: str, fichier: str | None = None) -> set:
+        chemin = self.csv_de(compte_source, fichier)
         self._charger(chemin)
         return self._ids[str(chemin)]
 
-    def reponses_connues(self, compte_source: str, parent_id: str) -> int:
-        chemin = self.csv_de(compte_source)
+    def reponses_connues(self, compte_source: str, parent_id: str, fichier: str | None = None) -> int:
+        chemin = self.csv_de(compte_source, fichier)
         self._charger(chemin)
         return self._reponses[str(chemin)].get(parent_id, 0)
 
-    def ajouter(self, compte_source: str, lignes: list[dict]) -> int:
-        """Ajoute en fin de fichier les lignes dont l'identifiant est nouveau. Renvoie leur nombre."""
-        chemin = self.csv_de(compte_source)
+    def _noter_likes(self, chemin: Path, cid: str, likes) -> None:
+        """Un commentaire déjà enregistré est revu : on garde son nombre de « j'aime » s'il a changé."""
+        if likes in ("", None):
+            return
+        likes = str(likes)
+        if self.likes.get(cid, self._likes_csv[str(chemin)].get(cid, "")) != likes:
+            self.likes[cid] = likes
+            self._likes_changes = True
+
+    def ajouter(self, compte_source: str, lignes: list[dict], fichier: str | None = None,
+                bilan: str | None = None) -> int:
+        """Ajoute en fin de fichier les lignes dont l'identifiant est nouveau. Renvoie leur nombre.
+        `fichier` : voir csv_de. `bilan` : nom sous lequel ces lignes sont comptées dans le bilan (par défaut le
+        compte)."""
+        chemin = self.csv_de(compte_source, fichier)
         self._charger(chemin)
         ids, rep = self._ids[str(chemin)], self._reponses[str(chemin)]
         a_ecrire = []
@@ -84,8 +108,10 @@ class Depot:
         for l in lignes:
             cid = str(l["commentaire_id"])
             if cid in ids:
+                self._noter_likes(chemin, cid, l.get("likes"))
                 continue
             ids.add(cid)
+            self._likes_csv[str(chemin)][cid] = "" if l.get("likes") in ("", None) else str(l["likes"])
             if l.get("parent_id"):
                 rep[l["parent_id"]] = rep.get(l["parent_id"], 0) + 1
             ligne = {c: l.get(c, "") for c in COLONNES}
@@ -101,11 +127,14 @@ class Depot:
                     w.writeheader()
                 w.writerows(a_ecrire)
         self.nouveaux += len(a_ecrire)
-        self.par_compte[compte_source] = self.par_compte.get(compte_source, 0) + len(a_ecrire)
+        self.par_compte[bilan or compte_source] = self.par_compte.get(bilan or compte_source, 0) + len(a_ecrire)
         return len(a_ecrire)
 
     def sauver_etat(self) -> None:
         ecrire_json(self.fichier_etat, self.etat)
+        if self._likes_changes:
+            ecrire_json(self.fichier_likes, self.likes, indent=None)
+            self._likes_changes = False
 
     def total(self) -> int:
         return sum(compter_lignes_csv(c) for c in self.dossier.glob("*.csv"))

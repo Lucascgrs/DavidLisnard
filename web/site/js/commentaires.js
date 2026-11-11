@@ -6,7 +6,7 @@ import { synthese, selection, evolution as lireEvolution } from "./donnees.js";
 import { curseur } from "./curseur.js";
 import { evolution as graphique } from "./graphique.js";
 import { carte, ouvrirDepuisAdresse } from "./fiche.js";
-import { lireAdresse, ecrireAdresse, versBase, etatVide, TRIS } from "./filtres.js";
+import { lireAdresse, ecrireAdresse, versBase, etatVide, TRIS, TAILLES } from "./filtres.js";
 import { remplirPied } from "./pied.js";
 
 const $ = (id) => document.getElementById(id);
@@ -81,6 +81,7 @@ function construireFiltres() {
 
   controles.type = segments([["tous", "Tous"], ["principal", "Commentaires"], ["reponse", "Réponses"]], etat.type, (v) => { etat.type = v; changer(); }, "Type");
   controles.cible = segments([["", "Tous"], ["L", "Parlent de lui"], ["A", "D'autre chose"]], etat.cible || "", (v) => { etat.cible = v || null; changer(); }, "Sujet");
+  controles.mots = segments(TAILLES.map(([n, t]) => [String(n), t]), String(etat.mots), (v) => { etat.mots = +v; changer(); }, "Taille");
   controles.fiab = segments([["toutes", "Toutes"], ["bm", "Bonne ou moyenne"], ["bonne", "Bonne"]], etat.fiab, (v) => { etat.fiab = v; changer(); }, "Fiabilité");
 
   controles.notes = {};
@@ -108,12 +109,14 @@ function construireFiltres() {
     el("button", { type: "button", class: "bouton discret fermer-filtres", onclick: () => $("filtres").classList.remove("ouvert") }, "Fermer ×"),
     bloc("Recherche", el("div", { class: "recherche" },
       el("span", { html: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>' }), champ),
-      el("p", { class: "aide" }, "Sans tenir compte des accents ni des pluriels. « entre guillemets » pour une expression exacte, -mot pour l'exclure.")),
+      el("p", { class: "aide" }, "« entre guillemets » pour une expression exacte, -mot pour l'exclure.")),
     bloc("Période", controles.periode.element, raccourcis),
     bloc("Sources", controles.sources.element),
     bloc("Comptes", controles.groupes.element, controles.listeComptes),
     bloc("Type", controles.type.element),
     bloc("Sujet", controles.cible.element),
+    bloc("Taille", controles.mots.element,
+      el("p", { class: "aide" }, "Les longs commentaires sont souvent les plus argumentés.")),
     bloc("Notes (de 0 à 20)", ...notes),
     bloc("Fiabilité des notes", controles.fiab.element),
     bloc(null, el("button", { type: "button", class: "bouton", onclick: reinitialiser }, "Tout réinitialiser")));
@@ -151,7 +154,7 @@ function reinitialiser() {
   controles.periode.fixer([0, S.length - 1]);
   controles.sources.fixer(Object.keys(SOURCES));
   controles.groupes.fixer(Object.keys(GROUPES));
-  controles.type.fixer("tous"); controles.cible.fixer(""); controles.fiab.fixer("toutes");
+  controles.type.fixer("tous"); controles.cible.fixer(""); controles.fiab.fixer("toutes"); controles.mots.fixer("0");
   for (const k of CRITERES) { controles.notes[k].curseur.fixer([0, 20]); controles.notes[k].valeur.textContent = "toutes"; }
   $("tri").value = "recent";
   majListeComptes();
@@ -170,6 +173,7 @@ function filtresActifs() {
   if (etat.type !== "tous") p.push([etat.type === "reponse" ? "Réponses" : "Commentaires principaux", retirer(() => { etat.type = "tous"; })]);
   if (etat.cible) p.push([etat.cible === "L" ? "Parlent de lui" : "Parlent d'autre chose", retirer(() => { etat.cible = null; })]);
   for (const k of CRITERES) if (etat.notes[k][0] > 0 || etat.notes[k][1] < 20) p.push([`${TITRES[k]} ${texteNote(etat.notes[k])}`, retirer(() => { etat.notes[k] = [0, 20]; })]);
+  if (etat.mots) p.push([`${etat.mots} mots et plus`, retirer(() => { etat.mots = 0; })]);
   if (etat.fiab !== "toutes") p.push([etat.fiab === "bonne" ? "Fiabilité bonne" : "Fiabilité bonne ou moyenne", retirer(() => { etat.fiab = "toutes"; })]);
   $("actifs").replaceChildren(...p.map(([t, f]) => el("button", { type: "button", onclick: f, "aria-label": `Retirer le filtre ${t}` }, t)));
 }
@@ -181,6 +185,7 @@ function synchroniser() {
   controles.sources.fixer(etat.sources || Object.keys(SOURCES));
   controles.groupes.fixer(etat.groupes || Object.keys(GROUPES));
   controles.type.fixer(etat.type); controles.cible.fixer(etat.cible || ""); controles.fiab.fixer(etat.fiab);
+  controles.mots.fixer(String(etat.mots));
   for (const k of CRITERES) { controles.notes[k].curseur.fixer(etat.notes[k]); controles.notes[k].valeur.textContent = texteNote(etat.notes[k]); }
   majListeComptes();
 }
@@ -290,6 +295,5 @@ async function chargerEvolution() {
     description: "Évolution de la sélection",
   });
   zone.prepend(el("p", { class: "doux petit", style: { margin: "0 0 12px" } },
-    `Part des commentaires de la sélection jugés favorables (tonalité ≥ ${HAUT}) et hostiles (≤ ${BAS}), par ${parMois ? "mois" : "semaine"}, depuis ${moisLong(debut)}.`
-    + (etat.cible === "L" ? "" : " Astuce : choisir « Parlent de lui » dans Sujet pour écarter ceux qui parlent d'autre chose.")));
+    `Part des commentaires de la sélection jugés favorables (tonalité ≥ ${HAUT}) et hostiles (≤ ${BAS}), par ${parMois ? "mois" : "semaine"}, depuis ${moisLong(debut)}.`));
 }

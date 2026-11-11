@@ -6,6 +6,8 @@ Les notes suivent docs/GRILLE.md. Une annotation porte sur un texte distinct (te
     python -m analyse.annotation tirer-tour1           prépare les lots du premier tour (fait le 2026-11-08)
     python -m analyse.annotation tirer-actif N          N commentaires où le modèle hésite, ou loin de tout exemple
     python -m analyse.annotation tirer-reponses N       N réponses à lire avec leur parent (ironie, « exactement »…)
+    python -m analyse.annotation tirer-visibles N       N commentaires mis en avant (argumentés, notes extrêmes)
+    python -m analyse.annotation tirer-suspects         ceux dont le texte contredit la tonalité du modèle
     python -m analyse.annotation tirer-hasard N [jeu]   N commentaires au hasard (jeu « test » : agrandit la mesure)
     python -m analyse.annotation voir 3 [depuis]        affiche le lot 3 (pour l'annotateur)
     python -m analyse.annotation noter 3 notes.txt      vérifie et enregistre les notes du lot 3
@@ -203,6 +205,79 @@ def tirer_reponses(n: int):
     tirer([l["texte_cle"] for l in pris], "reponses")
 
 
+def tirer_visibles(n: int):
+    """Les commentaires que le site et l'interface mettent en avant, pas encore relus : ceux que le modèle juge
+    argumentés (pertinence ≥ 12), sur Lisnard, avec une note extrême (tonalité ≤ 6 ou ≥ 14, reproche ≤ 6 ou éloge
+    ≥ 16). Ce sont eux qui sortent en tête des « Soutiens argumentés », des « Critiques argumentées » et des tris : une
+    erreur inversée s'y voit tout de suite. Les plus argumentés d'abord. Le commentaire tiré est celui-là même (avec
+    son parent), pas une autre copie du texte."""
+    corpus = lire()
+    scores = stockage.lire_scores()
+    deja = deja_tires() | {a["texte_cle"] for a in annotations()}
+    cands = {}
+    for l in corpus:
+        s = scores.get(l["cle"])
+        if not s or l["source"] not in ("youtube", "instagram") or s["cible"] != "L" or l["texte_cle"] in deja:
+            continue
+        x = {c: int(s[c]) for c in CRITERES}
+        if x["pertinence"] < 12:
+            continue
+        extreme = (x["tonalite"] <= 6 or x["tonalite"] >= 14
+                   or any(x[c] <= 6 or x[c] >= 16 for c in ("forme", "systeme", "idees")))
+        if extreme and (l["texte_cle"] not in cands or x["pertinence"] > cands[l["texte_cle"]][0]):
+            cands[l["texte_cle"]] = (x["pertinence"], abs(x["tonalite"] - 10), l)
+    ordre = sorted(cands.values(), key=lambda v: (-v[0], -v[1]))[:n]
+    choisis = [{"cle": l["cle"], "texte_cle": l["texte_cle"], "jeu": "entrainement", "motif": "visible"}
+               for _, _, l in ordre]
+    numeros = [x for x in map(numero_lot, LOTS.glob("lot_*.csv")) if x < LOTS_CONSTANCE]
+    premier = max(numeros, default=0) + 1
+    nb = _ecrire_lots(choisis, premier)
+    print(f"{len(cands)} candidats ; {len(choisis)} commentaires en {nb} lots (à partir du lot {premier})")
+
+
+# Marques de critique dans un commentaire noté favorable, ou d'éloge dans un commentaire noté hostile : là où le
+# modèle se trompe de sens (« … la conséquence est la destruction du public : c'est ça, un programme d'austérité ! »
+# noté 15). Beaucoup de faux suspects (un soutien qui critique les autres), d'où la relecture.
+CRITIQUE = (r"austerit|detrui|destruct|demantel|casser? (le|les|la|des)|cadeaux? (fiscaux|aux)|ultra.?riches|"
+            r"plus riches|inegalit|bla.?bla|baratin|clone|macron bis|lr bis|charlatan|menteur|guignol|escroc|"
+            r"imposteur|vendu|pantin|poulain|aucune (chance|credibilit|confiance)|jamais (je ne|voter)|"
+            r"ne votera[is]? (jamais|pas)|non merci|surtout pas|ridicule|risible|pathetique|demago|populis|hors.?sol|"
+            r"deconnect|mepris|arrogan|honte|catastroph|desastre|prive payant|precarit|anti.?social|"
+            r"liberalisme sauvage|ultra.?liberal|neoliberal|thatcher|milei du pauvre|medef|bourges?\b|nantis|"
+            r"sbires|recycl|meme moule|droite molle")
+ELOGE = (r"bravo|merci (monsieur|mr|m\.|david)|je voterai pour (lui|vous)|lisnard president|notre (futur )?president|"
+         r"soutien total|tout mon soutien|enfin un|le seul (qui|candidat)|excellent|formidable|j.adhere|continuez|"
+         r"courage a vous")
+
+
+def tirer_suspects():
+    """Les commentaires sur Lisnard, assez pertinents pour être vus (≥ 10), dont le texte contredit la tonalité
+    donnée par le modèle : favorable mais avec plus de marques de critique que d'éloge, ou l'inverse. Les plus
+    contradictoires d'abord."""
+    corpus = lire()
+    scores = stockage.lire_scores()
+    deja = deja_tires() | {a["texte_cle"] for a in annotations()}
+    critique, eloge = re.compile(CRITIQUE), re.compile(ELOGE)
+    cands = {}
+    for l in corpus:
+        s = scores.get(l["cle"])
+        if (not s or l["source"] not in ("youtube", "instagram") or s["cible"] != "L" or l["texte_cle"] in deja
+                or int(s["pertinence"]) < 10):
+            continue
+        t, ton = sans_accents(l["texte"]), int(s["tonalite"])
+        nc, ne = len(critique.findall(t)), len(eloge.findall(t))
+        force = nc - ne if ton >= 14 else ne - nc if ton <= 6 else 0
+        if force > 0 and (ton >= 14 and nc or ton <= 6 and ne):
+            cands.setdefault(l["texte_cle"], (force, l))
+    ordre = sorted(cands.values(), key=lambda v: -v[0])
+    choisis = [{"cle": l["cle"], "texte_cle": l["texte_cle"], "jeu": "entrainement", "motif": "visible"}
+               for _, l in ordre]
+    numeros = [x for x in map(numero_lot, LOTS.glob("lot_*.csv")) if x < LOTS_CONSTANCE]
+    premier = max(numeros, default=0) + 1
+    nb = _ecrire_lots(choisis, premier)
+    print(f"{len(choisis)} suspects en {nb} lots (à partir du lot {premier})")
+
+
 def tirer_hasard(n: int, jeu: str):
     """n commentaires au hasard (jeu « test » : agrandit l'échantillon de mesure)."""
     deja = deja_tires()
@@ -225,7 +300,7 @@ def voir(numero: int, depuis: int = 1):
             ligne += f" P:{abreger(l['publication_titre'], 60)}"
         if l["parent_texte"]:
             ligne += "\n   ↳ répond à : " + abreger(l["parent_texte"], 450)
-        ligne += f"\n   » {abreger(l['texte'], 600)}"
+        ligne += f"\n   » {abreger(l['texte'], 1500 if item.get('motif') == 'visible' else 600)}"
         print(ligne)
 
 
@@ -288,6 +363,10 @@ if __name__ == "__main__":
         tirer_actif(int(args[0]) if args else 500)
     elif cmd == "tirer-reponses":
         tirer_reponses(int(args[0]))
+    elif cmd == "tirer-suspects":
+        tirer_suspects()
+    elif cmd == "tirer-visibles":
+        tirer_visibles(int(args[0]))
     elif cmd == "tirer-hasard":
         tirer_hasard(int(args[0]), args[1] if len(args) > 1 else "entrainement")
     elif cmd == "voir":

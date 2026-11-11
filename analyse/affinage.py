@@ -10,7 +10,8 @@ pour qu'il ne soit jamais coupé au profit du contexte).
 Sortie : cible (L/A), tonalité et pertinence (régression), forme, système et idées (3 classes : reproche, rien,
 éloge), comme dans modele.py.
 
-    python -m analyse.affinage entrainer [--epoques 5] [--sortie affineN] [--graine 0] [--lr 3e-5]
+    python -m analyse.affinage entrainer [--epoques 5] [--sortie affineN] [--graine 0] [--lr 3e-5] [--sans-titre]
+        [--longueurs 256 128 20]
 
 Apprend sur le jeu « entrainement » (dont 12 % mis de côté pour choisir la meilleure époque) et enregistre dans
 modeles/<sortie>/ le réseau et ses sorties sur le réglage et le test, que lit ensuite analyse/ensemble.py.
@@ -34,7 +35,8 @@ from analyse.vecteurs import DIMENSION, MODELE_LANGUE
 from commun.config import MODELES
 from commun.fichiers import lire_json
 
-LONG_COMMENTAIRE, LONG_PARENT, LONG_TITRE = 128, 64, 20  # jetons gardés au plus pour chaque partie de l'entrée
+LONG_COMMENTAIRE, LONG_PARENT, LONG_TITRE = 256, 128, 20  # jetons gardés au plus pour chaque partie de l'entrée
+# (valeurs par défaut ; un réseau entraîné avec d'autres longueurs les garde dans son infos.json, clé « longueurs »)
 FIGES = 4  # couches basses gardées telles quelles (plus rapide, et peu de données pour les ajuster)
 FILS = max(1, (os.cpu_count() or 8) - 2)  # le processeur presque entier, en laissant la main à l'interface
 SORTIES = 12  # 1 cible + tonalité + pertinence + 3 reproches × 3 classes
@@ -47,19 +49,21 @@ def _texte_entree(l: dict, parents: dict) -> tuple[str, str, str, str]:
 
 
 class Encodeur:
-    def __init__(self, tok):
-        self.tok = tok
+    def __init__(self, tok, titre: bool = True, longueurs=None):
+        self.tok, self.titre = tok, titre
+        self.longueurs = tuple(longueurs or (LONG_COMMENTAIRE, LONG_PARENT, LONG_TITRE))
 
     def __call__(self, tete, texte, parent, titre):
         t = self.tok
+        lc, lp, lt = self.longueurs
         ids = t(f"query: {tete}. Commentaire :", add_special_tokens=False)["input_ids"]
-        ids += t(texte, add_special_tokens=False, truncation=True, max_length=LONG_COMMENTAIRE)["input_ids"]
+        ids += t(texte, add_special_tokens=False, truncation=True, max_length=lc)["input_ids"]
         if parent:
             ids += t(" Il répond à :", add_special_tokens=False)["input_ids"]
-            ids += t(parent, add_special_tokens=False, truncation=True, max_length=LONG_PARENT)["input_ids"]
-        if titre:
+            ids += t(parent, add_special_tokens=False, truncation=True, max_length=lp)["input_ids"]
+        if titre and self.titre:
             ids += t(" Publication :", add_special_tokens=False)["input_ids"]
-            ids += t(titre, add_special_tokens=False, truncation=True, max_length=LONG_TITRE)["input_ids"]
+            ids += t(titre, add_special_tokens=False, truncation=True, max_length=lt)["input_ids"]
         return [t.cls_token_id] + ids + [t.sep_token_id]
 
 
@@ -135,8 +139,10 @@ def decoder(brut: np.ndarray, moyennes: dict) -> dict[str, np.ndarray]:
     return d
 
 
-def entrainer(epoques=5, nom=None, graine=0, journal=print, lr=3e-5) -> str:
-    """Affine le réseau et l'enregistre dans modeles/<nom>/ (par défaut le prochain affineN). Renvoie le nom."""
+def entrainer(epoques=5, nom=None, graine=0, journal=print, lr=3e-5, titre=True, longueurs=None) -> str:
+    """Affine le réseau et l'enregistre dans modeles/<nom>/ (par défaut le prochain affineN). Renvoie le nom.
+    titre=False : le réseau ne lit pas le titre de la publication (essai du 2026-11-10).
+    longueurs=(commentaire, parent, titre) en jetons ; par défaut LONG_COMMENTAIRE, LONG_PARENT, LONG_TITRE."""
     import torch
     from transformers import AutoTokenizer
     nom = nom or versions.prochain_reseau()
@@ -147,7 +153,7 @@ def entrainer(epoques=5, nom=None, graine=0, journal=print, lr=3e-5) -> str:
     lignes, cibles, notes, jeux = jeu_annote(entrees)
     parents = {l["cle"]: l["texte"] for l in entrees.corpus}
     tok = AutoTokenizer.from_pretrained(MODELE_LANGUE)
-    enc = Encodeur(tok)
+    enc = Encodeur(tok, titre, longueurs)
     seqs = [enc(*_texte_entree(l, parents)) for l in lignes]
     app = np.where(jeux == "entrainement")[0]
     # 12 % de l'entraînement mis de côté : choix de l'époque et étalonnage des notes (le test reste intouché).
@@ -230,7 +236,8 @@ def entrainer(epoques=5, nom=None, graine=0, journal=print, lr=3e-5) -> str:
         sorties[nom_jeu] = {"cles": [lignes[i]["cle"] for i in idx], "brut": brut.tolist()}
     (d / "sorties.json").write_text(json.dumps(sorties), encoding="utf-8")
     (d / "infos.json").write_text(json.dumps({"moyennes": moyennes, "historique": historique, "epoques": epoques,
-                                              "lr": lr, "figes": FIGES, "graine": graine,
+                                              "lr": lr, "figes": FIGES, "graine": graine, "titre": titre,
+                                              "longueurs": list(enc.longueurs),
                                               "duree_min": round((time.time() - t0) / 60, 1)}, indent=1),
                                   encoding="utf-8")
     journal(f"  enregistré dans {d} ({(time.time() - t0) / 60:.0f} min)")
@@ -267,5 +274,8 @@ if __name__ == "__main__":
     a.add_argument("--sortie", default=None, help="nom du dossier dans modeles/ (défaut : le prochain affineN)")
     a.add_argument("--graine", type=int, default=0)
     a.add_argument("--lr", type=float, default=3e-5)
+    a.add_argument("--longueurs", type=int, nargs=3, metavar=("COMMENTAIRE", "PARENT", "TITRE"),
+                   help="jetons gardés au plus pour chaque partie (défaut 128 64 20)")
+    a.add_argument("--sans-titre", action="store_true", help="ne pas donner le titre de la publication au réseau")
     x = a.parse_args()
-    entrainer(x.epoques, x.sortie, x.graine, lr=x.lr)
+    entrainer(x.epoques, x.sortie, x.graine, lr=x.lr, titre=not x.sans_titre, longueurs=x.longueurs)

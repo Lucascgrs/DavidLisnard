@@ -3,6 +3,11 @@
   "mot_cle": "Lisnard",
   "youtube": {
     "relire_si_moins_de_jours": 30,
+    "recherche": {
+      "active": true,
+      "depuis": "2025-01-01",
+      "pages_par_lancement": 5
+    },
     "chaines": [
       {"nom": "David Lisnard", "id": "UC2XZY-bjIEmyLZ9MPJQytZg", "regle": "toutes", "groupe": "officiel"},
       {"nom": "Nouvelle Énergie avec David Lisnard", "id": "UCtcYJQAVosqW1EvVa2g0o2g", "regle": "toutes", "groupe": "officiel"},
@@ -27,6 +32,11 @@
       {"nom": "Sardoche Clips", "id": "UCIm7ntKsAnxns-r1Qa9Akpw", "regle": "mention", "groupe": "commentateur"},
       {"nom": "Et si l'économie sauvait l'écologie ?", "id": "UCJ6g0VC-AWqiy1DY5w9RQFA", "regle": "mention", "groupe": "commentateur"}
     ]
+  },
+  "bluesky": {
+    "depuis": "2025-01-01",
+    "pages_par_lancement": 60,
+    "relire_si_moins_de_jours": 7
   },
   "whatsapp": {
     "communaute": "Nouvelle Énergie 34",

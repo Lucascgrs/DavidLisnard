@@ -17,8 +17,8 @@ export const BORNES = {
   idees: ["rejet", "non évoquées", "adhésion"],
   pertinence: ["n'apporte rien", "avis sans argument", "argumenté"],
 };
-export const SOURCES = { youtube: "YouTube", instagram: "Instagram" };
-export const GROUPES = { officiel: "Ses comptes", media: "Médias", commentateur: "Commentateurs", soutien: "Chaînes de soutien" };
+export const SOURCES = { youtube: "YouTube", instagram: "Instagram", bluesky: "Bluesky" };
+export const GROUPES = { officiel: "Ses comptes", media: "Médias", commentateur: "Commentateurs", soutien: "Chaînes de soutien", autre: "Autres comptes" };
 export const BAS = 6, HAUT = 14, ARGUMENTE = 12, EXPLOITABLE = 5;
 
 const FR = new Intl.NumberFormat("fr-FR");
@@ -66,6 +66,10 @@ export function lienOriginal(c) {
   const id = c.cle.split(":")[1];
   const pub = c.publications || {};
   if (c.source === "youtube") return `https://www.youtube.com/watch?v=${pub.code}&lc=${id}`;
+  if (c.source === "bluesky") {  // clé « bluesky:did:plc:…/rkey »
+    const [did, rkey] = c.cle.slice("bluesky:".length).split("/");
+    return `https://bsky.app/profile/${did}/post/${rkey}`;
+  }
   return pub.lien || `https://www.instagram.com/p/${pub.code}/`;
 }
 

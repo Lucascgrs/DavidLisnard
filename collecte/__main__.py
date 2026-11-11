@@ -5,8 +5,10 @@
     python -m collecte --reessayer instagram    relance une source abandonnée (critère des 30 minutes)
 
 Résultats : donnees/<source>/ (un CSV par compte + <source>_tout.xlsx), donnees/bilan.md, donnees/journal.log.
-Une source qui échoue n'arrête pas les suivantes. Si du neuf a été collecté, les nouveaux commentaires sont ensuite
-notés par le modèle (option de l'onglet Analyse, cochée par défaut), puis publiés sur le site (« python -m web »).
+Une source qui échoue n'arrête pas les suivantes. À la fin, les données sont sauvegardées
+(donnees/sauvegardes/donnees.zip). Si du neuf a été collecté, les nouveaux commentaires sont ensuite notés par le
+modèle (option de l'onglet Analyse, cochée par défaut), puis publiés sur le site (« python -m web »). Le
+rangement par thèmes, lui, se fait à la demande : c'est Claude qui lit (« python -m critiques »).
 """
 import argparse
 import importlib
@@ -99,6 +101,18 @@ def noter_les_nouveaux(journal: Journal) -> None:
         journal(f"### Analyse impossible : {type(e).__name__}: {e}")
 
 
+def sauvegarder(journal: Journal) -> None:
+    """À la fin de chaque collecte : la sauvegarde unique des données qu'on ne peut pas refaire (commun/sauvegarde.py).
+    Une erreur ici ne fait jamais échouer la collecte."""
+    from commun import sauvegarde
+    try:
+        sauvegarde.sauvegarder_sous_verrou(journal)
+    except sauvegarde.SauvegardeRefusee as e:
+        journal(f"### SAUVEGARDE REFUSÉE : {e}")
+    except BaseException as e:
+        journal(f"### Sauvegarde impossible : {type(e).__name__}: {e}")
+
+
 def publier_le_site(journal: Journal) -> None:
     """Après les notes : met à jour le site public, si son installation est faite (python -m web installer). Une
     erreur ici ne fait jamais échouer la collecte."""
@@ -136,6 +150,7 @@ def main():
             resultats.append(lancer(nom, journal, args.reessayer))
     finally:
         journal(f"### Fini. Bilan : {ecrire_bilan(resultats)}")
+    sauvegarder(journal)
     if any(r.get("nouveaux") for r in resultats):
         noter_les_nouveaux(journal)
         publier_le_site(journal)

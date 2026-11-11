@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Thèmes · Lisnard vu par les commentaires</title>
+  <meta name="description" content="Ce que disent de David Lisnard les commentaires argumentés, rangés par thème : éloges, critiques, doutes et questions.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/themes.js"></script>
+</head>
+<body>
+  <header class="entete">
+    <div class="large">
+      <a class="marque" href="index.html" aria-label="Accueil">
+        <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" style="fill:var(--texte)"/><path d="M9 21v-4M14 21v-9M19 21v-6M24 21v-11" style="stroke:var(--fond)" stroke-width="3" stroke-linecap="round"/></svg>
+        <span>Lisnard vu par les commentaires</span>
+      </a>
+      <nav class="nav" aria-label="Pages">
+        <a href="index.html">Le projet</a>
+        <a href="statistiques.html">Statistiques</a>
+        <a href="commentaires.html">Commentaires</a>
+        <a href="themes.html" aria-current="page">Thèmes</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="large">
+    <div class="titre-page">
+      <p class="surtitre">Thèmes</p>
+      <h1>Ce qu'on lui reproche, ce qu'on salue</h1>
+      <p>Les commentaires argumentés, lus un par un et rangés par thème.</p>
+      <p class="maj-haut" id="maj-haut" hidden></p>
+    </div>
+
+    <section class="carte section" id="filtres" aria-label="Filtres"><div class="chargement">Chargement des thèmes…</div></section>
+    <div class="chiffres chiffres-4" id="chiffres"></div>
+    <div class="themes-corps">
+      <section class="carte section" id="liste-themes" aria-label="Thèmes"></section>
+      <section class="carte section" id="theme" aria-live="polite"></section>
+    </div>
+    <section class="carte section" id="methode">
+      <div class="tete"><h2>Comment c'est fait</h2></div>
+      <div class="etapes">
+        <div class="etape">
+          <h3>On retient</h3>
+          <p>Les commentaires qui parlent de lui, donnent un argument (pertinence de <span id="pertinence">12</span> sur 20 ou plus) et font au moins <span id="mots">20</span> mots.</p>
+        </div>
+        <div class="etape">
+          <h3>Claude lit</h3>
+          <p>Chacun est lu en entier par Claude, une intelligence artificielle.</p>
+        </div>
+        <div class="etape">
+          <h3>Il range</h3>
+          <p>Dans un ou plusieurs thèmes, avec un avis et un résumé.</p>
+        </div>
+        <div class="etape">
+          <h3>On compte</h3>
+          <p>Les commentaires, et les auteurs distincts pour qu'un habitué ne pèse pas plus.</p>
+        </div>
+      </div>
+      <p class="doux petit" style="margin:16px 0 0;max-width:860px">Ce n'est pas un sondage. Chaque résumé renvoie au commentaire d'origine.</p>
+    </section>
+  </main>
+
+  <footer class="pied">
+    <div class="large">
+      <span>Projet indépendant, sans lien avec David Lisnard ni son équipe. Commentaires publics, sans nom d'auteur.</span>
+      <span id="maj"></span>
+    </div>
+  </footer>
+</body>
+</html>

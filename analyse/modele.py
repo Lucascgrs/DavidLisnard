@@ -40,6 +40,19 @@ MOTIFS = {
     "rire": r"😂|🤣|mdr|lol|ptdr",
     "bravo": r"bravo|👏|merci|soutien|go\b|vive",
 }
+# Colonnes du titre dans la matrice d'entrée : son vecteur, puis l'indicateur « a un titre » (13e indicateur).
+COL_TITRE = slice(2 * DIMENSION, 3 * DIMENSION)
+COL_IND_TITRE = 3 * DIMENSION + len(SOURCES) + len(GROUPES) + 3
+
+
+def masquer_titre(X: np.ndarray) -> np.ndarray:
+    """La même matrice sans rien du titre de la publication (modèles entraînés sans titre)."""
+    X = X.copy()
+    X[:, COL_TITRE] = 0
+    X[:, COL_IND_TITRE] = 0
+    return X
+
+
 CLASSES = [6.5, 13.5]  # limites des 3 classes des reproches : ≤ 6, 7 à 13, ≥ 14
 MOYENNES_PAR_DEFAUT = (3.0, 10.0, 16.0)
 
@@ -130,8 +143,10 @@ def classer_fiabilite(score: np.ndarray, seuils) -> np.ndarray:
 
 class Modele:
     seuils_fiabilite = (0.33, 0.66)
+    sans_titre = False  # True : le titre de la publication est ignoré (à l'entraînement comme à la prédiction)
 
-    def __init__(self):
+    def __init__(self, sans_titre: bool = False):
+        self.sans_titre = sans_titre
         self.cible = None
         self.regresseurs: dict[str, list] = {}
         self.references = None  # vecteurs des textes annotés (proximité, pour le tirage des lots)
@@ -152,6 +167,8 @@ class Modele:
         def logistique():
             return make_pipeline(StandardScaler(), LogisticRegression(C=0.003, max_iter=3000, class_weight="balanced"))
 
+        if self.sans_titre:
+            X = masquer_titre(X)
         jeux = self._jeux(X)
         self.cible = [logistique().fit(Z, cibles) for Z in jeux.values()]
         self.moyennes = {}
@@ -202,6 +219,8 @@ class Modele:
         return m.predict(Z)
 
     def predire(self, X: np.ndarray, lot=20000) -> dict[str, np.ndarray]:
+        if getattr(self, "sans_titre", False):
+            X = masquer_titre(X)
         sortie = {c: [] for c in CRITERES}
         sortie.update(p_autre=[], ecart=[], proximite=[])
         for i in range(0, len(X), lot):

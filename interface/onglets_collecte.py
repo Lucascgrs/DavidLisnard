@@ -1,4 +1,5 @@
-"""Onglets de la collecte : tableau de bord, YouTube, Instagram, WhatsApp et planification.
+"""Onglets de la collecte : tableau de bord (une carte par source, Bluesky compris), YouTube, Instagram, WhatsApp
+et planification.
 
 Lancer une collecte = « python -m collecte <source> » en arrière-plan : elle continue si l'on ferme la fenêtre, et
 l'interface la retrouve à la réouverture (verrou donnees/<source>/EN_COURS), y compris si elle a été lancée ailleurs
@@ -129,7 +130,7 @@ class Carte:
         else:
             self.b_forcer.pack_forget()
         if comptes is not None:
-            unite = "messages" if self.source == "whatsapp" else "commentaires"
+            unite = "messages" if self.source in ("whatsapp", "bluesky") else "commentaires"
             self.total.config(text=f"{nombre(comptes[self.source]['total'])} {unite}")
         lignes = []
         d = etat.get("dernier")
@@ -145,8 +146,19 @@ class Carte:
     def details(self, etat: dict) -> list[str]:
         p = perimetre()
         if self.source == "youtube":
+            r, er = p.get("youtube", {}).get("recherche") or {}, etat.get("recherche") or {}
+            ailleurs = ("" if not r.get("active") else
+                        f" Recherche « {p.get('mot_cle', 'Lisnard')} » au-delà des chaînes suivies : "
+                        f"{len(er.get('videos', []))} vidéos, arriéré "
+                        + ("terminé." if er.get("complet") else f"remonté jusqu'au {(er.get('arriere') or '…')[:10]}."))
             return [f"{len(p.get('youtube', {}).get('chaines', []))} chaînes suivies, "
-                    f"{len(etat.get('videos', {}))} vidéos lues. Quota gratuit : 4 à 5 lancements par jour."]
+                    f"{len(etat.get('videos', {}))} vidéos lues. Quota gratuit : environ 4 lancements par jour."
+                    + ailleurs]
+        if self.source == "bluesky":
+            er = etat.get("recherche") or {}
+            return [f"Messages publics qui citent « {p.get('mot_cle', 'Lisnard')} » et leurs réponses, par l'API "
+                    "ouverte de Bluesky (sans compte). Arriéré "
+                    + ("terminé." if er.get("complet") else f"remonté jusqu'au {(er.get('arriere') or '…')[:10]}.")]
         if self.source == "instagram":
             conf = p.get("instagram", {})
             sortie = []
@@ -208,7 +220,9 @@ class PageYoutube:
                 "« Vidéos qui citent le mot-clé » : médias et commentateurs, seules les vidéos dont le titre "
                 "ou la description contient le mot-clé sont prises. Retirer une chaîne arrête son suivi ; ses "
                 "commentaires déjà collectés restent dans les fichiers. Les changements comptent dès le "
-                "prochain lancement.")
+                "prochain lancement. « Chercher aussi ailleurs » : la recherche du mot-clé dans tout YouTube "
+                "ramène les vidéos des autres chaînes (dernière ligne du tableau, environ 100 unités de quota "
+                "par page de 50 vidéos).")
         reglages = tk.Frame(f, bg=fond)
         reglages.pack(fill="x", pady=(0, 8))
         tk.Label(reglages, text="Mot-clé :", bg=fond).pack(side="left")
@@ -217,6 +231,10 @@ class PageYoutube:
         tk.Label(reglages, text="Relire une vidéo de moins de (jours) :", bg=fond).pack(side="left")
         self.v_jours = tk.StringVar(value=str(perimetre().get("youtube", {}).get("relire_si_moins_de_jours", 30)))
         ttk.Spinbox(reglages, from_=0, to=365, textvariable=self.v_jours, width=5).pack(side="left", padx=4)
+        self.v_ailleurs = tk.BooleanVar(value=bool((perimetre().get("youtube", {}).get("recherche") or {}).get(
+            "active")))
+        ttk.Checkbutton(reglages, text="Chercher aussi ailleurs que sur les chaînes suivies",
+                        variable=self.v_ailleurs).pack(side="left", padx=(16, 0))
         ttk.Button(reglages, text="Enregistrer", command=self.sauver_reglages).pack(side="left", padx=10)
 
         cadre = tk.Frame(f, bg=fond)
@@ -263,6 +281,11 @@ class PageYoutube:
             self.table.insert("", "end", iid=c["id"], values=(
                 c["nom"], pm.REGLES.get(c["regle"], c["regle"]), c.get("groupe", ""), c["id"],
                 "" if n is None else nombre(n)))
+        n = par_fichier.get("autres_chaines")  # collecte/sources/youtube.py, FICHIER_RECHERCHE
+        if n is not None or self.v_ailleurs.get():
+            self.table.insert("", "end", iid="autres_chaines", values=(
+                "Autres chaînes (trouvées par la recherche)", pm.REGLES["mention"], "autre", "",
+                "" if n is None else nombre(n)))
         for iid in selection:
             if self.table.exists(iid):
                 self.table.selection_add(iid)
@@ -280,6 +303,8 @@ class PageYoutube:
         p = perimetre()
         p["mot_cle"] = mot
         p.setdefault("youtube", {})["relire_si_moins_de_jours"] = jours
+        p["youtube"]["recherche"] = {"depuis": "2025-01-01", "pages_par_lancement": 5,
+                                     **(p["youtube"].get("recherche") or {}), "active": self.v_ailleurs.get()}
         pm.sauver(p)
         self.app.message("Réglages YouTube enregistrés.")
 
@@ -314,7 +339,7 @@ class PageYoutube:
         self.app.message(f"Chaîne ajoutée : {nom}. Elle sera lue au prochain lancement de YouTube.")
 
     def retirer(self):
-        ids = self.table.selection()
+        ids = [i for i in self.table.selection() if i != "autres_chaines"]
         if not ids:
             return
         p = perimetre()

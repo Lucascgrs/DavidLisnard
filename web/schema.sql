@@ -13,7 +13,7 @@ do $$ begin
 end $$;
 
 create table if not exists publications (
-  id      text primary key,          -- « youtube:<id vidéo> » ou « instagram:<code du post> »
+  id      text primary key,          -- « youtube:<id vidéo> », « instagram:<code du post> », « bluesky:<did/rkey de la tête du fil> »
   source  text not null,
   code    text not null,
   compte  text,
@@ -23,10 +23,10 @@ create table if not exists publications (
 );
 
 create table if not exists commentaires (
-  cle         text primary key,      -- « youtube:<id commentaire> » ou « instagram:<id commentaire> »
+  cle         text primary key,      -- « youtube:<id commentaire> », « instagram:<id commentaire> », « bluesky:<did/rkey> »
   source      text not null,
   compte      text not null,
-  groupe      text not null,         -- officiel, media, commentateur, soutien
+  groupe      text not null,         -- officiel, media, commentateur, soutien, autre (recherche YouTube, Bluesky)
   publication text references publications (id),
   date        timestamp,
   semaine     date,                  -- lundi de la semaine
@@ -44,6 +44,10 @@ create table if not exists commentaires (
   recherche   tsvector generated always as (to_tsvector('public.fr'::regconfig, texte)) stored
 );
 
+-- Taille en mots, calculée par la base (filtre « Taille » et tri « Plus longs » de la page Commentaires).
+alter table commentaires add column if not exists mots integer
+  generated always as (coalesce(array_length(regexp_split_to_array(btrim(texte), '\s+'), 1), 0)) stored;
+
 create index if not exists commentaires_date on commentaires (date desc nulls last);
 create index if not exists commentaires_semaine on commentaires (semaine);
 -- Toutes les colonnes des filtres sauf le texte : evolution() et les comptages se lisent dans ces ~10 Mo
@@ -52,6 +56,7 @@ create index if not exists commentaires_resume on commentaires (semaine) include
   (source, groupe, compte, fiabilite, reponse, cible, tonalite, forme, systeme, idees, pertinence);
 create index if not exists commentaires_pertinence on commentaires (pertinence desc);
 create index if not exists commentaires_likes on commentaires (likes desc);
+create index if not exists commentaires_mots on commentaires (mots desc);
 create index if not exists commentaires_publication on commentaires (publication);
 create index if not exists commentaires_parent on commentaires (parent);
 create index if not exists commentaires_recherche on commentaires using gin (recherche);
@@ -79,7 +84,7 @@ alter role anon set statement_timeout = '8s';  -- 3 s par défaut : trop court q
 -- La sélection de la page Commentaires, définie une seule fois. Le filtre f (jsonb) peut contenir :
 --   du, au (lundis, AAAA-MM-JJ ; du absent = depuis le début), sources, groupes, comptes (listes),
 --   reponse (true/false), cible ('L'/'A'), fiabilites (liste), q (mots cherchés),
---   tonalite, forme, systeme, idees, pertinence ([min, max] de 0 à 20).
+--   tonalite, forme, systeme, idees, pertinence ([min, max] de 0 à 20), mots_min (taille minimale en mots).
 -- Fonction SQL simple et stable, sans « set search_path » (qui empêcherait PostgreSQL de l'intégrer à la requête,
 -- donc d'utiliser les index) : les noms sont écrits en entier.
 create or replace function selection(f jsonb default '{}'::jsonb)
@@ -100,6 +105,7 @@ as $$
     and c.systeme between coalesce((f->'systeme'->>0)::int, 0) and coalesce((f->'systeme'->>1)::int, 20)
     and c.idees between coalesce((f->'idees'->>0)::int, 0) and coalesce((f->'idees'->>1)::int, 20)
     and c.pertinence between coalesce((f->'pertinence'->>0)::int, 0) and coalesce((f->'pertinence'->>1)::int, 20)
+    and (f->>'mots_min' is null or c.mots >= (f->>'mots_min')::int)
     and (coalesce(f->>'q', '') = '' or c.recherche @@ websearch_to_tsquery('public.fr'::regconfig, f->>'q'))
 $$;
 

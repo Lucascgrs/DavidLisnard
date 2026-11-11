@@ -36,11 +36,13 @@ export function evolution(conteneur, o) {
       t.textContent = o.formatY(v);
       axe.append(t);
     }
-    let dernierX = -Infinity;
+    let dernierX = -Infinity, dernierL = 0;
     for (let i = 0; i < n; i++) {
       const etiquette = o.etiquetteX(i);
-      if (!etiquette || x(i) - dernierX < 56) continue;
+      // Écart minimal selon la longueur des deux étiquettes (« nov. 2025 » est plus large que « mars »).
+      if (!etiquette || x(i) - dernierX < Math.max(56, 3.4 * (dernierL + etiquette.length) + 12)) continue;
       dernierX = x(i);
+      dernierL = etiquette.length;
       const t = s("text", { x: x(i), y: H - 6, "text-anchor": i === 0 && n > 1 ? "start" : "middle" });
       t.textContent = etiquette;
       axe.append(t);
@@ -142,7 +144,8 @@ export function evolution(conteneur, o) {
       cible.addEventListener("pointermove", (e) => montrer(e.clientX));
       cible.addEventListener("pointerleave", cacher);
     }
-    racine.replaceChildren(svg, el("div", { class: "sous-titre-graph" }, o.titreVolume || "Nombre de commentaires"), vol, bulle);
+    racine.replaceChildren(svg,
+      el("div", { class: "sous-titre-graph" }, o.titreVolume || "Nombre de commentaires"), vol, bulle);
   };
   dessiner();
   let largeur = racine.clientWidth;

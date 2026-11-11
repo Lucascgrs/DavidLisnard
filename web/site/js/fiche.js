@@ -8,6 +8,7 @@ const FIABILITES = {
   moyenne: "Fiabilité moyenne : notes probables, à lire avec un peu de recul.",
   faible: "Fiabilité faible : le modèle hésite, souvent sur le fait que le commentaire parle de lui.",
   "corrigée": "Notes vérifiées à la main.",
+  relue: "Notes relues et données une à une par Claude (et non par le modèle).",
 };
 
 /** La carte cliquable d'une liste. */
@@ -82,7 +83,7 @@ export async function ouvrir(c) {
   const panneau = el("div", { class: "fiche", role: "dialog", "aria-modal": "true", "aria-label": "Commentaire" },
     boutonFermer,
     el("p", { class: "meta-c" }, el("b", {}, c.compte), ` · ${SOURCES[c.source]} · ${GROUPES[c.groupe] || ""} · ${dateLongue(c.date)}`,
-      c.likes ? ` · ${nombre(c.likes)} j'aime` : ""),
+      c.likes ? ` · ${nombre(c.likes)} j'aime` : "", c.mots ? ` · ${nombre(c.mots)} mots` : ""),
     parent,
     el("p", { class: "texte-complet" }, c.texte),
     el("h3", {}, "Les notes du modèle"),
@@ -91,14 +92,15 @@ export async function ouvrir(c) {
       : null,
     ...CRITERES.map((k) => echelle(c, k)),
     el("p", { class: "pale petit" }, FIABILITES[c.fiabilite] || ""),
-    el("h3", {}, c.source === "youtube" ? "La vidéo" : "Le post"),
+    el("h3", {}, c.source === "youtube" ? "La vidéo" : c.source === "bluesky" ? "Le fil" : "Le post"),
     el("div", { class: "publication" },
       c.source === "youtube" && pub.code ? lecteur(pub) : null,
-      el("div", { class: "titre-pub" }, pub.titre || "(sans titre)"),
+      el("div", { class: "titre-pub" }, pub.titre || (c.source === "bluesky" ? "Ce message ouvre le fil." : "(sans titre)")),
       el("div", { class: "pale petit" }, `${c.compte}${pub.date ? ` · publié le ${dateLongue(pub.date)}` : ""}`),
       el("div", { class: "actions" },
         el("a", { class: "bouton plein", href: lienOriginal(c), target: "_blank", rel: "noopener" },
-          c.source === "youtube" ? "Voir le commentaire sur YouTube" : "Ouvrir le post sur Instagram"),
+          c.source === "youtube" ? "Voir le commentaire sur YouTube" : c.source === "bluesky" ? "Voir le message sur Bluesky" : "Ouvrir le post sur Instagram"),
+        c.source === "bluesky" && pub.lien && pub.lien !== lienOriginal(c) ? el("a", { class: "bouton", href: pub.lien, target: "_blank", rel: "noopener" }, "Début du fil") : null,
         c.source === "youtube" && pub.lien ? el("a", { class: "bouton", href: pub.lien, target: "_blank", rel: "noopener" }, "Vidéo sur YouTube") : null)),
   );
   fond = el("div", { class: "fiche-fond", onclick: (e) => { if (e.target === fond) fermer(); } }, panneau);

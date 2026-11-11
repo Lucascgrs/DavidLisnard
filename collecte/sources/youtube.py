@@ -5,6 +5,13 @@
 2. on demande leur nombre de commentaires (50 vidéos pour 1 unité de quota) ;
 3. on lit une vidéo si elle est nouvelle, si elle a gagné des commentaires, ou si elle a moins de N jours ;
 4. pour une vidéo relue, on ne redemande les réponses que des fils qui en ont gagné.
+
+Recherche au-delà des chaînes suivies (« recherche » dans config/perimetre.json) : après les chaînes, on cherche le
+mot-clé dans tout YouTube (search.list, 100 unités par page de 50 vidéos) et on lit de la même façon les vidéos des
+autres chaînes dont le titre ou la description le contient. Leurs commentaires vont dans un seul fichier,
+autres_chaines.csv, chacun sous le nom de sa chaîne. À chaque lancement, au plus « pages_par_lancement » pages :
+d'abord les vidéos publiées depuis la dernière recherche, puis, s'il reste des pages, la suite de l'arriéré en
+remontant jusqu'à la date « depuis ».
 """
 import time
 from datetime import datetime, timedelta, timezone
@@ -18,6 +25,8 @@ from commun.textes import contient, date_paris
 API = "https://www.googleapis.com/youtube/v3/"
 COUT = {"search": 100}  # les autres appels coûtent 1 unité
 QUOTA_JOUR = 10_000
+FICHIER_RECHERCHE = "autres_chaines"  # donnees/youtube/autres_chaines.csv : toutes les chaînes non suivies
+BILAN_RECHERCHE = "Autres chaînes (recherche)"
 
 
 class QuotaAtteint(Exception):
@@ -106,6 +115,60 @@ def videos_mention(api: Api, chaine: dict, etat_chaine: dict, mot: str) -> list[
     return trouvees
 
 
+def videos_recherche(api: Api, mot: str, apres: str | None, avant: str | None, pages: int):
+    """Vidéos de tout YouTube trouvées par le mot-clé, des plus récentes aux plus anciennes, entre deux dates ISO.
+    Renvoie (identifiants, date de la plus ancienne trouvée, vrai si la recherche est allée au bout)."""
+    trouvees, plus_ancienne, jeton = [], None, None
+    for _ in range(pages):
+        d = api.appel("search", part="snippet", q=mot, type="video", order="date", maxResults=50,
+                      publishedAfter=apres, publishedBefore=avant, pageToken=jeton)
+        if "_erreur" in d:
+            return trouvees, plus_ancienne, True
+        for it in d.get("items", []):
+            if it["id"].get("videoId"):
+                trouvees.append(it["id"]["videoId"])
+                plus_ancienne = it["snippet"].get("publishedAt") or plus_ancienne
+        jeton = d.get("nextPageToken")
+        if not jeton:
+            return trouvees, plus_ancienne, True
+    return trouvees, plus_ancienne, False
+
+
+def _iso(d: datetime) -> str:
+    return d.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def chercher_ailleurs(api: Api, conf: dict, etat: dict, mot: str, journal) -> list[str]:
+    """Met à jour la liste des vidéos trouvées par la recherche (etat["videos"]) et la renvoie.
+    etat : {videos, le (dernière recherche), arriere (date la plus ancienne atteinte), complet}."""
+    pages = int(conf.get("pages_par_lancement", 5))
+    depuis = _iso(datetime.fromisoformat(conf.get("depuis", "2025-01-01")).replace(tzinfo=timezone.utc))
+    debut = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    trouvees = []
+    if etat.get("le"):  # les nouveautés : depuis la dernière recherche, moins 3 jours de marge
+        apres = max(depuis, _iso(datetime.fromisoformat(etat["le"]) - timedelta(days=3)))
+        ids, _, fini = videos_recherche(api, mot, apres, None, pages)
+        trouvees += ids
+        pages -= max(1, -(-len(ids) // 50))
+        if not fini:
+            journal(f"    recherche : plus de {len(ids)} vidéos récentes, la suite au prochain lancement")
+    else:  # première fois : on part d'aujourd'hui et on remonte
+        etat["arriere"], etat["complet"] = None, False
+    etat["le"] = debut
+    if not etat.get("complet") and pages > 0:  # l'arriéré, en remontant vers « depuis »
+        ids, plus_ancienne, fini = videos_recherche(api, mot, depuis, etat.get("arriere"), pages)
+        trouvees += ids
+        if plus_ancienne:
+            etat["arriere"] = plus_ancienne
+        # YouTube ne rend qu'environ 500 résultats par recherche : une recherche qui s'arrête d'elle-même près de ce
+        # plafond n'est peut-être pas finie, on repartira de la vidéo la plus ancienne. En dessous, l'arriéré est fini.
+        etat["complet"] = fini and len(ids) < 400
+        journal(f"    recherche : arriéré remonté jusqu'au {(etat.get('arriere') or depuis)[:10]}"
+                + (" (terminé)" if etat["complet"] else ""))
+    etat["videos"] = list(dict.fromkeys(etat.get("videos", []) + trouvees))
+    return etat["videos"]
+
+
 def details(api: Api, ids: list[str]) -> dict[str, dict]:
     sortie = {}
     for i in range(0, len(ids), 50):
@@ -115,7 +178,9 @@ def details(api: Api, ids: list[str]) -> dict[str, dict]:
             sortie[it["id"]] = {
                 "titre": s.get("title", ""), "description": s.get("description", ""),
                 "date": s.get("publishedAt", ""), "chaine": s.get("channelTitle", ""),
+                "chaine_id": s.get("channelId", ""),
                 "commentaires": int(st["commentCount"]) if "commentCount" in st else None,
+                "vues": int(st["viewCount"]) if "viewCount" in st else None,
                 "live": s.get("liveBroadcastContent", "none"),
             }
     return sortie
@@ -138,7 +203,8 @@ def _ligne(c: dict, video_id: str, video: dict, type_: str, parent: str | None) 
     }
 
 
-def commentaires_video(api: Api, depot, compte: str, video_id: str, video: dict) -> tuple[list[dict], str | None]:
+def commentaires_video(api: Api, depot, compte: str, video_id: str, video: dict,
+                       fichier: str | None = None) -> tuple[list[dict], str | None]:
     lignes = []
     for page in api.pages("commentThreads", part="snippet,replies", videoId=video_id, maxResults=100,
                           textFormat="plainText", order="time"):
@@ -151,7 +217,7 @@ def commentaires_video(api: Api, depot, compte: str, video_id: str, video: dict)
             incluses = (fil.get("replies") or {}).get("comments", [])
             if nb and len(incluses) >= nb:
                 lignes += [_ligne(r, video_id, video, REPONSE, haut["id"]) for r in incluses]
-            elif nb and nb > depot.reponses_connues(compte, haut["id"]):
+            elif nb and nb > depot.reponses_connues(compte, haut["id"], fichier):
                 for p in api.pages("comments", part="snippet", parentId=haut["id"], maxResults=100,
                                    textFormat="plainText"):
                     if "_erreur" in p:
@@ -161,6 +227,43 @@ def commentaires_video(api: Api, depot, compte: str, video_id: str, video: dict)
 
 
 # --- Collecte ------------------------------------------------------------------
+
+def _a_lire(tous: list[str], infos: dict, vues: dict, limite: datetime) -> list[str]:
+    """Vidéos à lire : jamais lues, ou qui ont gagné des commentaires, ou publiées après la limite."""
+    a_lire = []
+    for vid in tous:
+        v, deja = infos.get(vid), vues.get(vid)
+        if not v or v["live"] != "none":
+            continue
+        if deja is None:
+            a_lire.append(vid)
+        elif v["commentaires"] is not None and v["commentaires"] > deja.get("commentaires", 0):
+            a_lire.append(vid)
+        elif v["date"] and datetime.fromisoformat(v["date"].replace("Z", "+00:00")) > limite:
+            a_lire.append(vid)
+    return a_lire
+
+
+def _lire(api: Api, depot, journal, a_lire: list[str], infos: dict, vues: dict, compte_de,
+          fichier: str | None = None, bilan: str | None = None) -> None:
+    """Lit les commentaires de ces vidéos. compte_de(vidéo) : le compte sous lequel ses commentaires sont rangés."""
+    for n, vid in enumerate(a_lire, 1):
+        depot.verifier_arret()
+        v = infos[vid]
+        if v["commentaires"] == 0:
+            vues[vid] = {"commentaires": 0, "lu_le": datetime.now(timezone.utc).isoformat(timespec="seconds")}
+            continue
+        compte = compte_de(v)
+        lignes, erreur = commentaires_video(api, depot, compte, vid, v, fichier)
+        ajoutes = depot.ajouter(compte, lignes, fichier, bilan)
+        vues[vid] = {"commentaires": v["commentaires"] or 0,
+                     "lu_le": datetime.now(timezone.utc).isoformat(timespec="seconds")}
+        if erreur:
+            vues[vid]["ferme"] = erreur
+        depot.sauver_etat()
+        journal(f"    [{n}/{len(a_lire)}] {v['titre'][:70]} : {len(lignes)} lus, {ajoutes} nouveaux"
+                f" ({v['commentaires']} annoncés){' — ' + erreur if erreur else ''}")
+
 
 def collecter(depot, journal) -> dict:
     cle = cles().get("youtube", "").strip()
@@ -192,34 +295,33 @@ def collecter(depot, journal) -> dict:
             nouvelles = [i for i in tous if i not in anciennes]
             ec["videos"] = tous
             depot.sauver_etat()
-            a_lire = []
-            for vid in tous:
-                v, deja = infos.get(vid), vues.get(vid)
-                if not v or v["live"] != "none":
-                    continue
-                if deja is None:
-                    a_lire.append(vid)
-                elif v["commentaires"] is not None and v["commentaires"] > deja.get("commentaires", 0):
-                    a_lire.append(vid)
-                elif v["date"] and datetime.fromisoformat(v["date"].replace("Z", "+00:00")) > limite:
-                    a_lire.append(vid)
+            a_lire = _a_lire(tous, infos, vues, limite)
             journal(f"  {chaine['nom']} : {len(tous)} vidéos dans le périmètre "
                     f"({len(nouvelles)} nouvelles), {len(a_lire)} à lire")
-            for n, vid in enumerate(a_lire, 1):
-                depot.verifier_arret()
-                v = infos[vid]
-                if v["commentaires"] == 0:
-                    vues[vid] = {"commentaires": 0, "lu_le": datetime.now(timezone.utc).isoformat(timespec="seconds")}
-                    continue
-                lignes, erreur = commentaires_video(api, depot, chaine["nom"], vid, v)
-                ajoutes = depot.ajouter(chaine["nom"], lignes)
-                vues[vid] = {"commentaires": v["commentaires"] or 0,
-                             "lu_le": datetime.now(timezone.utc).isoformat(timespec="seconds")}
-                if erreur:
-                    vues[vid]["ferme"] = erreur
-                depot.sauver_etat()
-                journal(f"    [{n}/{len(a_lire)}] {v['titre'][:70]} : {len(lignes)} lus, {ajoutes} nouveaux"
-                        f" ({v['commentaires']} annoncés){' — ' + erreur if erreur else ''}")
+            _lire(api, depot, journal, a_lire, infos, vues, lambda v, nom=chaine["nom"]: nom)
+
+        recherche = conf.get("recherche") or {}
+        if recherche.get("active"):
+            depot.verifier_arret()
+            er = depot.etat.setdefault("recherche", {"videos": []})
+            anciennes = set(er.get("videos", []))
+            tous = chercher_ailleurs(api, recherche, er, mot, journal)
+            infos = details(api, tous)
+            suivies = {c["id"] for c in conf["chaines"]}  # déjà lues par leur propre règle
+            tous = [i for i in tous if i in infos and infos[i]["chaine_id"] not in suivies and
+                    contient(infos[i]["titre"] + " " + infos[i]["description"], mot)]
+            nouvelles = [i for i in tous if i not in anciennes]
+            er["videos"] = tous
+            depot.sauver_etat()
+            a_lire = _a_lire(tous, infos, vues, limite)
+            n_chaines = len({infos[i]["chaine_id"] for i in tous})
+            journal(f"  Autres chaînes (recherche « {mot} ») : {len(tous)} vidéos de {n_chaines} chaînes "
+                    f"({len(nouvelles)} nouvelles), {len(a_lire)} à lire")
+            _lire(api, depot, journal, a_lire, infos, vues, lambda v: v["chaine"] or "Chaîne sans nom",
+                  FICHIER_RECHERCHE, BILAN_RECHERCHE)
+            details_bilan.append(f"recherche au-delà des chaînes suivies : {len(tous)} vidéos de {n_chaines} "
+                                 "chaînes, arriéré " + ("terminé" if er.get("complet") else
+                                                        f"remonté jusqu'au {(er.get('arriere') or '?')[:10]}"))
     except QuotaAtteint:
         quota = True
         depot.sauver_etat()

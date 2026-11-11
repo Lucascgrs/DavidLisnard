@@ -1,5 +1,8 @@
 // Page Statistiques : tout est recalculé dans le navigateur à partir du « cube » (comptages par semaine, compte,
 // type, cible), donc instantanément ; seuls les exemples sont demandés à la base.
+// Deux vues : une voix par commentaire (colonnes n, tonalite…), ou pondérée par les « j'aime » (colonnes p_n,
+// p_tonalite… : un commentaire pèse 1 + ses « j'aime »). K(nom) rend la colonne de la vue choisie ; les seuils
+// « assez de commentaires » se comptent toujours en commentaires (col.n).
 import { SOURCES, GROUPES, TITRES, REPROCHES, EXPLOITABLE, BAS, HAUT, el, nombre, pc, sur20, dateCourte, moisCourt, moisLong,
   finDeSemaine, debounce, puces, segments, interrupteur, messageErreur } from "./commun.js";
 import { synthese, selection } from "./donnees.js";
@@ -14,6 +17,7 @@ const MIN_PAR_PERIODE = 30; // une semaine de quelques commentaires donnerait de
 const MESURES = ["tonalite", ...REPROCHES];
 const COULEURS = { bas: "var(--bas)", haut: "var(--haut)", accent: "var(--accent)" };
 
+const K = (nom) => col[(etat.poids && col.p_n != null ? "p_" : "") + nom];
 let cube, col, S, etat, periode, vue = { critere: "tonalite", mode: "parts", pas: "auto", exemple: "critiques", tousComptes: false };
 
 demarrer();
@@ -94,6 +98,7 @@ function construireFiltres() {
   });
   const type = segments([["tous", "Tous"], ["principal", "Commentaires"], ["reponse", "Réponses"]], etat.type, (v) => { etat.type = v; changer(); }, "Type");
   const expl = interrupteur("Écarter les commentaires inexploitables", etat.exploitables, (v) => { etat.exploitables = v; changer(); });
+  const poids = interrupteur("Pondérer par les « j'aime »", etat.poids, (v) => { etat.poids = v; changer(); });
   zoneCompte = el("div");
   $("filtres").replaceChildren(el("div", { class: "barre-filtres" },
     el("div", { class: "periode" }, el("span", { class: "etiquette" }, "Période"), curseurPeriode.element, raccourcis),
@@ -102,7 +107,9 @@ function construireFiltres() {
     el("div", { class: "filtres-ligne" },
       el("div", {}, el("span", { class: "etiquette" }, "Type"), type.element),
       el("div", {}, el("span", { class: "etiquette" }, "Exploitables"), expl.element,
-        el("p", { class: "aide" }, `Pertinence de ${EXPLOITABLE} ou plus : sans ironie indécidable, émojis seuls ni hors-sujet.`))),
+        el("p", { class: "aide" }, "Sans émojis seuls, hors-sujet ni ironie impossible à trancher.")),
+      col.p_n != null ? el("div", {}, el("span", { class: "etiquette" }, "Poids"), poids.element,
+        el("p", { class: "aide" }, "Chaque commentaire pèse 1 + ses « j'aime ».")) : null),
     zoneCompte));
   majCompte();
 }
@@ -146,16 +153,17 @@ function calculer() {
 // ---------- Chiffres clés ----------
 
 function chiffres(T, B, L) {
-  const n = col.n;
-  const ton = L[n] ? L[col.tonalite] / L[n] : null;
+  const n = col.n, p = K("n");
+  const ton = L[p] ? L[K("tonalite")] / L[p] : null;
+  const mention = etat.poids ? ", pondéré par les « j'aime »" : "";
   const verdict = ton == null ? "" : ton >= 12 ? "plutôt favorable" : ton <= 8 ? "plutôt hostile" : "partagée";
   const tuiles = [
-    ["Commentaires analysés", nombre(B[n]), etat.exploitables ? `exploitables, sur ${nombre(T[n])} dans la sélection` : "dans la sélection"],
-    ["Parlent de lui", pc(B[n] ? L[n] / B[n] : null), `${nombre(L[n])} commentaires ; les autres parlent d'autre chose`],
-    ["Tonalité moyenne", ton == null ? "—" : `${sur20(ton)} /20`, verdict ? `envers lui : ${verdict}` : ""],
-    ["Favorables", pc(L[n] ? L[col.haut_tonalite] / L[n] : null), `tonalité de ${HAUT} ou plus`, "var(--haut)"],
-    ["Hostiles", pc(L[n] ? L[col.bas_tonalite] / L[n] : null), `tonalité de ${BAS} ou moins`, "var(--bas)"],
-    ["Argumentés", pc(B[n] ? B[col.argumentes] / B[n] : null), "donnent au moins une raison (pertinence ≥ 12)"],
+    ["Commentaires analysés", nombre(B[n]), etat.exploitables ? `exploitables sur ${nombre(T[n])}` : "dans la sélection"],
+    ["Parlent de lui", pc(B[n] ? L[n] / B[n] : null), `${nombre(L[n])} commentaires`],
+    ["Tonalité moyenne", ton == null ? "—" : `${sur20(ton)} /20`, verdict ? `envers lui : ${verdict}${mention}` : ""],
+    ["Favorables", pc(L[p] ? L[K("haut_tonalite")] / L[p] : null), `tonalité de ${HAUT} ou plus${mention}`, "var(--haut)"],
+    ["Hostiles", pc(L[p] ? L[K("bas_tonalite")] / L[p] : null), `tonalité de ${BAS} ou moins${mention}`, "var(--bas)"],
+    ["Argumentés", pc(B[p] ? B[K("argumentes")] / B[p] : null), `donnent au moins une raison${mention}`],
   ];
   $("chiffres").replaceChildren(...tuiles.map(([nom, valeur, legende, couleur]) => el("div", { class: "chiffre" },
     el("div", { class: "nom" }, couleur ? el("span", { class: "pastille", style: { background: couleur } }) : null, nom),
@@ -174,7 +182,7 @@ function repartition(bas, haut, fine) {
 }
 
 function perception(L) {
-  const n = L[col.n];
+  const n = L[col.n], p = L[K("n")];
   const lignes = {
     tonalite: "hostile · neutre · favorable",
     forme: "élocution, charisme, communication",
@@ -183,7 +191,7 @@ function perception(L) {
   };
   const grille = el("div", { class: "perception" });
   for (const k of MESURES) {
-    const bas = n ? L[col[`bas_${k}`]] / n : 0, haut = n ? L[col[`haut_${k}`]] / n : 0;
+    const bas = p ? L[K(`bas_${k}`)] / p : 0, haut = p ? L[K(`haut_${k}`)] / p : 0;
     grille.append(
       el("div", { class: "nom" }, el("h3", {}, TITRES[k]), el("p", {}, lignes[k])),
       repartition(bas, haut),
@@ -192,7 +200,7 @@ function perception(L) {
   }
   $("perception").replaceChildren(
     el("div", { class: "tete" }, el("h2", {}, "Ce qu'on lui reproche, ce qu'on salue"),
-      el("p", {}, `Sur les ${nombre(n)} commentaires qui parlent de lui. Pour la forme, le « système » et les idées, la plupart des commentaires n'en disent rien : c'est la part grise.`)),
+      el("p", {}, `Sur les ${nombre(n)} commentaires qui parlent de lui${etat.poids ? ", pondérés par les « j'aime »" : ""}. En gris : ceux qui n'en disent rien.`)),
     grille,
     el("div", { class: "legende-rep" }, el("span", { style: { "--c": "var(--bas)" } }, `critique ou reproche (note ≤ ${BAS})`),
       el("span", { style: { "--c": "var(--milieu)" } }, "neutre ou pas évoqué"), el("span", { style: { "--c": "var(--haut)" } }, `éloge (note ≥ ${HAUT})`)));
@@ -222,16 +230,16 @@ function evolution(sur, base) {
     seaux.get(cle(c[0]))[k === "pertinence" ? "base" : "sur"].push(c);
   }
   const points = ordre.map((q) => {
-    const x = seaux.get(q), t = somme(k === "pertinence" ? x.base : x.sur), n = t[col.n];
+    const x = seaux.get(q), t = somme(k === "pertinence" ? x.base : x.sur), n = t[col.n], p = t[K("n")];
     const assez = n >= MIN_PAR_PERIODE;
     const valeurs = {};
-    if (vue.mode === "moyenne") valeurs.moy = assez ? t[col[k]] / n : null;
-    else if (k === "pertinence") valeurs.arg = assez ? (100 * t[col.argumentes]) / n : null;
+    if (vue.mode === "moyenne") valeurs.moy = assez ? t[K(k)] / p : null;
+    else if (k === "pertinence") valeurs.arg = assez ? (100 * t[K("argumentes")]) / p : null;
     else {
-      valeurs.bas = assez ? (100 * t[col[`bas_${k}`]]) / n : null;
-      valeurs.haut = assez ? (100 * t[col[`haut_${k}`]]) / n : null;
+      valeurs.bas = assez ? (100 * t[K(`bas_${k}`)]) / p : null;
+      valeurs.haut = assez ? (100 * t[K(`haut_${k}`)]) / p : null;
     }
-    return { n, valeurs, debut: x.debut, moyenne: n ? t[col[k]] / n : null };
+    return { n, valeurs, debut: x.debut, moyenne: p ? t[K(k)] / p : null };
   });
   const series = vue.mode === "moyenne" ? [{ cle: "moy", nom: `${TITRES[k]} moyenne`, couleur: COULEURS.accent }]
     : k === "pertinence" ? [{ cle: "arg", nom: "argumentés", couleur: COULEURS.accent }]
@@ -240,10 +248,10 @@ function evolution(sur, base) {
   const max = Math.max(0, ...points.flatMap((p) => Object.values(p.valeurs).filter((v) => v != null)));
   const [yMax, yPas] = vue.mode === "moyenne" ? [20, 5] : echelle(max);
   $("evolution-aide").textContent = (vue.mode === "moyenne"
-    ? `Note moyenne de ${TITRES[k].toLowerCase()} (0 à 20, 10 = neutre ou pas évoqué), `
+    ? `Note moyenne de ${TITRES[k].toLowerCase()} sur 20, `
     : k === "pertinence" ? "Part des commentaires qui donnent au moins une raison, "
     : `Part des commentaires ${k === "tonalite" ? "favorables et hostiles" : `qui font un éloge ou un reproche sur ${TITRES[k].toLowerCase()}`}, `)
-    + `par ${pas}. Les ${pas === "mois" ? "mois" : "semaines"} de moins de ${MIN_PAR_PERIODE} commentaires ne sont pas tracé${pas === "mois" ? "s" : "es"}.`;
+    + `par ${pas}${etat.poids ? ", pondérée par les « j'aime »" : ""}.`;
   if (!points.length) { zoneGraph.replaceChildren(el("p", { class: "vide" }, "Aucune période dans la sélection.")); return; }
   graphique(zoneGraph, {
     points, series, yMax, yPas, repere: vue.mode === "moyenne" ? 10 : null,
@@ -280,19 +288,19 @@ function comptes(sur) {
     el("div", { class: "entete-col" }, "Compte"), el("div", { class: "entete-col n" }, "Comment."),
     el("div", { class: "entete-col col-rep" }, "Hostiles · neutres · favorables"), el("div", { class: "entete-col moy" }, "Ton"));
   for (const [i, t] of montrees) {
-    const k = cube.comptes[i], n = t[col.n];
+    const k = cube.comptes[i], n = t[col.n], p = t[K("n")];
     const choisi = etat.comptes?.length === 1 && etat.comptes[0] === k.nom;
     grille.append(
       el("button", { type: "button", class: "nom-compte", title: choisi ? "Retirer ce filtre" : `Ne garder que ${k.nom}`, onclick: () => {
         etat.comptes = choisi ? null : [k.nom]; majCompte(); changer();
-      } }, el("span", {}, k.nom), el("span", { class: "source-mini" }, `${SOURCES[k.source]} · ${GROUPES[k.groupe]}`)),
+      } }, el("span", {}, k.nom), el("span", { class: "source-mini" }, `${SOURCES[k.source] || k.source} · ${GROUPES[k.groupe] || "Autres comptes"}`)),
       el("div", { class: "n" }, nombre(n)),
-      el("div", { class: "col-rep" }, repartition(t[col.bas_tonalite] / n, t[col.haut_tonalite] / n, true)),
-      el("div", { class: "moy", title: "tonalité moyenne sur 20" }, sur20(t[col.tonalite] / n)));
+      el("div", { class: "col-rep" }, repartition(t[K("bas_tonalite")] / p, t[K("haut_tonalite")] / p, true)),
+      el("div", { class: "moy", title: "tonalité moyenne sur 20" }, sur20(t[K("tonalite")] / p)));
   }
   $("comptes").replaceChildren(
     el("div", { class: "tete" }, el("h2", {}, "Selon le compte"),
-      el("p", {}, "Le ton dépend beaucoup de l'endroit : ses propres comptes attirent surtout ses soutiens, les médias un public plus mélangé. Cliquer sur un compte pour ne garder que lui.")),
+      el("p", {}, "Ses propres comptes attirent surtout ses soutiens. Cliquer sur un compte pour ne garder que lui.")),
     lignes.length ? grille : el("p", { class: "vide" }, "Aucun compte dans la sélection."),
     lignes.length > 10 ? el("button", { type: "button", class: "bouton discret", style: { marginTop: "14px" }, onclick: () => { vue.tousComptes = !vue.tousComptes; comptes(choisir().sur); } },
       vue.tousComptes ? "Afficher moins" : `Afficher les ${lignes.length} comptes`) : null);
@@ -301,11 +309,11 @@ function comptes(sur) {
 // ---------- Exemples ----------
 
 const EXEMPLES = {
-  critiques: ["Critiques argumentées", { tonalite: [0, BAS] }, "pertinent", "Les avis hostiles qui donnent le plus de raisons."],
-  soutiens: ["Soutiens argumentés", { tonalite: [HAUT, 20] }, "pertinent", "Les avis favorables qui donnent le plus de raisons."],
-  forme: ["Reproches : forme", { forme: [0, BAS] }, "forme", "Les reproches les plus nets sur sa manière de parler, son charisme, sa communication."],
-  systeme: ["Reproches : système", { systeme: [0, BAS] }, "systeme", "Ceux qui le voient comme un homme du système : proche de Macron, politicien de carrière…"],
-  idees: ["Reproches : idées", { idees: [0, BAS] }, "idees", "Les rejets les plus nets de son programme ou de ses positions."],
+  critiques: ["Critiques argumentées", { tonalite: [0, BAS] }, "pertinent", "Les avis hostiles les plus argumentés."],
+  soutiens: ["Soutiens argumentés", { tonalite: [HAUT, 20] }, "pertinent", "Les avis favorables les plus argumentés."],
+  forme: ["Reproches : forme", { forme: [0, BAS] }, "forme", "Sur sa manière de parler et sa communication."],
+  systeme: ["Reproches : système", { systeme: [0, BAS] }, "systeme", "Ceux qui le voient comme un homme du système."],
+  idees: ["Reproches : idées", { idees: [0, BAS] }, "idees", "Les rejets de son programme ou de ses positions."],
 };
 const TRIS_EXEMPLES = { pertinent: "pertinence.desc", forme: "forme.asc,pertinence.desc", systeme: "systeme.asc,pertinence.desc", idees: "idees.asc,pertinence.desc" };
 
@@ -326,7 +334,7 @@ async function chargerExemples() {
     lienExemples = el("a", { class: "bouton", style: { marginTop: "16px" } }, "Voir tous ces commentaires →");
     const onglets = segments(Object.entries(EXEMPLES).map(([k, v]) => [k, v[0]]), vue.exemple, (v) => { vue.exemple = v; chargerExemples(); }, "Exemples");
     $("exemples").replaceChildren(el("div", { class: "tete" }, el("h2", {}, "Exemples"),
-      el("p", {}, "Des commentaires réels de la sélection, choisis par leurs notes. Cliquer pour lire le détail et voir la vidéo.")),
+      el("p", {}, "Cliquer sur un commentaire pour voir ses notes et la vidéo.")),
       onglets.element, aideExemples, zoneExemples, lienExemples);
   }
   aideExemples.textContent = EXEMPLES[vue.exemple][3];

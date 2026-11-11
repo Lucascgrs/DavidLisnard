@@ -22,6 +22,8 @@
   --haut-pale: #e0ecfb;
   --haut-texte: #1d5fae;
   --volume: #bfbdb4;
+  /* Doutes ou questions (page Thèmes). */
+  --doute: #eda100;
   --ombre: 0 1px 2px rgba(20, 20, 15, .05), 0 4px 16px rgba(20, 20, 15, .04);
   --ombre-forte: 0 12px 48px rgba(20, 20, 15, .18);
   --rayon: 14px;
@@ -51,6 +53,7 @@
     --haut-pale: #1c2c42;
     --haut-texte: #8ebdf5;
     --volume: #55544e;
+    --doute: #c98500;
     --ombre: 0 1px 2px rgba(0, 0, 0, .3);
     --ombre-forte: 0 12px 48px rgba(0, 0, 0, .6);
   }
@@ -77,6 +80,7 @@
   --haut-pale: #1c2c42;
   --haut-texte: #8ebdf5;
   --volume: #55544e;
+  --doute: #c98500;
   --ombre: 0 1px 2px rgba(0, 0, 0, .3);
   --ombre-forte: 0 12px 48px rgba(0, 0, 0, .6);
 }
@@ -129,6 +133,10 @@ img { max-width: 100%; display: block; }
 .titre-page { padding: 44px 0 8px; }
 .titre-page h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(30px, 4.4vw, 44px); line-height: 1.12; letter-spacing: -.015em; margin: 0 0 10px; }
 .titre-page p { color: var(--doux); font-size: 17px; margin: 0; max-width: 720px; }
+/* Date de mise à jour des données et version du modèle, sous le titre de chaque page. */
+.maj-haut, .titre-page p.maj-haut { margin: 14px 0 0; font-size: 13.5px; color: var(--pale); max-width: none; }
+.maj-haut[hidden] { display: none; }
+.une .maj-haut { margin: 22px 0 0; }
 .surtitre { text-transform: uppercase; letter-spacing: .09em; font-size: 12.5px; font-weight: 650; color: var(--accent-texte); margin: 0 0 10px; }
 h2 { font-family: var(--serif); font-weight: 600; font-size: 26px; letter-spacing: -.01em; line-height: 1.2; margin: 0 0 6px; }
 h3 { font-size: 16px; font-weight: 650; margin: 0 0 4px; }
@@ -186,6 +194,7 @@ h3 { font-size: 16px; font-weight: 650; margin: 0 0 4px; }
 .puce-choix .compte-n { color: var(--pale); font-size: 12.5px; font-variant-numeric: tabular-nums; }
 
 .segments { display: inline-flex; background: var(--carte-2); border-radius: 999px; padding: 3px; gap: 2px; flex-wrap: wrap; }
+
 .segments button {
   border: 0; background: transparent; color: var(--doux); padding: 5px 12px; border-radius: 999px; font-size: 14px;
   cursor: pointer; font-weight: 540; white-space: nowrap;
@@ -424,6 +433,11 @@ h3 { font-size: 16px; font-weight: 650; margin: 0 0 4px; }
 .raccourcis { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
 .filtres-ligne { display: flex; flex-wrap: wrap; gap: 18px 28px; align-items: flex-start; }
 
+/* ---------- Méthode (pages Thèmes) ---------- */
+
+.liste-methode { margin: 0; padding-left: 18px; max-width: 860px; }
+.liste-methode li { margin-bottom: 10px; }
+
 /* ---------- Écrans moyens et petits ---------- */
 
 @media (max-width: 1020px) {
@@ -443,12 +457,16 @@ h3 { font-size: 16px; font-weight: 650; margin: 0 0 4px; }
   .ouvrir-filtres { display: inline-flex; }
   .fermer-filtres { display: inline-flex; float: right; }
 }
+@media (max-width: 420px) {
+  .nav a { padding: 6px 5px; font-size: 13px; }
+}
 @media (max-width: 720px) {
   .large, .etroit { padding: 0 16px; }
   .entete .large { gap: 12px; }
   .marque span { display: none; }
   .nav { margin-left: auto; }
-  .nav a { padding: 6px 10px; font-size: 14.5px; }
+  .nav { gap: 0; }
+  .nav a { padding: 6px 7px; font-size: 14px; white-space: nowrap; }
   .chiffres { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .grands-chiffres { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .grille-2, .grille-3, .exemples, .notes-expliquees, .etapes { grid-template-columns: minmax(0, 1fr); }
@@ -464,4 +482,57 @@ h3 { font-size: 16px; font-weight: 650; margin: 0 0 4px; }
   .echelle .valeur-note { grid-column: 1 / -1; margin-top: -6px; }
   .fiche { padding: 18px 16px 40px; }
   .une { padding-top: 40px; }
+}
+
+/* ---------- Page Thèmes ---------- */
+.chiffres-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.themes-corps { display: grid; grid-template-columns: minmax(280px, 2fr) minmax(0, 3fr); gap: 20px; align-items: start; }
+.themes-corps > .section { margin-top: 20px; }
+#liste-themes { position: sticky; top: 12px; max-height: calc(100vh - 24px); overflow-y: auto; }
+.ligne-theme { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; width: 100%; text-align: left;
+  background: none; border: 1px solid transparent; border-radius: 10px; padding: 8px 10px; cursor: pointer; color: inherit; font: inherit; }
+.ligne-theme:hover { background: var(--carte-2); }
+.ligne-theme[aria-pressed="true"] { background: var(--accent-pale); border-color: var(--accent); }
+.ligne-theme .nom-theme { font-weight: 600; }
+.barre-sens { grid-column: 1 / -1; display: flex; height: 5px; border-radius: 3px; overflow: hidden; background: var(--carte-2); }
+.barre-sens i { display: block; height: 100%; }
+.synthese-sens h3 { font-size: 15px; margin: 18px 0 4px; }
+.synthese-sens .pastille, .resume .pastille { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 8px; vertical-align: 1px; }
+.synthese-sens p { margin: 0; }
+.titre-liens { font-size: 15px; margin: 24px 0 10px; }
+.resume-theme { border-top: 1px solid var(--bord); padding-top: 10px; }
+.resume-theme p { margin: 0 0 4px; }
+.resume-theme .resume { font-weight: 560; }
+.resume-theme .extrait { overflow-wrap: anywhere; }
+.resume-theme button.lien { background: none; border: 0; padding: 0; color: var(--accent); cursor: pointer; font: inherit; text-decoration: underline; }
+.mois-theme { display: flex; gap: 6px; align-items: flex-end; height: 90px; margin: 4px 0 6px; }
+.colonne-mois { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; }
+.colonne-mois .pile { flex: 1; width: 100%; max-width: 28px; display: flex; flex-direction: column; justify-content: flex-end; }
+.colonne-mois .pile i { display: block; width: 100%; }
+@media (max-width: 1020px) {
+  .themes-corps { grid-template-columns: minmax(0, 1fr); }
+  #liste-themes { position: static; max-height: 420px; }
+  .chiffres-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.barre-filtres-themes { display: flex; flex-wrap: wrap; gap: 18px 32px; align-items: flex-start; }
+.barre-filtres-themes .recherche input { min-width: 220px; }
+.mois-theme > * { min-width: 0; }
+.mois-theme .pale { overflow: hidden; max-width: 100%; }
+/* Cinq pages dans le menu : sur téléphone, il défile horizontalement plutôt que de déborder. */
+@media (max-width: 720px) {
+  .nav { min-width: 0; overflow-x: auto; scrollbar-width: none; }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a { padding: 6px 5px; font-size: 13px; }
+}
+@media (max-width: 420px) {
+  .nav a { padding: 6px 4px; font-size: 12.5px; }
+}
+/* Sur téléphone, les choix passent sur plusieurs lignes : un fond en pilule y formait une grosse tache arrondie.
+   On garde des boutons séparés, chacun avec son contour. */
+@media (max-width: 720px) {
+  .segments { display: flex; background: none; padding: 0; gap: 6px; }
+  .segments button { border: 1px solid var(--bord-fort); padding: 6px 12px; }
+  .segments button[aria-pressed="true"] { background: var(--accent-pale); color: var(--accent-texte); border-color: var(--accent); box-shadow: none; }
+  .barre-filtres-themes > div { width: 100%; }
+  .barre-filtres-themes .recherche input { min-width: 0; }
 }

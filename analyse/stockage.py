@@ -46,6 +46,36 @@ def lire_corrections() -> dict[str, dict]:
     return lire_csv_par_cle(CORRECTIONS)
 
 
+RELUE, CORRIGEE = "relue", "corrigée"
+LONGUEUR_PARTAGE = 60  # un texte plus court (« Exactement », « 😂 ») change de sens selon le parent : pas partagé
+
+
+def lire_notes(corpus: list[dict] | None = None) -> dict[str, dict]:
+    """Les notes à afficher et à publier, par clé de commentaire. Dans l'ordre de priorité :
+    1. les corrections faites à la main dans l'interface (fiabilité « corrigée ») ;
+    2. les notes données par Claude en annotation (fiabilité « relue ») : sur le commentaire annoté et, si l'on
+       donne le corpus, sur les autres copies du même texte long (le même avis collé sous plusieurs posts) ;
+    3. les notes du modèle.
+    Les lots de contrôle de constance (renotation à l'aveugle) ne comptent pas."""
+    from analyse.annotation import LOTS_CONSTANCE, annotations
+    notes = lire_scores()
+    par_texte = {}
+    for a in annotations():
+        if int(a["lot"]) >= LOTS_CONSTANCE:
+            continue
+        n = {"cle": a["cle"], "cible": a["cible"], **{c: a[c] for c in CRITERES}, "fiabilite": RELUE}
+        notes[a["cle"]] = n
+        par_texte[a["texte_cle"]] = n
+    if corpus and par_texte:
+        for l in corpus:
+            n = par_texte.get(l["texte_cle"])
+            if n and len(l["texte"]) >= LONGUEUR_PARTAGE and notes.get(l["cle"], {}).get("fiabilite") != RELUE:
+                notes[l["cle"]] = {**n, "cle": l["cle"]}
+    for cle, c in lire_corrections().items():
+        notes[cle] = {**c, "fiabilite": CORRIGEE}
+    return notes
+
+
 def enregistrer_correction(cle: str, cible: str, notes: dict) -> None:
     """Remplace la correction de ce commentaire s'il en avait déjà une."""
     lignes = [c for c in lire_csv(CORRECTIONS) if c["cle"] != cle]

@@ -6,7 +6,7 @@ const REST = `${SUPABASE_URL}/rest/v1`;
 const ENTETES = SUPABASE_CLE.startsWith("sb_")
   ? { apikey: SUPABASE_CLE }
   : { apikey: SUPABASE_CLE, Authorization: `Bearer ${SUPABASE_CLE}` };
-const CHAMPS = "cle,source,compte,groupe,date,semaine,reponse,parent,likes,texte,tonalite,forme,systeme,idees,pertinence,"
+const CHAMPS = "cle,source,compte,groupe,date,semaine,reponse,parent,likes,mots,texte,tonalite,forme,systeme,idees,pertinence,"
   + "cible,fiabilite,publication,publications(titre,lien,code,date)";
 
 async function demander(chemin, { methode = "GET", corps, entetes = {}, signal } = {}) {

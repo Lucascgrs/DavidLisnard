@@ -26,20 +26,22 @@ TACHE = "analyse"
 
 
 def charger_donnees() -> list[dict]:
-    """Corpus + notes (les corrections priment), joints par clé. Quelques secondes pour 150 000 lignes : à lancer
-    dans un fil à part."""
+    """Corpus + notes (corrections à la main, puis notes relues par Claude, puis modèle), joints par clé. Quelques
+    secondes pour 150 000 lignes : à lancer dans un fil à part."""
     lignes = lire_csv(stockage.CORPUS)
-    notes = stockage.lire_scores()
-    corrections = stockage.lire_corrections()
+    notes = stockage.lire_notes(lignes)
     for l in lignes:
-        s = corrections.get(l["cle"]) or notes.get(l["cle"])
+        s = notes.get(l["cle"])
         l["_note"] = bool(s)
-        l["_corrige"] = l["cle"] in corrections
+        l["_corrige"] = bool(s) and s.get("fiabilite") == stockage.CORRIGEE
         for c in CRITERES:
             l[c] = int(s[c]) if s else None
         l["cible"] = s["cible"] if s else ""
-        l["fiabilite"] = ("corrigée" if l["_corrige"] else s.get("fiabilite", "")) if s else ""
+        l["fiabilite"] = s.get("fiabilite", "") if s else ""
         l["_cherche"] = sans_accents(l["texte"])
+        l["_mots"] = len(l["texte"].split())
+        l["_doublon"] = bool(l.get("doublon_de"))  # même auteur, même texte, même source (analyse/corpus.py)
+        l["_poids"] = 1 + int(l["likes"] or 0) if (l["likes"] or "0").isdigit() else 1  # vue pondérée par les likes
     return lignes
 
 

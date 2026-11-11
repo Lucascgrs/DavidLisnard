@@ -9,9 +9,9 @@ import time
 
 import numpy as np
 
+from analyse import MODELE_LANGUE, hors_ligne  # défini dans analyse/__init__.py, avec le réglage hors ligne
 from analyse.stockage import VECTEURS
 
-MODELE_LANGUE = "intfloat/multilingual-e5-base"
 DIMENSION = 768
 LONGUEUR_MAX = 256  # jetons ; au-delà, la fin du commentaire est ignorée par le modèle
 _modele = None
@@ -21,7 +21,8 @@ def modele_langue():
     global _modele
     if _modele is None:
         from sentence_transformers import SentenceTransformer
-        _modele = SentenceTransformer(MODELE_LANGUE, device="cpu")
+        # local_files_only : sans lui, la bibliothèque tente quand même de joindre le site et affiche un avertissement.
+        _modele = SentenceTransformer(MODELE_LANGUE, device="cpu", local_files_only=hors_ligne())
         _modele.max_seq_length = LONGUEUR_MAX
     return _modele
 

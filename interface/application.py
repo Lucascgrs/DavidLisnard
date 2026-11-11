@@ -17,6 +17,7 @@ from collecte.depot import compter_par_source
 from commun.config import DONNEES
 from commun.taches import ERREURS
 from interface.onglet_analyse import PageAnalyse
+from interface.onglet_themes import PageThemes
 from interface.onglets_collecte import (PageInstagram, PagePlanification, PageTableau, PageWhatsapp, PageYoutube,
                                         tout_lancer)
 from interface.theme import COULEURS, appliquer_theme, ouvrir, police
@@ -43,10 +44,11 @@ class Application(tk.Tk):
         titres.pack(side="left")
         tk.Label(titres, text="Commentaires sur David Lisnard", font=police(20, True, True), bg=COULEURS["fond"],
                  fg=COULEURS["texte"]).pack(anchor="w")
-        tk.Label(titres, text="Collecte automatique (YouTube, Instagram, WhatsApp) et analyse des avis",
+        tk.Label(titres, text="Collecte automatique (YouTube, Bluesky, WhatsApp, Instagram), analyse des avis et thèmes",
                  font=police(10), bg=COULEURS["fond"], fg=COULEURS["doux"]).pack(anchor="w")
         ttk.Button(entete, text="Dernier bilan", command=lambda: ouvrir(DONNEES / "bilan.md")).pack(side="right")
         ttk.Button(entete, text="Dossier des données", command=lambda: ouvrir(DONNEES)).pack(side="right", padx=6)
+        ttk.Button(entete, text="Sauvegarder", command=self.sauvegarder).pack(side="right")
         ttk.Button(entete, text="Tout lancer", style="Accent.TButton",
                    command=lambda: tout_lancer(self)).pack(side="right", padx=6)
 
@@ -59,6 +61,7 @@ class Application(tk.Tk):
                               PageWhatsapp(self, self.onglets)]
         PagePlanification(self, self.onglets)
         self.analyse = PageAnalyse(self, self.onglets)
+        self.themes = PageThemes(self, self.onglets)
 
         self._boucle_rapide()
         self._boucle_comptage()
@@ -71,6 +74,15 @@ class Application(tk.Tk):
         except OSError:
             pass
         messagebox.showerror("Erreur", f"{exc.__name__} : {val}\n\nDétail dans donnees/erreurs_interface.log")
+
+    def sauvegarder(self):
+        """Sauvegarde unique des données qu'on ne peut pas refaire (aussi faite à la fin de chaque collecte)."""
+        from commun import sauvegarde
+        from commun.taches import lancer_en_fond
+        lancer_en_fond(["-m", "commun.sauvegarde"], sortie=DONNEES / "journal.log")
+        c = sauvegarde.contenu()
+        self.message("Sauvegarde lancée : donnees/sauvegardes/donnees.zip"
+                     + (f" (la précédente date du {c['le'][:16]})." if c else "."))
 
     def message(self, texte: str):
         """Message passager en bas de la fenêtre (6 secondes)."""

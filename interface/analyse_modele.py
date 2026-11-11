@@ -51,8 +51,7 @@ class OngletModele:
                                    "puis combinaison) prend 3 à 4 heures et occupe le processeur. Le lancer "
                                    "maintenant ?"):
             return
-        lancer_en_fond(["-u", "-m", "analyse.ensemble", "tout"], sortie=stockage.JOURNAL_REENTRAINEMENT,
-                       env={"HF_HUB_OFFLINE": "1"})
+        lancer_en_fond(["-u", "-m", "analyse.ensemble", "tout"], sortie=stockage.JOURNAL_REENTRAINEMENT)
         self.app.message("Réentraînement lancé (3 à 4 heures, suivi dans donnees/analyse/reentrainement.log). La "
                          "nouvelle version sera utilisée à la prochaine analyse.")
 

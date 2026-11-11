@@ -73,9 +73,13 @@ def publier(tout: bool = False, journal=print) -> dict:
         ecrire_json(ETAT, etat, indent=None)  # après chaque table : une coupure ne fait pas tout renvoyer
     syntheses = [{"nom": "meta", "donnees": export.meta(commentaires, {p["id"]: p for p in publications})},
                  {"nom": "cube", "donnees": export.cube(commentaires)}]
-    base.ecrire("syntheses", syntheses, "nom")
+    lecture = export.themes()
+    if lecture:
+        syntheses.append({"nom": "themes", "donnees": lecture})
+    base.ecrire("syntheses", syntheses, "nom", paquet=1)  # une par envoi : ensemble, elles dépassent le délai de la base
     journal(f"   publié : {bilan['commentaires']} commentaires et {bilan['publications']} publications nouveaux ou "
-            f"changés, {bilan['retires']} retirés ; statistiques recalculées")
+            f"changés, {bilan['retires']} retirés ; statistiques recalculées"
+            + (f" ; {len(lecture['themes'])} thèmes" if lecture else ""))
     return bilan
 
 

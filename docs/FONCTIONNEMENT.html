@@ -1,0 +1,465 @@
+<!doctype html>
+<!--
+  Source du document « Comment marche l'analyse des commentaires » (docs/FONCTIONNEMENT.pdf).
+
+  À modifier ici, puis regénérer le PDF :      python -m docs
+
+  Les {{nom}} sont remplacés par les chiffres réels du projet au moment de la génération (docs/__main__.py,
+  fonction chiffres()). Un {{nom}} inconnu arrête la génération : ajouter la valeur dans chiffres().
+  Le texte, les schémas et les explications sont écrits à la main : ils doivent suivre toute modification de
+  structure ou de méthode du projet (voir CLAUDE.md, « Document de fonctionnement »).
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Comment marche l'analyse des commentaires</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Mise en page A4 : une colonne, des schémas pleine largeur, une couleur par étape du circuit */
+:root{
+  --bg:#ffffff; --surface:#f6f8fb; --fg:#18202c; --muted:#5a6676; --line:#d9dfe7;
+  --accent:#2a62c9;
+  --s-collecte:#138a7e; --s-stock:#b7791f; --s-annot:#7c4dcc; --s-modele:#2a62c9; --s-pub:#2f8a3c;
+  --s-collecte-bg:#e3f4f2; --s-stock-bg:#fbf1df; --s-annot-bg:#efe8fb; --s-modele-bg:#e5edfb; --s-pub-bg:#e4f3e6;
+  --gris:#9aa5b4;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mono:"JetBrains Mono", Consolas, monospace;
+}
+@page{size:A4;margin:14mm 14mm 16mm}
+*{box-sizing:border-box}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:11pt;line-height:1.5;margin:0}
+.page{display:flex;flex-direction:column;gap:26px}
+h1,h2,h3{font-family:var(--display);line-height:1.15;margin:0;break-after:avoid}
+h1{font-size:28pt;font-weight:700}
+h2{font-size:17pt;font-weight:700}
+h3{font-size:12.5pt;font-weight:600}
+p{margin:0}
+section{display:flex;flex-direction:column;gap:12px}
+h2+*,h3+*,.titre+*{break-before:avoid}
+.titre{display:flex;flex-direction:column;gap:12px;break-inside:avoid;break-after:avoid}
+.etiquette{font-family:var(--mono);font-size:8pt;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.chapo{font-size:13pt;color:var(--muted)}
+code,.mono{font-family:var(--mono);font-size:.86em}
+code{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:0 4px}
+.schema{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px;break-inside:avoid}
+.schema svg{display:block;width:100%;height:auto}
+.schema svg text{font-family:var(--body);fill:var(--fg)}
+.schema svg .petit{font-size:12px;fill:var(--muted)}
+.schema svg .mono{font-family:var(--mono);font-size:11.5px;fill:var(--muted)}
+.legende{font-size:9.5pt;color:var(--muted)}
+.grille{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.grille.trois{grid-template-columns:repeat(3,1fr)}
+.carte{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:11px 13px;display:flex;flex-direction:column;gap:5px;break-inside:avoid}
+.carte .chiffre{font-family:var(--display);font-size:19pt;font-weight:700;font-variant-numeric:tabular-nums}
+.carte p{font-size:10pt;color:var(--muted)}
+.carte .comment{color:var(--fg)}
+.puce{display:inline-block;font-family:var(--mono);font-size:7.5pt;padding:1px 7px;border-radius:99px;width:fit-content}
+.p-ok{background:var(--s-pub-bg);color:var(--s-pub)}
+.p-non{background:var(--s-stock-bg);color:var(--s-stock)}
+.p-prive{background:var(--s-annot-bg);color:var(--s-annot)}
+table{border-collapse:collapse;width:100%;font-size:10pt}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.tableau{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:2px 6px;break-inside:avoid}
+.etapes{display:flex;flex-direction:column;gap:7px;margin:0;padding:0;list-style:none;counter-reset:e}
+.etapes li{counter-increment:e;display:grid;grid-template-columns:26px 1fr;gap:9px;align-items:start;break-inside:avoid}
+.etapes li::before{content:counter(e);font-family:var(--mono);font-size:9pt;width:21px;height:21px;border-radius:50%;
+  display:grid;place-items:center;background:var(--s-modele-bg);color:var(--s-modele)}
+.barres{display:flex;flex-direction:column;gap:10px}
+.barre{display:grid;grid-template-columns:90px 1fr;gap:10px;align-items:center}
+.barre .nom{font-size:10pt}
+.piste{display:flex;flex-direction:column;gap:3px;padding-right:44px}
+.trait{height:10px;border-radius:0 3px 3px 0;position:relative}
+.trait span{position:absolute;left:calc(100% + 6px);top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:8pt;color:var(--fg);white-space:nowrap}
+.t-vec{background:var(--gris)} .t-ens{background:var(--accent)}
+.cle{display:flex;gap:16px;flex-wrap:wrap;font-size:9.5pt;color:var(--muted)}
+.cle i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.priorite{display:flex;gap:7px;flex-wrap:wrap;align-items:center;font-size:10pt}
+.priorite .pas{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:5px 10px}
+.priorite .fl{color:var(--muted)}
+.note{border-left:3px solid var(--line);padding-left:11px;color:var(--muted);font-size:10pt}
+.exemple{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 13px;font-family:var(--mono);font-size:8.5pt;line-height:1.7;white-space:pre-wrap;break-inside:avoid}
+.exemple b{color:var(--s-annot);font-weight:500}
+.pied{font-size:8.5pt;color:var(--muted);border-top:1px solid var(--line);padding-top:8px}
+</style>
+</head>
+<body>
+<div class="page">
+
+<header style="display:flex;flex-direction:column;gap:10px">
+  <span class="etiquette">Projet DavidLisnard · état au {{date}}</span>
+  <h1>Comment marche l'analyse des commentaires</h1>
+  <p class="chapo">De la collecte des commentaires sur YouTube, Bluesky et Instagram jusqu'au site public : d'où viennent les données, où elles sont rangées, comment Claude les annote et comment le modèle apprend à noter seul les {{n_total}} commentaires.</p>
+</header>
+
+<!-- ============ VUE D'ENSEMBLE ============ -->
+<section>
+  <div class="titre"><span class="etiquette">Vue d'ensemble</span>
+  <h2>Le circuit, en cinq étapes</h2></div>
+  <p>Chaque lancement de <code>python -m collecte</code> fait tourner tout le circuit pour ce qui est nouveau. Le modèle n'est réentraîné que sur demande, quand il y a beaucoup de nouvelles annotations.</p>
+  <div class="schema">
+    <svg viewBox="0 0 860 280">
+      <defs>
+        <marker id="fl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--muted)"/></marker>
+      </defs>
+      <rect x="10" y="40" width="150" height="150" rx="10" style="fill:var(--s-collecte-bg);stroke:var(--s-collecte)"/>
+      <text x="85" y="66" text-anchor="middle" style="font-weight:600;fill:var(--s-collecte)">1 · Collecte</text>
+      <text x="85" y="92" text-anchor="middle" class="petit">API YouTube</text>
+      <text x="85" y="110" text-anchor="middle" class="petit">API Bluesky</text>
+      <text x="85" y="128" text-anchor="middle" class="petit">Chrome piloté</text>
+      <text x="85" y="144" text-anchor="middle" class="petit">(Instagram)</text>
+      <text x="85" y="162" text-anchor="middle" class="petit">WhatsApp Web</text>
+
+      <rect x="185" y="40" width="150" height="150" rx="10" style="fill:var(--s-stock-bg);stroke:var(--s-stock)"/>
+      <text x="260" y="66" text-anchor="middle" style="font-weight:600;fill:var(--s-stock)">2 · Stockage</text>
+      <text x="260" y="94" text-anchor="middle" class="petit">fichiers CSV</text>
+      <text x="260" y="112" text-anchor="middle" class="petit">sur le PC</text>
+      <text x="260" y="136" text-anchor="middle" class="mono">donnees/</text>
+      <text x="260" y="154" text-anchor="middle" class="mono">corpus.csv</text>
+      <text x="260" y="176" text-anchor="middle" class="petit">+ sauvegarde</text>
+
+      <rect x="360" y="40" width="150" height="150" rx="10" style="fill:var(--s-annot-bg);stroke:var(--s-annot)"/>
+      <text x="435" y="66" text-anchor="middle" style="font-weight:600;fill:var(--s-annot)">3 · Annotation</text>
+      <text x="435" y="94" text-anchor="middle" class="petit">Claude lit et note</text>
+      <text x="435" y="112" text-anchor="middle" class="petit">à la main</text>
+      <text x="435" y="146" text-anchor="middle" style="font-family:var(--display);font-size:22px;font-weight:700">{{annotations}}</text>
+      <text x="435" y="166" text-anchor="middle" class="petit">exemples notés</text>
+
+      <rect x="535" y="40" width="150" height="150" rx="10" style="fill:var(--s-modele-bg);stroke:var(--s-modele)"/>
+      <text x="610" y="66" text-anchor="middle" style="font-weight:600;fill:var(--s-modele)">4 · Modèle</text>
+      <text x="610" y="94" text-anchor="middle" class="petit">e5 multilingue</text>
+      <text x="610" y="112" text-anchor="middle" class="petit">réentraîné</text>
+      <text x="610" y="140" text-anchor="middle" class="petit">puis note les</text>
+      <text x="610" y="158" text-anchor="middle" class="petit">{{n_total}} commentaires</text>
+
+      <rect x="710" y="40" width="140" height="150" rx="10" style="fill:var(--s-pub-bg);stroke:var(--s-pub)"/>
+      <text x="780" y="66" text-anchor="middle" style="font-weight:600;fill:var(--s-pub)">5 · Résultats</text>
+      <text x="780" y="94" text-anchor="middle" class="petit">interface</text>
+      <text x="780" y="112" text-anchor="middle" class="petit">sur le PC</text>
+      <text x="780" y="140" text-anchor="middle" class="petit">site public</text>
+      <text x="780" y="158" text-anchor="middle" class="petit">Supabase + Vercel</text>
+      <text x="780" y="178" text-anchor="middle" class="petit">+ thèmes lus</text>
+
+      <g style="stroke:var(--muted);stroke-width:1.6;fill:none">
+        <path d="M160 115 H183" marker-end="url(#fl)"/>
+        <path d="M335 115 H358" marker-end="url(#fl)"/>
+        <path d="M510 115 H533" marker-end="url(#fl)"/>
+        <path d="M685 115 H708" marker-end="url(#fl)"/>
+        <path d="M260 190 V235 H610 V192" marker-end="url(#fl)" style="stroke-dasharray:5 4"/>
+      </g>
+      <text x="435" y="258" text-anchor="middle" class="petit">tous les commentaires, annotés ou non, passent ensuite dans le modèle pour recevoir leurs notes</text>
+      <text x="85" y="24" text-anchor="middle" class="mono">python -m collecte</text>
+      <text x="435" y="24" text-anchor="middle" class="mono">docs/GRILLE.md</text>
+      <text x="610" y="24" text-anchor="middle" class="mono">python -m analyse</text>
+      <text x="780" y="24" text-anchor="middle" class="mono">python -m web</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ============ SOURCES ============ -->
+<section>
+  <div class="titre"><span class="etiquette" style="color:var(--s-collecte)">Étape 1 · Collecte</span>
+  <h2>D'où viennent les données</h2></div>
+  <p>Chaque source a sa méthode : une API officielle quand il y en a une, sinon un navigateur que le programme pilote comme le ferait une personne. La collecte est incrémentale : un fichier <code>etat.json</code> par source note ce qui a déjà été lu, et chaque lancement ne va chercher que le nouveau.</p>
+  <div class="grille">
+    <div class="carte">
+      <span class="puce p-ok">API officielle</span>
+      <h3>YouTube</h3>
+      <div class="chiffre">{{n_youtube}}</div>
+      <p>commentaires et réponses. {{n_chaines}} chaînes suivies : ses chaînes et celles de ses soutiens en entier, les médias et commentateurs seulement sur les vidéos qui citent « Lisnard ». Et, au-delà, les vidéos de {{n_autres_chaines}} autres chaînes trouvées par la recherche du mot-clé dans tout YouTube ({{n_autres}} commentaires).</p>
+      <p class="comment">API YouTube Data v3 (<code>commentThreads</code>, <code>search</code>) avec une clé gratuite. Le quota est d'environ 10 000 unités par jour ; une page de recherche de 50 vidéos en coûte 100, d'où {{pages_recherche}} pages au plus par lancement : les vidéos récentes d'abord, puis l'arriéré.</p>
+    </div>
+    <div class="carte">
+      <span class="puce p-ok">API ouverte, sans compte</span>
+      <h3>Bluesky</h3>
+      <div class="chiffre">{{n_bluesky}}</div>
+      <p>messages publics qui citent « Lisnard » et leurs réponses : tout le fil sous un message de tête qui le cite, et les réponses à une réponse qui le cite.</p>
+      <p class="comment">API publique <code>api.bsky.app</code> (<code>searchPosts</code>, <code>getPostThread</code>), gratuite. Sans compte, la suite d'une recherche se demande par dates. Les messages de moins de {{bluesky_relire}} jours sont relus : nouvelles réponses et « j'aime ».</p>
+    </div>
+    <div class="carte">
+      <span class="puce p-non">Navigateur piloté</span>
+      <h3>Instagram</h3>
+      <div class="chiffre">{{n_instagram}}</div>
+      <p>commentaires sous les posts de {{comptes_instagram}}.</p>
+      <p class="comment">Instagram n'a pas d'API publique pour ça. Un Chrome visible, piloté par Playwright et connecté avec un compte dédié (cookies enregistrés), ouvre les posts et déplie les réponses. On lit {{posts_par_lancement}} posts par lancement et on ne revient que sur ceux de moins de {{relire_jours}} jours. La source s'arrête seule si Instagram freine.</p>
+    </div>
+    <div class="carte">
+      <span class="puce p-prive">Privé, jamais publié</span>
+      <h3>WhatsApp</h3>
+      <div class="chiffre">{{n_whatsapp}}</div>
+      <p>messages du groupe d'adhérents.</p>
+      <p class="comment">WhatsApp Web, lié au téléphone, lu par la page. Les messages sont éphémères, donc il faut collecter souvent. Ils sont analysés mais jamais mis sur le site.</p>
+    </div>
+  </div>
+  <p class="note">Écartés : TikTok (le contournement de sa protection anti-robots a été refusé), Reddit (bloqué par le réseau). Facebook, Threads et X demandent une connexion ou une API payante : à tenter plus tard, avec un compte créé pour la collecte.</p>
+</section>
+
+<!-- ============ STOCKAGE ============ -->
+<section>
+  <div class="titre"><span class="etiquette" style="color:var(--s-stock)">Étape 2 · Stockage</span>
+  <h2>Où et comment c'est rangé</h2></div>
+  <p>Tout est d'abord stocké sur le PC, dans des fichiers lisibles (CSV, ouvrables dans Excel, et JSON). Il n'y a pas de base de données locale. Seul ce qui est publiable part ensuite en ligne.</p>
+  <div class="schema">
+    <svg viewBox="0 0 860 330">
+      <defs><marker id="fl2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--muted)"/></marker></defs>
+      <text x="20" y="24" style="font-weight:600">Sur le PC</text>
+      <g style="font-family:var(--mono);font-size:13px">
+        <text x="20" y="58" style="fill:var(--s-collecte)">donnees/youtube/</text>
+        <text x="40" y="78" class="mono">un CSV par chaîne · etat.json</text>
+        <text x="20" y="108" style="fill:var(--s-collecte)">donnees/instagram/</text>
+        <text x="40" y="128" class="mono">un CSV par compte · etat.json</text>
+        <text x="20" y="158" style="fill:var(--s-collecte)">donnees/whatsapp/ · bluesky/</text>
+        <text x="40" y="178" class="mono">likes.json : « j'aime » à jour</text>
+        <text x="20" y="208" style="fill:var(--s-annot)">donnees/critiques/</text>
+        <text x="40" y="228" class="mono">themes.json · rattachements.csv</text>
+      </g>
+      <rect x="320" y="40" width="230" height="110" rx="10" style="fill:var(--s-stock-bg);stroke:var(--s-stock)"/>
+      <text x="335" y="66" style="font-family:var(--mono);font-size:13px;fill:var(--s-stock)">analyse/corpus.csv</text>
+      <text x="335" y="88" class="petit">une ligne par commentaire :</text>
+      <text x="335" y="106" class="petit">texte, date, compte, likes,</text>
+      <text x="335" y="124" class="petit">texte du parent, titre de la vidéo</text>
+      <text x="335" y="142" class="petit">auteur remplacé par une empreinte</text>
+      <rect x="320" y="175" width="230" height="64" rx="10" style="fill:var(--s-annot-bg);stroke:var(--s-annot)"/>
+      <text x="335" y="200" style="font-family:var(--mono);font-size:13px;fill:var(--s-annot)">annotation/annotations.csv</text>
+      <text x="335" y="222" class="petit">les notes données par Claude</text>
+      <rect x="320" y="255" width="230" height="64" rx="10" style="fill:var(--s-modele-bg);stroke:var(--s-modele)"/>
+      <text x="335" y="280" style="font-family:var(--mono);font-size:13px;fill:var(--s-modele)">analyse/scores.csv</text>
+      <text x="335" y="302" class="petit">notes du modèle (modeles/{{version}}/)</text>
+      <g style="stroke:var(--muted);stroke-width:1.5;fill:none">
+        <path d="M250 70 C285 70 290 90 318 92" marker-end="url(#fl2)"/>
+        <path d="M250 120 C285 120 290 98 318 96" marker-end="url(#fl2)"/>
+        <path d="M250 160 C285 160 290 104 318 100" marker-end="url(#fl2)"/>
+      </g>
+      <text x="620" y="24" style="font-weight:600">En ligne</text>
+      <rect x="610" y="40" width="240" height="170" rx="10" style="fill:var(--s-pub-bg);stroke:var(--s-pub)"/>
+      <text x="625" y="66" style="font-weight:600;fill:var(--s-pub)">Supabase (base PostgreSQL)</text>
+      <text x="625" y="92" style="font-family:var(--mono);font-size:12.5px">publications</text>
+      <text x="625" y="112" style="font-family:var(--mono);font-size:12.5px">commentaires</text>
+      <text x="625" y="132" style="font-family:var(--mono);font-size:12.5px">syntheses</text>
+      <text x="625" y="158" class="petit">YouTube, Instagram, Bluesky, sans auteur</text>
+      <text x="625" y="176" class="petit">lecture seule pour le public</text>
+      <text x="625" y="194" class="petit">(règles RLS)</text>
+      <rect x="610" y="235" width="240" height="84" rx="10" style="fill:var(--bg);stroke:var(--s-pub)"/>
+      <text x="625" y="260" style="font-weight:600;fill:var(--s-pub)">Vercel</text>
+      <text x="625" y="282" class="petit">pages du site (HTML + JS)</text>
+      <text x="625" y="300" class="petit">qui interrogent Supabase</text>
+      <g style="stroke:var(--muted);stroke-width:1.5;fill:none">
+        <path d="M550 95 H608" marker-end="url(#fl2)"/>
+        <path d="M550 285 C580 285 580 150 608 150" marker-end="url(#fl2)" style="stroke-dasharray:5 4"/>
+        <path d="M730 210 V233" marker-end="url(#fl2)"/>
+      </g>
+      <text x="579" y="86" text-anchor="middle" class="mono">publier</text>
+    </svg>
+  </div>
+  <p class="legende">La publication est incrémentale : <code>donnees/web/publie.json</code> retient ce qui est déjà en ligne, et seules les lignes nouvelles ou dont la note a changé sont envoyées.</p>
+  <div class="grille trois">
+    <div class="carte"><span class="etiquette">Doublons</span><div class="chiffre">{{n_doublons}}</div><p>commentaires mis de côté ({{part_doublons}}) : le même texte, du même auteur, dans la même source. Seul le premier publié compte dans la synthèse, sur le site et dans les thèmes. Le même texte écrit par des personnes différentes reste compté : ce sont autant de voix.</p></div>
+    <div class="carte"><span class="etiquette">« J'aime »</span><p>Un commentaire lu juste après sa publication en a peu. Quand une publication est relue, les nouveaux comptes vont dans <code>likes.json</code>, sans retoucher les CSV. Ils servent à la vue pondérée : chaque commentaire y pèse 1 + ses « j'aime ».</p></div>
+    <div class="carte"><span class="etiquette">Sauvegarde</span><div class="chiffre">{{sauvegarde_mo}}</div><p><code>donnees/sauvegardes/donnees.zip</code>, refaite à la fin de chaque collecte : CSV bruts (WhatsApp et Instagram d'abord), annotations, thèmes. Une seule copie : la nouvelle est écrite à part, relue, puis remplace l'ancienne. Refusée si un CSV a rétréci.</p></div>
+  </div>
+</section>
+
+<!-- ============ GRILLE ============ -->
+<section>
+  <div class="titre"><span class="etiquette" style="color:var(--s-annot)">Étape 3 · Annotation</span>
+  <h2>Ce qu'on note : cinq notes sur 20 et une cible</h2></div>
+  <p>Chaque commentaire reçoit les mêmes six réponses, définies dans <code>docs/GRILLE.md</code>.</p>
+  <div class="tableau">
+    <table>
+      <thead><tr><th>Critère</th><th>Question posée</th><th>Échelle</th></tr></thead>
+      <tbody>
+        <tr><td><b>Cible</b></td><td>Le commentaire parle-t-il de Lisnard (L) ou d'autre chose (A) ?</td><td>L ou A</td></tr>
+        <tr><td><b>Tonalité</b></td><td>Quel est le ton envers lui, de l'hostilité franche à l'éloge ?</td><td class="mono">0 hostile · 10 neutre · 20 très favorable</td></tr>
+        <tr><td><b>Forme</b></td><td>Reproche ou éloge sur sa manière de parler, son style, sa personne.</td><td class="mono">0 reproche · 10 non évoqué · 20 éloge</td></tr>
+        <tr><td><b>Système</b></td><td>Reproche ou éloge sur ce qu'il représente : parti, élus, « système ».</td><td class="mono">0 reproche · 10 non évoqué · 20 éloge</td></tr>
+        <tr><td><b>Idées</b></td><td>Reproche ou éloge sur son programme, ses propositions.</td><td class="mono">0 reproche · 10 non évoqué · 20 éloge</td></tr>
+        <tr><td><b>Pertinence</b></td><td>Le commentaire apporte-t-il un avis argumenté ? Un « Bravo ! » seul vaut 8. Une ironie impossible à trancher vaut 2 ou 3.</td><td class="mono">0 vide · 20 très argumenté</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Si la cible est A, le ton et les trois reproches valent 10 : le commentaire ne le concerne pas. La pertinence permet ensuite d'écarter le bruit, comme les émojis seuls ou le hors-sujet (pertinence inférieure à 5).</p>
+
+  <h3>Qui annote : Claude, à la main, dans la conversation</h3>
+  <p>Il n'y a ni annotateur humain ni appel automatique à une API. Le programme tire des lots de commentaires, et Claude les lit un par un, avec le message auquel ils répondent et le titre de la vidéo, puis écrit les six notes et une courte remarque. Une vraie ligne du lot 24 :</p>
+  <div class="exemple">« tout à fait ! Pas entendu de discours aussi creux depuis longtemps 😂 »
+<b>→ répond à :</b> « Pour une fois je ne vais pas voter contre quelqu'un mais plutôt pour quelqu'un. Que la force soit avec vous, David. »
+cible L · ton 3 · forme 10 · système 10 · idées 3 · pertinence 8
+<b>remarque :</b> ironie : approuve pour dire discours creux</div>
+  <div class="grille trois">
+    <div class="carte"><h3>Ce qu'on annote</h3><p>Des tirages au hasard, pour que le jeu représente le corpus, et des tirages ciblés : les cas où le modèle hésite, les réponses, les commentaires les plus visibles et les « suspects » dont la note contredit les mots.</p></div>
+    <div class="carte"><h3>Constance</h3><p>{{constance_n}} commentaires renotés à l'aveugle d'une session à l'autre : même cible dans {{constance_cible}} des cas, {{constance_ton}} point d'écart moyen sur la tonalité. C'est la meilleure précision qu'on peut espérer du modèle.</p></div>
+    <div class="carte"><h3>Ironie et réponses</h3><p>Une ironie comprise est notée selon son sens réel. Une ironie indécidable reçoit 10 partout et une pertinence de 2-3, pour pouvoir la filtrer. Une réponse est toujours lue avec son parent.</p></div>
+  </div>
+</section>
+
+<!-- ============ MODELE ============ -->
+<section>
+  <div class="titre"><span class="etiquette" style="color:var(--s-modele)">Étape 4 · Modèle</span>
+  <h2>Comment le modèle apprend à noter seul</h2></div>
+  <p>Annoter les {{n_total}} commentaires à la main est impossible. On apprend donc à un modèle à reproduire les notes de Claude à partir des {{annotations}} exemples, puis il note tout le reste.</p>
+
+  <h3>Le modèle de départ</h3>
+  <p><b>intfloat/multilingual-e5-base</b> : un modèle de langue libre (famille BERT/XLM-RoBERTa, environ 280 millions de paramètres, 12 couches), entraîné par Microsoft pour transformer un texte en un vecteur de 768 nombres qui résume son sens. Il comprend le français et tourne sur le processeur, sans carte graphique. Seul, il ne sait rien de nos critères : il faut l'adapter. Il est lu sur le disque, sans rien demander en ligne (<code>HF_HUB_OFFLINE=1</code>, posé seul tant que sa copie existe).</p>
+
+  <h3>Les annotations sont partagées en trois</h3>
+  <div class="schema">
+    <svg viewBox="0 0 860 100">
+      <rect x="10" y="16" width="{{l_app}}" height="40" rx="4" style="fill:var(--s-annot)"/>
+      <rect x="{{x_reg}}" y="16" width="{{l_reg}}" height="40" style="fill:var(--s-modele)"/>
+      <rect x="{{x_test}}" y="16" width="{{l_test}}" height="40" rx="4" style="fill:var(--s-stock)"/>
+      <text x="{{m_app}}" y="41" text-anchor="middle" style="fill:#fff;font-weight:600">{{apprentissage}} pour apprendre</text>
+      <text x="{{m_reg}}" y="76" text-anchor="middle" class="petit">{{reglage}} pour régler</text>
+      <text x="850" y="94" text-anchor="end" class="petit">{{test}} jamais vus, pour mesurer</text>
+    </svg>
+  </div>
+  <p class="legende">Le modèle ne voit jamais les {{test}} commentaires de test pendant l'entraînement : les scores donnés plus bas sont donc ceux qu'il obtient sur du neuf.</p>
+
+  <h3>Deux modèles, combinés</h3>
+  <div class="schema">
+    <svg viewBox="0 0 860 400">
+      <defs><marker id="fl3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--muted)"/></marker></defs>
+      <rect x="10" y="150" width="190" height="104" rx="10" style="fill:var(--bg);stroke:var(--line)"/>
+      <text x="25" y="174" style="font-weight:600">Ce que lit le modèle</text>
+      <text x="25" y="198" class="mono">commentaire  ({{long_c}} jetons)</text>
+      <text x="25" y="218" class="mono">+ il répond à ({{long_p}})</text>
+      <text x="25" y="238" class="mono">+ titre vidéo ({{long_t}})</text>
+      <rect x="250" y="20" width="350" height="190" rx="10" style="fill:var(--s-modele-bg);stroke:var(--s-modele)"/>
+      <text x="265" y="44" style="font-weight:600;fill:var(--s-modele)">A · Réseau affiné (fine-tuning)</text>
+      <g>
+        <rect x="270" y="60" width="22" height="120" rx="3" style="fill:var(--gris)"/>
+        {{couches_svg}}
+        <rect x="548" y="90" width="38" height="60" rx="4" style="fill:var(--s-annot)"/>
+        <text x="567" y="124" text-anchor="middle" style="fill:#fff;font-size:12px;font-weight:600">12</text>
+      </g>
+      <text x="270" y="198" class="petit">figés : mots + {{figes}} couches</text>
+      <text x="400" y="198" class="petit">{{couches_ajustees}} couches réentraînées</text>
+      <text x="567" y="168" text-anchor="middle" class="petit">sorties</text>
+      <rect x="250" y="240" width="350" height="140" rx="10" style="fill:var(--bg);stroke:var(--gris)"/>
+      <text x="265" y="264" style="font-weight:600">B · Modèle à vecteurs</text>
+      <text x="265" y="290" class="petit">e5 non modifié → 3 vecteurs de 768 nombres</text>
+      <text x="265" y="308" class="petit">(commentaire, parent, titre) + indicateurs simples :</text>
+      <text x="265" y="326" class="petit">source, réponse ou non, longueur, mots cités</text>
+      <text x="265" y="352" class="petit">→ régressions ridge et logistiques, une par critère</text>
+      <rect x="650" y="140" width="200" height="124" rx="10" style="fill:var(--s-pub-bg);stroke:var(--s-pub)"/>
+      <text x="665" y="164" style="font-weight:600;fill:var(--s-pub)">Combinaison ({{version}})</text>
+      <text x="665" y="188" class="petit">moyenne pondérée, critère</text>
+      <text x="665" y="206" class="petit">par critère : {{poids_ton}} réseau</text>
+      <text x="665" y="224" class="petit">pour la tonalité, {{poids_cible}} cible…</text>
+      <text x="665" y="248" class="petit">puis étalonnage des notes</text>
+      <g style="stroke:var(--muted);stroke-width:1.5;fill:none">
+        <path d="M200 190 C225 190 225 120 248 120" marker-end="url(#fl3)"/>
+        <path d="M200 215 C225 215 225 310 248 310" marker-end="url(#fl3)"/>
+        <path d="M600 120 C625 120 625 185 648 185" marker-end="url(#fl3)"/>
+        <path d="M600 310 C625 310 625 225 648 225" marker-end="url(#fl3)"/>
+      </g>
+    </svg>
+  </div>
+  <p class="legende">Un jeton est un morceau de mot : {{long_c}} jetons couvrent environ 180 mots, assez pour presque tous les commentaires (au-delà, la fin est ignorée). Le passage de 128 à 256 jetons date du 11 novembre 2026 (v11), pour que les longs commentaires argumentés soient lus en entier. Les 12 sorties du réseau : 1 pour la cible, 1 pour la tonalité, 1 pour la pertinence, et 3 classes (reproche, non évoqué, éloge) pour chacun des trois critères forme, système et idées.</p>
+
+  <h3>Le fine-tuning, concrètement</h3>
+  <ol class="etapes">
+    <li><span>On ajoute au bout d'e5 une petite couche de sortie qui produit les 12 réponses.</span></li>
+    <li><span>On fige les couches basses, qui comprennent les mots et la grammaire, et on laisse les {{couches_ajustees}} couches hautes s'ajuster à nos critères. C'est plus rapide, et {{annotations}} exemples ne suffiraient pas à bien régler tout le réseau.</span></li>
+    <li><span>Le réseau lit les {{apprentissage}} exemples par paquets de 16, compare ses notes à celles de Claude et corrige ses poids un peu à chaque paquet (taux d'apprentissage {{lr}} pour e5, 10⁻³ pour la couche de sortie). Il refait le tour complet {{epoques}} fois ({{epoques}} époques).</span></li>
+    <li><span>Sur le processeur, cela prend environ {{duree}} ({{reseau}}, terminé le {{entraine_le}}).</span></li>
+    <li><span>On règle ensuite, sur les {{reglage}} exemples de réglage, le poids donné au réseau et aux vecteurs pour chaque critère. Le résultat est enregistré comme une nouvelle version (<code>modeles/{{version}}/</code>).</span></li>
+  </ol>
+  <p>Commande complète : <code>python -m analyse.ensemble tout</code>, aussi lancée par un bouton de l'interface. Puis <code>python -m analyse</code> renote tout le corpus, à 10 à 30 commentaires par seconde.</p>
+</section>
+
+<!-- ============ RESULTATS ============ -->
+<section>
+  <div class="titre"><span class="etiquette" style="color:var(--s-modele)">Qualité mesurée</span>
+  <h2>Ce que vaut le modèle</h2></div>
+  <p>La corrélation de rang mesure si le modèle classe les commentaires dans le même ordre que Claude (1 = ordre identique, 0 = aucun lien). Mesures sur les {{test}} commentaires de test, version {{version}}.</p>
+  <div class="schema" style="display:flex;flex-direction:column;gap:12px">
+    <div class="cle"><span><i style="background:var(--gris)"></i>Vecteurs seuls (B)</span><span><i style="background:var(--accent)"></i>Combinaison en service (A + B)</span></div>
+    <div class="barres">{{barres}}</div>
+  </div>
+  <div class="grille trois">
+    <div class="carte"><span class="etiquette">Tonalité</span><div class="chiffre">{{ecart_ton}} pt</div><p>d'écart moyen sur 20 avec la note de Claude. Entre deux lectures de Claude, l'écart est de {{constance_ton}}.</p></div>
+    <div class="carte"><span class="etiquette">Cible</span><div class="chiffre">{{cible}}</div><p>de bonnes réponses sur « parle de Lisnard ou non ».</p></div>
+    <div class="carte"><span class="etiquette">Ton inversé</span><div class="chiffre">2,0 %</div><p>de critiques notées comme des éloges, ou l'inverse : 8 sur 406 commentaires de test qui parlent de lui (mesure du 11 novembre 2026, v11 ; 1,5 % avec v9). 1 sur 67 parmi les commentaires argumentés.</p></div>
+  </div>
+  <p>Les reproches de forme, système et idées sont rares (la plupart des commentaires n'en parlent pas), d'où des corrélations plus faibles. Les parts de critiques et d'éloges restent proches des vraies.</p>
+  <h3>Quelle note est affichée</h3>
+  <div class="priorite">
+    <span class="pas">Correction à la main</span><span class="fl">sinon →</span>
+    <span class="pas">Note de Claude (« relue »)</span><span class="fl">sinon →</span>
+    <span class="pas">Note du modèle</span>
+  </div>
+  <p class="legende">Une note de Claude vaut aussi pour les copies exactes du même texte (60 caractères ou plus).</p>
+</section>
+
+<!-- ============ THEMES ============ -->
+<section>
+  <div class="titre"><span class="etiquette" style="color:var(--s-annot)">Lecture par thèmes</span>
+  <h2>Ce qu'on lui reproche, ce qu'on salue</h2></div>
+  <p>Les notes disent si un commentaire est favorable ou critique, pas sur quoi. Les commentaires argumentés sont donc lus par Claude et rangés par thème.</p>
+  <div class="schema">
+    <svg viewBox="0 0 860 250">
+      <defs><marker id="fl4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--muted)"/></marker></defs>
+
+      <rect x="10" y="30" width="170" height="130" rx="10" style="fill:var(--s-modele-bg);stroke:var(--s-modele)"/>
+      <text x="95" y="58" text-anchor="middle" style="font-weight:600;fill:var(--s-modele)">1 · Commentaires notés</text>
+      <text x="95" y="100" text-anchor="middle" style="font-family:var(--display);font-size:22px;font-weight:700">{{n_total}}</text>
+      <text x="95" y="124" text-anchor="middle" class="petit">par le modèle</text>
+
+      <rect x="230" y="30" width="170" height="130" rx="10" style="fill:var(--bg);stroke:var(--muted)"/>
+      <text x="315" y="58" text-anchor="middle" style="font-weight:600">2 · On garde ceux qui</text>
+      <text x="315" y="82" text-anchor="middle" class="petit">parlent de lui</text>
+      <text x="315" y="100" text-anchor="middle" class="petit">donnent un argument</text>
+      <text x="315" y="118" text-anchor="middle" class="petit">font 20 mots ou plus</text>
+      <text x="315" y="144" text-anchor="middle" style="font-family:var(--display);font-size:17px;font-weight:700">{{th_selection}} retenus</text>
+
+      <rect x="450" y="30" width="170" height="130" rx="10" style="fill:var(--s-annot-bg);stroke:var(--s-annot)"/>
+      <text x="535" y="58" text-anchor="middle" style="font-weight:600;fill:var(--s-annot)">3 · Claude les lit</text>
+      <text x="535" y="82" text-anchor="middle" class="petit">un par un, et note :</text>
+      <text x="535" y="100" text-anchor="middle" class="petit">le thème · l'avis</text>
+      <text x="535" y="118" text-anchor="middle" class="petit">une phrase de résumé</text>
+      <text x="535" y="144" text-anchor="middle" style="font-family:var(--display);font-size:17px;font-weight:700">{{th_lus}} lus</text>
+
+      <rect x="670" y="30" width="180" height="130" rx="10" style="fill:var(--s-pub-bg);stroke:var(--s-pub)"/>
+      <text x="760" y="58" text-anchor="middle" style="font-weight:600;fill:var(--s-pub)">4 · {{th_n}} thèmes</text>
+      <text x="760" y="84" text-anchor="middle" class="petit">{{th_e}} éloges</text>
+      <text x="760" y="102" text-anchor="middle" class="petit">{{th_c}} critiques</text>
+      <text x="760" y="120" text-anchor="middle" class="petit">{{th_d}} doutes ou questions</text>
+      <text x="760" y="144" text-anchor="middle" class="mono">interface · site</text>
+
+      <g style="stroke:var(--muted);stroke-width:1.6;fill:none">
+        <path d="M180 95 H228" marker-end="url(#fl4)"/>
+        <path d="M400 95 H448" marker-end="url(#fl4)"/>
+        <path d="M620 95 H668" marker-end="url(#fl4)"/>
+        <path d="M315 160 V205 H535 V162" marker-end="url(#fl4)" style="stroke-dasharray:5 4"/>
+      </g>
+      <text x="425" y="228" text-anchor="middle" class="petit">à la demande : les {{th_a_lire}} nouveaux commentaires retenus attendent la prochaine lecture (seuls les nouveaux sont lus)</text>
+    </svg>
+  </div>
+  <p class="legende">Commandes : <code>python -m critiques tirer</code>, <code>voir</code>, <code>noter</code>, puis <code>python -m web publier</code>. Les comptes sont donnés en commentaires et en auteurs distincts. Ce n'est pas un sondage.</p>
+</section>
+
+<!-- ============ PUBLICATION ============ -->
+<section>
+  <div class="titre"><span class="etiquette" style="color:var(--s-pub)">Étape 5 · Résultats</span>
+  <h2>Où on lit les résultats</h2></div>
+  <div class="grille trois">
+    <div class="carte"><h3>Interface sur le PC</h3><p><code>python -m interface</code> (Interface.bat) : lancer et planifier les collectes, synthèse des notes, évolution par mois, exemples, qualité du modèle, thèmes. Les commentaires se filtrent par source, compte, période, notes et taille en mots, et se trient par la colonne « Mots ». La Synthèse peut se lire pondérée par les « j'aime ». Tout y est, WhatsApp compris.</p></div>
+    <div class="carte"><h3>Site public</h3><p><span class="mono">analyse-commentaires-lisnard.vercel.app</span> : Le projet, Statistiques, Commentaires, Thèmes. Les filtres sont calculés dans le navigateur ou par une fonction SQL de Supabase, dont la taille en mots (colonne <span class="mono">mots</span> calculée par la base, tri « Plus longs »). Chaque page affiche la date de la dernière collecte et la version du modèle ; les Statistiques ont une vue pondérée par les « j'aime ». Ni auteurs, ni doublons, ni WhatsApp.</p></div>
+    <div class="carte"><h3>Thèmes</h3><p>Onglet de l'interface et page du site : les thèmes filtrés par sujet, type d'avis ou mot, avec leurs comptes, l'évolution par mois, les synthèses et chaque commentaire avec sa phrase, qui renvoie à l'original.</p></div>
+  </div>
+  <h3>Un lancement, de bout en bout</h3>
+  <ol class="etapes">
+    <li><span><code>python -m collecte</code> lit le nouveau sur YouTube, Bluesky, WhatsApp et Instagram et l'ajoute aux CSV, puis refait la sauvegarde.</span></li>
+    <li><span>Le corpus est reconstruit (doublons marqués, « j'aime » à jour) et les nouveaux commentaires sont notés par le modèle en service.</span></li>
+    <li><span>S'il y a du neuf, <code>python -m web publier</code> envoie les lignes nouvelles à Supabase et le site les montre aussitôt.</span></li>
+    <li><span>De temps en temps : nouveaux lots annotés par Claude, puis réentraînement (nouvelle version du modèle) et renotation complète.</span></li>
+    <li><span>À la demande : lecture par Claude des commentaires argumentés restés sans thème, puis publication.</span></li>
+  </ol>
+  <p class="pied">Document généré le {{date}} par <code>python -m docs</code> depuis <code>docs/FONCTIONNEMENT.html</code>. Les chiffres viennent des données du projet à cette date.</p>
+</section>
+
+</div>
+</body>
+</html>

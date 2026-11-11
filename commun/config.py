@@ -19,9 +19,9 @@ FICHIER_CLES = CONFIG / "cles.json"
 FICHIER_COMPTE = CONFIG / "compte.json"
 FICHIER_PLANIFICATION = CONFIG / "planification.json"
 
-# Sources collectées, dans l'ordre de passage : YouTube (sans fenêtre), WhatsApp (plein écran), puis Instagram
-# (navigateur, le plus lent). Reddit et TikTok ne sont pas collectés : voir README.md.
-SOURCES = {"youtube": "YouTube", "whatsapp": "WhatsApp", "instagram": "Instagram"}
+# Sources collectées, dans l'ordre de passage : YouTube et Bluesky (API, sans fenêtre), WhatsApp (plein écran), puis
+# Instagram (navigateur, le plus lent). Reddit et TikTok ne sont pas collectés : voir README.md.
+SOURCES = {"youtube": "YouTube", "bluesky": "Bluesky", "whatsapp": "WhatsApp", "instagram": "Instagram"}
 
 
 def perimetre() -> dict:

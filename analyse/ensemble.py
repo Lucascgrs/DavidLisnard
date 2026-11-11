@@ -43,8 +43,8 @@ class Ensemble:
     def _charger_reseau(self):
         if self._net is None:
             from analyse.affinage import Encodeur, charger_reseau
-            net, tok, _ = charger_reseau(self.reseau)
-            self._net = (net, tok, Encodeur(tok))
+            net, tok, infos = charger_reseau(self.reseau)
+            self._net = (net, tok, Encodeur(tok, infos.get("titre", True), infos.get("longueurs")))
         return self._net
 
     def sorties_reseau(self, lignes, corpus_par_cle, avancement=None) -> np.ndarray:
@@ -116,8 +116,10 @@ def _regler(notes_dev, cibles_dev, pa_dev, pb_dev):
     return ref, poids
 
 
-def construire(nom_reseau: str, journal=print) -> str:
-    """Nouvelle version vN à partir du réseau modeles/<nom_reseau>/ ; renvoie son nom."""
+def construire(nom_reseau: str, journal=print, nom: str | None = None) -> str:
+    """Nouvelle version vN à partir du réseau modeles/<nom_reseau>/ ; renvoie son nom.
+    Avec nom (autre que vN), le modèle est écrit dans modeles/<nom>/ sans être mis en service ni toucher au rapport.
+    Le modèle à vecteurs ignore le titre si le réseau a été entraîné sans lui."""
     from analyse.affinage import decoder
     from analyse.mesures import ecrire_rapport
     debut = time.time()
@@ -141,7 +143,8 @@ def construire(nom_reseau: str, journal=print) -> str:
     app = np.array([i for i in range(len(lignes)) if i not in exclus and jeux[i] == "entrainement"])
     X = entrees.matrice(lignes)
     journal(f"  modèle à vecteurs : {len(app)} annotations pour apprendre, {len(dev)} pour régler, {len(test)} pour mesurer")
-    base = Modele()
+    sans_titre = not infos_res.get("titre", True)
+    base = Modele(sans_titre=sans_titre)
     base.entrainer(X[app], cibles[app], notes[app], journal)
     pb_dev, pb_test = base.predire(X[dev]), base.predire(X[test])
     moy = infos_res["moyennes"]
@@ -158,17 +161,20 @@ def construire(nom_reseau: str, journal=print) -> str:
     # Pour comparer : le modèle à vecteurs seul, sur le même test.
     mesures["vecteurs_seuls"] = {c: mesurer(notes[test][t, j], pb_test[c][t]) for j, c in enumerate(CRITERES)}
     mesures["vecteurs_seuls"]["cible"] = float(((pb_test["p_autre"][t] > 0.5) == (cibles[test][t] == 1)).mean())
-    version = versions.prochaine_version()
+    version = nom or versions.prochaine_version()
     d = MODELES / version
     d.mkdir(parents=True)
     infos = {"version": version, "type": "ensemble", "reseau": nom_reseau,
              "le": datetime.now().isoformat(timespec="seconds"), "annotations": int(len(lignes)),
              "apprentissage": int(len(app)), "reglage": int(len(dev)), "test": int(t.sum()),
              "modele_langue": "intfloat/multilingual-e5-base (affiné) + vecteurs e5", "seuil_autre": SEUIL_A,
+             "titre": not sans_titre,
+             "longueurs": infos_res.get("longueurs", [128, 64, 20]),
              "poids_reseau": poids, "mesures_test": mesures, "duree_s": round(time.time() - debut)}
     joblib.dump(ens, d / "modele.joblib", compress=3)
     (d / "infos.json").write_text(json.dumps(infos, ensure_ascii=False, indent=2), encoding="utf-8")
-    ecrire_rapport(infos)
+    if nom is None:
+        ecrire_rapport(infos)
     journal(f"  modèle combiné {version} enregistré ; poids du réseau affiné : "
             + ", ".join(f"{k} {v:.2f}" for k, v in poids.items()))
     return version

@@ -15,10 +15,14 @@ from interface.theme import COULEURS, nombre, ouvrir, police, puce, ton_note
 
 TACHE = "analyse"
 PAGE = 500
-SOURCES_ANALYSE = {"youtube": "YouTube", "instagram": "Instagram", "whatsapp": "WhatsApp"}
+SOURCES_ANALYSE = dict(SOURCES)  # toutes les sources collectées (commun/config.py)
 COULEURS_LIGNES = {"tres_neg": "#fde7e9", "neg": "#fff4f4", "pos": "#f1faf1", "tres_pos": "#dff6dd",
                    "autre": "#f5f5f5"}
-FIABILITES = {"toutes": None, "bonne et moyenne": {"bonne", "moyenne", "corrigée"}, "bonne": {"bonne", "corrigée"}}
+FIABILITES = {"toutes": None, "bonne et moyenne": {"bonne", "moyenne", "corrigée", "relue"},
+              "bonne": {"bonne", "corrigée", "relue"}}
+# Taille en mots (la moitié des commentaires en fait moins de 10 ; les longs sont souvent les plus argumentés).
+TAILLES = {"toutes": 0, "30 mots et plus": 30, "50 mots et plus": 50, "100 mots et plus": 100,
+           "200 mots et plus": 200}
 
 
 def couleur_ligne(l: dict) -> str:
@@ -104,6 +108,12 @@ class OngletCommentaires:
         e = ttk.Entry(filtres, textvariable=self.v_cherche)
         e.pack(fill="x")
         e.bind("<Return>", lambda _: self.appliquer())
+        titre("Taille du commentaire")
+        self.v_taille = tk.StringVar(value="toutes")
+        ttk.Combobox(filtres, textvariable=self.v_taille, state="readonly", width=18, values=list(TAILLES)).pack(
+            anchor="w")
+        tk.Label(filtres, text="Pour lire les plus longs d'abord : trier par la colonne « Mots ».", bg=C["fond"],
+                 fg=C["doux"], font=police(8), wraplength=260, justify="left").pack(anchor="w")
         titre("Notes (minimum – maximum)")
         self.v_min, self.v_max = {}, {}
         for c in CRITERES:
@@ -118,6 +128,10 @@ class OngletCommentaires:
         self.v_sans_autre = tk.BooleanVar(value=False)
         ttk.Checkbutton(filtres, text="Masquer ceux qui ne parlent pas de Lisnard",
                         variable=self.v_sans_autre).pack(anchor="w")
+        self.v_doublons = tk.BooleanVar(value=False)
+        ttk.Checkbutton(filtres, text="Montrer aussi les doublons", variable=self.v_doublons).pack(anchor="w")
+        tk.Label(filtres, text="Doublon : le même texte, du même auteur, dans la même source. Seul le premier publié "
+                 "compte.", bg=C["fond"], fg=C["doux"], font=police(8), wraplength=260, justify="left").pack(anchor="w")
         self.v_fiab = tk.StringVar(value="toutes")
         ligne = tk.Frame(filtres, bg=C["fond"])
         ligne.pack(fill="x", pady=2)
@@ -151,9 +165,9 @@ class OngletCommentaires:
 
     def _tableau(self, droite):
         C = COULEURS
-        colonnes = ["date", "source", "compte", "texte"] + CRITERES + ["cible", "fiabilite"]
-        largeurs = {"date": 90, "source": 70, "compte": 120, "texte": 380, "cible": 45, "fiabilite": 70}
-        entetes = {"date": "Date", "source": "Source", "compte": "Compte", "texte": "Commentaire",
+        colonnes = ["date", "source", "compte", "texte", "mots"] + CRITERES + ["cible", "fiabilite"]
+        largeurs = {"date": 90, "source": 70, "compte": 120, "texte": 380, "mots": 50, "cible": 45, "fiabilite": 70}
+        entetes = {"date": "Date", "source": "Source", "compte": "Compte", "texte": "Commentaire", "mots": "Mots",
                    "cible": "Cible", "fiabilite": "Fiabilité", **COURTS}
         cadre = tk.Frame(droite, bg=C["bord"])
         cadre.pack(fill="both", expand=True)
@@ -230,10 +244,12 @@ class OngletCommentaires:
         for v in (self.v_du, self.v_au, self.v_cherche):
             v.set("")
         self.v_type.set("tous")
+        self.v_taille.set("toutes")
         for c in CRITERES:
             self.v_min[c].set("0")
             self.v_max[c].set("20")
         self.v_sans_autre.set(False)
+        self.v_doublons.set(False)
         self.v_fiab.set("toutes")
         self.v_etat.set("tous")
         self._remplir_comptes()
@@ -257,12 +273,18 @@ class OngletCommentaires:
         typ, mot = self.v_type.get(), sans_accents(self.v_cherche.get().strip())
         bornes, sans_autre, etat = self._bornes(), self.v_sans_autre.get(), self.v_etat.get()
         ok_fiab = FIABILITES[self.v_fiab.get()]
+        mots_min = TAILLES.get(self.v_taille.get(), 0)
+        doublons = self.v_doublons.get()
         sortie = []
         for l in self.page.lignes:
             if l["source"] not in sources or (comptes and l["compte"] not in comptes):
                 continue
+            if l["_doublon"] and not doublons:
+                continue
             d = l["date"][:10]
             if (du and d < du) or (au and d > au) or (typ != "tous" and l["type"] != typ):
+                continue
+            if mots_min and l["_mots"] < mots_min:
                 continue
             if mot and mot not in l["_cherche"]:
                 continue
@@ -290,7 +312,7 @@ class OngletCommentaires:
     # -- tableau -------------------------------------------------------------------------------------------------
 
     def trier(self, colonne):
-        desc = not self.tri[1] if self.tri[0] == colonne else colonne == "date" or colonne in CRITERES
+        desc = not self.tri[1] if self.tri[0] == colonne else colonne in ("date", "mots") or colonne in CRITERES
         self.tri = (colonne, desc)
         self._trier_selection()
         self.numero_page = 0
@@ -298,7 +320,9 @@ class OngletCommentaires:
 
     def _trier_selection(self):
         col, desc = self.tri
-        if col in CRITERES:
+        if col == "mots":
+            self.selection.sort(key=lambda l: l["_mots"], reverse=desc)
+        elif col in CRITERES:
             self.selection.sort(key=lambda l: (l[col] is not None, l[col] or 0), reverse=desc)
         else:
             self.selection.sort(key=lambda l: l.get(col) or "", reverse=desc)
@@ -308,7 +332,7 @@ class OngletCommentaires:
         debut = self.numero_page * PAGE
         for i, l in enumerate(self.selection[debut:debut + PAGE]):
             valeurs = [l["date"][:10], SOURCES.get(l["source"], l["source"]), l["compte"][:30],
-                       " ".join(l["texte"].split())[:160]]
+                       " ".join(l["texte"].split())[:160], l["_mots"]]
             valeurs += ["—" if l[c] is None else l[c] for c in CRITERES]
             valeurs += [l["cible"] or "—", l["fiabilite"] or "—"]
             etiquette = couleur_ligne(l)
@@ -354,7 +378,7 @@ class OngletCommentaires:
             puce(self.puces_detail, "parle de Lisnard" if l["cible"] != "A" else "parle d'autre chose",
                  "accent" if l["cible"] != "A" else "neutre").pack(side="left", padx=(10, 6))
             puce(self.puces_detail, f"fiabilité {l['fiabilite']}",
-                 {"bonne": "vert", "corrigée": "vert", "moyenne": "orange"}.get(l["fiabilite"], "rouge")).pack(side="left")
+                 {"bonne": "vert", "corrigée": "vert", "relue": "vert", "moyenne": "orange"}.get(l["fiabilite"], "rouge")).pack(side="left")
         self.b_ouvrir.state(["!disabled"] if l and l["publication_lien"] else ["disabled"])
 
     def ouvrir_original(self):

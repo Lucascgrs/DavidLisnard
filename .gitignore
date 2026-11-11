@@ -12,3 +12,4 @@ modeles/
 __pycache__/
 *.tmp
 config/web.json
+docs/FONCTIONNEMENT_rendu.html

@@ -3,11 +3,13 @@
 import { CRITERES } from "./commun.js";
 
 const COURTS = { tonalite: "ton", forme: "forme", systeme: "sys", idees: "idees", pertinence: "pert" };
+// Taille minimale en mots (la moitié des commentaires en fait moins de 10).
+export const TAILLES = [[0, "Toutes"], [30, "30 mots +"], [50, "50 +"], [100, "100 +"], [200, "200 +"]];
 export const TOUTES_NOTES = () => Object.fromEntries(CRITERES.map((k) => [k, [0, 20]]));
 
 export function etatVide() {
   return { du: null, au: null, sources: null, groupes: null, comptes: null, type: "tous", cible: null, q: "",
-    notes: TOUTES_NOTES(), fiab: "toutes", tri: "recent", exploitables: true };
+    notes: TOUTES_NOTES(), fiab: "toutes", tri: "recent", exploitables: true, mots: 0, poids: false };
 }
 
 export function lireAdresse() {
@@ -25,8 +27,10 @@ export function lireAdresse() {
     if (m) e.notes[k] = [Math.min(20, +m[1]), Math.min(20, +m[2])];
   }
   if (["bm", "bonne"].includes(p.get("fiab"))) e.fiab = p.get("fiab");
+  if (TAILLES.some(([n]) => n > 0 && n === +p.get("mots"))) e.mots = +p.get("mots");
   if (p.get("tri")) e.tri = p.get("tri");
   if (p.get("expl") === "0") e.exploitables = false;
+  if (p.get("poids") === "likes") e.poids = true;  // page Statistiques : chaque commentaire pèse 1 + ses « j'aime »
   return e;
 }
 
@@ -41,12 +45,14 @@ export function versParametres(e, pour) {
   if (e.type !== "tous") p.set("type", e.type);
   if (pour === "statistiques") {
     if (!e.exploitables) p.set("expl", "0");
+    if (e.poids) p.set("poids", "likes");
     return p;
   }
   if (e.cible) p.set("cible", e.cible);
   if (e.q) p.set("q", e.q);
   for (const k of CRITERES) if (e.notes[k][0] > 0 || e.notes[k][1] < 20) p.set(COURTS[k], e.notes[k].join("-"));
   if (e.fiab !== "toutes") p.set("fiab", e.fiab);
+  if (e.mots) p.set("mots", e.mots);
   if (e.tri !== "recent") p.set("tri", e.tri);
   return p;
 }
@@ -71,8 +77,9 @@ export function versBase(e) {
   if (e.cible) f.cible = e.cible;
   if (e.q.trim()) f.q = e.q.trim();
   for (const k of CRITERES) if (e.notes[k][0] > 0 || e.notes[k][1] < 20) f[k] = e.notes[k];
-  if (e.fiab === "bm") f.fiabilites = ["bonne", "moyenne", "corrigée"];
-  if (e.fiab === "bonne") f.fiabilites = ["bonne", "corrigée"];
+  if (e.mots) f.mots_min = e.mots;
+  if (e.fiab === "bm") f.fiabilites = ["bonne", "moyenne", "corrigée", "relue"];
+  if (e.fiab === "bonne") f.fiabilites = ["bonne", "corrigée", "relue"];
   return f;
 }
 
@@ -83,4 +90,5 @@ export const TRIS = {
   favorable: ["Plus favorables", "tonalite.desc,pertinence.desc"],
   hostile: ["Plus hostiles", "tonalite.asc,pertinence.desc"],
   aime: ["Plus aimés", "likes.desc"],
+  long: ["Plus longs", "mots.desc"],
 };
