@@ -9,7 +9,9 @@ Une source qui échoue n'arrête pas les suivantes. À la fin, les données sont
 (donnees/sauvegardes/donnees.zip). Si du neuf a été collecté, les nouveaux commentaires sont ensuite notés par le
 modèle (option de l'onglet Analyse, cochée par défaut), puis publiés sur le site (« python -m web ») et
 exportés vers le dataset Hugging Face du groupe (« python -m huggingface »). Le
-rangement par thèmes, lui, se fait à la demande : c'est Claude qui lit (« python -m critiques »).
+rangement par thèmes, lui, se fait à la demande : c'est Claude qui lit (« python -m critiques »). Enfin, si
+Facebook a ramené du neuf, les nouveaux commentaires Facebook sont classés pour la modération (« python -m
+moderation classer », à part de l'analyse) et envoyés dans la table privée « moderation » de Supabase.
 """
 import argparse
 import importlib
@@ -150,6 +152,27 @@ def exporter_vers_huggingface(journal: Journal) -> None:
         journal(f"### Export vers Hugging Face impossible : {type(e).__name__}: {e}")
 
 
+def classer_pour_la_moderation(journal: Journal) -> None:
+    """Si Facebook a ramené du neuf : classe les nouveaux commentaires pour la modération (moderation/, à part de
+    l'analyse) et envoie le résultat dans la table privée « moderation » de Supabase. Quelques secondes. Une erreur
+    ici ne fait jamais échouer la collecte."""
+    from moderation import donnees, modele
+    if not donnees.infos_modele():
+        return
+    journal("### Modération : classement des nouveaux commentaires Facebook")
+    try:
+        modele.classer()
+        e = donnees.etat()
+        journal(f"### Modération : {e['classes']} commentaires classés, {e['insultants']} à modérer, "
+                f"{e['questions']} questions (détail : donnees/moderation/journal.log)")
+    except DejaEnCours:
+        journal("== modération : déjà en cours, les nouveaux seront classés par elle ou à la prochaine")
+    except ArretDemande:
+        journal("### Modération arrêtée à la demande")
+    except BaseException as e:
+        journal(f"### Modération impossible : {type(e).__name__}: {e}")
+
+
 def main():
     if sys.stdout:  # absent quand on est lancé sans console
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -175,6 +198,8 @@ def main():
         noter_les_nouveaux(journal)
         publier_le_site(journal)
         exporter_vers_huggingface(journal)
+    if any(r.get("nouveaux") for r in resultats if r.get("source") == "facebook"):
+        classer_pour_la_moderation(journal)
 
 
 if __name__ == "__main__":

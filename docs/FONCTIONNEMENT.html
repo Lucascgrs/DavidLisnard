@@ -98,7 +98,7 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
 <section>
   <div class="titre"><span class="etiquette">Vue d'ensemble</span>
   <h2>Le circuit, en cinq étapes</h2></div>
-  <p>Chaque lancement de <code>python -m collecte</code> fait tourner tout le circuit pour ce qui est nouveau. Le modèle n'est réentraîné que sur demande, quand il y a beaucoup de nouvelles annotations.</p>
+  <p>Chaque lancement de <code>python -m collecte</code> fait tourner tout le circuit pour ce qui est nouveau. Le modèle n'est réentraîné que sur demande, quand il y a beaucoup de nouvelles annotations. À part du circuit, les nouveaux commentaires Facebook sont aussi classés pour la modération à la fin du lancement (voir « Modérer les groupes Facebook »).</p>
   <div class="schema">
     <svg viewBox="0 0 860 280">
       <defs>
@@ -248,10 +248,10 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
       <text x="620" y="24" style="font-weight:600">En ligne</text>
       <rect x="610" y="40" width="240" height="170" rx="10" style="fill:var(--s-pub-bg);stroke:var(--s-pub)"/>
       <text x="625" y="66" style="font-weight:600;fill:var(--s-pub)">Supabase (base PostgreSQL)</text>
-      <text x="625" y="92" style="font-family:var(--mono);font-size:12.5px">publications</text>
-      <text x="625" y="112" style="font-family:var(--mono);font-size:12.5px">commentaires</text>
-      <text x="625" y="132" style="font-family:var(--mono);font-size:12.5px">syntheses</text>
-      <text x="625" y="158" class="petit">toutes les sources, sans auteur</text>
+      <text x="625" y="92" style="font-family:var(--mono);font-size:11.5px">sources, comptes, publications</text>
+      <text x="625" y="112" style="font-family:var(--mono);font-size:11.5px">commentaires, syntheses</text>
+      <text x="625" y="132" style="font-family:var(--mono);font-size:11.5px">utilisateurs (privée)</text>
+      <text x="625" y="158" class="petit">normalisée, auteurs jamais lus</text>
       <text x="625" y="176" class="petit">lecture seule pour le public</text>
       <text x="625" y="194" class="petit">(règles RLS)</text>
       <rect x="610" y="235" width="240" height="84" rx="10" style="fill:var(--bg);stroke:var(--s-pub)"/>
@@ -270,7 +270,7 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
       <text x="579" y="86" text-anchor="middle" class="mono">publier</text>
     </svg>
   </div>
-  <p class="legende">La publication est incrémentale : <code>donnees/web/publie.json</code> retient ce qui est déjà en ligne, et seules les lignes nouvelles ou dont la note a changé sont envoyées. Les commentaires notés partent aussi vers le dataset du groupe RAG politique, <span class="mono">rag-politique/politique-sources</span>, dans <code>data/commentaires/nouvelle-energie/</code> : un seul fichier Parquet par source, avec le nom affiché des auteurs, remplacé en entier quand la source change ({{hf_exportes}} commentaires dans ces fichiers, dont {{hf_attente}} en attente d'envoi ; le site n'en dépend pas ; règles dans <code>docs/HUGGINGFACE.md</code>).</p>
+  <p class="legende">La base est normalisée, en étoile : une source, un compte suivi (et son groupe), une publication, un auteur n'y sont écrits qu'une fois, et chaque commentaire ne porte que son texte, ses notes et des numéros vers eux (la semaine et la taille en mots sont calculées par la base). Les auteurs sont dans une table privée, que le site ne peut pas lire : il n'en voit qu'un numéro. Les fichiers du PC gardent leur forme ; la publication les traduit dans ce modèle. Elle est incrémentale : <code>donnees/web/publie.json</code> retient ce qui est déjà en ligne, et seules les lignes nouvelles ou dont la note a changé sont envoyées. Les commentaires notés partent aussi vers le dataset du groupe RAG politique, <span class="mono">rag-politique/politique-sources</span>, dans <code>data/commentaires/nouvelle-energie/</code> : un seul fichier Parquet par source, avec le nom affiché des auteurs, remplacé en entier quand la source change ({{hf_exportes}} commentaires dans ces fichiers, dont {{hf_attente}} en attente d'envoi ; le site n'en dépend pas ; règles dans <code>docs/HUGGINGFACE.md</code>).</p>
   <div class="grille trois">
     <div class="carte"><span class="etiquette">Doublons</span><div class="chiffre">{{n_doublons}}</div><p>commentaires mis de côté ({{part_doublons}}) : le même texte, du même auteur, dans la même source. Seul le premier publié compte dans la synthèse, sur le site et dans les thèmes. Le même texte écrit par des personnes différentes reste compté : ce sont autant de voix.</p></div>
     <div class="carte"><span class="etiquette">« J'aime »</span><p>Un commentaire lu juste après sa publication en a peu. Quand une publication est relue, les nouveaux comptes vont dans <code>likes.json</code>, sans retoucher les CSV. Ils servent à la vue pondérée : chaque commentaire y pèse 1 + ses « j'aime ».</p></div>
@@ -468,25 +468,185 @@ cible L · ton 3 · forme 10 · système 10 · idées 3 · pertinence 8
   <p class="legende">Les nouveaux lots se notent <code>n | Thème | C3 | phrase</code> : chiffre obligatoire après C ou D, interdit après E. Pour l'existant : <code>python -m critiques trier</code> affiche le lot suivant sans catégorie, <code>python -m critiques ranger K fichier</code> l'enregistre (colonne <code>categorie</code> de <code>rattachements.csv</code>, lots dans <code>donnees/critiques/tris/</code>). L'onglet et la page Thèmes ont un filtre « Catégorie des critiques et des doutes » (Toutes, Tout sauf les oppositions de principe, ou une seule).</p>
 </section>
 
-<!-- ============ PUBLICATION ============ -->
+<!-- ============ MODÉRATION ============ -->
 <section>
-  <div class="titre"><span class="etiquette" style="color:var(--s-pub)">Étape 5 · Résultats</span>
-  <h2>Où on lit les résultats</h2></div>
-  <div class="grille trois">
-    <div class="carte"><h3>Interface sur le PC</h3><p><code>python -m interface</code> (Interface.bat) : lancer et planifier les collectes, régler chaque source et ajouter ce qu'elle suit par un simple lien (onglets YouTube, Bluesky, Instagram, Facebook, X), synthèse des notes, évolution par mois, exemples, qualité du modèle, thèmes. Les commentaires se filtrent par source, compte, période, notes et taille en mots, et se trient par la colonne « Mots ». La Synthèse peut se lire pondérée par les « j'aime ». </p></div>
-    <div class="carte"><h3>Site public</h3><p><span class="mono">analyse-commentaires-lisnard.vercel.app</span> : Le projet, Statistiques, Commentaires, Thèmes. Les filtres sont calculés dans le navigateur ou par une fonction SQL de Supabase, dont la taille en mots (colonne <span class="mono">mots</span> calculée par la base, tri « Plus longs »). Chaque page affiche la date de la dernière collecte et la version du modèle ; les Statistiques ont une vue pondérée par les « j'aime ». Ni auteurs ni doublons.</p></div>
-    <div class="carte"><h3>Thèmes</h3><p>Onglet de l'interface et page du site : les thèmes filtrés par sujet, type d'avis, catégorie des critiques et des doutes, mot et, sur le site, par période (derniers mois ou mois choisis, avec la part de chaque thème comparée à la période précédente), avec leurs comptes, l'évolution par mois, les synthèses et chaque commentaire avec sa phrase, qui renvoie à l'original.</p></div>
+  <div class="titre"><span class="etiquette" style="color:var(--s-annot)">À part · Modération</span>
+  <h2>Modérer les groupes Facebook</h2></div>
+  <p>Demandée par le gestionnaire d'un groupe de soutien : repérer ce qu'il faut modérer et ce qui appelle une réponse. Séparée du reste : ni notes, ni thèmes, rien sur le site public ; un site à part, protégé par mot de passe, sert aux modérateurs.</p>
+  <div class="schema">
+    <svg viewBox="0 0 860 300">
+      <defs><marker id="flm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--muted)"/></marker></defs>
+      <rect x="10" y="100" width="150" height="96" rx="10" style="fill:var(--s-collecte-bg);stroke:var(--s-collecte)"/>
+      <text x="85" y="128" text-anchor="middle" style="font-weight:600;fill:var(--s-collecte)">Collecte Facebook</text>
+      <text x="85" y="156" text-anchor="middle" style="font-family:var(--display);font-size:22px;font-weight:700">{{mod_commentaires}}</text>
+      <text x="85" y="180" text-anchor="middle" class="petit">commentaires</text>
+      <text x="200" y="128" text-anchor="middle" class="petit">à la fin</text>
+      <text x="200" y="142" text-anchor="middle" class="petit">de chaque</text>
+      <text x="200" y="156" text-anchor="middle" class="petit">collecte</text>
+      <rect x="240" y="100" width="150" height="96" rx="10" style="fill:var(--s-modele-bg);stroke:var(--s-modele)"/>
+      <text x="315" y="128" text-anchor="middle" style="font-weight:600;fill:var(--s-modele)">Modèle {{mod_version}}</text>
+      <text x="315" y="152" text-anchor="middle" class="mono">e5 affiné</text>
+      <text x="315" y="176" text-anchor="middle" class="petit">0,1 s par commentaire</text>
+      <rect x="440" y="20" width="200" height="74" rx="10" style="fill:#fbe9e7;stroke:#c0392b"/>
+      <text x="455" y="44" style="font-weight:600;fill:#c0392b">À modérer</text>
+      <text x="625" y="46" text-anchor="end" style="font-family:var(--display);font-size:20px;font-weight:700;fill:#c0392b">{{mod_insultants}}</text>
+      <text x="455" y="66" class="petit">injure, menace, haine,</text>
+      <text x="455" y="82" class="petit">attaque personnelle</text>
+      <rect x="440" y="111" width="200" height="74" rx="10" style="fill:#fdf0e2;stroke:#d9822b"/>
+      <text x="455" y="135" style="font-weight:600;fill:#d9822b">Question</text>
+      <text x="625" y="137" text-anchor="end" style="font-family:var(--display);font-size:20px;font-weight:700;fill:#d9822b">{{mod_questions}}</text>
+      <text x="455" y="157" class="petit">appelle une réponse</text>
+      <text x="455" y="173" class="petit">de l'équipe</text>
+      <rect x="440" y="202" width="200" height="74" rx="10" style="fill:var(--surface);stroke:var(--gris)"/>
+      <text x="455" y="226" style="font-weight:600;fill:var(--muted)">Autre</text>
+      <text x="625" y="228" text-anchor="end" style="font-family:var(--display);font-size:20px;font-weight:700;fill:var(--muted)">{{mod_autres}}</text>
+      <text x="455" y="248" class="petit">tout le reste,</text>
+      <text x="455" y="264" class="petit">positifs compris</text>
+      <rect x="690" y="52" width="160" height="78" rx="10" style="fill:var(--s-pub-bg);stroke:var(--s-pub)"/>
+      <text x="770" y="78" text-anchor="middle" style="font-weight:600;fill:var(--s-pub)">Onglet Modération</text>
+      <text x="770" y="98" text-anchor="middle" class="petit">sur le PC : auteur,</text>
+      <text x="770" y="114" text-anchor="middle" class="petit">publication, lien</text>
+      <rect x="690" y="166" width="160" height="78" rx="10" style="fill:var(--s-annot-bg);stroke:var(--s-annot)"/>
+      <rect x="704" y="183" width="14" height="11" rx="2" style="fill:var(--s-annot)"/>
+      <path d="M707,183 v-4 a4,4 0 0 1 8,0 v4" style="fill:none;stroke:var(--s-annot);stroke-width:1.8"/>
+      <text x="782" y="194" text-anchor="middle" style="font-weight:600;fill:var(--s-annot)">Supabase privé</text>
+      <text x="770" y="214" text-anchor="middle" class="petit">lu seulement par le site</text>
+      <text x="770" y="230" text-anchor="middle" class="petit">des modérateurs (mot de passe)</text>
+      <g style="stroke:var(--muted);stroke-width:1.6;fill:none">
+        <path d="M160,148 H236" marker-end="url(#flm)"/>
+        <path d="M390,148 C415,148 415,57 436,57" marker-end="url(#flm)"/>
+        <path d="M390,148 H436" marker-end="url(#flm)"/>
+        <path d="M390,148 C415,148 415,239 436,239" marker-end="url(#flm)"/>
+        <path d="M640,57 C655,57 655,148 664,148"/>
+        <path d="M640,148 H664"/>
+        <path d="M640,239 C655,239 655,148 664,148"/>
+        <path d="M664,148 C676,148 674,91 686,91" marker-end="url(#flm)"/>
+        <path d="M664,148 C676,148 674,205 686,205" marker-end="url(#flm)"/>
+      </g>
+    </svg>
   </div>
-  <h3>Un lancement, de bout en bout</h3>
-  <ol class="etapes">
-    <li><span><code>python -m collecte</code> lit le nouveau sur YouTube, Bluesky, Instagram, Facebook et X et l'ajoute aux CSV, puis refait la sauvegarde.</span></li>
-    <li><span>Le corpus est reconstruit (doublons marqués, « j'aime » à jour) et les nouveaux commentaires sont notés par le modèle en service.</span></li>
-    <li><span>S'il y a du neuf, <code>python -m web publier</code> envoie les lignes nouvelles à Supabase et le site les montre aussitôt, puis <code>python -m huggingface</code> remplace, dans le dataset Hugging Face du groupe, le fichier des sources qui ont changé (aussi par le bouton « Export Hugging Face » de l'interface).</span></li>
-    <li><span>De temps en temps : nouveaux lots annotés par Claude, puis réentraînement (nouvelle version du modèle) et renotation complète.</span></li>
-    <li><span>À la demande : lecture par Claude des commentaires argumentés restés sans thème, avec la catégorie des critiques et des doutes, puis les synthèses qui ont changé et la publication. L'ordre complet de ces étapes est dans <code>PROCESS.md</code>.</span></li>
-  </ol>
+  <h3>Le site des modérateurs</h3>
+  <div class="schema">
+    <svg viewBox="0 0 860 120">
+      <defs><marker id="fls" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--muted)"/></marker></defs>
+      <rect x="10" y="22" width="170" height="76" rx="10" style="fill:var(--s-annot-bg);stroke:var(--s-annot)"/>
+      <text x="95" y="52" text-anchor="middle" style="font-weight:600;fill:var(--s-annot)">Mot de passe</text>
+      <text x="95" y="74" text-anchor="middle" class="petit">choisi par l'utilisateur</text>
+      <rect x="230" y="22" width="190" height="76" rx="10" style="fill:var(--s-pub-bg);stroke:var(--s-pub)"/>
+      <text x="325" y="52" text-anchor="middle" style="font-weight:600;fill:var(--s-pub)">Site de modération</text>
+      <text x="325" y="74" text-anchor="middle" class="petit">à traiter · auteurs · publications</text>
+      <rect x="470" y="22" width="180" height="76" rx="10" style="fill:var(--surface);stroke:var(--gris)"/>
+      <text x="560" y="52" text-anchor="middle" style="font-weight:600">Facebook</text>
+      <text x="560" y="74" text-anchor="middle" class="petit">commentaire, fiche du membre</text>
+      <rect x="700" y="22" width="150" height="76" rx="10" style="fill:#e1f2e6;stroke:#2f8a4c"/>
+      <text x="775" y="52" text-anchor="middle" style="font-weight:600;fill:#2f8a4c">« Traité »</text>
+      <text x="775" y="74" text-anchor="middle" class="petit">vu de tous</text>
+      <g style="stroke:var(--muted);stroke-width:1.6;fill:none">
+        <path d="M180,60 H226" marker-end="url(#fls)"/><path d="M420,60 H466" marker-end="url(#fls)"/><path d="M650,60 H696" marker-end="url(#fls)"/>
+      </g>
+    </svg>
+  </div>
+  <p>On repère sur le site, on agit sur Facebook (supprimer, retirer ou bloquer : Facebook ne permet pas de le faire d'ailleurs), puis on marque le commentaire. Changer le mot de passe ferme toutes les sessions. Pour ménager la base gratuite, chaque navigateur télécharge tout une fois, le garde, puis ne demande que les nouveautés ; filtres et tris se font sur l'ordinateur du modérateur.</p>
+  <h3>S'améliorer : à la demande seulement</h3>
+  <div class="schema">
+    <svg viewBox="0 0 860 170">
+      <defs><marker id="flm2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--muted)"/></marker></defs>
+      <rect x="10" y="20" width="180" height="86" rx="10" style="fill:var(--surface);stroke:var(--line)"/>
+      <text x="100" y="46" text-anchor="middle" style="font-weight:600">1 · Tirer un lot</text>
+      <text x="100" y="70" text-anchor="middle" class="mono">tirer 250 questions</text>
+      <text x="100" y="92" text-anchor="middle" class="petit">jamais annotés</text>
+      <rect x="230" y="20" width="180" height="86" rx="10" style="fill:var(--s-annot-bg);stroke:var(--s-annot)"/>
+      <text x="320" y="46" text-anchor="middle" style="font-weight:600;fill:var(--s-annot)">2 · Claude lit</text>
+      <text x="320" y="70" text-anchor="middle" class="mono">I: 3, 17   Q: 5, 9</text>
+      <text x="320" y="92" text-anchor="middle" class="petit">le reste : autre</text>
+      <rect x="450" y="20" width="180" height="86" rx="10" style="fill:var(--s-stock-bg);stroke:var(--s-stock)"/>
+      <text x="540" y="46" text-anchor="middle" style="font-weight:600;fill:var(--s-stock)">3 · Annotations</text>
+      <text x="540" y="74" text-anchor="middle" style="font-family:var(--display);font-size:20px;font-weight:700">{{mod_annotations}}</text>
+      <text x="540" y="94" text-anchor="middle" class="petit">dont {{mod_test}} gardées pour mesurer</text>
+      <rect x="670" y="20" width="180" height="86" rx="10" style="fill:var(--s-modele-bg);stroke:var(--s-modele)"/>
+      <text x="760" y="46" text-anchor="middle" style="font-weight:600;fill:var(--s-modele)">4 · Réentraîner</text>
+      <text x="760" y="70" text-anchor="middle" class="petit">≈ 30 min, version suivante</text>
+      <text x="760" y="92" text-anchor="middle" class="petit">puis tout est reclassé</text>
+      <g style="stroke:var(--muted);stroke-width:1.6;fill:none">
+        <path d="M190,63 H226" marker-end="url(#flm2)"/>
+        <path d="M410,63 H446" marker-end="url(#flm2)"/>
+        <path d="M630,63 H666" marker-end="url(#flm2)"/>
+        <path d="M760,106 V136 H100 V110" marker-end="url(#flm2)" style="stroke-dasharray:5 4"/>
+      </g>
+      <text x="430" y="160" text-anchor="middle" class="petit">un commentaire annoté ne l'est jamais deux fois ; le test ne change pas, pour comparer les versions</text>
+    </svg>
+  </div>
+  <div class="grille">
+    <div>
+      <h3>Ce que vaut le modèle {{mod_version}}</h3>
+      <div class="schema">
+        <svg viewBox="0 0 420 222">
+          <text x="10" y="20" class="petit">sur {{mod_test}} commentaires jamais vus</text>
+          <text x="10" y="50" style="font-weight:600">Accord avec Claude</text>
+          <rect x="10" y="58" width="300" height="12" rx="3" style="fill:var(--line)"/><rect x="10" y="58" width="{{mod_w_accord}}" height="12" rx="3" style="fill:var(--s-modele)"/>
+          <text x="318" y="69" class="mono" style="fill:var(--fg)">{{mod_accord}}</text>
+          <text x="10" y="100" style="font-weight:600;fill:#c0392b">À modérer</text>
+          <text x="10" y="120" class="petit">alertes justes</text>
+          <rect x="110" y="111" width="200" height="11" rx="3" style="fill:var(--line)"/><rect x="110" y="111" width="{{mod_w_ins_j}}" height="11" rx="3" style="fill:#c0392b"/>
+          <text x="318" y="121" class="mono" style="fill:var(--fg)">{{mod_ins_justes}}</text>
+          <text x="10" y="140" class="petit">vraies trouvées</text>
+          <rect x="110" y="131" width="200" height="11" rx="3" style="fill:var(--line)"/><rect x="110" y="131" width="{{mod_w_ins_t}}" height="11" rx="3" style="fill:#c0392b"/>
+          <text x="318" y="141" class="mono" style="fill:var(--fg)">{{mod_ins_trouves}}</text>
+          <text x="10" y="172" style="font-weight:600;fill:#d9822b">Questions</text>
+          <text x="10" y="192" class="petit">alertes justes</text>
+          <rect x="110" y="183" width="200" height="11" rx="3" style="fill:var(--line)"/><rect x="110" y="183" width="{{mod_w_q_j}}" height="11" rx="3" style="fill:#d9822b"/>
+          <text x="318" y="193" class="mono" style="fill:var(--fg)">{{mod_q_justes}}</text>
+          <text x="10" y="212" class="petit">vraies trouvées</text>
+          <rect x="110" y="203" width="200" height="11" rx="3" style="fill:var(--line)"/><rect x="110" y="203" width="{{mod_w_q_t}}" height="11" rx="3" style="fill:#d9822b"/>
+          <text x="318" y="213" class="mono" style="fill:var(--fg)">{{mod_q_trouves}}</text>
+        </svg>
+      </div>
+    </div>
+    <div>
+      <h3>Les essais écartés</h3>
+      <div class="schema">
+        <svg viewBox="0 0 420 222">
+          <rect x="10" y="11" width="12" height="10" rx="2" style="fill:#c0392b"/>
+          <text x="27" y="20" class="petit">insultes : alertes justes</text>
+          <rect x="180" y="11" width="12" height="10" rx="2" style="fill:#e8a99f"/>
+          <text x="197" y="20" class="petit">trouvées</text>
+          <text x="410" y="20" text-anchor="end" class="petit">temps</text>
+          <text x="10" y="50" style="font-weight:600">Toxicité publique</text>
+          <text x="10" y="65" class="petit">textdetox</text>
+          <rect x="150" y="40" width="43" height="10" rx="2" style="fill:#c0392b"/>
+          <text x="199" y="49" class="mono" style="fill:var(--fg);font-size:10px">27 %</text>
+          <rect x="150" y="53" width="141" height="10" rx="2" style="fill:#e8a99f"/>
+          <text x="297" y="62" class="mono" style="fill:var(--fg);font-size:10px">88 %</text>
+          <text x="410" y="56" text-anchor="end" class="mono" style="fill:var(--fg)">0,1 s</text>
+          <text x="10" y="94" style="font-weight:600">Sans entraînement</text>
+          <text x="10" y="109" class="petit">bge-m3 zero-shot</text>
+          <rect x="150" y="84" width="86" height="10" rx="2" style="fill:#c0392b"/>
+          <text x="242" y="93" class="mono" style="fill:var(--fg);font-size:10px">54 %</text>
+          <rect x="150" y="97" width="86" height="10" rx="2" style="fill:#e8a99f"/>
+          <text x="242" y="106" class="mono" style="fill:var(--fg);font-size:10px">54 %</text>
+          <text x="410" y="100" text-anchor="end" class="mono" style="fill:var(--fg)">3 s</text>
+          <text x="10" y="138" style="font-weight:600">Modèle de langue</text>
+          <text x="10" y="153" class="petit">Qwen3-4B + consigne</text>
+          <rect x="150" y="128" width="54" height="10" rx="2" style="fill:#c0392b"/>
+          <text x="210" y="137" class="mono" style="fill:var(--fg);font-size:10px">34 %</text>
+          <rect x="150" y="141" width="149" height="10" rx="2" style="fill:#e8a99f"/>
+          <text x="305" y="150" class="mono" style="fill:var(--fg);font-size:10px">93 %</text>
+          <text x="410" y="144" text-anchor="end" class="mono" style="fill:var(--fg)">6 s</text>
+          <text x="10" y="182" style="font-weight:700;fill:var(--s-modele)">e5 affiné</text>
+          <text x="10" y="197" class="petit">en service</text>
+          <rect x="150" y="172" width="91" height="10" rx="2" style="fill:#c0392b"/>
+          <text x="247" y="181" class="mono" style="fill:var(--fg);font-size:10px">57 %</text>
+          <rect x="150" y="185" width="139" height="10" rx="2" style="fill:#e8a99f"/>
+          <text x="295" y="194" class="mono" style="fill:var(--fg);font-size:10px">87 %</text>
+          <text x="410" y="188" text-anchor="end" class="mono" style="fill:var(--fg)">0,1 s</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <p class="legende">Mesures ramenées à l'ensemble des commentaires (le test surreprésente les suspects) ; essais du 13 novembre 2026 sur les mêmes commentaires. Commandes : <code>python -m moderation classer</code>, <code>tirer</code>, <code>noter</code>, <code>entrainer</code>, <code>publier</code>, <code>motdepasse</code>, <code>site deployer</code>. Fichiers : <span class="mono">donnees/moderation/</span>, <span class="mono">modeles/moderation/</span>.</p>
   <p class="pied">Document généré le {{date}} par <code>python -m docs</code> depuis <code>docs/FONCTIONNEMENT.html</code>. Les chiffres viennent des données du projet à cette date.</p>
 </section>
+
 
 </div>
 </body>

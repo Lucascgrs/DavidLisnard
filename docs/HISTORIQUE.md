@@ -56,6 +56,13 @@ presque pas. Grille écrite d'abord ([GRILLE.md](GRILLE.md)), annotation par Cla
 - Ton inversé (critique notée comme un éloge ou l'inverse) : 1,5 % avec v9, 2,0 % avec v11, 1,5 % avec v12 (6 sur 401 ; 0 sur 66
   parmi les argumentés).
 - Le 2026-11-11, v1 à v9, l'essai `essai_long` et les réseaux `affine1` à `affine6` ont été supprimés (3,3 Go).
+- 2026-11-13 : 3 000 annotations de plus à la demande de l'utilisateur (lots 244 à 274, total 26 557) : 436 Facebook
+  (la source n'en avait que 90), 300 Bluesky, 1 600 `tirer-actif`, 291 longs, 300 réponses, 73 au hasard. Le contrôle
+  de dérive a montré la pertinence des cibles L à 6,9 au lieu de 8,8 (lots 1 à 17), le retard portant sur les
+  commentaires de 8 mots et plus : elle a été relevée de 1 à 4 points selon la longueur et la tonalité (écart à
+  la moyenne des lots 1 à 17), sauf les notes 0 à 3 et les lots « longs » 268-270 déjà au niveau ; moyenne 8,6
+  ensuite. Copie avant recalage : `annotations_avant_recalage_lots244-274.csv`, bilan dans
+  `recalage/bilan_lots244-274.json`. Pas encore de réentraînement (v12 a 21 969 annotations).
 
 **Dérive de la pertinence, recalée (2026-11-09).** Des lots 18 à 142, la pertinence moyenne des commentaires visant
 Lisnard est passée de 8,8 à 0,8 : des « Bravo » notés 0 au lieu de 8. C'est ce qui a fait reculer v6.
@@ -101,6 +108,21 @@ enregistrement : d'où le contrôle des moyennes par lot (PROCESS.md, étape 3).
   passages dans les médias (`apparitions/`) retirés partout, à la demande : hors sujet.
 - 2026-11-12 : filtre de période et filtre de catégorie sur la page Thèmes. Groupes Facebook publiés (« Chaînes et
   groupes de soutien », lien vers le post et le commentaire).
+- 2026-11-13 : à la demande de l'utilisateur, **base Supabase normalisée** (modèle en étoile) : tables `sources`,
+  `comptes` (avec leur groupe), `publications` (rattachées à un compte), `utilisateurs` (privée : identifiant et nom
+  des auteurs, jamais lue par le site) ; `commentaires` ne garde que ses propres données et des numéros (source,
+  publication, utilisateur, parent par son code), sa clé devient (source, code) ; la semaine et la taille en mots
+  sont calculées par la base, la recherche passe par un index d'expression (plus de colonne `recherche` stockée).
+  `moderation` ne garde que la classification et des numéros ; le texte, l'auteur, la date et la publication n'y sont
+  écrits que si le commentaire n'est pas déjà dans `commentaires`, et la catégorie retenue, l'origine et la
+  catégorie du modèle se calculent dans la vue `moderation_complete`. Les fichiers locaux ne changent pas : la
+  publication les traduit. Base : 215 Mo → 113 Mo (`commentaires` 198 → 89 Mo ; `utilisateurs` 12 Mo). Pièges
+  rencontrés : avec un paramètre nommé, l'API passe le filtre comme une valeur par ligne et une sous-requête des
+  comptes était refaite pour chaque commentaire (> 8 s), et les jointures planifiées sans connaître le filtre
+  prenaient 30 s ; `selection` et `evolution` prennent donc un paramètre jsonb unique et sans nom (le corps de la
+  requête, passé tel quel). Les anciennes tables sont gardées dans le schéma `ancien` (non exposé) jusqu'à
+  vérification. Différence connue : pour les 1 773 commentaires Facebook déjà sur le site, l'onglet de modération lit
+  le texte nettoyé du corpus (retours à la ligne en espaces, 431 cas) et le nom sans espace final (36 cas).
 
 ## Dataset Hugging Face du groupe
 
@@ -113,6 +135,22 @@ enregistrement : d'où le contrôle des moyennes par lot (PROCESS.md, étape 3).
   au site) ; l'identifiant de plateforme ne part pas. Nos colonnes différant des autres fichiers, l'export tient dans
   le README du dataset une configuration `commentaires` à part et fait lister à `default` les autres dossiers. Lancé
   après chaque collecte qui ramène du neuf, et par un bouton de l'interface.
+
+## Modération Facebook
+
+Demandée le 2026-11-13 par le gestionnaire d'un groupe Facebook de soutien : repérer les commentaires à modérer et
+ceux qui appellent une réponse. À part de l'analyse (paquet `moderation/`, onglet « Modération »).
+
+| Date | Ce qui s'est passé |
+|---|---|
+| 2026-11-13 | Essais sur de vrais commentaires Facebook, relus par Claude (573 : les 173 signalés par textdetox sur 1 500 tirés au hasard, et 400 tirés parmi les autres ; poids 1327/400 pour ramener ces derniers à la population). **textdetox/xlmr-large-toxicity-classifier-v2** (le meilleur modèle public de toxicité en français) : 27 % seulement de ses alertes sont de vraies insultes, il signale des soutiens (« On sera des vôtres », « Lisnard président ! ») et confond ton vif et injure : écarté. **bge-m3-zeroshot-v2.0** (classement sans entraînement, 4 catégories) : 90 % d'alertes justes au seuil 0,7 mais 54 % des insultes trouvées, 3 s par commentaire : écarté. **Qwen3-4B-Instruct-2507** avec une consigne en français (lecture de la probabilité des lettres I/Q/P/A) : 93 % des insultes trouvées, aucun soutien signalé, mais 57 % d'alertes justes ou limites et 6 s par commentaire sur le processeur (30 h pour les 18 000) : écarté pour la lenteur. Les modèles de 8 à 14 milliards de paramètres n'ont pas été essayés (llama.cpp refusé par le contrôle automatique). |
+| 2026-11-13 | Affinage de petits modèles sur 2 000 commentaires Facebook annotés par Claude (600 signalés par textdetox, 250 avec « ? », 1 150 au hasard). xlmr-base de textdetox : 71 % d'accord. **multilingual-e5-base : 80 % d'accord en 4 catégories**, 86 % d'alertes justes ou limites, 43 insultes sur 49, 0,09 s par commentaire. Combiner e5 avec textdetox ou xlmr n'apporte rien. |
+| 2026-11-13 | À la demande de l'utilisateur, la catégorie « positif » rejoint « autre » (seul compte ce qu'il faut modérer ou à quoi répondre) : réentraînement en 3 catégories, **version m1** en service. Test : accord 90 %, à modérer 57 % justes (78 % avec les limites) et 87 % trouvés, questions 48 % justes et 52 % trouvées (92 exemples seulement à l'entraînement : annoter des questions est la prochaine amélioration). Intégré à part : rien ne tourne pendant la collecte, rien sur le site. Stockage dans Supabase demandé par l'utilisateur : **table à part `moderation`, privée** (aucune règle de lecture publique, pas d'auteurs), plutôt qu'une colonne de `commentaires`, qui est lisible par le public et ne contient que les commentaires déjà notés par l'analyse. |
+| 2026-11-13 | Le classement des nouveaux commentaires Facebook est branché à la fin de `python -m collecte` (si Facebook a ramené du neuf), à la demande de l'utilisateur ; annotation et réentraînement restent à la demande. Les commentaires dont la publication n'a pas de texte connu (≈ 5 000, photo ou vidéo seule) sont gardés : leur propre texte compte ; seuls les textes vides sont écartés, comme depuis le début. |
+| 2026-11-13 | À la demande de l'utilisateur, 1 000 nouvelles annotations de modération par Claude (4 lots de 250 : 2 « questions », 1 « insultes », 1 « hasard » ; 162 insultants, 108 questions), puis **version m2** (3 000 annotations d'entraînement, même test de 573). Test : accord 91 % (m1 90 %), à modérer 62 % justes (57 %) et 81 % trouvés (87 %), questions 70 % justes (48 %) et 57 % trouvées (52 %). Correction de `tirer` : les lots tirés d'avance réservent leurs commentaires (deux lots tirés à la suite se chevauchaient). |
+| 2026-11-13 | Pour un futur onglet des administrateurs du groupe, la table privée `moderation` reçoit le commentaire lui-même (texte, auteur, identifiant de l'auteur, date, réponse à, publication). Le lien n'est pas recopié : la vue privée `moderation_complete` le forme à partir de `publications.lien` (+ `comment_id`, `reply_comment_id`). Les 664 publications Facebook manquantes sont ajoutées à `publications` sans écraser celles du site. Coût : 6 → 10 Mo (base 226 Mo sur 500). Avant, seuls 10 % des commentaires classés (61 « à modérer » sur 734) se retrouvaient dans `commentaires`, qui n'a pas d'auteurs. |
+| 2026-11-13 | **Site de modération** à la demande de l'utilisateur, à part du site public (projet Vercel `moderation-lisnard`, `moderation/site/`). Accès par mot de passe choisi par l'utilisateur : compte Supabase Auth partagé (adresse fixe, on ne tape que le mot de passe) portant `app_metadata.role = moderateur`, inscriptions fermées ; les tables privées `moderation` et `utilisateurs` ne s'ouvrent qu'à ce rôle (règles RLS), et `est_moderateur()` vérifie que le compte existe encore, si bien que changer le mot de passe (compte recréé) coupe toutes les sessions. Écartés : la protection par mot de passe de Vercel (payante) et une fonction serveur qui lirait avec la clé secrète (clé secrète hors de la base, plus de pièces). Retirer ou bloquer un membre depuis le site est impossible (API des groupes Facebook fermée en 2024) : le site ouvre sa fiche de membre du groupe, où l'administrateur le fait. Ajout d'un suivi partagé « Traité » / « Sans suite » (`moderation_suivi`). Première version : vues calculées par la base à chaque recherche (0,3 à 0,5 s sur 17 841 commentaires). |
+| 2026-11-13 | À la demande de l'utilisateur (offre gratuite de Supabase), le travail passe dans le navigateur : téléchargement complet une seule fois (≈ 18 pages de 1 000), gardé dans IndexedDB, puis seulement les nouveautés (colonne `maj` datée par déclencheur, table `moderation_retires` remplie à la suppression, suivi par date ; « à traiter » est écrit au lieu d'effacer la marque). Mesuré en ligne : rechargement = 4 requêtes vides (8 octets, 0,2 ms de base chacune), aucune requête pour filtrer ou trier, une par marque. Vues `moderation_site`, `moderation_auteurs`, `moderation_publications`, `moderation_bilan` retirées. Site mis en ligne : https://moderation-lisnard.vercel.app. |
 
 ## Pistes non faites
 

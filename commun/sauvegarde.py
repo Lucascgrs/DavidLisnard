@@ -8,7 +8,8 @@ Ce qui est copié, dans cet ordre (le plus irremplaçable d'abord) :
 1. Instagram : les anciennes publications ne peuvent pas être recollectées ;
 2. les autres sources (YouTube, Bluesky, Facebook, X) ;
 3. le travail fait à la main : annotations (donnees/analyse/annotation/), corrections de l'interface
-   (donnees/analyse/corrections.csv) et lecture par thèmes (donnees/critiques/).
+   (donnees/analyse/corrections.csv), lecture par thèmes (donnees/critiques/) et annotations de la modération
+   (donnees/moderation/annotations.csv et lots/).
 Pour chaque source : les CSV bruts, etat.json (ce qui a déjà été lu) et likes.json. Les Excel, la copie de travail,
 les vecteurs et les notes du modèle ne sont pas copiés : tout cela se recalcule.
 
@@ -56,6 +57,12 @@ def fichiers() -> list[tuple[Path, str, bool]]:
     corrections = DONNEES / "analyse" / "corrections.csv"
     if corrections.exists():
         sortie.append((corrections, "analyse/corrections.csv", False))
+    # Modération (moderation/) : annotations et lots tirés ; les notes du modèle se recalculent.
+    moderation = DONNEES / "moderation"
+    if (moderation / "annotations.csv").exists():
+        sortie.append((moderation / "annotations.csv", "moderation/annotations.csv", False))
+    sortie += [(f, f.relative_to(DONNEES).as_posix(), False) for f in sorted((moderation / "lots").glob("*"))
+               if f.is_file()]
     return sortie
 
 

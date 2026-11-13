@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Modération · groupes Facebook</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <!-- Connexion : rien d'autre n'est chargé tant qu'elle n'est pas faite. -->
+  <main id="ecran-connexion" class="connexion" hidden>
+    <form id="form-connexion" class="carte carte-connexion" autocomplete="on">
+      <div class="logo" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="currentColor"/><path d="M16 7l7 3v5c0 5-3 8.5-7 10-4-1.5-7-5-7-10v-5z" fill="none" stroke="var(--carte)" stroke-width="2.2" stroke-linejoin="round"/></svg>
+      </div>
+      <h1>Modération</h1>
+      <p class="doux">Commentaires des groupes Facebook. Accès réservé aux modérateurs.</p>
+      <label for="mdp">Mot de passe</label>
+      <input id="mdp" type="password" autocomplete="current-password" required>
+      <label for="prenom">Votre prénom <span class="pale">(affiché sur ce que vous marquez « traité »)</span></label>
+      <input id="prenom" type="text" autocomplete="given-name" maxlength="40">
+      <button class="bouton principal" type="submit">Entrer</button>
+      <p id="erreur-connexion" class="erreur" role="alert" hidden></p>
+    </form>
+  </main>
+
+  <div id="ecran-site" hidden>
+    <header class="entete">
+      <div class="large ligne-entete">
+        <span class="marque">
+          <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="currentColor"/><path d="M16 7l7 3v5c0 5-3 8.5-7 10-4-1.5-7-5-7-10v-5z" fill="none" stroke="var(--carte)" stroke-width="2.2" stroke-linejoin="round"/></svg>
+          Modération
+        </span>
+        <nav class="onglets" aria-label="Vues">
+          <button type="button" data-vue="commentaires" aria-current="page">Commentaires</button>
+          <button type="button" data-vue="auteurs">Auteurs</button>
+          <button type="button" data-vue="publications">Publications</button>
+          <button type="button" data-vue="aide">Mode d'emploi</button>
+        </nav>
+        <span class="qui"><span id="etat-donnees" class="pale"></span> <button type="button" class="lien" id="actualiser" title="Demander les nouveautés à la base">Actualiser</button> · <span id="qui"></span> <button type="button" class="lien" id="deconnexion">Se déconnecter</button></span>
+      </div>
+    </header>
+
+    <main class="large">
+      <section class="tuiles" id="tuiles" aria-label="À traiter"></section>
+
+      <!-- Commentaires -->
+      <section id="vue-commentaires" class="vue">
+        <div class="explorateur">
+          <aside class="filtres carte" aria-label="Filtres">
+            <fieldset>
+              <legend>Catégorie</legend>
+              <div class="segments" id="f-categorie">
+                <button type="button" data-v="">Toutes</button>
+                <button type="button" data-v="insultant">Insultants</button>
+                <button type="button" data-v="question">Questions</button>
+                <button type="button" data-v="autre">Autres</button>
+              </div>
+            </fieldset>
+            <fieldset id="bloc-certitude">
+              <legend>Certitude du modèle</legend>
+              <select id="f-certitude">
+                <option value="">Toutes</option>
+                <option value="0.7">70 % et plus</option>
+                <option value="0.9">90 % et plus</option>
+              </select>
+            </fieldset>
+            <fieldset>
+              <legend>Suivi</legend>
+              <div class="segments" id="f-suivi">
+                <button type="button" data-v="a_traiter">À traiter</button>
+                <button type="button" data-v="traite">Traités</button>
+                <button type="button" data-v="sans_suite">Sans suite</button>
+                <button type="button" data-v="">Tous</button>
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend>Période</legend>
+              <div class="segments petits" id="f-periode">
+                <button type="button" data-v="1">24 h</button>
+                <button type="button" data-v="7">7 jours</button>
+                <button type="button" data-v="30">30 jours</button>
+                <button type="button" data-v="">Tout</button>
+              </div>
+              <div class="dates">
+                <label>du <input type="date" id="f-du"></label>
+                <label>au <input type="date" id="f-au"></label>
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend>Groupe</legend>
+              <div id="f-groupes" class="cases"></div>
+            </fieldset>
+            <fieldset>
+              <legend>Rechercher</legend>
+              <input type="search" id="f-texte" placeholder="Mots du commentaire">
+              <input type="search" id="f-auteur" placeholder="Nom de l'auteur">
+              <input type="search" id="f-publication" placeholder="Texte de la publication">
+            </fieldset>
+            <button type="button" class="bouton" id="reinitialiser">Tout réinitialiser</button>
+          </aside>
+
+          <div>
+            <div class="barre-resultats">
+              <span class="total" id="total" aria-live="polite"></span>
+              <label class="sr" for="tri">Trier</label>
+              <select id="tri">
+                <option value="date">Plus récents</option>
+                <option value="ancien">Plus anciens</option>
+                <option value="insultant">Plus insultants d'abord</option>
+                <option value="question">Questions les plus nettes d'abord</option>
+                <option value="auteurs">Auteurs les plus signalés d'abord</option>
+              </select>
+            </div>
+            <div class="puces" id="puces"></div>
+            <div id="liste" class="liste"></div>
+            <div id="suite" class="suite"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Auteurs -->
+      <section id="vue-auteurs" class="vue" hidden>
+        <div class="barre-resultats">
+          <input type="search" id="a-nom" placeholder="Nom de l'auteur">
+          <select id="a-tri">
+            <option value="a_traiter">Insultants à traiter</option>
+            <option value="insultants">Insultants en tout</option>
+            <option value="questions">Questions</option>
+            <option value="n">Nombre de commentaires</option>
+            <option value="dernier">Dernier commentaire</option>
+          </select>
+          <span class="total" id="a-total"></span>
+        </div>
+        <div class="tableau-cadre carte">
+          <table class="tableau">
+            <thead><tr><th>Auteur</th><th class="n">Insultants</th><th class="n">dont à traiter</th><th class="n">Questions</th><th class="n">Commentaires</th><th>Dernier</th><th>Groupes</th></tr></thead>
+            <tbody id="a-lignes"></tbody>
+          </table>
+        </div>
+        <div id="a-suite" class="suite"></div>
+      </section>
+
+      <!-- Publications -->
+      <section id="vue-publications" class="vue" hidden>
+        <div class="barre-resultats">
+          <input type="search" id="p-texte" placeholder="Texte de la publication">
+          <select id="p-groupe"><option value="">Tous les groupes</option></select>
+          <select id="p-tri">
+            <option value="a_traiter">À traiter</option>
+            <option value="insultants">Insultants</option>
+            <option value="questions">Questions</option>
+            <option value="n">Nombre de commentaires</option>
+            <option value="dernier">Commentée récemment</option>
+          </select>
+          <span class="total" id="p-total"></span>
+        </div>
+        <div id="p-lignes" class="liste"></div>
+        <div id="p-suite" class="suite"></div>
+      </section>
+
+      <!-- Mode d'emploi -->
+      <section id="vue-aide" class="vue aide carte" hidden>
+        <h2>Mode d'emploi</h2>
+        <ol>
+          <li><strong>Repérer.</strong> Les cases du haut donnent ce qui reste à traiter. Un clic affiche ces commentaires.
+            Chaque commentaire porte la catégorie donnée par le modèle (<em>insultant</em>, <em>question</em>,
+            <em>autre</em>) et sa certitude.</li>
+          <li><strong>Vérifier.</strong> « Ouvrir sur Facebook » mène au commentaire lui-même (à défaut, à la
+            publication). Le modèle se trompe parfois : lire avant d'agir.</li>
+          <li><strong>Agir sur Facebook.</strong> Depuis le commentaire : « … » → Supprimer ou Masquer. Depuis le nom de
+            l'auteur → « Sa fiche dans le groupe » : en tant qu'administrateur, « … » → Retirer du groupe, Bloquer ou
+            Mettre en sourdine. Facebook ne permet pas de le faire depuis un autre site : son API des groupes est
+            fermée depuis 2024.</li>
+          <li><strong>Marquer.</strong> « Traité » (action faite) ou « Sans suite » (rien à faire, ou erreur du modèle).
+            Le commentaire quitte la liste « À traiter » pour tous les modérateurs, avec votre prénom.</li>
+          <li><strong>Répondre aux questions.</strong> La catégorie <em>question</em> regroupe ce qui appelle une réponse
+            de l'équipe : vraie question, doute sincère, affirmation fausse à rectifier.</li>
+        </ol>
+        <p class="doux">Les vues <em>Auteurs</em> et <em>Publications</em> montrent qui revient souvent et quelles
+          publications attirent les insultes. Les données suivent chaque collecte (plusieurs fois par jour) ; le site les garde dans votre navigateur et ne demande que les nouveautés (toutes les 15 minutes, les marques des autres modérateurs toutes les 3 minutes, ou par « Actualiser »). Se déconnecter les efface.  un
+          commentaire supprimé sur Facebook reste ici, à marquer « Traité ». L'adresse de la page garde les filtres :
+          elle peut être envoyée à un autre modérateur.</p>
+        <p class="pale" id="aide-maj"></p>
+      </section>
+    </main>
+  </div>
+
+  <div id="menu" class="menu carte" role="menu" hidden></div>
+  <div id="message" class="message" role="status" hidden></div>
+</body>
+</html>

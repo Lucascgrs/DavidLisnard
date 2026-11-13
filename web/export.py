@@ -73,6 +73,20 @@ def charger() -> tuple[list[dict], dict[str, dict]]:
     return commentaires, publications
 
 
+def auteurs() -> dict[str, tuple[str, str]]:
+    """Clé du commentaire → (identifiant de l'auteur, nom affiché), lus dans les fichiers collectés (donnees/<source>/,
+    sans les modifier) : le corpus ne garde qu'une empreinte de l'auteur. L'identifiant est celui de la plateforme,
+    à défaut le nom (comme l'empreinte auteur_h d'analyse/corpus.py). Vont dans la table privée utilisateurs."""
+    sortie = {}
+    for source in SOURCES_PUBLIEES:
+        for f in sorted((DONNEES / source).glob("*.csv")):
+            for l in lire_csv(f):
+                ident = (l.get("auteur_id") or l.get("auteur") or "").strip()
+                if ident and l.get("commentaire_id"):
+                    sortie.setdefault(f"{source}:{l['commentaire_id']}", (ident, (l.get("auteur") or "").strip()))
+    return sortie
+
+
 def cube(commentaires: list[dict]) -> dict:
     """Comptages agrégés. Chaque cellule : [semaine, compte, réponse, autre, exploitable, puis un bloc de mesures
     (n, sommes des 5 notes, pour tonalité, forme, système, idées : nombre ≤ 6 et nombre ≥ 14, nombre d'argumentés),

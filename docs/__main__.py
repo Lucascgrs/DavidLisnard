@@ -187,7 +187,29 @@ def chiffres() -> dict[str, str]:
         "constance_n": entier(constance.get("n", 0)),
         "constance_cible": pourcent(constance.get("cible", 0)),
         "constance_ton": decimal((constance.get("ecart") or {}).get("tonalite", 0)),
+        **moderation_chiffres(),
     }
+
+
+def moderation_chiffres() -> dict[str, str]:
+    """Carte « Modération Facebook » (moderation/, à part de l'analyse)."""
+    from moderation import donnees as moderation
+    e = moderation.etat()
+    i = e["modele"] or {}
+    m = i.get("mesures") or {}
+    ins, q = m.get("insultant") or {}, m.get("question") or {}
+    return {"mod_version": i.get("version", "aucun"), "mod_le": jour(i["le"]) if i.get("le") else "?",
+            "mod_commentaires": entier(e["commentaires"]), "mod_classes": entier(e["classes"]),
+            "mod_insultants": entier(e["insultants"]), "mod_questions": entier(e["questions"]),
+            "mod_annotations": entier(e["annotations"]), "mod_test": entier(e["test"]),
+            "mod_accord": pourcent(m.get("accord", 0)), "mod_ins_justes": pourcent(ins.get("justes", 0)),
+            "mod_ins_trouves": pourcent(ins.get("trouves", 0)), "mod_q_justes": pourcent(q.get("justes", 0)),
+            "mod_q_trouves": pourcent(q.get("trouves", 0)),
+            "mod_autres": entier(e["classes"] - e["insultants"] - e["questions"]),
+            # Largeurs des barres du schéma « Ce que vaut le modèle » (300 px pour l'accord, 200 pour les autres).
+            "mod_w_accord": f"{300 * m.get('accord', 0):.0f}", "mod_w_ins_j": f"{200 * ins.get('justes', 0):.0f}",
+            "mod_w_ins_t": f"{200 * ins.get('trouves', 0):.0f}", "mod_w_q_j": f"{200 * q.get('justes', 0):.0f}",
+            "mod_w_q_t": f"{200 * q.get('trouves', 0):.0f}"}
 
 
 def remplir(modele: str, valeurs: dict[str, str]) -> str:

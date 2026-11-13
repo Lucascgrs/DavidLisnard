@@ -17,6 +17,7 @@ from collecte.depot import compter_par_source
 from commun.config import DONNEES
 from commun.taches import ERREURS
 from interface.onglet_analyse import PageAnalyse
+from interface.onglet_moderation import PageModeration
 from interface.onglet_themes import PageThemes
 from interface.onglets_collecte import (PageBluesky, PageFacebook, PageInstagram, PagePlanification, PageTableau, PageX,
                                         PageYoutube, tout_lancer)
@@ -64,6 +65,7 @@ class Application(tk.Tk):
         PagePlanification(self, self.onglets)
         self.analyse = PageAnalyse(self, self.onglets)
         self.themes = PageThemes(self, self.onglets)
+        self.moderation = PageModeration(self, self.onglets)  # à part de l'analyse : groupes Facebook (moderation/)
 
         self._boucle_rapide()
         self._boucle_comptage()
@@ -142,6 +144,7 @@ class Application(tk.Tk):
             self._lire_journal()
             self.apres_action()
             self.analyse.boucle()
+            self.moderation.boucle()
         finally:
             self.after(1500, self._boucle_rapide)
 

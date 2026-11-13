@@ -6,8 +6,20 @@ const REST = `${SUPABASE_URL}/rest/v1`;
 const ENTETES = SUPABASE_CLE.startsWith("sb_")
   ? { apikey: SUPABASE_CLE }
   : { apikey: SUPABASE_CLE, Authorization: `Bearer ${SUPABASE_CLE}` };
-const CHAMPS = "cle,source,compte,groupe,date,semaine,reponse,parent,likes,mots,texte,tonalite,forme,systeme,idees,pertinence,"
-  + "cible,fiabilite,publication,publications(titre,lien,code,date)";
+// Modèle normalisé (web/schema.sql) : source, compte et groupe se lisent par la publication. remettre() redonne à
+// chaque commentaire la forme qu'attendent les pages (cle « source:code », source, compte, groupe, parent).
+const CHAMPS = "source:sources(nom),code,date,semaine,reponse,parent,likes,mots,texte,tonalite,forme,systeme,idees,"
+  + "pertinence,cible,fiabilite,publications(titre,lien,code,date,comptes(nom,groupe))";
+
+function remettre(c) {
+  const source = c.source?.nom;
+  const pub = c.publications || {};
+  return {
+    ...c, source, cle: `${source}:${c.code}`, compte: pub.comptes?.nom, groupe: pub.comptes?.groupe,
+    parent: c.parent ? `${source}:${c.parent}` : null,
+    publications: { titre: pub.titre, lien: pub.lien, code: pub.code, date: pub.date },
+  };
+}
 
 async function demander(chemin, { methode = "GET", corps, entetes = {}, signal } = {}) {
   const r = await fetch(`${REST}/${chemin}`, {
@@ -44,19 +56,20 @@ export function synthese(nom) {
 export async function selection(filtre, { tri = "date.desc.nullslast", limite = 30, decalage = 0, compter = false, signal } = {}) {
   const ordre = tri.includes("date") ? tri : `${tri},likes.desc,date.desc.nullslast`;
   const r = await demander(`rpc/selection?select=${CHAMPS}&order=${ordre}&limit=${limite}&offset=${decalage}`, {
-    methode: "POST", corps: { f: filtre }, signal, entetes: compter ? { Prefer: "count=exact" } : {},
+    methode: "POST", corps: filtre, signal, entetes: compter ? { Prefer: "count=exact" } : {},
   });
-  const lignes = await r.json();
+  const lignes = (await r.json()).map(remettre);
   const plage = r.headers.get("Content-Range");
   return { lignes, total: plage ? Number(plage.split("/")[1]) : null };
 }
 
 export async function evolution(filtre, signal) {
-  const r = await demander("rpc/evolution", { methode: "POST", corps: { f: filtre }, signal });
+  const r = await demander("rpc/evolution", { methode: "POST", corps: filtre, signal });
   return r.json();
 }
 
 export async function commentaire(cle) {
-  const r = await demander(`commentaires?cle=eq.${encodeURIComponent(cle)}&select=${CHAMPS}`);
-  return (await r.json())[0] || null;
+  const r = await demander(`rpc/commentaire?select=${CHAMPS}`, { methode: "POST", corps: { cle } });
+  const c = (await r.json())[0];
+  return c ? remettre(c) : null;
 }

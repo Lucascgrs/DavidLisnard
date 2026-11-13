@@ -23,6 +23,7 @@ Le détail de chaque commande est dans [README.md](README.md) ; les règles de n
 | 9 | Document de fonctionnement | toujours | — |
 | 10 | Sauvegarde, publication | toujours | ce qui a changé |
 | 11 | Compte rendu à l'utilisateur | toujours | — |
+| M | Modération Facebook : annoter, réentraîner (le classement, lui, suit seul la collecte) | **seulement si l'utilisateur le demande** | le nouveau |
 
 ## 0. Vérifier que rien ne tourne
 
@@ -40,7 +41,9 @@ Une seule commande fait, dans l'ordre : la collecte du nouveau sur YouTube, Blue
 `etat.json` par source), la sauvegarde `donnees/sauvegardes/donnees.zip`, la mise à jour de `corpus.csv` (doublons,
 « j'aime ») et des vecteurs, la notation des **seuls nouveaux** commentaires par le modèle en service, puis
 `python -m web publier`, et enfin l'export vers le dataset Hugging Face du groupe (le fichier des sources qui ont changé
-remplace l'ancien) (`python -m huggingface`, [docs/HUGGINGFACE.md](docs/HUGGINGFACE.md)). Facebook prend le plus de temps (jusqu'à 120 min par lancement, tant que l'arriéré
+remplace l'ancien) (`python -m huggingface`, [docs/HUGGINGFACE.md](docs/HUGGINGFACE.md)), et, si Facebook a ramené du
+neuf, le classement des nouveaux commentaires Facebook pour la modération (partie M ; quelques secondes, envoyé dans
+la table privée `moderation` de Supabase). Facebook prend le plus de temps (jusqu'à 120 min par lancement, tant que l'arriéré
 depuis le 2026-07-31 n'est pas fini), puis Instagram (50 posts) : lancer en arrière-plan avec `python -u` et un
 journal. X peut aussi prendre jusqu'à 120 min tant que son arriéré n'est pas fini. Si `donnees/facebook/EN_COURS`
 (ou `donnees/x/EN_COURS`) existe, une collecte de cette source tourne déjà : attendre (étape 0).
@@ -51,6 +54,9 @@ dire à l'utilisateur, qui la lance lui-même (étape 10).
 ## 2. Contrôler le bilan
 
 - Lire `donnees/bilan.md` : nouveaux commentaires par source, erreurs.
+- Modération (si Facebook a ramené du neuf) : le journal finit par « ### Modération : N commentaires classés,
+  X à modérer, Y questions ». « Modération impossible » ou « Envoi à Supabase impossible » dans
+  `donnees/moderation/journal.log` : relancer `python -m moderation classer` (ou `publier`), sans rien d'autre.
 - Source « abandonnée » (Instagram freiné, 10 posts en plus de 30 min) : ne pas insister le jour même ;
   `python -m collecte --reessayer instagram` à la prochaine mise à jour.
 - Quota YouTube atteint : rien à faire, la suite reprend au lancement suivant.
@@ -198,5 +204,49 @@ Si le classifieur refuse `publier` ou `deployer`, ne pas contourner : demander �
 
 Dire en quelques lignes : commentaires nouveaux par source, annotations ajoutées, version du modèle et ses mesures
 si elle a changé, commentaires lus pour les thèmes et leurs catégories, nombre de critiques et doutes restés sans catégorie,
-synthèses réécrites, ce qui est en ligne et
+synthèses réécrites, commentaires Facebook classés pour la modération (à modérer, questions), ce qui est en ligne et
 ce qui reste à lancer de son côté.
+
+## M. Modération des commentaires Facebook (facultatif, seulement sur demande)
+
+À part du reste du projet (paquet `moderation/`, onglet « Modération » de l'interface, détail dans
+`moderation/__init__.py`). Demandée par le gestionnaire d'un groupe Facebook de soutien : chaque commentaire Facebook
+est classé « insultant » (à modérer), « question » (appelle une réponse) ou « autre ». Seul le **classement** des
+nouveaux commentaires se fait seul, à la fin de `python -m collecte` quand Facebook a ramené du neuf (étape 1).
+**L'annotation et le réentraînement ne se font pas pendant une mise à jour ordinaire** : seulement quand
+l'utilisateur le demande (« annote pour la modération », « réentraîne la modération »…).
+
+```
+python -m moderation etat                       où on en est (classés, annotés, mesures du modèle)
+python -m moderation classer                    classe les commentaires Facebook pas encore classés (0,1 s chacun)
+python -m moderation tirer 250 questions        prépare un lot à annoter (modes : hasard, questions, insultes, doutes)
+python -m moderation noter K lecture.txt        enregistre la lecture du lot K
+python -m moderation entrainer                  réentraîne (≈ 30 min) puis reclasse tout (≈ 30 min)
+python -m moderation motdepasse                 change le mot de passe du site de modération (par l'utilisateur)
+python -m moderation site deployer              remet en ligne le site de modération après une modification des pages
+```
+
+Le site de modération lit la base en direct : rien à faire à la mise à jour, la publication suffit.
+
+- **Classer** : automatique à la fin de chaque collecte qui ramène du neuf sur Facebook ; à la main par le bouton
+  « Classer les nouveaux » ou la commande (par exemple si la collecte a été lancée source par source sans Facebook,
+  ou si l'envoi a échoué). Seuls les commentaires sans catégorie de la version en service sont traités ; ceux dont
+  le texte est vide sont écartés, ceux dont la publication n'a pas de texte connu sont gardés.
+- **Annoter** : Claude lit le lot (`donnees/moderation/lots/lot_K.txt`) et écrit un fichier avec une ligne
+  `I: numéros` (insultants) et une ligne `Q: numéros` (questions) ; tout le reste du lot est « autre ». Les règles
+  sont celles de `moderation/__init__.py` : une critique dure sans injure n'est pas insultante ; une question
+  rhétorique n'est pas une question ; les commentaires positifs sont « autre ». Le mode `questions` est le plus
+  utile tant que le modèle trouve mal les questions. Un commentaire annoté ne l'est jamais deux fois ; plusieurs
+  lots peuvent être tirés d'avance, ils ne se chevauchent pas (un lot tiré réserve ses commentaires). Le jeu de test
+  (573 commentaires, `jeu=test`) ne change pas, pour que les versions restent comparables (`--test` seulement si
+  l'utilisateur veut l'agrandir).
+- **Réentraîner** : sur demande, après des annotations (bouton « Réentraîner le modèle » ou commande). Jamais en
+  même temps qu'une analyse ou un autre calcul lourd (étape 0). Ajouter une ligne à `docs/HISTORIQUE.md` avec la
+  version (m2, m3…) et ses mesures, puis `python -m docs`.
+- **Supabase** : chaque `classer`, `noter` et `entrainer` envoie ensuite ce qui a changé dans la table privée
+  `moderation` (probabilités, version, annotation, et le commentaire : texte, auteur, date, publication, sauf s'il
+  est déjà dans `commentaires` ; catégorie retenue, auteur et lien direct se lisent dans la vue
+  `moderation_complete`). Elle
+  n'a aucune règle de lecture publique : le site ne la voit pas. Si l'envoi échoue (réseau, base en pause), le
+  journal le dit : relancer `python -m moderation publier`. Rien ne va sur le site ni sur Hugging Face, et
+  l'onglet, qui montre les auteurs et les liens, reste local.

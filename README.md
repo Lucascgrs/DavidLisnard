@@ -15,6 +15,9 @@ Chaque commentaire reçoit ensuite cinq notes de 0 à 20 et une cible :
 Les notes viennent d'un modèle entraîné sur les commentaires notés à la main par Claude selon
 [docs/GRILLE.md](docs/GRILLE.md). Les commentaires argumentés sont en plus lus par Claude et rangés par thème.
 
+À part, pour les modérateurs des groupes Facebook : chaque commentaire Facebook est aussi classé « à modérer »,
+« question » ou « autre » par un second modèle, juste après la collecte (voir « Modération »).
+
 | Document | Pour |
 |---|---|
 | [PROCESS.md](PROCESS.md) | **mettre à jour le projet** : toutes les étapes, dans l'ordre |
@@ -28,7 +31,7 @@ Les notes viennent d'un modèle entraîné sur les commentaires notés à la mai
 
 | Pour | Faire |
 |---|---|
-| Tout piloter (collecte, comptes suivis, analyse, synthèse) | double-clic sur `Interface.bat` (ou `python -m interface`) |
+| Tout piloter (collecte, comptes suivis, analyse, synthèse, modération) | double-clic sur `Interface.bat` (ou `python -m interface`) |
 | Collecter sans l'interface | double-clic sur `Collecter.bat` (ou `python -m collecte`) |
 | Installer les bibliothèques | `python -m pip install -r requirements.txt` |
 
@@ -74,7 +77,8 @@ DavidLisnard/
 │   ├── taches.py                    une tâche à la fois (verrou), arrêt propre, lancement en arrière-plan
 │   └── journal.py                   journal à l'écran et dans donnees/journal.log
 ├── collecte/                        « python -m collecte »
-│   ├── __main__.py                  une source après l'autre, bilan, puis notation des nouveaux
+│   ├── __main__.py                  une source après l'autre, bilan, sauvegarde, notation des nouveaux, site,
+│   │                                Hugging Face, puis classement des nouveaux Facebook pour la modération
 │   ├── depot.py                     format des lignes, ajout sans doublon, état, Excel, bilan
 │   ├── sources/                     youtube.py, bluesky.py, instagram.py, facebook.py, x.py
 │   ├── perimetre.py                 ajout et retrait de chaînes, comptes, groupes et Pages (trouver_bluesky, trouver_facebook, trouver_x)
@@ -101,10 +105,15 @@ DavidLisnard/
 │   ├── onglet_analyse.py            onglet Analyse et ses sous-onglets :
 │   │   analyse_commentaires.py, analyse_synthese.py, analyse_modele.py
 │   ├── onglet_themes.py             onglet Thèmes (lecture par thèmes, voir « Thèmes »)
+│   ├── onglet_moderation.py         onglet Modération (groupes Facebook, voir « Modération »)
 │   └── theme.py                     thème Windows 11, couleurs, composants
 ├── critiques/                       « python -m critiques » : thèmes des éloges et des critiques (voir « Thèmes »)
 │   ├── __main__.py                  commandes (tirer, voir, noter, a-resumer, synthèses…)
 │   └── donnees.py                   sélection, lots, rattachements, comptes par thème
+├── moderation/                      « python -m moderation » : modération Facebook, à part (voir « Modération »)
+│   ├── __main__.py                  commandes (etat, classer, tirer, noter, entrainer)
+│   ├── donnees.py                   commentaires Facebook, annotations, notes, lots
+│   └── modele.py                    entraînement, mesures, classement
 ├── web/                             le site public, « python -m web » (voir « Site public »)
 │   ├── export.py                    ce qui est publié : commentaires, publications, statistiques
 │   ├── publication.py               installer la base, publier les données, mettre les pages en ligne
@@ -123,7 +132,8 @@ DavidLisnard/
 │   ├── HISTORIQUE.md                décisions, essais abandonnés, versions du modèle, ancienne organisation
 │   └── TRI_DES_CRITIQUES.pdf        méthode des 5 catégories de critiques et de doutes (choisie le 2026-11-12)
 ├── donnees/                         tout ce qui est collecté et calculé (privé, voir plus bas)
-├── modeles/                         modèles entraînés : vN/ (versions), affineN/ (réseaux affinés) ; voir « Modèles »
+├── modeles/                         modèles entraînés : vN/ (versions), affineN/ (réseaux affinés) ; voir « Modèles » ;
+│                                    moderation/ (modèle de modération en service)
 └── sessions/                        sessions de navigateur et cookies (privé) : Instagram, facebook_profil/,
                                      facebook_cookies.json, x_profil/, x_cookies.json, x_twscrape.db
 ```
@@ -133,7 +143,8 @@ DavidLisnard/
 **Collecte**
 
 ```
-python -m collecte                          toutes les sources (YouTube, Bluesky, Instagram, Facebook, X)
+python -m collecte                          toutes les sources (YouTube, Bluesky, Instagram, Facebook, X), puis
+                                            notation, site, Hugging Face et classement pour la modération
 python -m collecte youtube                  une seule source
 python -m collecte --reessayer instagram    relancer une source marquée abandonnée
 ```
@@ -147,6 +158,20 @@ python -m critiques proches | fusionner fichier   thèmes qui pourraient fusionn
 python -m critiques a-resumer               les synthèses à écrire ou réécrire depuis la dernière fois
 python -m critiques syntheses fichier       enregistrer les synthèses par thème et par sens
 python -m critiques trier [N] | ranger K fichier   catégorie des critiques et doutes restés sans catégorie
+```
+
+**Modération Facebook** (à part, à la demande, voir « Modération »)
+
+```
+python -m moderation etat                  classés, annotés, mesures du modèle
+python -m moderation classer               classe les commentaires Facebook pas encore classés
+python -m moderation tirer 250 questions   lot à annoter (modes : hasard, questions, insultes, doutes)
+python -m moderation noter K fichier       enregistre la lecture du lot K (« I: … » et « Q: … »)
+python -m moderation entrainer             réentraîne (≈ 30 min) puis reclasse tout
+python -m moderation publier [--tout]      envoie ce qui a changé dans la table privée moderation de Supabase
+python -m moderation motdepasse           choisit le mot de passe du site de modération (ferme les sessions ouvertes)
+python -m moderation site deployer        met en ligne le site de modération (moderation/site/)
+python -m moderation site apercu          ouvre le site de modération en local (http://localhost:8001)
 ```
 
 **Sauvegarde** (voir « Sauvegarde »)
@@ -210,6 +235,7 @@ Un réentraînement occupe tout le processeur : ne jamais en lancer deux à la f
 | Analyse › Commentaires | Filtres (sources, comptes, période, type, recherche, plages de notes, cible, fiabilité, analysé ou non, doublons masqués ou montrés), tableau, détail, « Corriger les notes », export Excel, analyse de la sélection. |
 | Analyse › Synthèse | Chiffres clés, perception (critiques · non évoqué · éloges), évolution par mois, sources, exemples. La case « écarter pertinence < 5 » retire l'ironie indécidable, les émojis seuls et le hors-sujet. La case « Pondérer par les « j'aime » » fait peser chaque commentaire 1 + ses « j'aime » (voir « Doublons et « j'aime » »). |
 | Analyse › Modèle | Qualité mesurée, apport du réseau affiné, réentraînement, analyse automatique après chaque collecte. |
+| Modération | Commentaires Facebook classés « à modérer », « question » ou « autre » par le modèle de modération (ou par l'annotation de Claude) : combien sont traités et annotés, qualité du modèle, filtres par catégorie, groupe et mot, tri par sûreté ou date ; pour chaque commentaire, l'auteur, la publication, son lien (double-clic pour l'ouvrir) et les probabilités. Boutons « Classer les nouveaux », « Réentraîner le modèle », Journal, Arrêter. Local seulement : rien sur le site. |
 | Thèmes | Les thèmes des éloges, critiques et doutes : filtres par famille, sens, catégorie des critiques et des doutes, période et mot, comptes en commentaires et en auteurs distincts, évolution par mois, synthèses et commentaires de chaque thème. |
 
 À savoir :
@@ -410,12 +436,16 @@ Le site montre le travail à tout le monde : explication du projet, statistiques
 commentaires filtrables (curseurs, puces) avec la vidéo d'origine, thèmes des éloges et des critiques. Adresse : `site_url` dans `config/web.json`.
 
 - **Pages** (`web/site/`, HTML + JavaScript sans bibliothèque ni étape de construction) hébergées par **Vercel**.
-- **Données** dans **Supabase** (PostgreSQL) : tables `commentaires`, `publications`, `syntheses`. Le public lit avec
-  la clé publique, en lecture seule (règles RLS de `web/schema.sql`) ; seul `python -m web publier` écrit, avec la clé
-  secrète. Les filtres de la page Commentaires sont appliqués par la base (fonctions `selection` et `evolution`) ;
+- **Données** dans **Supabase** (PostgreSQL), modèle normalisé (`web/schema.sql`) : `sources`, `comptes` (et leur
+  groupe), `publications`, `utilisateurs` (auteurs, **privée**), `commentaires` (le texte, les notes et des numéros
+  vers les autres tables), `syntheses`, et `moderation` (privée). Chaque donnée n'est écrite qu'une fois ; les fichiers
+  locaux gardent leur forme, la publication les traduit. Le public lit avec la clé publique, en lecture seule (règles
+  RLS) ; seuls `python -m web publier` et `python -m moderation publier` écrivent, avec la clé secrète. Les filtres de
+  la page Commentaires sont appliqués par la base (fonctions `selection` et `evolution`, qui prennent le filtre jsonb
+  comme paramètre unique et sans nom ; `commentaire` lit un commentaire par sa clé « source:code ») ;
   la page Statistiques recalcule tout dans le navigateur à partir du « cube » (comptages par semaine et par compte).
 - **Pas d'API à héberger** (ni Railway ni autre) : les pages interrogent Supabase directement. Les deux offres
-  gratuites suffisent (base d'environ 150 Mo sur 500).
+  gratuites suffisent (base d'environ 115 Mo sur 500).
 - **Ce qui est publié** : les commentaires notés de YouTube, d'Instagram, de Bluesky et de Facebook, sans
   auteur ni doublon. Sur le site, la Page Facebook est rangée avec ses comptes officiels et les groupes avec les
   chaînes de soutiens (« Chaînes et groupes
@@ -486,13 +516,63 @@ Ce qu'on lui reproche et ce qu'on salue, rangé par thème (onglet **Thèmes** d
   automatique par vecteurs a été essayé puis retiré ([docs/HISTORIQUE.md](docs/HISTORIQUE.md)).
 - **Fichiers** : `donnees/critiques/` (`themes.json`, `rattachements.csv` avec sa colonne `categorie`, `lus.csv`, `lots/`, `tris/`, `notes/`).
 
+## Modération
+
+À part de l'analyse : demandée par le gestionnaire d'un groupe Facebook de soutien (2026-11-13). Chaque commentaire
+Facebook collecté (groupes et Page suivis, sans les publications elles-mêmes) reçoit une catégorie :
+
+- **insultant** (à modérer) : injure ou grossièreté qui vise une personne ou un groupe, menace, appel à la violence,
+  propos haineux ou déshumanisant, attaque personnelle méprisante. Une critique dure sans injure n'en est pas une ;
+- **question** : appelle une réponse de l'équipe (question sur le candidat, son programme, le mouvement ; doute
+  sincère ; demande d'aide ; affirmation fausse à rectifier). Une question rhétorique n'en est pas une ;
+- **autre** : tout le reste, commentaires positifs compris.
+
+- **Modèle** : multilingual-e5-base affiné en trois classes sur les annotations de Claude
+  (`modeles/moderation/`, version m1 le 2026-11-13 : 2 000 annotations, test de 573). Environ 0,1 s par commentaire.
+  Les modèles déjà entraînés à la toxicité, le zero-shot et Qwen3-4B ont été essayés et écartés
+  ([docs/HISTORIQUE.md](docs/HISTORIQUE.md)).
+- **Mesures** (test, ramenées à la population) : accord avec Claude ≈ 90 % ; à modérer : ≈ 57 % des alertes justes
+  (≈ 78 % en comptant les cas limites), ≈ 87 % des vraies insultes trouvées ; questions : ≈ 48 % justes, ≈ 52 %
+  trouvées, le point faible. Relire avant de supprimer ou de bannir.
+- **Classement automatique** à la fin de chaque collecte qui ramène du neuf sur Facebook (quelques secondes, puis
+  envoi dans Supabase) ; aussi par le bouton « Classer les nouveaux ». Les commentaires au texte vide sont écartés.
+- **À la demande seulement** ([PROCESS.md](PROCESS.md), partie M) : annoter des lots (`tirer` / `noter`),
+  réentraîner.
+- **Fichiers** : `donnees/moderation/` (`annotations.csv`, `notes.csv`, `lots/`, `journal.log`). Les annotations et
+  les lots sont dans la sauvegarde. L'onglet, qui montre les auteurs, reste local.
+- **Supabase** : table **privée** `moderation` (`web/schema.sql`), une ligne par commentaire classé ou annoté, même
+  clé que `commentaires` (source, code) : `p_insultant`, `p_question`, `p_autre`, `version`, `annotation`,
+  `classe_le`, et des numéros vers `publications` et `utilisateurs` (table privée des auteurs). Le texte, l'auteur, la
+  date et la publication n'y sont écrits que si le commentaire n'est pas déjà dans `commentaires`. La vue privée
+  `moderation_complete` remet tout en une ligne : catégorie retenue (l'annotation si elle existe, sinon le modèle),
+  origine, catégorie du modèle, texte, auteur, lien direct. Sécurité par ligne active sans règle de lecture : seule la
+  clé secrète la lit, le site ne la voit pas. Envoi
+  incrémental (`donnees/moderation/publie.json`) après chaque `classer`, `noter` et `entrainer`, ou par
+  `python -m moderation publier [--tout]`. Rien sur Hugging Face.
+- **Site de modération** (2026-11-13, https://moderation-lisnard.vercel.app, projet Vercel `moderation-lisnard`, pages dans `moderation/site/`, code dans
+  `moderation/site.py`) : réservé aux modérateurs, à part du site public. On n'y entre qu'avec le mot de passe choisi
+  par `python -m moderation motdepasse` (compte Supabase Auth partagé, rôle « moderateur » ; inscriptions fermées ;
+  changer le mot de passe coupe aussitôt les sessions ouvertes). Compteurs « à traiter », vue Commentaires (filtres
+  catégorie, certitude, suivi, période, groupe, texte, auteur, publication ; tri par date, insulte, question, auteurs
+  signalés), vues Auteurs et Publications, mode d'emploi. Liens vers le commentaire sur Facebook, la publication,
+  le profil de l'auteur et sa fiche de membre du groupe (où un administrateur peut le retirer ou le bloquer : l'API
+  des groupes Facebook est fermée depuis 2024, on ne peut pas le faire depuis le site). Marques « Traité » /
+  « Sans suite » partagées entre modérateurs (table `moderation_suivi`, jamais touchée par la publication).
+  **Ménager la base gratuite** : chaque navigateur télécharge tout une fois (≈ 18 requêtes, 2 à 7 Mo), le garde
+  (IndexedDB, effacé à la déconnexion), puis ne demande que ce qui a changé (`moderation.maj` daté par un
+  déclencheur, `moderation_retires` pour les retraits, `moderation_suivi.le`) : 4 requêtes vides au démarrage,
+  toutes les 15 min page ouverte (le suivi toutes les 3 min), ou par « Actualiser ». Filtres, tris et comptages se
+  font dans le navigateur (`js/donnees.js`, `js/app.js`), sans requête ; tout retélécharger au bout de 7 jours.
+  Vues `moderation_lignes`, `moderation_pubs` et fonction `suivre()` dans `web/schema.sql` ; rien à faire à la
+  publication. Après une modification des pages : `python -m moderation site deployer`.
+
 ## Sauvegarde
 
 `donnees/sauvegardes/donnees.zip` : une copie compressée de ce qu'on ne peut pas refaire.
 - **Contenu**, dans cet ordre : Instagram d'abord (anciennes publications, qu'on ne peut pas recollecter), puis
   YouTube, Bluesky et Facebook (CSV bruts, `etat.json`, `likes.json`), puis le travail fait à la main : annotations
-  (`donnees/analyse/annotation/`), corrections de l'interface, lecture par thèmes (`donnees/critiques/`).
-  Environ 18 Mo, une seconde.
+  (`donnees/analyse/annotation/`), corrections de l'interface, lecture par thèmes (`donnees/critiques/`),
+  annotations de la modération (`donnees/moderation/`). Environ 18 Mo, une seconde.
 - **Une seule sauvegarde** : la nouvelle est écrite dans un fichier temporaire, relue en entier, puis remplace
   l'ancienne. On n'est jamais sans sauvegarde.
 - **Garde-fou** : les CSV de collecte ne font que grandir. Si l'un d'eux a rétréci ou disparu, l'ancienne

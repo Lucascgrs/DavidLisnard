@@ -96,17 +96,34 @@ class Base:
                     raise
                 time.sleep(5 * (essai + 1))
 
-    def ecrire(self, table: str, lignes: list[dict], conflit: str, paquet: int = 1000, avancement=None) -> None:
-        """Ajoute ou remplace les lignes (même clé `conflit` = remplacement)."""
+    def ecrire(self, table: str, lignes: list[dict], conflit: str, paquet: int = 1000, avancement=None,
+               ignorer: bool = False) -> None:
+        """Ajoute ou remplace les lignes (même clé `conflit` = remplacement). Avec ignorer=True, une ligne dont la clé
+        existe déjà est laissée telle quelle (seules les nouvelles sont ajoutées)."""
+        resolution = "ignore-duplicates" if ignorer else "merge-duplicates"
         for i in range(0, len(lignes), paquet):
             morceau = lignes[i:i + paquet]
             self._envoi("POST", table, params={"on_conflict": conflit},
-                        headers={"Prefer": "resolution=merge-duplicates,return=minimal"},
+                        headers={"Prefer": f"resolution={resolution},return=minimal"},
                         data=json.dumps(morceau, ensure_ascii=False).encode("utf-8"))
             if avancement:
                 avancement(min(i + paquet, len(lignes)), len(lignes))
 
-    def supprimer(self, table: str, colonne: str, valeurs: list[str], paquet: int = 100) -> None:
+    def supprimer(self, table: str, colonne: str, valeurs: list[str], paquet: int = 100,
+                  filtre: dict | None = None) -> None:
+        """Supprime les lignes dont `colonne` est dans `valeurs` (et qui vérifient `filtre`, ex. {"source": "eq.1"})."""
         for i in range(0, len(valeurs), paquet):
-            liste = ",".join('"' + v.replace('"', '\\"') + '"' for v in valeurs[i:i + paquet])
-            self._envoi("DELETE", table, params={colonne: f"in.({liste})"})
+            liste = ",".join('"' + str(v).replace('"', '\\"') + '"' for v in valeurs[i:i + paquet])
+            self._envoi("DELETE", table, params={**(filtre or {}), colonne: f"in.({liste})"})
+
+    def appeler(self, fonction: str, arguments: dict | None = None):
+        """Appelle une fonction SQL (rpc) et rend son résultat."""
+        for essai in range(4):
+            try:
+                r = _verifier(self.s.post(f"{self.url}/rpc/{fonction}", timeout=180,
+                                          data=json.dumps(arguments or {}).encode("utf-8")))
+                return r.json()
+            except (requests.ConnectionError, requests.Timeout):
+                if essai == 3:
+                    raise
+                time.sleep(5 * (essai + 1))
