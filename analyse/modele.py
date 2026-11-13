@@ -28,7 +28,11 @@ from commun.config import MODELES
 from commun.fichiers import lire_csv, lire_json
 from commun.textes import sans_accents
 
-# L'ordre de ces listes fixe les colonnes des indicateurs : le changer fausserait les modèles déjà entraînés.
+# L'ordre de ces listes fixe les colonnes des indicateurs : le changer fausserait les modèles déjà entraînés. « whatsapp »
+# et « adhérents » restent donc à leur place alors que WhatsApp n'est plus collecté (2026-11-12) : colonnes toujours à 0.
+# Bluesky, Facebook (2026-11-12) et X (2026-11-13) n'ont pas de colonne de source : y en ajouter une changerait la
+# taille des entrées et empêcherait de relire les modèles enregistrés. Leurs colonnes de source valent 0 ; Facebook se
+# reconnaît à son groupe « soutien », et le réseau affiné (affinage.py) lit le nom de la source dans son texte.
 SOURCES = ["youtube", "instagram", "whatsapp"]
 GROUPES = ["officiel", "media", "commentateur", "soutien", "adhérents", "autre"]
 MOTIFS = {

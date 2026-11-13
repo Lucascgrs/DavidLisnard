@@ -36,17 +36,106 @@
   "bluesky": {
     "depuis": "2025-01-01",
     "pages_par_lancement": 60,
-    "relire_si_moins_de_jours": 7
-  },
-  "whatsapp": {
-    "communaute": "Nouvelle Énergie 34",
-    "discussion": "NE 34 - Échanges entre adhérents"
+    "relire_si_moins_de_jours": 7,
+    "comptes": []
   },
   "instagram": {
     "comptes": ["davidlisnard"],
     "depuis": "2026-07-31",
-    "posts_par_lancement": 50,
-    "relire_si_moins_de_jours": 21,
-    "abandon_si_10_posts_depassent_minutes": 30
+    "posts_par_lancement": 100,
+    "relire_si_moins_de_jours": 10,
+    "abandon_si_10_posts_depassent_minutes": 50
+  },
+  "facebook": {
+    "groupes": [
+      {
+        "nom": "Cap 2027 avec David Lisnard",
+        "id": "469487021094991",
+        "groupe": "soutien"
+      },
+      {
+        "nom": "Soutien David Lisnard 2027",
+        "id": "842316026535041",
+        "groupe": "soutien"
+      },
+      {
+        "nom": "Soutien à David Lisnard",
+        "id": "802159377468775",
+        "groupe": "soutien"
+      },
+      {
+        "nom": "Soutien Lisnard Lot, Cantal et Aveyron",
+        "id": "2526290980742790",
+        "groupe": "soutien"
+      },
+      {
+        "nom": "Nouvelle Énergie 13 - Bouches-du-Rhône",
+        "id": "945753498034448",
+        "groupe": "soutien"
+      }
+    ],
+    "pages": [
+      {
+        "nom": "David Lisnard (page Facebook)",
+        "id": "100002198332972",
+        "groupe": "officiel"
+      }
+    ],
+    "depuis": "2026-07-31",
+    "relire_si_moins_de_jours": 7,
+    "minutes_par_lancement": 120,
+    "requetes_par_jour": 6000,
+    "pause_entre_requetes_s": [
+      1.5,
+      3.0
+    ],
+    "pause_longue": {
+      "toutes_les_requetes": 150,
+      "secondes": [
+        60,
+        120
+      ]
+    },
+    "repos_apres_freinage_heures": 3
+  },
+  "x": {
+    "comptes": [
+      {
+        "pseudo": "davidlisnard",
+        "id": "103918784",
+        "nom": "David Lisnard",
+        "groupe": "officiel"
+      },
+      {
+        "pseudo": "Nouv_Energie",
+        "id": "1401879880426561543",
+        "nom": "Nouvelle Énergie",
+        "groupe": "officiel"
+      },
+      {
+        "pseudo": "AvecLisnard",
+        "id": "630943126",
+        "nom": "Avec David Lisnard",
+        "groupe": "soutien"
+      },
+      {
+        "pseudo": "DavidLPresident",
+        "id": "1043764939633111040",
+        "nom": "Lisnard Président",
+        "groupe": "soutien"
+      }
+    ],
+    "recherche": true,
+    "depuis": "2026-07-31",
+    "relire_si_moins_de_jours": 7,
+    "attendre_reponses_jours": 2,
+    "minutes_par_lancement": 120,
+    "requetes_par_jour": 3000,
+    "recherches_par_quart_heure": 40,
+    "pause_entre_requetes_s": [
+      3,
+      8
+    ],
+    "repos_apres_freinage_heures": 3
   }
 }

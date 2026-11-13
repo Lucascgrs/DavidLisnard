@@ -25,14 +25,15 @@ async function demarrer() {
   if (meta.debut_par_source?.instagram) $("debut-instagram").textContent = moisLong(meta.debut_par_source.instagram);
   if (m.cible) $("erreur-sujet").textContent = `${Math.round(100 * (1 - m.cible))} %`;
 
-  // Comptes du groupe « autre » : chaînes YouTube trouvées par la recherche (Bluesky n'est qu'un seul compte).
+  // Comptes du groupe « autre » : chaînes YouTube trouvées par la recherche (Bluesky et la recherche sur X ne sont qu'un seul compte chacun).
+  const groupesFb = meta.comptes.filter((c) => c.source === "facebook").length;
   const autres = meta.comptes.filter((c) => c.groupe === "autre" && c.source === "youtube").length;
   $("grands-chiffres").replaceChildren(...[
     [nombre(meta.commentaires), "commentaires analysés", `dont ${nombre(meta.reponses)} réponses à d'autres commentaires`],
-    [nombre(meta.publications), "vidéos et posts", `${nombre(meta.par_source.youtube)} commentaires YouTube, ${nombre(meta.par_source.instagram)} Instagram${meta.par_source.bluesky ? `, ${nombre(meta.par_source.bluesky)} Bluesky` : ""}`],
+    [nombre(meta.publications), "vidéos et posts", `${nombre(meta.par_source.youtube)} commentaires YouTube, ${nombre(meta.par_source.instagram)} Instagram${meta.par_source.bluesky ? `, ${nombre(meta.par_source.bluesky)} Bluesky` : ""}${meta.par_source.facebook ? `, ${nombre(meta.par_source.facebook)} Facebook` : ""}${meta.par_source.x ? `, ${nombre(meta.par_source.x)} X` : ""}`],
     [String(meta.comptes.filter((c) => c.groupe !== "autre").length), "comptes suivis", autres
-      ? `ses comptes, son mouvement, des médias ; plus ${autres} autres chaînes et Bluesky`
-      : "ses comptes, son mouvement, des médias"],
+      ? `ses comptes, son mouvement, des médias${groupesFb ? `, ${groupesFb} groupes Facebook` : ""} ; plus ${autres} autres chaînes, Bluesky et la recherche sur X`
+      : `ses comptes, son mouvement, des médias${groupesFb ? `, ${groupesFb} groupes Facebook` : ""}`],
     [nombre(m.annotations), "exemples annotés", "pour entraîner le modèle"],
   ].map(([v, nom, legende]) => el("div", { class: "chiffre" }, el("div", { class: "valeur" }, v), el("div", { class: "nom" }, nom), el("div", { class: "legende" }, legende))));
 

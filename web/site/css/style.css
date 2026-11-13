@@ -504,7 +504,12 @@ h3 { font-size: 16px; font-weight: 650; margin: 0 0 4px; }
 .resume-theme p { margin: 0 0 4px; }
 .resume-theme .resume { font-weight: 560; }
 .resume-theme .extrait { overflow-wrap: anywhere; }
-.resume-theme button.lien { background: none; border: 0; padding: 0; color: var(--accent); cursor: pointer; font: inherit; text-decoration: underline; }
+.resume-theme button.lien, .repartition-categories button.lien { background: none; border: 0; padding: 0; color: var(--accent); cursor: pointer; font: inherit; text-decoration: underline; }
+/* Catégorie d'une critique ou d'un doute (page Thèmes) */
+.repartition-categories { margin: 6px 0 0; }
+.repartition-categories button.lien[aria-pressed="true"] { font-weight: 700; text-decoration: none; color: var(--texte); }
+.etiquette-categorie { display: inline-block; border: 1px solid var(--bord); border-radius: 999px; padding: 0 8px; margin-right: 8px; color: var(--doux); }
+.aide-categorie { margin: 8px 0 0; max-width: 560px; }
 .mois-theme { display: flex; gap: 6px; align-items: flex-end; height: 90px; margin: 4px 0 6px; }
 .colonne-mois { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; }
 .colonne-mois .pile { flex: 1; width: 100%; max-width: 28px; display: flex; flex-direction: column; justify-content: flex-end; }
@@ -516,6 +521,14 @@ h3 { font-size: 16px; font-weight: 650; margin: 0 0 4px; }
 }
 .barre-filtres-themes { display: flex; flex-wrap: wrap; gap: 18px 32px; align-items: flex-start; }
 .barre-filtres-themes .recherche input { min-width: 220px; }
+.filtre-periode { flex-basis: 100%; }
+.choix-mois { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; font-size: 14px; }
+.choix-mois[hidden] { display: none; }
+.choix-mois select { border: 1px solid var(--bord-fort); background: var(--carte); border-radius: 999px; padding: 6px 12px; font-size: 14px; cursor: pointer; }
+.evol { font-weight: 600; white-space: nowrap; }
+.evol.hausse { color: var(--accent-texte); }
+.evol.baisse { opacity: .7; }
+.segments button[hidden] { display: none; }
 .mois-theme > * { min-width: 0; }
 .mois-theme .pale { overflow: hidden; max-width: 100%; }
 /* Cinq pages dans le menu : sur téléphone, il défile horizontalement plutôt que de déborder. */

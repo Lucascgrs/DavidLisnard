@@ -1,7 +1,7 @@
 """Analyse des commentaires : note ce qui ne l'est pas encore par le modèle en service.
 
     python -m analyse                                 tout ce qui n'est pas encore noté par le modèle actuel
-    python -m analyse --sources youtube,whatsapp      seulement ces sources
+    python -m analyse --sources youtube,bluesky       seulement ces sources
     python -m analyse --du 2026-01-01 --au 2026-06-30 seulement cette période (date du commentaire)
     python -m analyse --refaire                       renote aussi ce qui l'a déjà été par ce modèle
 
@@ -22,7 +22,7 @@ def main():
         sys.stdout.reconfigure(encoding="utf-8")
     ap = argparse.ArgumentParser(prog="python -m analyse", description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--sources", default="", help="youtube,instagram,whatsapp (toutes par défaut)")
+    ap.add_argument("--sources", default="", help="youtube,instagram,bluesky,facebook,x (toutes par défaut)")
     ap.add_argument("--du", default="", help="AAAA-MM-JJ")
     ap.add_argument("--au", default="", help="AAAA-MM-JJ")
     ap.add_argument("--refaire", action="store_true")

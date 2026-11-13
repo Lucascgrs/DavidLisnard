@@ -9,7 +9,7 @@ import numpy as np
 
 from analyse import stockage
 from analyse.criteres import CRITERES, REPROCHES
-from analyse.modele import SOURCES
+from commun.config import SOURCES  # toutes les sources collectées (pas seulement les colonnes du modèle)
 
 FIABILITES = ("bonne", "moyenne", "faible")
 

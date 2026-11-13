@@ -2,9 +2,12 @@
 
 - themes.json : la liste des thèmes ({id: nom, famille, définition, lot de création, synthèses par sens}),
   les anciens identifiants absorbés par une fusion (alias) et le journal des fusions ;
-- rattachements.csv : une ligne par (texte, thème, sens) avec la phrase courte qui dit ce que le commentaire en dit ;
+- rattachements.csv : une ligne par (texte, thème, sens) avec la phrase courte qui dit ce que le commentaire en dit,
+  et, pour une critique ou un doute, sa catégorie de 1 à 5 (CATEGORIES : ce que le programme peut en faire) ;
 - lus.csv : les textes lus, même ceux qui n'abordent aucun thème (pour ne jamais les relire) ;
-- lots/lot_NNN.csv : les commentaires de chaque lot ; notes/lot_NNN.txt : la lecture de Claude telle qu'écrite.
+- lots/lot_NNN.csv : les commentaires de chaque lot ; notes/lot_NNN.txt : la lecture de Claude telle qu'écrite ;
+- tris/tri_NNN.csv et notes/tri_NNN.txt : la même chose pour le tri par catégorie des critiques et des doutes
+  rangés avant que la catégorie existe (commandes « trier » et « ranger »).
 
 Un texte n'est lu qu'une fois, même s'il a été posté plusieurs fois : la clé « copie » ignore les mentions
 « @pseudo » du début (un même texte collé en réponse à des dizaines de personnes reste un seul texte), la casse,
@@ -29,8 +32,9 @@ RATTACHEMENTS = DOSSIER / "rattachements.csv"
 LUS = DOSSIER / "lus.csv"
 LOTS = DOSSIER / "lots"
 NOTES = DOSSIER / "notes"
+TRIS = DOSSIER / "tris"
 
-CHAMPS_RATT = ["cle", "copie", "theme", "sens", "resume", "lot", "le"]
+CHAMPS_RATT = ["cle", "copie", "theme", "sens", "categorie", "resume", "lot", "le"]
 CHAMPS_LUS = ["cle", "copie", "lot", "le"]
 TAILLE_LOT = 100
 
@@ -40,6 +44,19 @@ MOTS_MIN = 20
 FIABILITES = {"bonne", "moyenne", "corrigée", "relue"}
 
 SENS = {"E": "éloge", "C": "critique", "D": "doute ou question"}
+# Ce que le programme peut faire d'une critique ou d'un doute (docs/TRI_DES_CRITIQUES.pdf, choix de l'utilisateur,
+# 2026-11-12). Lue dans le commentaire lui-même, par Claude ; un éloge n'a pas de catégorie. La catégorie ne dépend
+# pas du ton : un soutien qui conteste une mesure est en 3, un opposant poli qui rejette tout est en 1. Une remarque
+# sur la forme (« travaillez votre sang-froid ») se range en 3.
+CATEGORIES = {"1": "Opposition de principe", "2": "Demande de précision", "3": "Objection sur une mesure",
+              "4": "Doute sur la faisabilité", "5": "Suggestion"}
+DEFINITIONS_CATEGORIES = {
+    "1": "rejette le projet ou la personne en bloc ; aucune précision ne le fera changer d'avis",
+    "2": "d'accord ou pas encore décidé, demande comment, combien, quand",
+    "3": "conteste un point précis (mesure, propos, façon de faire), souvent avec son cas personnel",
+    "4": "ne conteste pas l'idée mais croit qu'elle sera bloquée ou qu'il n'y arrivera pas",
+    "5": "apporte une idée ou un sujet absent du programme"}
+SENS_TRIES = ("C", "D")  # seuls les critiques et les doutes reçoivent une catégorie
 # Sur quoi porte un thème. Les noms affichés disent le sujet en clair (retour d'un lecteur du site, 2026-11-11 :
 # « Famille », « Toutes » et « Forme » ne se comprenaient pas) ; les clés, elles, ne changent pas.
 FAMILLES = {"idees": "Ses idées", "forme": "Sa façon de s'exprimer", "positionnement": "Son positionnement politique",
@@ -194,7 +211,7 @@ def voir(numero: int, depuis: int = 1, themes: bool = True) -> None:
 # ---------------------------------------------------------------------------------------------- enregistrement
 
 DECLARATION = re.compile(r"^\+\s*(.+?)\s*\|\s*(\w+)\s*\|\s*(.+?)\s*$")
-RATTACHEMENT = re.compile(r"^(\d+)\s*\|\s*(.+?)\s*\|\s*([ECD])\s*\|\s*(.+?)\s*$")
+RATTACHEMENT = re.compile(r"^(\d+)\s*\|\s*(.+?)\s*\|\s*([ECD])\s*([1-5]?)\s*\|\s*(.+?)\s*$")
 AUCUN = re.compile(r"^(\d+)\s*\|\s*-\s*$")
 
 
@@ -203,8 +220,9 @@ def noter(numero: int, fichier: str) -> None:
 
     Lignes du fichier :
         + Nom du thème | famille | définition d'une ligne      (déclare un thème nouveau)
-        12 | T5 | C | phrase courte                           (le commentaire 12 critique le thème T5)
+        12 | T5 | C3 | phrase courte                          (le commentaire 12 critique le thème T5, catégorie 3)
         12 | Nom du thème | E | phrase courte                 (par le nom, d'un thème existant ou déclaré)
+    Une critique (C) ou un doute (D) porte toujours sa catégorie de 1 à 5 (CATEGORIES) ; un éloge (E) jamais.
         13 | -                                                (lu, n'aborde aucun thème)
     """
     lot = {int(l["n"]): l for l in lire_csv(LOTS / f"lot_{numero:03d}.csv")}
@@ -229,11 +247,13 @@ def noter(numero: int, fichier: str) -> None:
         elif m := AUCUN.match(ligne):
             vides.add(int(m.group(1)))
         elif m := RATTACHEMENT.match(ligne):
-            liens.append((int(m.group(1)), m.group(2), m.group(3), m.group(4), ligne))
+            if bool(m.group(4)) != (m.group(3) in SENS_TRIES):
+                erreurs.append(f"catégorie 1 à 5 obligatoire après C ou D, interdite après E : {ligne}")
+            liens.append((int(m.group(1)), m.group(2), m.group(3), m.group(4), m.group(5), ligne))
         else:
             erreurs.append(f"illisible : {ligne}")
     resolus, utilises = [], set()
-    for n, ref, sens, resume, ligne in liens:
+    for n, ref, sens, cat, resume, ligne in liens:
         if n not in lot:
             erreurs.append(f"numéro hors du lot : {ligne}")
             continue
@@ -242,12 +262,12 @@ def noter(numero: int, fichier: str) -> None:
             if not ident:
                 erreurs.append(f"thème inconnu {ref} : {ligne}")
                 continue
-            resolus.append((n, ident, sens, resume))
+            resolus.append((n, ident, sens, cat, resume))
         elif normaliser(ref) in par_nom:
-            resolus.append((n, par_nom[normaliser(ref)], sens, resume))
+            resolus.append((n, par_nom[normaliser(ref)], sens, cat, resume))
         elif normaliser(ref) in declares:
             utilises.add(normaliser(ref))
-            resolus.append((n, "+" + normaliser(ref), sens, resume))
+            resolus.append((n, "+" + normaliser(ref), sens, cat, resume))
         else:
             erreurs.append(f"thème ni existant ni déclaré « {ref} » : {ligne}")
         if len(resume) > 220:
@@ -280,14 +300,14 @@ def noter(numero: int, fichier: str) -> None:
         nouveaux[k] = ident
     le = maintenant()
     vus_liens = set()
-    for n, ident, sens, resume in resolus:
+    for n, ident, sens, cat, resume in resolus:
         ident = nouveaux[ident[1:]] if ident.startswith("+") else ident
         item = lot[n]
         if (item["copie"], ident, sens) in vus_liens:
             continue
         vus_liens.add((item["copie"], ident, sens))
         ratt.append({"cle": item["cle"], "copie": item["copie"], "theme": ident, "sens": sens,
-                     "resume": resume, "lot": numero, "le": le})
+                     "categorie": cat, "resume": resume, "lot": numero, "le": le})
     for n, item in lot.items():
         deja_lus.append({"cle": item["cle"], "copie": item["copie"], "lot": numero, "le": le})
     ecrire_csv(RATTACHEMENTS, ratt, CHAMPS_RATT)
@@ -295,9 +315,115 @@ def noter(numero: int, fichier: str) -> None:
     ecrire_themes(d)
     NOTES.mkdir(parents=True, exist_ok=True)
     (NOTES / f"lot_{numero:03d}.txt").write_text(texte, encoding="utf-8")
-    sens = Counter(s for _, _, s, _ in resolus)
+    sens = Counter(r[2] for r in resolus)
     print(f"Lot {numero} enregistré : {len(vus_liens)} rattachements ({', '.join(f'{v} {k}' for k, v in sens.items())}), "
           f"{len(nouveaux)} thèmes nouveaux, {len(vides)} sans thème. {len(d['themes'])} thèmes en tout.")
+
+
+# ---------------------------------------------------------------------------------------------- tri par catégorie
+
+TEXTE_TRI = 450  # caractères du commentaire montrés pour choisir la catégorie
+RANGEMENT = re.compile(r"^(\d+)\s*[| ]\s*([1-5])$")
+
+
+def sans_categorie(ratt: list[dict] | None = None) -> list[dict]:
+    """Critiques et doutes qui n'ont pas encore de catégorie (rangés avant le 2026-11-12)."""
+    return [r for r in (ratt if ratt is not None else rattachements())
+            if r["sens"] in SENS_TRIES and not r.get("categorie")]
+
+
+def tris_existants() -> list[int]:
+    return sorted(numero_lot(p) for p in TRIS.glob("tri_*.csv")) if TRIS.exists() else []
+
+
+def trier(n: int = TAILLE_LOT) -> int | None:
+    """Prépare et affiche le prochain lot de tri : les critiques et doutes sans catégorie de n textes. Tant que le
+    dernier lot préparé n'est pas rangé, c'est lui qui est affiché de nouveau."""
+    attente = {(r["copie"], r["theme"], r["sens"]) for r in sans_categorie()}
+    if not attente:
+        print("Rien à trier : toutes les critiques et tous les doutes ont une catégorie.")
+        return None
+    dernier = (tris_existants() or [0])[-1]
+    if dernier and any((l["copie"], l["theme"], l["sens"]) in attente for l in lire_csv(TRIS / f"tri_{dernier:03d}.csv")):
+        voir_tri(dernier)
+        return dernier
+    par_texte = defaultdict(list)
+    for r in sans_categorie():
+        par_texte[r["copie"]].append(r)
+    lignes = []
+    for k in list(par_texte)[:n]:
+        for r in par_texte[k]:
+            lignes.append({"n": len(lignes) + 1, "cle": r["cle"], "copie": r["copie"], "theme": r["theme"],
+                           "sens": r["sens"]})
+    numero = dernier + 1
+    ecrire_csv(TRIS / f"tri_{numero:03d}.csv", lignes, ["n", "cle", "copie", "theme", "sens"])
+    voir_tri(numero)
+    print(f"\nTri {numero} : {len(lignes)} critiques ou doutes de {min(n, len(par_texte))} textes "
+          f"({len(attente) - len(lignes)} restent ensuite).")
+    return numero
+
+
+def voir_tri(numero: int) -> None:
+    lot = lire_csv(TRIS / f"tri_{numero:03d}.csv")
+    corpus = {l["cle"]: l for l in lire_csv(stockage.CORPUS)}
+    d = lire_themes()
+    resumes = {(r["copie"], r["theme"], r["sens"]): r["resume"] for r in rattachements()}
+    print(" ; ".join(f"{k} {v} ({DEFINITIONS_CATEGORIES[k]})" for k, v in CATEGORIES.items()) + "\n")
+    precedent = None
+    for item in lot:
+        if item["copie"] != precedent:
+            precedent = item["copie"]
+            l = corpus.get(item["cle"])
+            print(f"» {abreger(l['texte'], TEXTE_TRI) if l else '(commentaire absent du corpus)'}")
+        theme = resoudre(d, item["theme"])
+        nom = d["themes"][theme]["nom"] if theme else item["theme"]
+        print(f"   {item['n']}. [{nom}|{item['sens']}] {resumes.get((item['copie'], theme, item['sens']), '')}")
+
+
+def ranger(numero: int, fichier: str) -> None:
+    """Enregistre les catégories d'un lot de tri. Lignes « 12 | 3 » ou « 12 3 » ; rien n'est écrit s'il y a une
+    erreur ou s'il manque un numéro."""
+    lot = {int(l["n"]): l for l in lire_csv(TRIS / f"tri_{numero:03d}.csv")}
+    if not lot:
+        raise SystemExit(f"Tri {numero} introuvable.")
+    d = lire_themes()
+    texte = open(fichier, encoding="utf-8").read()
+    choix, erreurs = {}, []
+    for brut in texte.splitlines():
+        ligne = brut.strip()
+        if not ligne or ligne.startswith("//"):
+            continue
+        m = RANGEMENT.match(ligne)
+        if not m:
+            erreurs.append(f"illisible : {ligne}")
+        elif int(m.group(1)) not in lot:
+            erreurs.append(f"numéro hors du lot : {ligne}")
+        elif int(m.group(1)) in choix:
+            erreurs.append(f"numéro donné deux fois : {ligne}")
+        else:
+            choix[int(m.group(1))] = m.group(2)
+    manquants = sorted(set(lot) - set(choix))
+    if manquants:
+        erreurs.append(f"numéros sans catégorie : {manquants}")
+    if erreurs:
+        print("Rien n'a été enregistré :")
+        for e in erreurs:
+            print("  - " + e)
+        raise SystemExit(1)
+    par_lien = {(lot[n]["copie"], resoudre(d, lot[n]["theme"]), lot[n]["sens"]): c for n, c in choix.items()}
+    ratt = rattachements()
+    faits = 0
+    for r in ratt:
+        c = par_lien.get((r["copie"], r["theme"], r["sens"]))
+        if c:
+            r["categorie"] = c
+            faits += 1
+    ecrire_csv(RATTACHEMENTS, ratt, CHAMPS_RATT)
+    NOTES.mkdir(parents=True, exist_ok=True)
+    (NOTES / f"tri_{numero:03d}.txt").write_text(texte, encoding="utf-8")
+    n = Counter(choix.values())
+    print(f"Tri {numero} enregistré : {faits} catégories ({', '.join(f'{n[k]} × {v}' for k, v in CATEGORIES.items() if n[k])}). "
+          f"{len(sans_categorie(ratt))} critiques ou doutes restent sans catégorie.")
 
 
 # ---------------------------------------------------------------------------------------------- fusion et synthèses
@@ -361,6 +487,7 @@ def fusionner(fichier: str) -> None:
             for r in ratt:
                 if r["theme"] in absorbes:
                     r["theme"] = garde
+            d["themes"][garde].pop("synthese_le", None)  # le thème a changé : ses synthèses sont à réécrire
         d["fusions"].append({"le": le, "genre": genre, "garde": garde, "absorbes": absorbes, "anciens_noms": avant,
                              "nom": d["themes"][garde]["nom"]})
     # Un texte présent deux fois dans le même thème avec le même sens n'est gardé qu'une fois.
@@ -422,12 +549,54 @@ def syntheses(fichier: str) -> None:
         if not m or not resoudre(d, m.group(1)):
             erreurs.append(ligne)
             continue
-        d["themes"][resoudre(d, m.group(1))].setdefault("synthese", {})[m.group(2)] = m.group(3)
+        t = d["themes"][resoudre(d, m.group(1))]
+        t.setdefault("synthese", {})[m.group(2)] = m.group(3)
+        t.setdefault("synthese_le", {})[m.group(2)] = maintenant()  # repère de « a-resumer »
         n += 1
     if erreurs:
         print("Lignes ignorées :", *erreurs, sep="\n  ")
     ecrire_themes(d)
     print(f"{n} synthèses enregistrées.")
+
+
+SYNTHESE_MIN = 3      # un couple thème-sens de moins de 3 commentaires n'a pas de synthèse
+NOUVEAUX_MIN = 5      # une synthèse est à réécrire si elle a reçu au moins 5 commentaires
+PART_NOUVEAUX = 0.25  # et au moins 25 % de commentaires en plus depuis qu'elle a été écrite
+
+
+def a_resumer(afficher: bool = True) -> list[tuple[str, str]]:
+    """Les synthèses à écrire ou à réécrire après une lecture, et seulement elles : couple thème-sens d'au moins
+    SYNTHESE_MIN commentaires sans synthèse, ou qui a reçu depuis sa synthèse au moins NOUVEAUX_MIN commentaires et
+    PART_NOUVEAUX de plus. Affiche la synthèse actuelle et les phrases des commentaires arrivés depuis."""
+    d = lire_themes()
+    par = defaultdict(list)
+    for r in rattachements():
+        ident = resoudre(d, r["theme"])
+        if ident:
+            par[(ident, r["sens"])].append(r)
+    a_faire = []
+    for (ident, sens), liste in sorted(par.items(), key=lambda x: (int(x[0][0][1:]), "ECD".index(x[0][1]))):
+        t = d["themes"][ident]
+        actuelle = t.get("synthese", {}).get(sens)
+        depuis = t.get("synthese_le", {}).get(sens, "") if actuelle else ""
+        nouveaux = [r for r in liste if r["le"] > depuis]
+        if actuelle:
+            if len(nouveaux) < NOUVEAUX_MIN or len(nouveaux) < PART_NOUVEAUX * (len(liste) - len(nouveaux)):
+                continue
+        elif len(liste) < SYNTHESE_MIN:
+            continue
+        a_faire.append((ident, sens))
+        if afficher:
+            print(f"\n{ident} {sens} · {t['nom']} ({SENS[sens]}) : {len(liste)} commentaires, "
+                  f"{len(nouveaux)} {'nouveaux' if actuelle else 'sans synthèse'}")
+            if actuelle:
+                print(f"  synthèse actuelle : {actuelle}")
+            for r in (nouveaux if actuelle else liste):
+                print(f"  - {r['resume']}")
+    if afficher:
+        print(f"\n{len(a_faire)} synthèses à écrire ou réécrire. Format du fichier pour « syntheses » : "
+              f"« T5 C | texte » (les autres restent telles quelles).")
+    return a_faire
 
 
 # ---------------------------------------------------------------------------------------------- résultats
@@ -452,7 +621,8 @@ def resultats(corpus: list[dict] | None = None) -> dict:
         t["_auteurs"][r["sens"]].add(l.get("auteur_h") or r["cle"])
         if l["date"]:
             t["mois"][l["date"][:7]][r["sens"]] += 1
-        t["liens"].append({"cle": l["cle"], "sens": r["sens"], "resume": r["resume"], "date": l["date"][:10],
+        t["liens"].append({"cle": l["cle"], "sens": r["sens"], "categorie": r.get("categorie") or "",
+                           "resume": r["resume"], "date": l["date"][:10],
                            "source": l["source"], "compte": l["compte"], "texte": l["texte"],
                            "auteur_h": l.get("auteur_h", "")})
     for t in themes.values():
@@ -464,6 +634,8 @@ def resultats(corpus: list[dict] | None = None) -> dict:
     lu = {l["copie"] for l in lus()}
     return {"themes": themes, "n_lus": len(lu), "n_selection": len(sel), "a_lire": len(set(sel) - lu),
             "n_rattachements": sum(t["total"] for t in themes.values()), "maj": d.get("maj"),
+            "sans_categorie": sum(1 for t in themes.values() for l in t["liens"]
+                                  if l["sens"] in SENS_TRIES and not l["categorie"]),
             "fusions": len(d["fusions"])}
 
 
@@ -475,3 +647,7 @@ def etat() -> None:
     print(f"{r['n_lus']} textes lus ; {r['n_selection']} sélectionnés aujourd'hui, {r['a_lire']} à lire ; "
           f"{len(r['themes'])} thèmes ; {r['n_rattachements']} rattachements "
           f"({', '.join(f'{n[s]} × {SENS[s]}' for s in SENS)}) ; {r['fusions']} fusions.")
+    c = Counter(l["categorie"] for t in r["themes"].values() for l in t["liens"] if l["sens"] in SENS_TRIES)
+    print("Critiques et doutes par catégorie : " + ", ".join(f"{c[k]} × {v}" for k, v in CATEGORIES.items())
+          + f" ; {c['']} sans catégorie.")
+    print(f"Synthèses à écrire ou réécrire : {len(a_resumer(afficher=False))} (python -m critiques a-resumer).")

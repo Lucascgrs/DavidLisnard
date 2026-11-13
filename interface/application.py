@@ -18,8 +18,8 @@ from commun.config import DONNEES
 from commun.taches import ERREURS
 from interface.onglet_analyse import PageAnalyse
 from interface.onglet_themes import PageThemes
-from interface.onglets_collecte import (PageInstagram, PagePlanification, PageTableau, PageWhatsapp, PageYoutube,
-                                        tout_lancer)
+from interface.onglets_collecte import (PageBluesky, PageFacebook, PageInstagram, PagePlanification, PageTableau, PageX,
+                                        PageYoutube, tout_lancer)
 from interface.theme import COULEURS, appliquer_theme, ouvrir, police
 
 JOURNAL = DONNEES / "journal.log"
@@ -44,11 +44,12 @@ class Application(tk.Tk):
         titres.pack(side="left")
         tk.Label(titres, text="Commentaires sur David Lisnard", font=police(20, True, True), bg=COULEURS["fond"],
                  fg=COULEURS["texte"]).pack(anchor="w")
-        tk.Label(titres, text="Collecte automatique (YouTube, Bluesky, WhatsApp, Instagram), analyse des avis et thèmes",
+        tk.Label(titres, text="Collecte automatique (YouTube, Bluesky, Instagram, Facebook, X), analyse des avis et thèmes",
                  font=police(10), bg=COULEURS["fond"], fg=COULEURS["doux"]).pack(anchor="w")
         ttk.Button(entete, text="Dernier bilan", command=lambda: ouvrir(DONNEES / "bilan.md")).pack(side="right")
         ttk.Button(entete, text="Dossier des données", command=lambda: ouvrir(DONNEES)).pack(side="right", padx=6)
         ttk.Button(entete, text="Sauvegarder", command=self.sauvegarder).pack(side="right")
+        ttk.Button(entete, text="Export Hugging Face", command=self.exporter_hf).pack(side="right", padx=6)
         ttk.Button(entete, text="Tout lancer", style="Accent.TButton",
                    command=lambda: tout_lancer(self)).pack(side="right", padx=6)
 
@@ -57,8 +58,9 @@ class Application(tk.Tk):
         self.onglets = ttk.Notebook(self)
         self.onglets.pack(fill="both", expand=True, padx=16, pady=(0, 8))
         self.tableau = PageTableau(self, self.onglets)
-        self.pages_comptes = [PageYoutube(self, self.onglets), PageInstagram(self, self.onglets),
-                              PageWhatsapp(self, self.onglets)]
+        self.pages_comptes = [PageYoutube(self, self.onglets), PageBluesky(self, self.onglets),
+                             PageInstagram(self, self.onglets), PageFacebook(self, self.onglets),
+                             PageX(self, self.onglets)]
         PagePlanification(self, self.onglets)
         self.analyse = PageAnalyse(self, self.onglets)
         self.themes = PageThemes(self, self.onglets)
@@ -83,6 +85,20 @@ class Application(tk.Tk):
         c = sauvegarde.contenu()
         self.message("Sauvegarde lancée : donnees/sauvegardes/donnees.zip"
                      + (f" (la précédente date du {c['le'][:16]})." if c else "."))
+
+    def exporter_hf(self):
+        """Fichier de chaque source qui a changé → dataset rag-politique/politique-sources (python -m huggingface,
+        docs/HUGGINGFACE.md). Aussi fait seul après chaque collecte qui ramène du neuf."""
+        from commun.taches import en_cours, lancer_en_fond
+        if en_cours("huggingface"):
+            return self.message("Un export vers Hugging Face est déjà en cours : voir le journal.")
+        if not messagebox.askyesno("Exporter vers Hugging Face",
+                                   "Mettre à jour dans le dataset public rag-politique/politique-sources le "
+                                   "fichier de chaque source qui a changé (commentaires notés, avec le nom de "
+                                   "leurs auteurs) ? L'ancien fichier de ces sources est remplacé."):
+            return
+        lancer_en_fond(["-m", "huggingface"], env={"HF_HUB_OFFLINE": "0"})
+        self.message("Export vers Hugging Face lancé : suivi dans le journal du tableau de bord.")
 
     def message(self, texte: str):
         """Message passager en bas de la fenêtre (6 secondes)."""

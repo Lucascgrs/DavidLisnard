@@ -18,6 +18,7 @@ from datetime import date, datetime
 
 from commun.config import DOCS, MODELES, perimetre
 from commun.fichiers import lire_csv, lire_json
+from huggingface import export as hf_export
 
 SOURCE = DOCS / "FONCTIONNEMENT.html"
 PDF = DOCS / "FONCTIONNEMENT.pdf"
@@ -65,6 +66,8 @@ def chiffres() -> dict[str, str]:
     constance = lire_json(stockage.CONSTANCE, {}) or {}
     p = perimetre()
     insta = p.get("instagram", {})
+    fb = p.get("facebook", {})
+    px = p.get("x", {})
     figes = int(reseau.get("figes", 4))
     longueurs = reseau.get("longueurs") or [128, 64, 20]
     from critiques import donnees as critiques
@@ -72,6 +75,8 @@ def chiffres() -> dict[str, str]:
     th_ratt = lire_csv(critiques.RATTACHEMENTS) if critiques.RATTACHEMENTS.exists() else []
     th_lus = lire_csv(critiques.LUS) if critiques.LUS.exists() else []
     th_etat = critiques.resultats()  # sélection d'aujourd'hui et reste à lire
+    from analyse.ton_inverse import mesurer as ton_inverse
+    inv = ton_inverse()  # carte « Ton inversé » : notes du corpus (scores.csv) contre celles de Claude sur le test
     from commun import sauvegarde
     from commun.config import DONNEES
     doublons = 0
@@ -113,14 +118,44 @@ def chiffres() -> dict[str, str]:
         "n_total": entier(sum(sources.values())),
         "n_youtube": entier(sources.get("youtube", 0)),
         "n_instagram": entier(sources.get("instagram", 0)),
-        "n_whatsapp": entier(sources.get("whatsapp", 0)),
         "n_bluesky": entier(sources.get("bluesky", 0)),
         "bluesky_relire": str(p.get("bluesky", {}).get("relire_si_moins_de_jours", 7)),
+        "n_comptes_bluesky": {0: "aucun", 1: "un"}.get(len(p.get("bluesky", {}).get("comptes", [])),
+                                                       str(len(p.get("bluesky", {}).get("comptes", [])))),
+        # Avant la première reconstruction du corpus avec Facebook : les lignes déjà collectées.
+        "n_facebook": entier(sources.get("facebook") or sum(
+            len(lire_csv(f)) for f in (DONNEES / "facebook").glob("*.csv"))),
+        "n_groupes_facebook": str(len(fb.get("groupes", []))),
+        "groupes_facebook": ", ".join(f"« {g['nom']} »" for g in fb.get("groupes", [])) or "aucun groupe",
+        "pages_facebook": {0: "aucune Page", 1: "sa Page officielle"}.get(
+            len(fb.get("pages", [])), f"{len(fb.get('pages', []))} Pages officielles"),
+        "fb_pause": " à ".join(decimal(x, 1) for x in fb.get("pause_entre_requetes_s", [1.5, 3.0])),
+        "fb_minutes": str(fb.get("minutes_par_lancement", 120)),
+        "fb_quota": entier(fb.get("requetes_par_jour", 6000)),
+        "fb_relire": str(fb.get("relire_si_moins_de_jours", 7)),
+        "fb_depuis": jour(fb.get("depuis", "2026-07-31")),
+        "fb_repos": str(fb.get("repos_apres_freinage_heures", 3)),
+        # Avant la première reconstruction du corpus avec X : les lignes déjà collectées.
+        "n_x": entier(sources.get("x") or sum(len(lire_csv(f)) for f in (DONNEES / "x").glob("*.csv"))),
+        "n_comptes_x": str(len(px.get("comptes", []))),
+        "comptes_x": ", ".join(f"@{c['pseudo']}" for c in px.get("comptes", [])) or "aucun",
+        "x_par_quart": str(px.get("recherches_par_quart_heure", 40)),
+        "x_pause": " à ".join(decimal(x, 0) for x in px.get("pause_entre_requetes_s", [3, 8])),
+        "x_minutes": str(px.get("minutes_par_lancement", 120)),
+        "x_quota": entier(px.get("requetes_par_jour", 3000)),
+        "x_relire": str(px.get("relire_si_moins_de_jours", 7)),
+        "x_attendre": str(px.get("attendre_reponses_jours", 2)),
+        "x_depuis": jour(px.get("depuis", "2026-07-31")),
+        "x_repos": str(px.get("repos_apres_freinage_heures", 3)),
         "n_autres_chaines": entier(len(autres)), "n_autres": entier(sum(autres.values())),
         "pages_recherche": str((p.get("youtube", {}).get("recherche") or {}).get("pages_par_lancement", 5)),
         "n_doublons": entier(doublons),
         "part_doublons": decimal(100 * doublons / max(1, sum(sources.values())), 1) + " %",
         "sauvegarde_mo": f"{archive:.0f} Mo" if archive else "à faire",
+        # Export vers le dataset Hugging Face du groupe (huggingface/export.py, lu sur les lots locaux)
+        **(lambda e: {"hf_exportes": entier(e["exportes"]),
+                      "hf_attente": entier(sum(n for _, _, n, depose in e["sources"] if not depose))})(
+            hf_export.etat()),
         "th_selection": entier(th_etat["n_selection"]), "th_a_lire": entier(th_etat["a_lire"]),
         "n_chaines": str(len(p.get("youtube", {}).get("chaines", []))),
         "comptes_instagram": ", ".join(f"@{c}" for c in insta.get("comptes", [])) or "aucun compte",
@@ -137,6 +172,11 @@ def chiffres() -> dict[str, str]:
         "th_lus": entier(len(th_lus)), "th_n": str(len(th_themes)), "th_ratt": entier(len(th_ratt)),
         "th_e": entier(sum(r["sens"] == "E" for r in th_ratt)), "th_c": entier(sum(r["sens"] == "C" for r in th_ratt)),
         "th_d": entier(sum(r["sens"] == "D" for r in th_ratt)),
+        "inv_part": (f"{100 * inv['n'] / inv['total']:.1f}".replace(".", ",") + " %") if inv["total"] else "?",
+        "inv_n": str(inv["n"]), "inv_total": entier(inv["total"]), "inv_version": inv["version"],
+        "inv_n_arg": str(inv["n_arg"]), "inv_total_arg": str(inv["total_arg"]),
+        **{f"th_cat_{k}": entier(sum(r["sens"] in critiques.SENS_TRIES and (r.get("categorie") or "0") == k
+                                     for r in th_ratt)) for k in "012345"},
         "figes": str(figes), "couches_ajustees": str(COUCHES - figes), "couches_svg": couches,
         "epoques": str(reseau.get("epoques", "?")), "lr": puissance(reseau.get("lr", 3e-5)),
         "duree": f"{minutes // 60} h {minutes % 60:02d}" if minutes >= 60 else f"{minutes} min",

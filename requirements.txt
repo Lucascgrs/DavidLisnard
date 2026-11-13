@@ -2,11 +2,12 @@
 
 # Collecte
 requests>=2.32
-playwright>=1.50        # pilote le Chrome installé (Instagram) et l'application WhatsApp ; pas de navigateur à télécharger
+playwright>=1.50        # pilote le Chrome installé (Instagram) ; pas de navigateur à télécharger
 openpyxl>=3.1
 psutil>=7.0
-pywin32>=308            # fenêtre WhatsApp en plein écran
 tzdata>=2025.1          # fuseau Europe/Paris sous Windows
+facebook-gql-scraper>=0.9.1   # groupes Facebook (requêtes internes du site ; corrigée dans collecte/sources/facebook.py)
+twscrape>=0.21                # X (recherches internes du site avec les cookies du compte de collecte)
 
 # Interface
 sv-ttk>=2.6

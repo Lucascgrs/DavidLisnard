@@ -5,8 +5,8 @@
     python -m commun.sauvegarde --forcer    remplace l'ancienne même si un fichier de collecte a rétréci
 
 Ce qui est copié, dans cet ordre (le plus irremplaçable d'abord) :
-1. WhatsApp et Instagram : messages éphémères et anciennes publications, qu'on ne peut pas recollecter ;
-2. les autres sources (YouTube, Bluesky) ;
+1. Instagram : les anciennes publications ne peuvent pas être recollectées ;
+2. les autres sources (YouTube, Bluesky, Facebook, X) ;
 3. le travail fait à la main : annotations (donnees/analyse/annotation/), corrections de l'interface
    (donnees/analyse/corrections.csv) et lecture par thèmes (donnees/critiques/).
 Pour chaque source : les CSV bruts, etat.json (ce qui a déjà été lu) et likes.json. Les Excel, la copie de travail,
@@ -35,7 +35,7 @@ DOSSIER = DONNEES / "sauvegardes"
 FICHIER = DOSSIER / "donnees.zip"
 A_VERIFIER = DOSSIER / "donnees_a_verifier.zip"
 CONTENU = "contenu.json"  # dans l'archive : date et taille de chaque fichier
-PRIORITE = ("whatsapp", "instagram")
+PRIORITE = ("instagram",)
 TACHE = "sauvegardes"  # verrou donnees/sauvegardes/EN_COURS
 
 

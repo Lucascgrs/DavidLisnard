@@ -8,7 +8,10 @@ Les notes suivent docs/GRILLE.md. Une annotation porte sur un texte distinct (te
     python -m analyse.annotation tirer-reponses N       N réponses à lire avec leur parent (ironie, « exactement »…)
     python -m analyse.annotation tirer-visibles N       N commentaires mis en avant (argumentés, notes extrêmes)
     python -m analyse.annotation tirer-suspects         ceux dont le texte contredit la tonalité du modèle
+    python -m analyse.annotation tirer-longs N          N commentaires longs (≥ 40 mots), argumentés, toutes sources
     python -m analyse.annotation tirer-hasard N [jeu]   N commentaires au hasard (jeu « test » : agrandit la mesure)
+    … tirer-actif N --source facebook                   (et tirer-hasard) : seulement les commentaires d'une source,
+                                                        pour une source nouvelle encore peu annotée
     python -m analyse.annotation voir 3 [depuis]        affiche le lot 3 (pour l'annotateur)
     python -m analyse.annotation noter 3 notes.txt      vérifie et enregistre les notes du lot 3
     python -m analyse.annotation etat                   où en est l'annotation
@@ -29,6 +32,7 @@ from datetime import datetime
 from analyse import stockage
 from analyse.corpus import lire
 from analyse.criteres import CRITERES
+from commun.config import SOURCES
 from commun.fichiers import ecrire_csv, lire_csv
 from commun.textes import abreger, sans_accents
 
@@ -74,6 +78,12 @@ def _representants(corpus):
     return {k: rnd.choice(v) for k, v in par_texte.items()}
 
 
+def _de_la_source(corpus: list[dict], source: str | None) -> list[dict]:
+    if source and source not in SOURCES:
+        raise SystemExit(f"source inconnue : {source} (possibles : {', '.join(SOURCES)})")
+    return [l for l in corpus if l["source"] == source] if source else corpus
+
+
 def _strate(l):
     if l["source"] == "youtube":
         return "youtube_" + ("media" if l["groupe"] == "media" else "officiel" if l["groupe"] == "officiel"
@@ -105,7 +115,7 @@ def tirer_tour1():
     par_strate = defaultdict(list)
     for k, l in reps.items():
         par_strate[_strate(l)].append(l)
-    quotas = {"youtube_officiel": 260, "youtube_media": 300, "youtube_autres": 150, "instagram": 260, "whatsapp": 60}
+    quotas = {"youtube_officiel": 260, "youtube_media": 300, "youtube_autres": 150, "instagram": 260}
     choisis, pris = [], set()
     # 1. Au hasard dans chaque strate, en sur-représentant un peu les textes longs (la moitié tirée parmi > 80 car.)
     for s, q in quotas.items():
@@ -147,17 +157,18 @@ def tirer(cles_texte: list[str], motif: str, jeu: str = "entrainement"):
     print(f"{len(choisis)} commentaires en {nb} lots (à partir du lot {premier})")
 
 
-def tirer_actif(n: int):
+def tirer_actif(n: int, source: str | None = None):
     """Tour d'apprentissage actif : n commentaires choisis par le modèle actuel.
     - la moitié là où ses deux méthodes divergent le plus (il hésite) ;
     - un quart parmi les plus éloignés de tout ce qui a déjà été annoté ;
-    - un quart parmi ceux qu'il croit porteurs d'un reproche fort (forme, système, idées), pour les cas rares."""
+    - un quart parmi ceux qu'il croit porteurs d'un reproche fort (forme, système, idées), pour les cas rares.
+    source : seulement les commentaires de cette source (représentant pris dans cette source)."""
     import numpy as np
     from analyse.modele import Entrees, charger
     modele, _ = charger()
     entrees = Entrees()
     deja = deja_tires()
-    reps = _representants(entrees.corpus)
+    reps = _representants(_de_la_source(entrees.corpus, source))
     cands = [l for k, l in reps.items() if k not in deja and k in entrees.textes.index and len(l["texte"]) > 15]
     p = modele.predire(entrees.matrice(cands))
     rnd = random.Random(len(deja))
@@ -217,7 +228,7 @@ def tirer_visibles(n: int):
     cands = {}
     for l in corpus:
         s = scores.get(l["cle"])
-        if not s or l["source"] not in ("youtube", "instagram") or s["cible"] != "L" or l["texte_cle"] in deja:
+        if not s or l["source"] not in SOURCES or s["cible"] != "L" or l["texte_cle"] in deja:
             continue
         x = {c: int(s[c]) for c in CRITERES}
         if x["pertinence"] < 12:
@@ -261,7 +272,7 @@ def tirer_suspects():
     cands = {}
     for l in corpus:
         s = scores.get(l["cle"])
-        if (not s or l["source"] not in ("youtube", "instagram") or s["cible"] != "L" or l["texte_cle"] in deja
+        if (not s or l["source"] not in SOURCES or s["cible"] != "L" or l["texte_cle"] in deja
                 or int(s["pertinence"]) < 10):
             continue
         t, ton = sans_accents(l["texte"]), int(s["tonalite"])
@@ -278,10 +289,71 @@ def tirer_suspects():
     print(f"{len(choisis)} suspects en {nb} lots (à partir du lot {premier})")
 
 
-def tirer_hasard(n: int, jeu: str):
-    """n commentaires au hasard (jeu « test » : agrandit l'échantillon de mesure)."""
+MOTS_LONG = 40
+# Facebook (groupes de soutiens, ajouté le 2026-11-12) : une part à lui, prise sur YouTube et Instagram. X (ajouté le
+# 2026-11-13) : 10 %, pris de même sur YouTube et Instagram.
+PART_SOURCES = {"youtube": 0.35, "instagram": 0.28, "bluesky": 0.12, "facebook": 0.15, "x": 0.10}
+
+
+def tirer_longs(n: int):
+    """Commentaires longs (au moins 40 mots) pas encore annotés, ceux qui apprennent le plus au modèle et que la
+    lecture par thèmes utilise. 90 % parmi ceux que le modèle juge sur Lisnard et argumentés (pertinence ≥ 10), 10 %
+    parmi les autres longs (hors sujet, disputes) pour qu'il apprenne aussi à les reconnaître. Réparti entre les
+    sources (PART_SOURCES, le reste reporté sur les autres si une source manque) et, dans chaque source, en tournant
+    entre les comptes pour ne pas tout prendre sous les mêmes vidéos."""
+    corpus = lire()
+    scores = stockage.lire_scores()
+    deja = deja_tires() | {a["texte_cle"] for a in annotations()}
+    rnd = random.Random(len(deja) + 3)
+    vus, cands = set(), defaultdict(lambda: defaultdict(list))
+    for l in corpus:
+        k = l["texte_cle"]
+        if k in deja or k in vus or l.get("doublon_de") or len(l["texte"].split()) < MOTS_LONG or len(l["texte"]) > 4000:
+            continue
+        vus.add(k)
+        s = scores.get(l["cle"])
+        fort = bool(s) and s["cible"] == "L" and int(s["pertinence"]) >= 10
+        cands[fort][l["source"]].append(l)
+
+    def repartir(pool, combien):
+        voulu = {src: round(combien * PART_SOURCES.get(src, 0)) for src in pool}
+        manque = sum(max(0, v - len(pool[src])) for src, v in voulu.items())
+        for src in sorted(pool, key=lambda x: -len(pool[x])):  # le manque d'une source va aux plus fournies
+            libre = len(pool[src]) - voulu[src]
+            if manque and libre > 0:
+                plus = min(libre, manque)
+                voulu[src] += plus
+                manque -= plus
+        pris = []
+        for src, v in voulu.items():
+            par_compte = defaultdict(list)
+            for l in pool[src]:
+                par_compte[l["compte"]].append(l)
+            files = [rnd.sample(x, len(x)) for x in par_compte.values()]
+            rnd.shuffle(files)
+            pris_src = []
+            while len(pris_src) < min(v, len(pool[src])):
+                for f in files:
+                    if f and len(pris_src) < v:
+                        pris_src.append(f.pop())
+            pris += pris_src
+        return pris
+
+    forts = repartir(cands[True], round(0.9 * n))
+    autres = repartir(cands[False], n - len(forts))
+    choisis = [{"cle": l["cle"], "texte_cle": l["texte_cle"], "jeu": "entrainement", "motif": "long"}
+               for l in forts + autres]
+    numeros = [x for x in map(numero_lot, LOTS.glob("lot_*.csv")) if x < LOTS_CONSTANCE]
+    premier = max(numeros, default=0) + 1
+    nb = _ecrire_lots(choisis, premier)
+    print(f"{len(choisis)} longs en {nb} lots (à partir du lot {premier}) ; "
+          f"{Counter(l['source'] for l in forts + autres)}")
+
+
+def tirer_hasard(n: int, jeu: str, source: str | None = None):
+    """n commentaires au hasard (jeu « test » : agrandit l'échantillon de mesure), d'une seule source si demandé."""
     deja = deja_tires()
-    reps = _representants(lire())
+    reps = _representants(_de_la_source(lire(), source))
     rnd = random.Random(len(deja) + 2)
     pool = [k for k in reps if k not in deja]
     tirer(rnd.sample(pool, n), f"hasard:{jeu}", jeu)
@@ -300,7 +372,7 @@ def voir(numero: int, depuis: int = 1):
             ligne += f" P:{abreger(l['publication_titre'], 60)}"
         if l["parent_texte"]:
             ligne += "\n   ↳ répond à : " + abreger(l["parent_texte"], 450)
-        ligne += f"\n   » {abreger(l['texte'], 1500 if item.get('motif') == 'visible' else 600)}"
+        ligne += f"\n   » {abreger(l['texte'], 1500 if item.get('motif') in ('visible', 'long') else 600)}"
         print(ligne)
 
 
@@ -357,18 +429,25 @@ def etat():
 if __name__ == "__main__":
     sys.stdout.reconfigure(encoding="utf-8")
     cmd, *args = sys.argv[1:] or [""]
+    source = None
+    if "--source" in args:
+        i = args.index("--source")
+        source = args[i + 1] if i + 1 < len(args) else ""
+        del args[i:i + 2]
     if cmd == "tirer-tour1":
         tirer_tour1()
     elif cmd == "tirer-actif":
-        tirer_actif(int(args[0]) if args else 500)
+        tirer_actif(int(args[0]) if args else 500, source)
     elif cmd == "tirer-reponses":
         tirer_reponses(int(args[0]))
     elif cmd == "tirer-suspects":
         tirer_suspects()
+    elif cmd == "tirer-longs":
+        tirer_longs(int(args[0]))
     elif cmd == "tirer-visibles":
         tirer_visibles(int(args[0]))
     elif cmd == "tirer-hasard":
-        tirer_hasard(int(args[0]), args[1] if len(args) > 1 else "entrainement")
+        tirer_hasard(int(args[0]), args[1] if len(args) > 1 else "entrainement", source)
     elif cmd == "voir":
         voir(int(args[0]), int(args[1]) if len(args) > 1 else 1)
     elif cmd == "noter":

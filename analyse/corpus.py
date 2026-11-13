@@ -29,8 +29,9 @@ from commun.fichiers import ecrire_csv, lire_csv, lire_json
 from commun.textes import sans_accents
 
 # Ordre de lecture des sources : il fixe l'ordre des lignes du corpus, et donc le tirage des lots d'annotation.
-# Une nouvelle source s'ajoute à la fin, pour ne pas déplacer les lignes des autres.
-ORDRE_SOURCES = ["youtube", "instagram", "whatsapp", "bluesky"]
+# Une nouvelle source s'ajoute à la fin, pour ne pas déplacer les lignes des autres. WhatsApp a été retiré le 2026-11-12,
+# Facebook (groupes publics) ajouté le même jour, X le 2026-11-13.
+ORDRE_SOURCES = ["youtube", "instagram", "bluesky", "facebook", "x"]
 CHAMPS = ["cle", "source", "compte", "groupe", "publication_id", "publication_titre", "publication_lien",
           "publication_date", "date", "type", "parent_cle", "parent_texte", "auteur_h", "likes", "texte", "texte_cle",
           "doublon_de"]
@@ -54,6 +55,15 @@ def groupes() -> dict[tuple[str, str], str]:
     g = {("youtube", c["nom"]): c.get("groupe", "") for c in p["youtube"]["chaines"]}
     for c in p["instagram"]["comptes"]:
         g[("instagram", f"@{c}")] = "officiel" if c == "davidlisnard" else "autre"
+    for c in (p.get("bluesky") or {}).get("comptes", []):  # comptes Bluesky suivis (la recherche reste « autre »)
+        g[("bluesky", f"@{c['handle']}")] = c.get("groupe", "autre")
+    fb = p.get("facebook") or {}
+    for c in fb.get("groupes", []):  # groupes de soutiens : « soutien »
+        g[("facebook", c["nom"])] = c.get("groupe", "soutien")
+    for c in fb.get("pages", []):  # sa Page officielle : « officiel »
+        g[("facebook", c["nom"])] = c.get("groupe", "officiel")
+    for c in (p.get("x") or {}).get("comptes", []):  # comptes X suivis (la recherche reste « autre »)
+        g[("x", f"@{c['pseudo']}")] = c.get("groupe", "autre")
     return g
 
 
@@ -78,8 +88,7 @@ def lire_collecte() -> list[dict]:
         parent = l.get("parent_id") or ""
         corpus.append({
             "cle": cle, "source": l["source"], "compte": l["compte_source"],
-            "groupe": "adhérents" if l["source"] == "whatsapp"
-            else grp.get((l["source"], l["compte_source"]), GROUPE_PAR_DEFAUT),
+            "groupe": grp.get((l["source"], l["compte_source"]), GROUPE_PAR_DEFAUT),
             "publication_id": l["publication_id"], "publication_titre": nettoyer(l["publication_titre"])[:300],
             "publication_lien": l["publication_lien"], "publication_date": l["publication_date"],
             "date": l["date"], "type": l["type"],

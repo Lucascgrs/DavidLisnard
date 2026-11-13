@@ -13,7 +13,7 @@ do $$ begin
 end $$;
 
 create table if not exists publications (
-  id      text primary key,          -- « youtube:<id vidéo> », « instagram:<code du post> », « bluesky:<did/rkey de la tête du fil> »
+  id      text primary key,          -- « youtube:<id vidéo> », « instagram:<code du post> », « bluesky:<did/rkey de la tête du fil> », « facebook:<id du post> », « x:<id du post> »
   source  text not null,
   code    text not null,
   compte  text,
@@ -23,10 +23,10 @@ create table if not exists publications (
 );
 
 create table if not exists commentaires (
-  cle         text primary key,      -- « youtube:<id commentaire> », « instagram:<id commentaire> », « bluesky:<did/rkey> »
+  cle         text primary key,      -- « youtube:<id commentaire> », « instagram:<id commentaire> », « bluesky:<did/rkey> », « facebook:<id> », « x:<id> »
   source      text not null,
   compte      text not null,
-  groupe      text not null,         -- officiel, media, commentateur, soutien, autre (recherche YouTube, Bluesky)
+  groupe      text not null,         -- officiel, media, commentateur, soutien (dont les groupes Facebook), autre (recherche YouTube, Bluesky, recherche X)
   publication text references publications (id),
   date        timestamp,
   semaine     date,                  -- lundi de la semaine

@@ -1,8 +1,7 @@
 """Ce que le site publie, calculé depuis donnees/analyse/ (corpus.csv + scores.csv + corrections.csv).
 
-- les commentaires notés de YouTube, d'Instagram et de Bluesky, sans auteur ni doublon (même auteur, même texte,
-  même source : analyse/corpus.py). WhatsApp n'est jamais publié : c'est une discussion privée d'adhérents, pas un
-  espace public ;
+- les commentaires notés de YouTube, d'Instagram, de Bluesky, des groupes Facebook publics et de X, sans auteur ni doublon (même auteur, même texte,
+  même source : analyse/corpus.py) ;
 - les publications (vidéos, posts) auxquelles ils répondent, pour le lien vers l'original ;
 - « meta » : chiffres du projet, comptes suivis, qualité du modèle (page Le projet, listes de filtres) ;
 - « cube » : les comptages par semaine × compte × type × cible × exploitable, d'où la page Statistiques recalcule
@@ -10,7 +9,8 @@
   et pondéré par les « j'aime » (colonnes « p_… » : un commentaire pèse 1 + ses « j'aime », lui-même et ceux qui
   l'approuvent) ;
 - « themes » : ce que disent les commentaires argumentés sur lui, rangés par thème et par sens (python -m
-  critiques), recomptés sur les seules sources publiées, sans auteur (page Thèmes).
+  critiques), recomptés sur les seules sources publiées, sans auteur (page Thèmes). Chaque critique ou doute porte
+  sa catégorie (« cat », de 1 à 5 : critiques.CATEGORIES), que la page propose en filtre.
 """
 from collections import defaultdict
 from datetime import date, timedelta
@@ -21,11 +21,11 @@ from commun.config import DONNEES
 from commun.fichiers import lire_csv, lire_json
 from commun.textes import maintenant
 
-SOURCES_PUBLIEES = ("youtube", "instagram", "bluesky")
+SOURCES_PUBLIEES = ("youtube", "instagram", "bluesky", "facebook", "x")
 PERTINENCE_EXPLOITABLE = 5  # en dessous : ironie indécidable, émojis seuls, hors sujet (docs/GRILLE.md)
 BAS, HAUT, ARGUMENTE = 6, 14, 12  # critique ou reproche ≤ 6, éloge ≥ 14, avis argumenté : pertinence ≥ 12
 GROUPES = {"officiel": "Ses comptes", "media": "Médias", "commentateur": "Commentateurs",
-           "soutien": "Chaînes de soutien", "autre": "Autres comptes"}
+           "soutien": "Chaînes et groupes de soutien", "autre": "Autres comptes"}
 
 
 def lundi(texte_date: str) -> str:
@@ -57,7 +57,8 @@ def charger() -> tuple[list[dict], dict[str, dict]]:
                                  "compte": l["compte"], "titre": l["publication_titre"][:600] or None,
                                  "lien": l["publication_lien"] or None, "date": l["publication_date"][:19] or None}
         elif not publications[pub]["titre"] and l["publication_titre"]:
-            # Bluesky : le message de tête n'a pas de titre (son texte est le commentaire), ses réponses l'ont.
+            # Bluesky, Facebook, X : le message de tête (le post) n'a pas de titre (son texte est le commentaire),
+            # ses réponses l'ont.
             publications[pub]["titre"] = l["publication_titre"][:600]
         parent = garde.get(l["parent_cle"], "")  # une réponse à un doublon est rattachée au commentaire gardé
         commentaires.append({
@@ -122,6 +123,7 @@ def themes() -> dict | None:
     if not r["n_rattachements"]:
         return None
     sortie = []
+    anonymes = {}  # auteur -> numéro sans signification, pour compter les auteurs distincts sur une période choisie
     for i, t in r["themes"].items():
         liens = [l for l in t["liens"] if l["source"] in SOURCES_PUBLIEES]  # déjà sans doublon (critiques.resultats)
         if not liens:
@@ -136,11 +138,14 @@ def themes() -> dict | None:
                        "definition": t.get("definition", ""), "synthese": t.get("synthese", {}),
                        "n": n, "auteurs": auteurs, "mois": dict(sorted(mois.items())),
                        "liens": [{"cle": l["cle"], "sens": l["sens"], "resume": l["resume"], "date": l["date"],
+                                  **({"cat": l["categorie"]} if l["categorie"] else {}),
+                                  "a": anonymes.setdefault(l["auteur_h"] or l["cle"], len(anonymes)),
                                   "source": l["source"], "compte": l["compte"],
                                   "texte": l["texte"][:TEXTE_THEME] + ("…" if len(l["texte"]) > TEXTE_THEME else "")}
                                  for l in liens]})
     return {"mis_a_jour": maintenant(), "maj_lecture": r.get("maj"), "familles": critiques.FAMILLES,
-            "sens": critiques.SENS, "n_lus": r["n_lus"], "n_selection": r["n_selection"], "a_lire": r["a_lire"],
+            "sens": critiques.SENS, "categories": critiques.CATEGORIES,
+            "definitions_categories": critiques.DEFINITIONS_CATEGORIES, "n_lus": r["n_lus"], "n_selection": r["n_selection"], "a_lire": r["a_lire"],
             "regles": {"pertinence_min": critiques.PERTINENCE_MIN, "mots_min": critiques.MOTS_MIN},
             "themes": sortie}
 

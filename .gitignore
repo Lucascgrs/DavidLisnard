@@ -3,6 +3,9 @@ donnees/
 sessions/
 config/cles.json
 config/compte.json
+config/facebook.env
+config/*.env
+!config/*.exemple.env
 config/planification.json
 config/*.bak
 

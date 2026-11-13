@@ -8,6 +8,10 @@ Ce qui est pris :
   une vidéo qui parle de lui ;
 - sous une réponse qui le contient : les réponses à cette réponse.
 
+Comptes suivis (« comptes » dans config/perimetre.json, réglés dans l'onglet Bluesky de l'interface) : en plus de la
+recherche, tous les messages publiés par ces comptes (reposts exclus), qu'ils citent le mot-clé ou non, avec toutes
+leurs réponses. Un fichier par compte (« @pseudo »), un arriéré par compte remonté par curseur jusqu'à « depuis ».
+
 Comment c'est rangé (mêmes colonnes que les autres sources) :
 - un seul compte, « Recherche « Lisnard » », donc un seul fichier ;
 - la « publication » est le message de tête du fil : son texte sert de titre aux réponses (le message de tête
@@ -43,6 +47,11 @@ PAUSE = 0.15  # secondes entre deux appels : très en dessous de la limite (3 00
 
 def nom_compte(mot: str) -> str:
     return f"Recherche « {mot} »"
+
+
+def nom_compte_suivi(c: dict) -> str:
+    """Nom (et fichier) d'un compte suivi : « @pseudo.bsky.social »."""
+    return f"@{c['handle']}"
 
 
 class Api:
@@ -174,6 +183,57 @@ def reponses_du_fil(api: Api, uri: str) -> list[dict]:
     return sortie
 
 
+def fil_du_compte(api: Api, did: str, etat: dict, depuis: datetime, pages: int) -> tuple[list[dict], int]:
+    """Messages publiés par un compte suivi (ses reposts exclus), du plus récent au plus ancien.
+    Récent : jusqu'au dernier passage (moins un jour de marge). Arriéré : repris au curseur enregistré, jusqu'à
+    « depuis ». Renvoie (messages, pages utilisées) ; etat garde le, curseur, arriere et complet."""
+    trouves, utilisees = [], 0
+
+    def lire(curseur, borne):
+        nonlocal utilisees
+        while utilisees < pages:
+            d = api.appel("app.bsky.feed.getAuthorFeed", actor=did, limit=100, cursor=curseur,
+                          filter="posts_and_author_threads")
+            utilisees += 1
+            if d.get("_erreur"):
+                raise SourceImpossible(f"compte Bluesky {did} introuvable (supprimé ?)")
+            plus_ancien = None
+            for item in d.get("feed", []):
+                post = item.get("post") or {}
+                if item.get("reason") or (post.get("author") or {}).get("did") != did or not post.get("record"):
+                    continue  # repost, ou message d'un autre compte dans le fil
+                date = _date(post["record"].get("createdAt"))
+                if date and date < borne:
+                    continue
+                trouves.append(post)
+            dates = [x for x in (_date((i.get("post") or {}).get("record", {}).get("createdAt"))
+                                 for i in d.get("feed", []) if not i.get("reason")) if x]
+            plus_ancien = min(dates) if dates else None
+            curseur = d.get("cursor")
+            if not curseur or not d.get("feed") or (plus_ancien and plus_ancien < borne):
+                return None, plus_ancien  # au bout
+        return curseur, None  # budget épuisé : la suite au prochain lancement
+
+    debut = datetime.now(timezone.utc)
+    if etat.get("le"):
+        lire(None, max(depuis, _date(etat["le"]) - timedelta(days=1)))
+    else:
+        etat.update(curseur=None, arriere=None, complet=False, demarre=False)
+    if not etat.get("complet") and utilisees < pages:
+        if etat.get("curseur") or not etat.get("demarre"):
+            etat["demarre"] = True
+            curseur, _ = lire(etat.get("curseur"), depuis)
+            etat["curseur"] = curseur
+            etat["complet"] = curseur is None
+        else:
+            etat["complet"] = True
+    dates = [x for x in (_date(p["record"].get("createdAt")) for p in trouves) if x]
+    if dates and not etat.get("complet"):
+        etat["arriere"] = min(dates + ([_date(etat["arriere"])] if etat.get("arriere") else [])).isoformat()
+    etat["le"] = debut.isoformat(timespec="seconds")
+    return trouves, utilisees
+
+
 def messages(api: Api, uris: list[str]) -> dict[str, dict]:
     """Les messages demandés, par adresse (25 par appel) ; ceux qui ont disparu sont absents."""
     sortie = {}
@@ -218,6 +278,24 @@ def collecter(depot, journal) -> dict:
         journal(f"  arriéré remonté jusqu'au {(etat.get('arriere') or '')[:10]}" + (" (terminé)" if fini else ""))
     trouves = {identifiant(x["uri"]): x for x in trouves if contient(x["record"].get("text", ""), mot)}
     journal(f"  {len(trouves)} messages trouvés par la recherche « {mot} »")
+    compte_de = dict.fromkeys(trouves, compte)
+
+    # 1 bis. Les comptes suivis : tous leurs messages, qu'ils citent le mot-clé ou non (un message trouvé par les
+    # deux chemins est rangé avec son compte).
+    etats_comptes, details_comptes = depot.etat.setdefault("comptes", {}), []
+    for c in conf.get("comptes") or []:
+        depot.verifier_arret()
+        ec = etats_comptes.setdefault(c["did"], {})
+        ec["handle"] = c["handle"]
+        posts, utilisees = fil_du_compte(api, c["did"], ec, depuis, max(1, pages))
+        pages -= utilisees
+        nom = nom_compte_suivi(c)
+        for x in posts:
+            trouves[identifiant(x["uri"])] = x
+            compte_de[identifiant(x["uri"])] = nom
+        etat_arriere = ("terminé" if ec.get("complet") else f"remonté jusqu'au {(ec.get('arriere') or '…')[:10]}")
+        journal(f"  {nom} : {len(posts)} messages lus, arriéré {etat_arriere}")
+        details_comptes.append(f"{nom} : {len(posts)} messages, arriéré {etat_arriere}")
 
     # 2. Les messages déjà suivis : récents (réponses et « j'aime » à mettre à jour) ou dont le fil reste à lire.
     limite = (debut - timedelta(days=jours)).isoformat()
@@ -226,6 +304,8 @@ def collecter(depot, journal) -> dict:
     for i in set(a_revoir) - set(revus):  # supprimé par son auteur depuis
         del suivis[i]
     candidats = trouves | revus
+    for i in revus:
+        compte_de.setdefault(i, suivis[i].get("compte") or compte)
 
     # Le texte des messages de tête, qui sert de titre aux réponses.
     tetes = {x["uri"]: x for x in candidats.values() if not _racine(x)}
@@ -239,23 +319,28 @@ def collecter(depot, journal) -> dict:
         return {"id": identifiant(racine), "texte": t["record"].get("text", "") if t else "",
                 "date": t["record"].get("createdAt") if t else None}
 
-    ajoutes = depot.ajouter(compte, [_ligne(x, tete_de(x)) for x in trouves.values()])
-    depot.ajouter(compte, [_ligne(x, tete_de(x)) for x in revus.values()])  # déjà enregistrés : « j'aime » seulement
+    ajoutes, n_recherche = {}, sum(1 for i in trouves if compte_de[i] == compte)
+    for nom in sorted(set(compte_de.values())):
+        ajoutes[nom] = depot.ajouter(nom, [_ligne(x, tete_de(x)) for i, x in trouves.items() if compte_de[i] == nom])
+        depot.ajouter(nom, [_ligne(x, tete_de(x)) for i, x in revus.items()  # déjà enregistrés : « j'aime »
+                            if i not in trouves and compte_de[i] == nom])
     for i, x in trouves.items():
         # Une date absente ou dans le futur (horloge de l'auteur) compte comme « maintenant ».
         date = min(_date(x["record"].get("createdAt")) or debut, debut).astimezone(timezone.utc)
         suivis.setdefault(i, {"date": date.isoformat(), "reponses": 0})
+        if compte_de[i] != compte:
+            suivis[i]["compte"] = compte_de[i]
     depot.sauver_etat()
 
     # 3. Les réponses, sous chaque message qui en a gagné depuis sa dernière lecture.
     a_lire = [i for i, x in candidats.items() if (x.get("replyCount") or 0) > suivis[i].get("reponses", 0)]
-    journal(f"  {ajoutes} nouveaux messages, {len(revus)} messages récents revus, {len(a_lire)} fils à lire")
+    journal(f"  {sum(ajoutes.values())} nouveaux messages, {len(revus)} messages récents revus, {len(a_lire)} fils à lire")
     n_reponses = 0
     for n, i in enumerate(a_lire, 1):
         depot.verifier_arret()
         x = candidats[i]
         tete = tete_de(x) or {"id": i, "texte": x["record"].get("text", ""), "date": x["record"].get("createdAt")}
-        n_reponses += depot.ajouter(compte, [_ligne(r, tete) for r in reponses_du_fil(api, x["uri"])])
+        n_reponses += depot.ajouter(compte_de[i], [_ligne(r, tete) for r in reponses_du_fil(api, x["uri"])])
         suivis[i].update(reponses=x.get("replyCount") or 0, lu=True)
         if n % 25 == 0 or n == len(a_lire):
             depot.sauver_etat()
@@ -266,8 +351,11 @@ def collecter(depot, journal) -> dict:
     for v in suivis.values():
         v["lu"] = True
     depot.sauver_etat()
-    return {"details": [f"{len(trouves)} messages citant « {mot} », dont {ajoutes} nouveaux ; {len(a_lire)} fils lus, "
+    return {"details": [f"{n_recherche} messages citant « {mot} », dont {ajoutes.get(compte, 0)} nouveaux ; "
+                        f"{sum(ajoutes.values()) - ajoutes.get(compte, 0)} nouveaux des comptes suivis ; "
+                        f"{len(a_lire)} fils lus, "
                         f"{n_reponses} réponses nouvelles",
                         "arriéré " + ("terminé" if etat.get("complet") else
                                       f"remonté jusqu'au {(etat.get('arriere') or '?')[:10]}"),
+                        *details_comptes,
                         f"{api.appels} appels à l'API publique de Bluesky (gratuite, sans compte)"]}

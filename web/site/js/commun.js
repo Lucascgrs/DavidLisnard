@@ -17,8 +17,8 @@ export const BORNES = {
   idees: ["rejet", "non évoquées", "adhésion"],
   pertinence: ["n'apporte rien", "avis sans argument", "argumenté"],
 };
-export const SOURCES = { youtube: "YouTube", instagram: "Instagram", bluesky: "Bluesky" };
-export const GROUPES = { officiel: "Ses comptes", media: "Médias", commentateur: "Commentateurs", soutien: "Chaînes de soutien", autre: "Autres comptes" };
+export const SOURCES = { youtube: "YouTube", instagram: "Instagram", bluesky: "Bluesky", facebook: "Facebook", x: "X" };
+export const GROUPES = { officiel: "Ses comptes", media: "Médias", commentateur: "Commentateurs", soutien: "Chaînes et groupes de soutien", autre: "Autres comptes" };
 export const BAS = 6, HAUT = 14, ARGUMENTE = 12, EXPLOITABLE = 5;
 
 const FR = new Intl.NumberFormat("fr-FR");
@@ -70,6 +70,11 @@ export function lienOriginal(c) {
     const [did, rkey] = c.cle.slice("bluesky:".length).split("/");
     return `https://bsky.app/profile/${did}/post/${rkey}`;
   }
+  if (c.source === "facebook") {  // clé « facebook:<id> » : le post lui-même, ou un commentaire sous lui
+    if (!pub.lien) return null;
+    return id === pub.code ? pub.lien : `${pub.lien}?comment_id=${id}`;
+  }
+  if (c.source === "x") return `https://x.com/i/status/${id}`;  // clé « x:<id du post> »
   return pub.lien || `https://www.instagram.com/p/${pub.code}/`;
 }
 

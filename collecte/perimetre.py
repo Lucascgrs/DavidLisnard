@@ -1,5 +1,5 @@
 """Modifier le périmètre de collecte (config/perimetre.json) : utilisé par l'interface pour ajouter ou retirer des
-chaînes YouTube et des comptes Instagram.
+chaînes YouTube, des comptes Instagram, Bluesky et X, des groupes et Pages Facebook.
 
 Un compte retiré n'est plus lu, mais ses commentaires déjà collectés restent dans les fichiers.
 """
@@ -99,3 +99,92 @@ def avancement_instagram(conf: dict, etat: dict, pseudo: str) -> dict:
     return {"liste": bool(liste), "posts": len(dans), "lus": sum(1 for c in dans if c in lus),
             "jamais_lus": sum(1 for c in dans if c not in lus),
             "complete": bool(etat.get("liste_complete", {}).get(pseudo))}
+
+
+def trouver_bluesky(saisie: str) -> dict:
+    """« https://bsky.app/profile/x.bsky.social », « @x.bsky.social » ou un did → {handle, did, nom}
+    (API publique de Bluesky, sans compte)."""
+    s = saisie.strip()
+    m = re.search(r"bsky\.app/profile/([^/?#\s]+)", s)
+    s = (m.group(1) if m else s).lstrip("@").strip("/")
+    if not s:
+        raise ValueError("Saisir un pseudo Bluesky (x.bsky.social), un lien de profil ou un did.")
+    r = requests.get("https://api.bsky.app/xrpc/app.bsky.actor.getProfile", params={"actor": s}, timeout=30)
+    if r.status_code != 200:
+        raise ValueError(f"Compte Bluesky « {s} » introuvable (HTTP {r.status_code}).")
+    d = r.json()
+    return {"handle": d["handle"], "did": d["did"], "nom": d.get("displayName") or d["handle"]}
+
+
+def trouver_facebook(saisie: str) -> dict:
+    """Lien (ou identifiant) d'un groupe ou d'une Page Facebook → {type, id, nom}, en lisant la page une fois avec le
+    compte de collecte (sessions/facebook_cookies.json). type : « groupe » ou « page »."""
+    import html
+    import unicodedata
+    from collecte.connexion_facebook import NAVIGATION, lire_cookies
+    s = saisie.strip()
+    if not s:
+        raise ValueError("Coller le lien du groupe ou de la Page Facebook.")
+    if not s.startswith("http"):
+        s = "https://www.facebook.com/" + s.lstrip("/")
+    m = re.search(r"facebook\.com/groups/([^/?#\s]+)", s)
+    if m:
+        url = f"https://www.facebook.com/groups/{m.group(1)}/"
+    else:
+        m = re.search(r"facebook\.com/(?:profile\.php\?id=(\d+)|([A-Za-z0-9.\-]+))", s)
+        if not m:
+            raise ValueError(f"« {saisie} » n'est pas un lien Facebook.")
+        url = (f"https://www.facebook.com/profile.php?id={m.group(1)}" if m.group(1)
+               else f"https://www.facebook.com/{m.group(2)}")
+    cookies = lire_cookies()
+    if not cookies:
+        raise ValueError("Pas de session Facebook : lancer d'abord « python -m collecte.connexion_facebook ».")
+    session = requests.Session()
+    session.headers.update(NAVIGATION)
+    for c in cookies:
+        session.cookies.set(c["name"], c["value"], domain=".facebook.com")
+    try:
+        t = session.get(url, timeout=60).text
+    except requests.RequestException as e:
+        raise ValueError(f"Facebook injoignable ({type(e).__name__}).")
+    if "/groups/" in url:
+        gid = re.search(r'"groupID":"(\d+)"', t)
+        if not gid:
+            raise ValueError("Groupe introuvable (lien faux, groupe supprimé, ou privé).")
+        titre = re.search(r"<title>(.*?)</title>", t, re.S)
+        nom = html.unescape(titre.group(1)).strip() if titre else gid.group(1)
+        nom = re.sub(r"\s*\|\s*Facebook\s*$", "", nom)
+        nom = " ".join("".join(ch for ch in nom if unicodedata.category(ch)[0] != "S"  # émojis, drapeaux
+                               and unicodedata.category(ch) != "Mn" or ch.isalpha()).split()) or gid.group(1)
+        return {"type": "groupe", "id": gid.group(1), "nom": nom}
+    pid = re.search(r'"profile_owner":\{"id":"(\d+)","name":"([^"]*)"', t)
+    if not pid:
+        raise ValueError("Page ou profil introuvable (lien faux, ou contenu non public).")
+    nom = json.loads(f'"{pid.group(2)}"')
+    return {"type": "page", "id": pid.group(1), "nom": nom}
+
+
+def trouver_x(saisie: str) -> dict:
+    """« https://x.com/davidlisnard », « @davidlisnard » ou « davidlisnard » → {pseudo, id, nom}, en lisant le profil
+    une fois avec le compte de collecte (sessions/x_cookies.json, une requête)."""
+    import asyncio
+    s = saisie.strip()
+    m = re.search(r"(?:x|twitter)\.com/([A-Za-z0-9_]{1,15})", s)
+    s = (m.group(1) if m else s).lstrip("@").strip("/")
+    if not re.fullmatch(r"[A-Za-z0-9_]{1,15}", s):
+        raise ValueError(f"« {saisie} » n'est pas un pseudo X valable.")
+    from collecte.sources import x as source_x
+
+    async def lire():
+        api = await source_x._api()
+        return await api.user_by_login(s)
+
+    try:
+        u = asyncio.run(lire())
+    except source_x.SessionMorte:
+        raise ValueError("Pas de session X valable : lancer « python -m collecte.connexion_x ».")
+    except Exception as e:
+        raise ValueError(f"X injoignable ({type(e).__name__} : {e}).")
+    if u is None:
+        raise ValueError(f"Compte X « @{s} » introuvable.")
+    return {"pseudo": u.username, "id": str(u.id), "nom": u.displayname or u.username}

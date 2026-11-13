@@ -91,7 +91,7 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
 <header style="display:flex;flex-direction:column;gap:10px">
   <span class="etiquette">Projet DavidLisnard · état au {{date}}</span>
   <h1>Comment marche l'analyse des commentaires</h1>
-  <p class="chapo">De la collecte des commentaires sur YouTube, Bluesky et Instagram jusqu'au site public : d'où viennent les données, où elles sont rangées, comment Claude les annote et comment le modèle apprend à noter seul les {{n_total}} commentaires.</p>
+  <p class="chapo">De la collecte des commentaires sur YouTube, Bluesky, Instagram, Facebook et X jusqu'au site public : d'où viennent les données, où elles sont rangées, comment Claude les annote et comment le modèle apprend à noter seul les {{n_total}} commentaires.</p>
 </header>
 
 <!-- ============ VUE D'ENSEMBLE ============ -->
@@ -106,11 +106,11 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
       </defs>
       <rect x="10" y="40" width="150" height="150" rx="10" style="fill:var(--s-collecte-bg);stroke:var(--s-collecte)"/>
       <text x="85" y="66" text-anchor="middle" style="font-weight:600;fill:var(--s-collecte)">1 · Collecte</text>
-      <text x="85" y="92" text-anchor="middle" class="petit">API YouTube</text>
-      <text x="85" y="110" text-anchor="middle" class="petit">API Bluesky</text>
-      <text x="85" y="128" text-anchor="middle" class="petit">Chrome piloté</text>
-      <text x="85" y="144" text-anchor="middle" class="petit">(Instagram)</text>
-      <text x="85" y="162" text-anchor="middle" class="petit">WhatsApp Web</text>
+      <text x="85" y="90" text-anchor="middle" class="petit">API YouTube</text>
+      <text x="85" y="108" text-anchor="middle" class="petit">API Bluesky</text>
+      <text x="85" y="130" text-anchor="middle" class="petit">Chrome (Instagram)</text>
+      <text x="85" y="152" text-anchor="middle" class="petit">requêtes du site</text>
+      <text x="85" y="170" text-anchor="middle" class="petit">(Facebook, X)</text>
 
       <rect x="185" y="40" width="150" height="150" rx="10" style="fill:var(--s-stock-bg);stroke:var(--s-stock)"/>
       <text x="260" y="66" text-anchor="middle" style="font-weight:600;fill:var(--s-stock)">2 · Stockage</text>
@@ -175,7 +175,7 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
       <span class="puce p-ok">API ouverte, sans compte</span>
       <h3>Bluesky</h3>
       <div class="chiffre">{{n_bluesky}}</div>
-      <p>messages publics qui citent « Lisnard » et leurs réponses : tout le fil sous un message de tête qui le cite, et les réponses à une réponse qui le cite.</p>
+      <p>messages publics qui citent « Lisnard » et leurs réponses : tout le fil sous un message de tête qui le cite, et les réponses à une réponse qui le cite. Des comptes peuvent aussi être suivis en entier ({{n_comptes_bluesky}} aujourd'hui).</p>
       <p class="comment">API publique <code>api.bsky.app</code> (<code>searchPosts</code>, <code>getPostThread</code>), gratuite. Sans compte, la suite d'une recherche se demande par dates. Les messages de moins de {{bluesky_relire}} jours sont relus : nouvelles réponses et « j'aime ».</p>
     </div>
     <div class="carte">
@@ -186,14 +186,21 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
       <p class="comment">Instagram n'a pas d'API publique pour ça. Un Chrome visible, piloté par Playwright et connecté avec un compte dédié (cookies enregistrés), ouvre les posts et déplie les réponses. On lit {{posts_par_lancement}} posts par lancement et on ne revient que sur ceux de moins de {{relire_jours}} jours. La source s'arrête seule si Instagram freine.</p>
     </div>
     <div class="carte">
-      <span class="puce p-prive">Privé, jamais publié</span>
-      <h3>WhatsApp</h3>
-      <div class="chiffre">{{n_whatsapp}}</div>
-      <p>messages du groupe d'adhérents.</p>
-      <p class="comment">WhatsApp Web, lié au téléphone, lu par la page. Les messages sont éphémères, donc il faut collecter souvent. Ils sont analysés mais jamais mis sur le site.</p>
+      <span class="puce p-non">Compte dédié, requêtes du site</span>
+      <h3>Facebook</h3>
+      <div class="chiffre">{{n_facebook}}</div>
+      <p>posts, commentaires et réponses de {{pages_facebook}} et de {{n_groupes_facebook}} groupes publics de soutiens : {{groupes_facebook}}. Les groupes privés sont écartés.</p>
+      <p class="comment">Meta a fermé l'API des groupes en 2024. Avec les cookies d'un compte dédié, la bibliothèque <code>facebook-gql-scraper</code> envoie les requêtes internes du site, sans navigateur. Rythme humain : {{fb_pause}} s entre deux requêtes, {{fb_minutes}} min par lancement, {{fb_quota}} requêtes par jour ; le récent d'abord ({{fb_relire}} jours), puis l'arriéré jusqu'au {{fb_depuis}}. Au moindre freinage, la source se repose {{fb_repos}} h. Une Page se lit comme un profil, avec la même mécanique.</p>
+    </div>
+    <div class="carte">
+      <span class="puce p-non">Compte dédié, requêtes du site</span>
+      <h3>X (Twitter)</h3>
+      <div class="chiffre">{{n_x}}</div>
+      <p>posts et réponses de {{n_comptes_x}} comptes suivis en entier ({{comptes_x}}), et les posts d'autres comptes qui citent « Lisnard », avec toutes les réponses dessous.</p>
+      <p class="comment">X n'a plus d'accès gratuit. Avec les cookies d'un compte dédié, la bibliothèque <code>twscrape</code> envoie les recherches internes du site, sans navigateur ; seule la recherche « conversation_id: » rend toutes les réponses d'un post (544 contre 36 en lisant le post, essai du 12 novembre 2026). Les petits fils sont lus par paquets de dix. Rythme : {{x_par_quart}} recherches au plus par quart d'heure (X en permet 50), {{x_pause}} s entre deux requêtes, {{x_minutes}} min par lancement, {{x_quota}} requêtes par jour ; le récent d'abord (les posts suivis de moins de {{x_relire}} jours sont relus, ceux qui le citent le sont au bout de {{x_attendre}} jours), puis l'arriéré jusqu'au {{x_depuis}}. Au moindre freinage, repos de {{x_repos}} h. La connexion se fait une fois dans un Chrome visible (X refuse le mot de passe envoyé par un script).</p>
     </div>
   </div>
-  <p class="note">Écartés : TikTok (le contournement de sa protection anti-robots a été refusé), Reddit (bloqué par le réseau). Facebook, Threads et X demandent une connexion ou une API payante : à tenter plus tard, avec un compte créé pour la collecte.</p>
+  <p class="note">Écartés : TikTok (le contournement de sa protection anti-robots a été refusé), Reddit (bloqué par le réseau), WhatsApp (la discussion d'adhérents collectée jusqu'au 12 novembre 2026 : des échanges entre militants, pas l'avis du public ; retirée avec tout ce qui en venait). Threads demande une connexion : à tenter plus tard, avec un compte créé pour la collecte.</p>
 </section>
 
 <!-- ============ STOCKAGE ============ -->
@@ -202,7 +209,7 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
   <h2>Où et comment c'est rangé</h2></div>
   <p>Tout est d'abord stocké sur le PC, dans des fichiers lisibles (CSV, ouvrables dans Excel, et JSON). Il n'y a pas de base de données locale. Seul ce qui est publiable part ensuite en ligne.</p>
   <div class="schema">
-    <svg viewBox="0 0 860 330">
+    <svg viewBox="0 0 860 380">
       <defs><marker id="fl2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--muted)"/></marker></defs>
       <text x="20" y="24" style="font-weight:600">Sur le PC</text>
       <g style="font-family:var(--mono);font-size:13px">
@@ -210,10 +217,14 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
         <text x="40" y="78" class="mono">un CSV par chaîne · etat.json</text>
         <text x="20" y="108" style="fill:var(--s-collecte)">donnees/instagram/</text>
         <text x="40" y="128" class="mono">un CSV par compte · etat.json</text>
-        <text x="20" y="158" style="fill:var(--s-collecte)">donnees/whatsapp/ · bluesky/</text>
+        <text x="20" y="158" style="fill:var(--s-collecte)">donnees/bluesky/</text>
         <text x="40" y="178" class="mono">likes.json : « j'aime » à jour</text>
-        <text x="20" y="208" style="fill:var(--s-annot)">donnees/critiques/</text>
-        <text x="40" y="228" class="mono">themes.json · rattachements.csv</text>
+        <text x="20" y="208" style="fill:var(--s-collecte)">donnees/facebook/</text>
+        <text x="40" y="228" class="mono">un CSV par groupe · etat.json</text>
+        <text x="20" y="258" style="fill:var(--s-collecte)">donnees/x/</text>
+        <text x="40" y="278" class="mono">un CSV par compte suivi · recherche</text>
+        <text x="20" y="308" style="fill:var(--s-annot)">donnees/critiques/</text>
+        <text x="40" y="328" class="mono">themes.json · rattachements.csv</text>
       </g>
       <rect x="320" y="40" width="230" height="110" rx="10" style="fill:var(--s-stock-bg);stroke:var(--s-stock)"/>
       <text x="335" y="66" style="font-family:var(--mono);font-size:13px;fill:var(--s-stock)">analyse/corpus.csv</text>
@@ -231,6 +242,8 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
         <path d="M250 70 C285 70 290 90 318 92" marker-end="url(#fl2)"/>
         <path d="M250 120 C285 120 290 98 318 96" marker-end="url(#fl2)"/>
         <path d="M250 160 C285 160 290 104 318 100" marker-end="url(#fl2)"/>
+        <path d="M250 210 C285 210 292 110 318 104" marker-end="url(#fl2)"/>
+        <path d="M250 260 C288 260 294 116 318 108" marker-end="url(#fl2)"/>
       </g>
       <text x="620" y="24" style="font-weight:600">En ligne</text>
       <rect x="610" y="40" width="240" height="170" rx="10" style="fill:var(--s-pub-bg);stroke:var(--s-pub)"/>
@@ -238,13 +251,17 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
       <text x="625" y="92" style="font-family:var(--mono);font-size:12.5px">publications</text>
       <text x="625" y="112" style="font-family:var(--mono);font-size:12.5px">commentaires</text>
       <text x="625" y="132" style="font-family:var(--mono);font-size:12.5px">syntheses</text>
-      <text x="625" y="158" class="petit">YouTube, Instagram, Bluesky, sans auteur</text>
+      <text x="625" y="158" class="petit">toutes les sources, sans auteur</text>
       <text x="625" y="176" class="petit">lecture seule pour le public</text>
       <text x="625" y="194" class="petit">(règles RLS)</text>
       <rect x="610" y="235" width="240" height="84" rx="10" style="fill:var(--bg);stroke:var(--s-pub)"/>
       <text x="625" y="260" style="font-weight:600;fill:var(--s-pub)">Vercel</text>
       <text x="625" y="282" class="petit">pages du site (HTML + JS)</text>
       <text x="625" y="300" class="petit">qui interrogent Supabase</text>
+      <rect x="610" y="330" width="240" height="46" rx="10" style="fill:var(--bg);stroke:var(--s-pub)"/>
+      <text x="625" y="350" style="font-weight:600;fill:var(--s-pub)">Hugging Face (dataset du groupe)</text>
+      <text x="625" y="368" class="petit">un Parquet par source, avec auteurs</text>
+      <path d="M550 135 C590 135 575 352 608 352" marker-end="url(#fl2)" style="stroke:var(--muted);stroke-width:1.5;fill:none"/>
       <g style="stroke:var(--muted);stroke-width:1.5;fill:none">
         <path d="M550 95 H608" marker-end="url(#fl2)"/>
         <path d="M550 285 C580 285 580 150 608 150" marker-end="url(#fl2)" style="stroke-dasharray:5 4"/>
@@ -253,11 +270,11 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
       <text x="579" y="86" text-anchor="middle" class="mono">publier</text>
     </svg>
   </div>
-  <p class="legende">La publication est incrémentale : <code>donnees/web/publie.json</code> retient ce qui est déjà en ligne, et seules les lignes nouvelles ou dont la note a changé sont envoyées.</p>
+  <p class="legende">La publication est incrémentale : <code>donnees/web/publie.json</code> retient ce qui est déjà en ligne, et seules les lignes nouvelles ou dont la note a changé sont envoyées. Les commentaires notés partent aussi vers le dataset du groupe RAG politique, <span class="mono">rag-politique/politique-sources</span>, dans <code>data/commentaires/nouvelle-energie/</code> : un seul fichier Parquet par source, avec le nom affiché des auteurs, remplacé en entier quand la source change ({{hf_exportes}} commentaires dans ces fichiers, dont {{hf_attente}} en attente d'envoi ; le site n'en dépend pas ; règles dans <code>docs/HUGGINGFACE.md</code>).</p>
   <div class="grille trois">
     <div class="carte"><span class="etiquette">Doublons</span><div class="chiffre">{{n_doublons}}</div><p>commentaires mis de côté ({{part_doublons}}) : le même texte, du même auteur, dans la même source. Seul le premier publié compte dans la synthèse, sur le site et dans les thèmes. Le même texte écrit par des personnes différentes reste compté : ce sont autant de voix.</p></div>
     <div class="carte"><span class="etiquette">« J'aime »</span><p>Un commentaire lu juste après sa publication en a peu. Quand une publication est relue, les nouveaux comptes vont dans <code>likes.json</code>, sans retoucher les CSV. Ils servent à la vue pondérée : chaque commentaire y pèse 1 + ses « j'aime ».</p></div>
-    <div class="carte"><span class="etiquette">Sauvegarde</span><div class="chiffre">{{sauvegarde_mo}}</div><p><code>donnees/sauvegardes/donnees.zip</code>, refaite à la fin de chaque collecte : CSV bruts (WhatsApp et Instagram d'abord), annotations, thèmes. Une seule copie : la nouvelle est écrite à part, relue, puis remplace l'ancienne. Refusée si un CSV a rétréci.</p></div>
+    <div class="carte"><span class="etiquette">Sauvegarde</span><div class="chiffre">{{sauvegarde_mo}}</div><p><code>donnees/sauvegardes/donnees.zip</code>, refaite à la fin de chaque collecte : CSV bruts (Instagram d'abord), annotations, thèmes. Une seule copie : la nouvelle est écrite à part, relue, puis remplace l'ancienne. Refusée si un CSV a rétréci.</p></div>
   </div>
 </section>
 
@@ -288,7 +305,7 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
 cible L · ton 3 · forme 10 · système 10 · idées 3 · pertinence 8
 <b>remarque :</b> ironie : approuve pour dire discours creux</div>
   <div class="grille trois">
-    <div class="carte"><h3>Ce qu'on annote</h3><p>Des tirages au hasard, pour que le jeu représente le corpus, et des tirages ciblés : les cas où le modèle hésite, les réponses, les commentaires les plus visibles et les « suspects » dont la note contredit les mots.</p></div>
+    <div class="carte"><h3>Ce qu'on annote</h3><p>Des tirages au hasard, pour que le jeu représente le corpus, et des tirages ciblés : les cas où le modèle hésite, les réponses, les commentaires les plus visibles, les « suspects » dont la note contredit les mots, et des commentaires longs (40 mots ou plus) répartis entre les sources et les comptes, surtout ceux qui argumentent.</p></div>
     <div class="carte"><h3>Constance</h3><p>{{constance_n}} commentaires renotés à l'aveugle d'une session à l'autre : même cible dans {{constance_cible}} des cas, {{constance_ton}} point d'écart moyen sur la tonalité. C'est la meilleure précision qu'on peut espérer du modèle.</p></div>
     <div class="carte"><h3>Ironie et réponses</h3><p>Une ironie comprise est notée selon son sens réel. Une ironie indécidable reçoit 10 partout et une pertinence de 2-3, pour pouvoir la filtrer. Une réponse est toujours lue avec son parent.</p></div>
   </div>
@@ -381,7 +398,7 @@ cible L · ton 3 · forme 10 · système 10 · idées 3 · pertinence 8
   <div class="grille trois">
     <div class="carte"><span class="etiquette">Tonalité</span><div class="chiffre">{{ecart_ton}} pt</div><p>d'écart moyen sur 20 avec la note de Claude. Entre deux lectures de Claude, l'écart est de {{constance_ton}}.</p></div>
     <div class="carte"><span class="etiquette">Cible</span><div class="chiffre">{{cible}}</div><p>de bonnes réponses sur « parle de Lisnard ou non ».</p></div>
-    <div class="carte"><span class="etiquette">Ton inversé</span><div class="chiffre">2,0 %</div><p>de critiques notées comme des éloges, ou l'inverse : 8 sur 406 commentaires de test qui parlent de lui (mesure du 11 novembre 2026, v11 ; 1,5 % avec v9). 1 sur 67 parmi les commentaires argumentés.</p></div>
+    <div class="carte"><span class="etiquette">Ton inversé</span><div class="chiffre">{{inv_part}}</div><p>de critiques notées comme des éloges, ou l'inverse : {{inv_n}} sur {{inv_total}} commentaires de test qui parlent de lui ({{inv_version}} ; 1,5 % avec v9). {{inv_n_arg}} sur {{inv_total_arg}} parmi les commentaires argumentés.</p></div>
   </div>
   <p>Les reproches de forme, système et idées sont rares (la plupart des commentaires n'en parlent pas), d'où des corrélations plus faibles. Les parts de critiques et d'éloges restent proches des vraies.</p>
   <h3>Quelle note est affichée</h3>
@@ -437,7 +454,18 @@ cible L · ton 3 · forme 10 · système 10 · idées 3 · pertinence 8
       <text x="425" y="228" text-anchor="middle" class="petit">à la demande : les {{th_a_lire}} nouveaux commentaires retenus attendent la prochaine lecture (seuls les nouveaux sont lus)</text>
     </svg>
   </div>
-  <p class="legende">Commandes : <code>python -m critiques tirer</code>, <code>voir</code>, <code>noter</code>, puis <code>python -m web publier</code>. Les comptes sont donnés en commentaires et en auteurs distincts. Ce n'est pas un sondage.</p>
+  <p class="legende">Commandes : <code>python -m critiques tirer</code>, <code>voir</code>, <code>noter</code>, puis <code>proches</code>, <code>a-resumer</code> (seules les synthèses qui ont reçu assez de nouveaux commentaires sont réécrites), <code>syntheses</code> et <code>python -m web publier</code>. Les comptes sont donnés en commentaires et en auteurs distincts. Ce n'est pas un sondage.</p>
+  <h3>Cinq catégories pour les critiques et les doutes</h3>
+  <p>Chaque critique ou doute rangé dans un thème porte aussi une catégorie : ce que le programme peut en faire. Les éloges n'en ont pas. Claude la pose en lisant, à la demande et seulement sur les commentaires déjà rangés par thème, jamais sur tout le corpus.</p>
+  <div class="grille trois">
+    <div class="carte"><span class="etiquette">1 · Opposition de principe</span><div class="chiffre">{{th_cat_1}}</div><p>rejette le projet ou la personne en bloc ; aucune précision ne le fera changer d'avis.</p></div>
+    <div class="carte"><span class="etiquette">2 · Demande de précision</span><div class="chiffre">{{th_cat_2}}</div><p>d'accord ou pas encore décidé, demande comment, combien, quand.</p></div>
+    <div class="carte"><span class="etiquette">3 · Objection sur une mesure</span><div class="chiffre">{{th_cat_3}}</div><p>conteste un point précis (mesure, propos, façon de faire), souvent avec son cas personnel.</p></div>
+    <div class="carte"><span class="etiquette">4 · Doute sur la faisabilité</span><div class="chiffre">{{th_cat_4}}</div><p>ne conteste pas l'idée mais croit qu'elle sera bloquée ou qu'il n'y arrivera pas.</p></div>
+    <div class="carte"><span class="etiquette">5 · Suggestion</span><div class="chiffre">{{th_cat_5}}</div><p>apporte une idée ou un sujet absent du programme.</p></div>
+    <div class="carte"><span class="etiquette">Sans catégorie</span><div class="chiffre">{{th_cat_0}}</div><p>critiques ou doutes qui attendent le prochain tri.</p></div>
+  </div>
+  <p class="legende">Les nouveaux lots se notent <code>n | Thème | C3 | phrase</code> : chiffre obligatoire après C ou D, interdit après E. Pour l'existant : <code>python -m critiques trier</code> affiche le lot suivant sans catégorie, <code>python -m critiques ranger K fichier</code> l'enregistre (colonne <code>categorie</code> de <code>rattachements.csv</code>, lots dans <code>donnees/critiques/tris/</code>). L'onglet et la page Thèmes ont un filtre « Catégorie des critiques et des doutes » (Toutes, Tout sauf les oppositions de principe, ou une seule).</p>
 </section>
 
 <!-- ============ PUBLICATION ============ -->
@@ -445,17 +473,17 @@ cible L · ton 3 · forme 10 · système 10 · idées 3 · pertinence 8
   <div class="titre"><span class="etiquette" style="color:var(--s-pub)">Étape 5 · Résultats</span>
   <h2>Où on lit les résultats</h2></div>
   <div class="grille trois">
-    <div class="carte"><h3>Interface sur le PC</h3><p><code>python -m interface</code> (Interface.bat) : lancer et planifier les collectes, synthèse des notes, évolution par mois, exemples, qualité du modèle, thèmes. Les commentaires se filtrent par source, compte, période, notes et taille en mots, et se trient par la colonne « Mots ». La Synthèse peut se lire pondérée par les « j'aime ». Tout y est, WhatsApp compris.</p></div>
-    <div class="carte"><h3>Site public</h3><p><span class="mono">analyse-commentaires-lisnard.vercel.app</span> : Le projet, Statistiques, Commentaires, Thèmes. Les filtres sont calculés dans le navigateur ou par une fonction SQL de Supabase, dont la taille en mots (colonne <span class="mono">mots</span> calculée par la base, tri « Plus longs »). Chaque page affiche la date de la dernière collecte et la version du modèle ; les Statistiques ont une vue pondérée par les « j'aime ». Ni auteurs, ni doublons, ni WhatsApp.</p></div>
-    <div class="carte"><h3>Thèmes</h3><p>Onglet de l'interface et page du site : les thèmes filtrés par sujet, type d'avis ou mot, avec leurs comptes, l'évolution par mois, les synthèses et chaque commentaire avec sa phrase, qui renvoie à l'original.</p></div>
+    <div class="carte"><h3>Interface sur le PC</h3><p><code>python -m interface</code> (Interface.bat) : lancer et planifier les collectes, régler chaque source et ajouter ce qu'elle suit par un simple lien (onglets YouTube, Bluesky, Instagram, Facebook, X), synthèse des notes, évolution par mois, exemples, qualité du modèle, thèmes. Les commentaires se filtrent par source, compte, période, notes et taille en mots, et se trient par la colonne « Mots ». La Synthèse peut se lire pondérée par les « j'aime ». </p></div>
+    <div class="carte"><h3>Site public</h3><p><span class="mono">analyse-commentaires-lisnard.vercel.app</span> : Le projet, Statistiques, Commentaires, Thèmes. Les filtres sont calculés dans le navigateur ou par une fonction SQL de Supabase, dont la taille en mots (colonne <span class="mono">mots</span> calculée par la base, tri « Plus longs »). Chaque page affiche la date de la dernière collecte et la version du modèle ; les Statistiques ont une vue pondérée par les « j'aime ». Ni auteurs ni doublons.</p></div>
+    <div class="carte"><h3>Thèmes</h3><p>Onglet de l'interface et page du site : les thèmes filtrés par sujet, type d'avis, catégorie des critiques et des doutes, mot et, sur le site, par période (derniers mois ou mois choisis, avec la part de chaque thème comparée à la période précédente), avec leurs comptes, l'évolution par mois, les synthèses et chaque commentaire avec sa phrase, qui renvoie à l'original.</p></div>
   </div>
   <h3>Un lancement, de bout en bout</h3>
   <ol class="etapes">
-    <li><span><code>python -m collecte</code> lit le nouveau sur YouTube, Bluesky, WhatsApp et Instagram et l'ajoute aux CSV, puis refait la sauvegarde.</span></li>
+    <li><span><code>python -m collecte</code> lit le nouveau sur YouTube, Bluesky, Instagram, Facebook et X et l'ajoute aux CSV, puis refait la sauvegarde.</span></li>
     <li><span>Le corpus est reconstruit (doublons marqués, « j'aime » à jour) et les nouveaux commentaires sont notés par le modèle en service.</span></li>
-    <li><span>S'il y a du neuf, <code>python -m web publier</code> envoie les lignes nouvelles à Supabase et le site les montre aussitôt.</span></li>
+    <li><span>S'il y a du neuf, <code>python -m web publier</code> envoie les lignes nouvelles à Supabase et le site les montre aussitôt, puis <code>python -m huggingface</code> remplace, dans le dataset Hugging Face du groupe, le fichier des sources qui ont changé (aussi par le bouton « Export Hugging Face » de l'interface).</span></li>
     <li><span>De temps en temps : nouveaux lots annotés par Claude, puis réentraînement (nouvelle version du modèle) et renotation complète.</span></li>
-    <li><span>À la demande : lecture par Claude des commentaires argumentés restés sans thème, puis publication.</span></li>
+    <li><span>À la demande : lecture par Claude des commentaires argumentés restés sans thème, avec la catégorie des critiques et des doutes, puis les synthèses qui ont changé et la publication. L'ordre complet de ces étapes est dans <code>PROCESS.md</code>.</span></li>
   </ol>
   <p class="pied">Document généré le {{date}} par <code>python -m docs</code> depuis <code>docs/FONCTIONNEMENT.html</code>. Les chiffres viennent des données du projet à cette date.</p>
 </section>

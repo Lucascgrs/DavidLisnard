@@ -1,13 +1,14 @@
 """Collecte : récupère ce qui est nouveau depuis le dernier lancement, source par source.
 
     python -m collecte                          toutes les sources
-    python -m collecte youtube whatsapp         seulement celles-là
+    python -m collecte youtube bluesky          seulement celles-là
     python -m collecte --reessayer instagram    relance une source abandonnée (critère des 30 minutes)
 
 Résultats : donnees/<source>/ (un CSV par compte + <source>_tout.xlsx), donnees/bilan.md, donnees/journal.log.
 Une source qui échoue n'arrête pas les suivantes. À la fin, les données sont sauvegardées
 (donnees/sauvegardes/donnees.zip). Si du neuf a été collecté, les nouveaux commentaires sont ensuite notés par le
-modèle (option de l'onglet Analyse, cochée par défaut), puis publiés sur le site (« python -m web »). Le
+modèle (option de l'onglet Analyse, cochée par défaut), puis publiés sur le site (« python -m web ») et
+exportés vers le dataset Hugging Face du groupe (« python -m huggingface »). Le
 rangement par thèmes, lui, se fait à la demande : c'est Claude qui lit (« python -m critiques »).
 """
 import argparse
@@ -130,6 +131,25 @@ def publier_le_site(journal: Journal) -> None:
         journal(f"### Publication sur le site impossible : {type(e).__name__}: {e}")
 
 
+def exporter_vers_huggingface(journal: Journal) -> None:
+    """Après la publication : le fichier de chaque source qui a changé remplace l'ancien dans le dataset du groupe
+    (python -m huggingface, docs/HUGGINGFACE.md). Dans un processus à part : analyse/ a mis Hugging Face hors ligne
+    dans celui-ci. Une erreur ici ne fait jamais échouer la collecte."""
+    import os
+    import subprocess
+    from commun.config import RACINE
+    from commun.taches import PYTHON
+    journal("### Export vers Hugging Face")
+    try:
+        r = subprocess.run([PYTHON, "-m", "huggingface"], cwd=RACINE, capture_output=True, text=True,
+                           encoding="utf-8", errors="replace", timeout=3600,
+                           env={**os.environ, "HF_HUB_OFFLINE": "0", "PYTHONIOENCODING": "utf-8"})
+        if r.returncode:
+            journal(f"### Export vers Hugging Face impossible : {(r.stderr or r.stdout).strip().splitlines()[-1:]}")
+    except Exception as e:
+        journal(f"### Export vers Hugging Face impossible : {type(e).__name__}: {e}")
+
+
 def main():
     if sys.stdout:  # absent quand on est lancé sans console
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -154,6 +174,7 @@ def main():
     if any(r.get("nouveaux") for r in resultats):
         noter_les_nouveaux(journal)
         publier_le_site(journal)
+        exporter_vers_huggingface(journal)
 
 
 if __name__ == "__main__":

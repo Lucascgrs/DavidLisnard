@@ -7,10 +7,17 @@
     python -m critiques liste                 les thèmes, avec leur définition et leurs comptes
     python -m critiques proches [N]           les paires de thèmes qui pourraient fusionner
     python -m critiques fusionner f.txt       applique des fusions et des renommages
+    python -m critiques a-resumer             les synthèses à écrire ou réécrire depuis la dernière fois, et elles seules
     python -m critiques syntheses f.txt       enregistre les synthèses rédigées par thème et par sens
+    python -m critiques trier [N]             affiche le lot suivant de critiques et doutes sans catégorie (N textes)
+    python -m critiques ranger 3 tri.txt      enregistre les catégories du lot de tri 3 (lignes « numéro catégorie »)
+
+Chaque critique (C) ou doute (D) porte une catégorie de 1 à 5, notée à la lecture (« 12 | T5 | C3 | phrase ») :
+1 opposition de principe, 2 demande de précision, 3 objection sur une mesure, 4 doute sur la faisabilité,
+5 suggestion. « trier » et « ranger » servent à ce qui a été rangé avant que la catégorie existe.
 
 Tous les rattachements sont faits par Claude, à la lecture. Mise à jour, à la demande : tirer / voir / noter jusqu'à
-« Rien de nouveau à lire », puis proches, fusionner, syntheses, et enfin « python -m web publier » pour le site.
+« Rien de nouveau à lire », puis proches, fusionner, a-resumer et syntheses, et enfin « python -m web publier » pour le site.
 Une lecture ne porte que sur les commentaires nouveaux : ce qui est lu ne l'est jamais deux fois.
 """
 import sys
@@ -38,8 +45,14 @@ def main(argv):
         donnees.proches(int(args[0]) if args else 60)
     elif cmd == "fusionner":
         donnees.fusionner(args[0])
+    elif cmd == "a-resumer":
+        donnees.a_resumer()
     elif cmd == "syntheses":
         donnees.syntheses(args[0])
+    elif cmd == "trier":
+        donnees.trier(int(args[0]) if args else donnees.TAILLE_LOT)
+    elif cmd == "ranger":
+        donnees.ranger(int(args[0]), args[1])
     else:
         raise SystemExit(f"Commande inconnue : {cmd}\n{__doc__}")
 

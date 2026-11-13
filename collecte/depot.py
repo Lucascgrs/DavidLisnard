@@ -1,6 +1,6 @@
 """Dépôt d'une source : format des lignes, ajout sans doublon, état de la collecte, Excel et bilan.
 
-Une ligne = un commentaire (ou un message WhatsApp). Les fichiers ne font que grandir : une ligne déjà enregistrée
+Une ligne = un commentaire (ou un message Bluesky). Les fichiers ne font que grandir : une ligne déjà enregistrée
 n'est jamais réécrite ni supprimée.
 
 Les « j'aime » sont ceux du moment de la collecte : un commentaire lu une heure après sa publication en a peu.
