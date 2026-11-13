@@ -74,6 +74,8 @@ function preparer() {
     const lien = facebook(pub?.lien)
       ? pub.lien + (l.parent ? `?comment_id=${l.parent}&reply_comment_id=${l.code}` : `?comment_id=${l.code}`) : null;
     const c = { ...l, cle: `facebook:${l.code}`, categorie: l.categorie || "autre", pub, lien, t: enDate(l.date)?.getTime() ?? 0 };
+    // Catégorie vérifiée à la lecture (annotation) : sûre à 100 %, pour l'affichage, les tris et le filtre de certitude.
+    if (l.verifie) Object.assign(c, { pi: 0, pq: 0, pa: 0, [{ insultant: "pi", question: "pq", autre: "pa" }[c.categorie]]: 1 });
     commentaires.push(c);
     if (l.auteur_id) {
       const a = auteurs.get(l.auteur_id) || { auteur_id: l.auteur_id, auteur: l.auteur, n: 0, insultants: 0, questions: 0, dernier: 0, groupes: {}, liste: [] };
@@ -288,7 +290,7 @@ function filtrer() {
   const cleP = { insultant: "pi", question: "pq", autre: "pa" }[f.categorie];
   const liste = commentaires.filter((c) => {
     if (f.categorie && c.categorie !== f.categorie) return false;
-    if (certitude != null && !c.verifie && !((c[cleP] ?? 0) >= certitude)) return false;
+    if (certitude != null && !((c[cleP] ?? 0) >= certitude)) return false;
     if (f.suivi && suiviDe(c) !== f.suivi) return false;
     if (du != null && c.t < du) return false;
     if (au != null && c.t >= au) return false;
@@ -314,7 +316,7 @@ function carteCommentaire(c) {
   const cat = c.categorie;
   const proba = c[{ insultant: "pi", question: "pq", autre: "pa" }[cat]];
   const badge = el("span", { class: `badge ${cat}`, title: c.verifie ? "Catégorie vérifiée à la lecture" : "Catégorie donnée par le modèle" },
-    CATEGORIES[cat] || cat, c.verifie ? " · vérifié" : proba != null ? ` · ${pourcent(proba)}` : "");
+    CATEGORIES[cat] || cat, proba != null ? ` · ${pourcent(proba)}` : "");
   const a = c.a;
   const recidive = a && a.insultants >= 2
     ? el("span", { class: "recidive", title: "Commentaires insultants de cet auteur, sur tous ses commentaires" }, `${a.insultants} insultants sur ${a.n}`)

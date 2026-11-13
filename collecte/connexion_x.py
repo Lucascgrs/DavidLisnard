@@ -13,6 +13,11 @@ auth_token et ct0, qui suffisent aux requêtes.
 La collecte, elle, n'ouvre aucun navigateur : elle envoie ses requêtes avec ces cookies. Elle relance d'elle-même
 cette connexion si la session a expiré. Ne jamais se déconnecter de ce compte dans le profil : la déconnexion annule
 la session enregistrée.
+
+Le profil garde toujours une copie de la session valable (y compris des cookies recopiés à la main dans
+sessions/x_cookies.json). Une reconnexion essaie d'abord, sans fenêtre et sans mot de passe, de la faire renouveler
+par X en ouvrant x.com/home ; le mot de passe ne sert que si X a annulé la session elle-même (le 2026-11-12 et le
+2026-11-13, X refusait la connexion par mot de passe de ce Chrome piloté : « temporairement limité »).
 """
 import argparse
 import json
@@ -61,9 +66,9 @@ def chaine_cookies(cookies: dict[str, str] | None = None) -> str:
     return "; ".join(f"{k}={cookies[k]}" for k in NECESSAIRES if cookies.get(k))
 
 
-def verifier() -> str | None:
-    """Pseudo du compte connecté si la session enregistrée marche, sinon None (une requête à X)."""
-    cookies = lire_cookies()
+def verifier(cookies: dict[str, str] | None = None) -> str | None:
+    """Pseudo du compte connecté si la session (enregistrée par défaut) marche, sinon None (une requête à X)."""
+    cookies = lire_cookies() if cookies is None else cookies
     if not all(cookies.get(k) for k in NECESSAIRES):
         return None
     try:
@@ -95,10 +100,60 @@ def _cliquer(page, *libelles: str) -> bool:
     return False
 
 
+def _cookies_du_profil(ctx) -> dict[str, str]:
+    return {c["name"]: c["value"] for c in ctx.cookies() if c["domain"].endswith("x.com")}
+
+
+def _semer(ctx, cookies: dict[str, str]) -> None:
+    """Met auth_token et ct0 dans le profil (comme si on s'y était connecté)."""
+    ctx.add_cookies([{"name": k, "value": cookies[k], "domain": ".x.com", "path": "/", "secure": True,
+                      "httpOnly": k == "auth_token", "sameSite": "None", "expires": time.time() + 365 * 86400}
+                     for k in NECESSAIRES if cookies.get(k)])
+
+
+def renouveler(journal=print) -> bool:
+    """Sans fenêtre ni mot de passe : fait renouveler la session par X à partir du profil (ou des cookies
+    enregistrés), l'enregistre et rend True ; rend False si X a annulé la session (il faut alors le mot de passe)."""
+    from playwright.sync_api import sync_playwright
+    with sync_playwright() as p:
+        try:
+            ctx = p.chromium.launch_persistent_context(str(PROFIL), channel="chrome", headless=True, locale="fr-FR")
+        except Exception as e:
+            raise ErreurConnexion(f"Chrome introuvable pour la connexion X ({str(e).splitlines()[0][:120]}).")
+        try:
+            fichier = lire_cookies()
+            candidats = [c for c in ({k: v for k, v in _cookies_du_profil(ctx).items() if k in NECESSAIRES},
+                                     {k: v for k, v in fichier.items() if k in NECESSAIRES})
+                         if c.get("auth_token")]
+            for cookies in candidats:
+                _semer(ctx, cookies)
+                page = ctx.pages[0] if ctx.pages else ctx.new_page()
+                try:
+                    page.goto("https://x.com/home", wait_until="domcontentloaded", timeout=120000)
+                    page.wait_for_timeout(5000)
+                except Exception:
+                    continue
+                c = {k: v for k, v in _cookies_du_profil(ctx).items() if k in NECESSAIRES}
+                if all(c.get(k) for k in NECESSAIRES) and verifier(c):
+                    sauver_cookies(c)
+                    journal("   session X renouvelée par le profil, sans mot de passe")
+                    return True
+            # Session annulée par X : on la retire du profil pour que la connexion par mot de passe reparte de zéro.
+            for k in NECESSAIRES:
+                ctx.clear_cookies(name=k)
+            return False
+        finally:
+            ctx.close()
+
+
 def connecter(journal=print) -> None:
-    """Ouvre Chrome, se connecte avec config/x.env, attend la session, enregistre auth_token et ct0."""
+    """Renouvelle la session par le profil si X l'accepte ; sinon ouvre Chrome et se connecte avec config/x.env,
+    attend la session, enregistre auth_token et ct0."""
+    if renouveler(journal):
+        return
     from playwright.sync_api import sync_playwright
     pseudo, mdp, mail = identifiants()
+    journal("   session X annulée par X : connexion par mot de passe (fenêtre Chrome)")
     with sync_playwright() as p:
         try:
             ctx = p.chromium.launch_persistent_context(str(PROFIL), channel="chrome", headless=False,
@@ -194,8 +249,15 @@ def main():
     ap = argparse.ArgumentParser(prog="python -m collecte.connexion_x", description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--verifier", action="store_true", help="dit seulement si la session enregistrée marche")
+    ap.add_argument("--profil", action="store_true",
+                    help="recopie seulement la session enregistrée dans le profil et la fait renouveler (après avoir "
+                         "collé des cookies à la main dans sessions/x_cookies.json), sans mot de passe")
     args = ap.parse_args()
-    if not args.verifier:
+    if args.profil:
+        if not renouveler():
+            print("Échec : X refuse la session de sessions/x_cookies.json (annulée ou incomplète).")
+            sys.exit(1)
+    elif not args.verifier:
         try:
             connecter()
         except ErreurConnexion as e:

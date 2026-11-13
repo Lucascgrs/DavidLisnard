@@ -89,15 +89,15 @@ class Application(tk.Tk):
                      + (f" (la précédente date du {c['le'][:16]})." if c else "."))
 
     def exporter_hf(self):
-        """Fichier de chaque source qui a changé → dataset rag-politique/politique-sources (python -m huggingface,
+        """Fichier de chaque source qui a changé → dataset privé rag-politique/politique-sources-privees (python -m huggingface,
         docs/HUGGINGFACE.md). Aussi fait seul après chaque collecte qui ramène du neuf."""
         from commun.taches import en_cours, lancer_en_fond
         if en_cours("huggingface"):
             return self.message("Un export vers Hugging Face est déjà en cours : voir le journal.")
         if not messagebox.askyesno("Exporter vers Hugging Face",
-                                   "Mettre à jour dans le dataset public rag-politique/politique-sources le "
-                                   "fichier de chaque source qui a changé (commentaires notés, avec le nom de "
-                                   "leurs auteurs) ? L'ancien fichier de ces sources est remplacé."):
+                                   "Mettre à jour dans le dataset privé rag-politique/politique-sources-privees le "
+                                   "fichier de chaque source qui a changé (commentaires notés, auteurs remplacés "
+                                   "par un identifiant) ? L'ancien fichier de ces sources est remplacé."):
             return
         lancer_en_fond(["-m", "huggingface"], env={"HF_HUB_OFFLINE": "0"})
         self.message("Export vers Hugging Face lancé : suivi dans le journal du tableau de bord.")

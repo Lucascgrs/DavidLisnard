@@ -1,4 +1,4 @@
-"""Export des commentaires vers le dataset Hugging Face rag-politique/politique-sources (docs/HUGGINGFACE.md).
+"""Export des commentaires vers le dataset Hugging Face privé rag-politique/politique-sources-privees (docs/HUGGINGFACE.md).
 
     python -m huggingface              refait le fichier de chaque source, envoie ceux qui ont changé
     python -m huggingface preparer     seulement les fichiers Parquet, dans donnees/huggingface/lots/

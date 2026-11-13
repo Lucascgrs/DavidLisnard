@@ -53,8 +53,10 @@ Ce qu'il faut faire une seule fois :
   par `python -m collecte.connexion_x`, qui ouvre Chrome (profil `sessions/x_profil/`) et saisit pseudo et mot de
   passe ; X refuse le mot de passe envoyé par un script. Si X limite les connexions (« Nous avons temporairement
   limité votre connexion », arrivé le 2026-11-13 après plusieurs essais), attendre quelques heures, ou copier les
-  deux cookies depuis un navigateur connecté (F12 → Application → Cookies → x.com) dans `sessions/x_cookies.json`.
-  `--verifier` dit si la session marche. Ne jamais se déconnecter de ce compte : la déconnexion tue la session.
+  deux cookies depuis un navigateur connecté (F12 → Application → Cookies → x.com) dans `sessions/x_cookies.json`,
+  puis lancer `python -m collecte.connexion_x --profil`, qui les recopie dans le profil. Le profil garde ainsi la
+  session : quand elle expire, la collecte la fait renouveler par X sans fenêtre ni mot de passe ; le mot de passe ne
+  sert que si X a annulé la session. `--verifier` dit si la session marche. Ne jamais se déconnecter de ce compte : la déconnexion tue la session.
 
 ## Organisation
 
@@ -463,8 +465,8 @@ commentaires filtrables (curseurs, puces) avec la vidéo d'origine, thèmes des 
 
 ## Hugging Face
 
-Les commentaires notés partent aussi vers le dataset du groupe RAG politique,
-[`rag-politique/politique-sources`](https://huggingface.co/datasets/rag-politique/politique-sources). Règles du
+Les commentaires notés partent aussi vers le dataset **privé** du groupe RAG politique,
+[`rag-politique/politique-sources-privees`](https://huggingface.co/datasets/rag-politique/politique-sources-privees) (réservé aux membres ; jamais le dataset public). Règles du
 dataset et détail : [docs/HUGGINGFACE.md](docs/HUGGINGFACE.md).
 
 ```
@@ -477,8 +479,9 @@ python -m huggingface etat         par source : fichier, commentaires, déposé 
 - Rangement : `data/commentaires/nouvelle-energie/<source>_<AAAA-MM-JJ>.parquet`, **un seul fichier par source**,
   daté de sa dernière mise à jour. Quand une source change, son fichier remplace l'ancien (supprimé dans le même
   commit) ; une source inchangée ne repart pas.
-- Contenu : tous les commentaires notés de la source, sans doublon, **avec le nom affiché de l'auteur** (contrairement
-  au site), notes du moment.
+- Contenu : tous les commentaires notés de la source, sans doublon, notes du moment. **Aucun nom de compte** : la colonne
+  `auteur_id` est un identifiant opaque (HMAC avec la clé `AUTEUR_CLE` de `config/huggingface.env`, créée seule),
+  le même pour tous les commentaires d'un même compte.
 - Le site (Supabase, Vercel) n'en dépend pas : Hugging Face est une sortie en plus.
 - Automatique après chaque collecte qui ramène du neuf ; bouton **Export Hugging Face** en haut de l'interface.
 - Jeton : `HF_TOKEN` dans `config/huggingface.env` (privé), sinon celui de `hf auth login` ; droit d'écriture sur

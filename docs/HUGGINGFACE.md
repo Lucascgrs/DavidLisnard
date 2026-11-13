@@ -28,7 +28,9 @@ de page de règles.
 
 ## Ce que dépose ce projet
 
-Le groupe a accepté (2026-11-13) un type de source de plus, **`commentaires`**, pour les commentaires du public :
+Le groupe a accepté (2026-11-13) un type de source de plus, **`commentaires`**, pour les commentaires du public. Ils
+vont dans le dataset **privé** `rag-politique/politique-sources-privees`, jamais dans le public (choix de
+l'utilisateur du 2026-11-13 ; ce qui y avait été déposé le matin a été retiré et le README public rétabli) :
 
 ```
 data/commentaires/nouvelle-energie/<source>_<AAAA-MM-JJ>.parquet
@@ -42,19 +44,25 @@ data/commentaires/nouvelle-energie/<source>_<AAAA-MM-JJ>.parquet
   (même empreinte du contenu) ne repart pas.
 - C'est un écart assumé à la règle 2 (« on ne réécrit pas un fichier existant ») : nos fichiers sont petits (15 Mo en
   tout) et une version à jour vaut mieux qu'une pile de lots qui se recouvrent.
-- Ce qui part : les commentaires notés et sans doublon (comme sur le site), **avec le nom affiché de leur auteur**
-  (choix du 2026-11-13 : pas d'anonymisation), le texte, la publication à laquelle ils répondent, le commentaire
-  parent, les « j'aime » et les cinq notes et la cible, telles qu'à la date du fichier.
+- Ce qui part : les commentaires notés et sans doublon (comme sur le site), le texte, la publication à laquelle ils
+  répondent, le commentaire parent, les « j'aime » et les cinq notes et la cible, telles qu'à la date du fichier.
+- **Aucun nom de compte d'auteur.** La colonne `auteur_id` (« u » + 16 caractères) est un HMAC-SHA256 de
+  « source|identifiant de plateforme » avec une clé secrète locale, `AUTEUR_CLE` dans `config/huggingface.env`
+  (créée au premier export, à ne jamais partager). Le même compte a toujours le même identifiant, ce qui permet de
+  regrouper ses commentaires, mais on ne peut pas remonter au compte, même en essayant des noms. Perdre la clé change
+  tous les identifiants (les fichiers sont alors refaits), rien de plus. Les colonnes `compte` et `groupe` restent :
+  ce sont les pages, chaînes et groupes publics suivis, pas des personnes.
 - Le site (Supabase, Vercel, `python -m web`) ne change pas et ne dépend pas de cet export : Hugging Face est une
   sortie en plus.
 - Nos colonnes ne sont pas celles des autres types de source. Pour que le dataset reste lisible, le README du dataset
+  privé
   déclare nos fichiers dans une configuration à part, **`commentaires`**, et la configuration `default` liste les
   autres dossiers de `data/`. L'export entretient seul ces deux configurations et une courte section du README
   (entre `<!-- commentaires:debut -->` et `<!-- commentaires:fin -->`) ; le reste du README n'est pas touché.
 
 ```python
 from datasets import load_dataset
-load_dataset("rag-politique/politique-sources", "commentaires", split="train")
+load_dataset("rag-politique/politique-sources-privees", "commentaires", split="train")
 ```
 
 ## Lancer l'export

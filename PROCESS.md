@@ -70,7 +70,8 @@ dire à l'utilisateur, qui la lance lui-même (étape 10).
   `python -m collecte.connexion_x --verifier`, puis `python -m collecte.connexion_x` (Chrome visible). Si X répond
   « temporairement limité votre connexion », ne pas réessayer le jour même : demander à l'utilisateur les cookies
   `auth_token` et `ct0` du compte (navigateur connecté, F12 → Application → Cookies) et les mettre dans
-  `sessions/x_cookies.json`.
+  `sessions/x_cookies.json`, puis lancer `python -m collecte.connexion_x --profil` (les recopie dans le profil, qui
+  renouvellera ensuite la session seul). Une session simplement expirée se refait seule, sans mot de passe.
 
 ## 3. Annoter, si besoin
 

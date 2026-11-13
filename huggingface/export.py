@@ -1,4 +1,5 @@
-"""Conversion des commentaires en Parquet et envoi vers rag-politique/politique-sources (règles : docs/HUGGINGFACE.md).
+"""Conversion des commentaires en Parquet et envoi vers rag-politique/politique-sources-privees, le dataset privé de
+l'organisation (règles : docs/HUGGINGFACE.md).
 
 Dans le dataset, nos fichiers sont rangés sous data/commentaires/nouvelle-energie/, **un seul fichier par source**,
 daté du jour de sa dernière mise à jour : « youtube_2026-11-13.parquet », « instagram_2026-11-13.parquet »…
@@ -11,12 +12,16 @@ dataset garde les versions précédentes.
 Les fichiers sont d'abord écrits dans donnees/huggingface/lots/, puis envoyés en un seul commit ;
 donnees/huggingface/etat.json retient, par source, le fichier préparé et le fichier déposé avec leur empreinte.
 
-Ce qui part : les commentaires notés et sans doublon, comme sur le site (web/export.py), avec le nom affiché de leur
-auteur (choix de l'utilisateur du 2026-11-13 : pas d'anonymisation ; l'identifiant interne de plateforme ne part pas)
-et leurs notes du moment. Le site (Supabase, Vercel) ne dépend en rien de cet export.
+Ce qui part : les commentaires notés et sans doublon, comme sur le site (web/export.py), et leurs notes du moment.
+Aucun nom de compte d'auteur ne part (choix de l'utilisateur du 2026-11-13) : la colonne `auteur_id` est un identifiant
+opaque, le même pour tous les commentaires d'un même compte, calculé avec une clé secrète locale (AUTEUR_CLE dans
+config/huggingface.env) : impossible de retrouver le compte à partir de l'identifiant, même en essayant des noms.
+Le site (Supabase, Vercel) ne dépend en rien de cet export.
 """
 import hashlib
+import hmac
 import json
+import secrets
 import re
 from datetime import datetime
 from pathlib import Path
@@ -27,18 +32,18 @@ from commun.config import CONFIG, DONNEES, SOURCES, lire_env
 from commun.fichiers import ecrire_json, lire_csv, lire_json
 from commun.textes import PARIS, maintenant
 
-DEPOT = "rag-politique/politique-sources"
+DEPOT = "rag-politique/politique-sources-privees"  # privé : jamais le dataset public
 TYPE_SOURCE, PARTI, PERSONNE = "commentaires", "nouvelle-energie", "David Lisnard"
 DOSSIER_HF = f"data/{TYPE_SOURCE}/{PARTI}"
 LOCAL = DONNEES / "huggingface"
 LOTS = LOCAL / "lots"
 ETAT = LOCAL / "etat.json"  # {source: {"prepare": {...}, "depose": {...}}}
-FICHIER_ENV = CONFIG / "huggingface.env"  # HF_TOKEN=… (privé, hors git) ; sinon le jeton de « hf auth login »
+FICHIER_ENV = CONFIG / "huggingface.env"  # HF_TOKEN=… et AUTEUR_CLE=… (privé, hors git)
 NOM_CONFIG = "commentaires"  # configuration du dataset qui lit nos fichiers (README, en-tête YAML)
 
 COLONNES = ["id", "type_source", "parti", "personne", "source", "compte", "groupe", "publication_id",
             "publication_titre", "publication_lien", "publication_date", "date", "type", "parent_id",
-            "parent_texte", "auteur", "likes", "texte", "nb_caracteres", *CRITERES, "cible", "origine_notes",
+            "parent_texte", "auteur_id", "likes", "texte", "nb_caracteres", *CRITERES, "cible", "origine_notes",
             "version_modele"]
 ENTIERS = {"likes", "nb_caracteres", *CRITERES}
 
@@ -65,14 +70,31 @@ def source_du_fichier(nom: str) -> str:
     return re.sub(r"_\d{4}-\d{2}-\d{2}(_\d+)?\.parquet$", "", nom)
 
 
+def cle_auteurs() -> bytes:
+    """Clé secrète des identifiants d'auteur, créée une fois dans config/huggingface.env. La perdre change tous les
+    identifiants (les fichiers sont alors refaits en entier), sans autre conséquence."""
+    cle = lire_env(FICHIER_ENV).get("AUTEUR_CLE")
+    if not cle:
+        cle = secrets.token_hex(32)
+        avant = FICHIER_ENV.read_text(encoding="utf-8") if FICHIER_ENV.exists() else ""
+        FICHIER_ENV.write_text(avant.rstrip("\n") + ("\n" if avant else "")
+                               + "# Clé des identifiants d'auteur envoyés sur Hugging Face. Ne jamais la partager.\n"
+                               + f"AUTEUR_CLE={cle}\n", encoding="utf-8")
+    return cle.encode()
+
+
 def auteurs() -> dict[str, str]:
-    """Nom affiché de l'auteur, par clé « source:commentaire_id », lu dans les CSV de collecte (donnees/<source>/) :
-    le corpus n'en garde qu'une empreinte."""
-    sortie = {}
+    """Identifiant opaque de l'auteur (« u » + 16 caractères), par clé « source:commentaire_id ». Le compte (identifiant
+    de plateforme, à défaut nom affiché, comme web/export.py) est lu dans les CSV de collecte (donnees/<source>/) et ne
+    sort jamais d'ici : seul part son HMAC avec la clé locale."""
+    cle, sortie = cle_auteurs(), {}
     for source in SOURCES:
         for f in sorted((DONNEES / source).glob("*.csv")):
             for l in lire_csv(f):
-                sortie.setdefault(f"{source}:{l['commentaire_id']}", l.get("auteur") or "")
+                compte = (l.get("auteur_id") or l.get("auteur") or "").strip()
+                if compte and l.get("commentaire_id"):
+                    sortie.setdefault(f"{source}:{l['commentaire_id']}",
+                                      "u" + hmac.new(cle, f"{source}|{compte}".encode(), hashlib.sha256).hexdigest()[:16])
     return sortie
 
 
@@ -94,7 +116,7 @@ def lignes_par_source() -> dict[str, list[dict]]:
             "publication_id": l["publication_id"], "publication_titre": l["publication_titre"],
             "publication_lien": l["publication_lien"], "publication_date": l["publication_date"],
             "date": l["date"], "type": l["type"], "parent_id": garde.get(l["parent_cle"], l["parent_cle"]),
-            "parent_texte": l["parent_texte"], "auteur": noms.get(l["cle"], ""), "likes": int(l["likes"] or 0),
+            "parent_texte": l["parent_texte"], "auteur_id": noms.get(l["cle"], ""), "likes": int(l["likes"] or 0),
             "texte": l["texte"], "nb_caracteres": len(l["texte"]), **{c: int(n[c]) for c in CRITERES},
             "cible": n["cible"],
             "origine_notes": {"relue": "annotation", "corrigée": "correction"}.get(n.get("fiabilite"), "modèle"),
@@ -156,13 +178,15 @@ Commentaires publics laissés sous les publications de David Lisnard et des comp
 Instagram, Bluesky, groupes Facebook publics, X), envoyés par le projet DavidLisnard. Ce n'est pas la parole des
 responsables : c'est la réaction du public. Un seul fichier par source
 (`data/commentaires/nouvelle-energie/<source>_<AAAA-MM-JJ>.parquet`, daté de sa dernière mise à jour), remplacé en
-entier quand il change ; avec le nom affiché de l'auteur (`auteur`), sans doublon. Les notes (`tonalite`, `forme`,
-`systeme`, `idees`, `pertinence` sur 20, `cible`) sont celles du projet à la date du fichier.
+entier quand il change ; sans doublon. Aucun nom de compte : `auteur_id` est un identifiant opaque, le même pour
+tous les commentaires d'un même compte. Les notes (`tonalite`, `forme`, `systeme`, `idees`, `pertinence` sur 20,
+`cible`) sont celles du projet à la date du fichier.
 
-Leurs colonnes diffèrent des autres fichiers : ils forment la configuration `{NOM_CONFIG}`, à part de `default`.
+Leurs colonnes ne sont pas celles des autres fichiers : ils forment la configuration `{NOM_CONFIG}`, à part de
+`default`.
 
 ```python
-load_dataset("rag-politique/politique-sources", "{NOM_CONFIG}", split="train")
+load_dataset("{DEPOT}", "{NOM_CONFIG}", split="train")
 ```
 {FIN_SECTION}"""
 

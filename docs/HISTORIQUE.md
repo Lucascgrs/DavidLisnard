@@ -135,6 +135,17 @@ enregistrement : d'où le contrôle des moyennes par lot (PROCESS.md, étape 3).
   au site) ; l'identifiant de plateforme ne part pas. Nos colonnes différant des autres fichiers, l'export tient dans
   le README du dataset une configuration `commentaires` à part et fait lister à `default` les autres dossiers. Lancé
   après chaque collecte qui ramène du neuf, et par un bouton de l'interface.
+- 2026-11-13 (soir) : à la demande de l'utilisateur, les commentaires passent dans le dataset **privé**
+  `rag-politique/politique-sources-privees` et **sans nom d'auteur** : la colonne `auteur` est remplacée par `auteur_id`, HMAC-SHA256 (clé locale
+  `AUTEUR_CLE`, 16 caractères) de « source|identifiant de plateforme » — stable d'un export à l'autre, impossible à
+  remonter même en essayant des noms (contrairement à un simple hachage). Les fichiers et la configuration
+  `commentaires` ont été retirés du dataset public, dont le README a été rétabli à l'identique ; la note sur nos
+  colonnes est désormais dans le README du dataset privé.
+  Ensuite, avec son accord, l'historique de `main` du dataset public a été écrasé en un seul commit (44 fichiers
+  identiques à l'octet près, empreintes dans `donnees/huggingface/public_avant_squash.json`), et 4 blocs de stockage
+  de nos anciens fichiers ont été supprimés définitivement, puis, avec son autorisation, les 8 autres (rangés sous
+  `commentaires/train/`, qui portaient les deux autres versions). Vérifié : plus aucun de nos fichiers téléchargeable,
+  même par le numéro d'un ancien commit, et plus aucun bloc de stockage inutilisé dans le dataset public.
 
 ## Modération Facebook
 
@@ -151,6 +162,7 @@ ceux qui appellent une réponse. À part de l'analyse (paquet `moderation/`, ong
 | 2026-11-13 | Pour un futur onglet des administrateurs du groupe, la table privée `moderation` reçoit le commentaire lui-même (texte, auteur, identifiant de l'auteur, date, réponse à, publication). Le lien n'est pas recopié : la vue privée `moderation_complete` le forme à partir de `publications.lien` (+ `comment_id`, `reply_comment_id`). Les 664 publications Facebook manquantes sont ajoutées à `publications` sans écraser celles du site. Coût : 6 → 10 Mo (base 226 Mo sur 500). Avant, seuls 10 % des commentaires classés (61 « à modérer » sur 734) se retrouvaient dans `commentaires`, qui n'a pas d'auteurs. |
 | 2026-11-13 | **Site de modération** à la demande de l'utilisateur, à part du site public (projet Vercel `moderation-lisnard`, `moderation/site/`). Accès par mot de passe choisi par l'utilisateur : compte Supabase Auth partagé (adresse fixe, on ne tape que le mot de passe) portant `app_metadata.role = moderateur`, inscriptions fermées ; les tables privées `moderation` et `utilisateurs` ne s'ouvrent qu'à ce rôle (règles RLS), et `est_moderateur()` vérifie que le compte existe encore, si bien que changer le mot de passe (compte recréé) coupe toutes les sessions. Écartés : la protection par mot de passe de Vercel (payante) et une fonction serveur qui lirait avec la clé secrète (clé secrète hors de la base, plus de pièces). Retirer ou bloquer un membre depuis le site est impossible (API des groupes Facebook fermée en 2024) : le site ouvre sa fiche de membre du groupe, où l'administrateur le fait. Ajout d'un suivi partagé « Traité » / « Sans suite » (`moderation_suivi`). Première version : vues calculées par la base à chaque recherche (0,3 à 0,5 s sur 17 841 commentaires). |
 | 2026-11-13 | À la demande de l'utilisateur (offre gratuite de Supabase), le travail passe dans le navigateur : téléchargement complet une seule fois (≈ 18 pages de 1 000), gardé dans IndexedDB, puis seulement les nouveautés (colonne `maj` datée par déclencheur, table `moderation_retires` remplie à la suppression, suivi par date ; « à traiter » est écrit au lieu d'effacer la marque). Mesuré en ligne : rechargement = 4 requêtes vides (8 octets, 0,2 ms de base chacune), aucune requête pour filtrer ou trier, une par marque. Vues `moderation_site`, `moderation_auteurs`, `moderation_publications`, `moderation_bilan` retirées. Site mis en ligne : https://moderation-lisnard.vercel.app. |
+| 2026-11-13 | Connexion X automatique réessayée (une fois, profil temporaire) : toujours « temporairement limité votre connexion » juste après le pseudo. Le profil `sessions/x_profil/` n'avait aucune session : `collecte.connexion_x` y recopie maintenant la session valable et, à l'expiration, la fait renouveler par X sans fenêtre ni mot de passe (essai réel : fichier de cookies vidé, session rendue par le profil) ; le mot de passe ne sert que si X annule la session. Nouvelle option `--profil` après des cookies collés à la main. |
 
 ## Pistes non faites
 
