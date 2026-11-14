@@ -1,0 +1,32 @@
+affirmation,variante,grandeur,valeur,unite,annee,chiffre_lisnard,sources,methode,note
+ECO-01,"douanes (Eurostat), 2022",Solde des échanges de biens,-193.14,Md€,2022,114 Md€ (12 mois à juin 2022) ; 100 Md€ « structurel » ; 80 Md€ (2024),EUROSTAT-COMMERCE-DOUANES,M1,importations valorisées CAF (avec transport et assurance) : déficit plus large que le chiffre français FAB-FAB
+ECO-01,"comptes nationaux, 2022",Solde des échanges de biens,-131.75,Md€,2022,,EUROSTAT-COMMERCE-BIENS,M1,biens et services : -72.5 Md€
+ECO-01,"douanes (Eurostat), 2023",Solde des échanges de biens,-126.78,Md€,2023,114 Md€ (12 mois à juin 2022) ; 100 Md€ « structurel » ; 80 Md€ (2024),EUROSTAT-COMMERCE-DOUANES,M1,importations valorisées CAF (avec transport et assurance) : déficit plus large que le chiffre français FAB-FAB
+ECO-01,"comptes nationaux, 2023",Solde des échanges de biens,-80.93,Md€,2023,,EUROSTAT-COMMERCE-BIENS,M1,biens et services : -49.4 Md€
+ECO-01,"douanes (Eurostat), 2024",Solde des échanges de biens,-102.64,Md€,2024,114 Md€ (12 mois à juin 2022) ; 100 Md€ « structurel » ; 80 Md€ (2024),EUROSTAT-COMMERCE-DOUANES,M1,importations valorisées CAF (avec transport et assurance) : déficit plus large que le chiffre français FAB-FAB
+ECO-01,"comptes nationaux, 2024",Solde des échanges de biens,-55.33,Md€,2024,,EUROSTAT-COMMERCE-BIENS,M1,biens et services : -10.7 Md€
+ECO-01,"douanes (Eurostat), 2025",Solde des échanges de biens,-89.59,Md€,2025,114 Md€ (12 mois à juin 2022) ; 100 Md€ « structurel » ; 80 Md€ (2024),EUROSTAT-COMMERCE-DOUANES,M1,importations valorisées CAF (avec transport et assurance) : déficit plus large que le chiffre français FAB-FAB
+ECO-01,"comptes nationaux, 2025",Solde des échanges de biens,-53.7,Md€,2025,,EUROSTAT-COMMERCE-BIENS,M1,biens et services : -14.4 Md€
+ECO-02,"France, 2024","Industrie manufacturière, % du PIB",10.16,% du PIB,2024,"10,6 % ; 10,3 % ; moins de 10 %",EUROSTAT-VA-BRANCHES ; EUROSTAT-PIB-PAYS,M2,11.4 % de la valeur ajoutée ; industrie au sens large (B-E) 12.5 % du PIB
+ECO-02,"Italie, 2024","Industrie manufacturière, % du PIB",14.97,% du PIB,2024,16 %,EUROSTAT-VA-BRANCHES ; EUROSTAT-PIB-PAYS,M2,16.7 % de la valeur ajoutée ; industrie au sens large (B-E) 17.7 % du PIB
+ECO-02,"Espagne, 2024","Industrie manufacturière, % du PIB",10.8,% du PIB,2024,"13,6 %",EUROSTAT-VA-BRANCHES ; EUROSTAT-PIB-PAYS,M2,11.9 % de la valeur ajoutée ; industrie au sens large (B-E) 14.2 % du PIB
+ECO-02,"Allemagne, 2024","Industrie manufacturière, % du PIB",18.08,% du PIB,2024,19 %,EUROSTAT-VA-BRANCHES ; EUROSTAT-PIB-PAYS,M2,19.9 % de la valeur ajoutée ; industrie au sens large (B-E) 21.2 % du PIB
+ECO-02,"UE à 27, 2024","Industrie manufacturière, % du PIB",14.44,% du PIB,2024,,EUROSTAT-VA-BRANCHES ; EUROSTAT-PIB-PAYS,M2,16.1 % de la valeur ajoutée ; industrie au sens large (B-E) 17.5 % du PIB
+ECO-02,"UE à 27, 2024",Rang de la France du moins au plus industrialisé (part de l'industrie manufacturière),5.0,rang,2024,« l'un des pays les moins industrialisés d'Europe »,EUROSTAT-VA-BRANCHES,M2,"devant la France : LU, CY, MT, EL"
+ECO-02,"France, 2000","Industrie manufacturière, % de la valeur ajoutée",16.07,%,2000,,EUROSTAT-VA-BRANCHES,M2,
+ECO-03,"États-Unis, 2010 → 2023",Hausse du PIB par heure travaillée (volume),14.08,%,2023,"+22 % aux États-Unis, +5 % en Europe",OCDE-PRODUCTIVITE,M3,
+ECO-03,"zone euro, 2010 → 2023",Hausse du PIB par heure travaillée (volume),9.12,%,2023,"+22 % aux États-Unis, +5 % en Europe",OCDE-PRODUCTIVITE,M3,
+ECO-03,"France, 2010 → 2023",Hausse du PIB par heure travaillée (volume),5.76,%,2023,"+22 % aux États-Unis, +5 % en Europe",OCDE-PRODUCTIVITE,M3,
+ECO-03,"Allemagne, 2010 → 2023",Hausse du PIB par heure travaillée (volume),11.77,%,2023,"+22 % aux États-Unis, +5 % en Europe",OCDE-PRODUCTIVITE,M3,
+ECO-03,"1995, parités de pouvoir d'achat courantes",Productivité horaire de la zone euro / États-Unis,88.19,%,1995,98 % (1995) ; 82 % (2019),OCDE-PRODUCTIVITE,M3,
+ECO-03,"2019, parités de pouvoir d'achat courantes",Productivité horaire de la zone euro / États-Unis,89.9,%,2019,98 % (1995) ; 82 % (2019),OCDE-PRODUCTIVITE,M3,
+ECO-03,"2023, parités de pouvoir d'achat courantes",Productivité horaire de la zone euro / États-Unis,87.32,%,2023,98 % (1995) ; 82 % (2019),OCDE-PRODUCTIVITE,M3,
+ECO-04,"15-24 ans, 2024","Taux de chômage des jeunes, France",18.8,%,2024,"18,8 % ; Allemagne 6,7 % ; zone euro moins de 15 %",EUROSTAT-CHOMAGE-ANNUEL,M4,Allemagne 6.6 % ; zone euro (EA21) 14.7 % ; UE 15.0 %
+ECO-04,"15-24 ans, 2025","Taux de chômage des jeunes, France",19.8,%,2025,"18,8 % ; Allemagne 6,7 % ; zone euro moins de 15 %",EUROSTAT-CHOMAGE-ANNUEL,M4,Allemagne 7.1 % ; zone euro (EA21) 14.9 % ; UE 15.2 %
+ECO-04,1er trimestre 2026,"Taux de chômage, France (corrigé des variations saisonnières, Eurostat)",8.2,%,2026,"8,1 % (Insee)",EUROSTAT-CHOMAGE-TRIM,M4,"l'Insee publie sa propre estimation, légèrement différente"
+ECO-05,"France, 2023","Dépense intérieure de R&D totale, % du PIB",2.17,% du PIB,2023,"2,2 %",EUROSTAT-RD,M5,
+ECO-05,"France, 2023","R&D exécutée par l'État et l'enseignement supérieur (« recherche publique »), % du PIB",0.7,% du PIB,2023,"2,2 %",EUROSTAT-RD,M5,entreprises : 1.43 % du PIB
+ECO-05,"Allemagne, 2023","Dépense intérieure de R&D totale, % du PIB",3.1,% du PIB,2023,"3,1 %",EUROSTAT-RD,M5,
+ECO-05,"Allemagne, 2023","R&D exécutée par l'État et l'enseignement supérieur (« recherche publique »), % du PIB",0.9,% du PIB,2023,"3,1 %",EUROSTAT-RD,M5,entreprises : 2.12 % du PIB
+ECO-05,"États-Unis, 2023","Dépense intérieure de R&D totale, % du PIB",3.42,% du PIB,2023,"3,5 %",EUROSTAT-RD,M5,
+ECO-05,"États-Unis, 2023","R&D exécutée par l'État et l'enseignement supérieur (« recherche publique »), % du PIB",0.65,% du PIB,2023,"3,5 %",EUROSTAT-RD,M5,entreprises : 2.66 % du PIB

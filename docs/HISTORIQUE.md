@@ -79,6 +79,10 @@ enregistrement : d'où le contrôle des moyennes par lot (PROCESS.md, étape 3).
 - Deux calculs lourds en parallèle se ralentissent énormément (jusqu'à 9 fois) : un seul à la fois.
 - Les journaux en arrière-plan doivent passer par `python -u`.
 - Les annotations ajoutées pendant un réentraînement ne servent qu'au suivant.
+- Fenêtre de suivi (2026-11-14, `python -m suivi`) : une sonde est injectée dans l'entraînement déjà lancé par `sys.remote_exec` (Python 3.14), sans l'interrompre.
+  Elle lit seulement les variables de `affinage.entrainer` (lot, sorties, perte, poids) et ne ralentit rien de mesurable.
+  Une sonde d'une autre version arrête la précédente. Piège : `pas_total` est une variable de cellule (lambda du planificateur).
+  Depuis, `affinage.entrainer` démarre la sonde et ouvre la fenêtre dans un processus à part (`ouvrir_suivi`, désactivable par LISNARD_SANS_SUIVI=1).
 - Les colonnes de `SOURCES` et `GROUPES` de `analyse/modele.py` définissent les entrées du modèle : ne pas les
   retirer (la colonne « whatsapp » reste, toujours à 0).
 
@@ -124,28 +128,16 @@ enregistrement : d'où le contrôle des moyennes par lot (PROCESS.md, étape 3).
   vérification. Différence connue : pour les 1 773 commentaires Facebook déjà sur le site, l'onglet de modération lit
   le texte nettoyé du corpus (retours à la ligne en espaces, 431 cas) et le nom sans espace final (36 cas).
 
-## Dataset Hugging Face du groupe
+## Stockage du groupe sur Cloudflare R2
 
-- 2026-11-13 : export vers `rag-politique/politique-sources` (`python -m huggingface`, règles dans
-  [HUGGINGFACE.md](HUGGINGFACE.md)). Le groupe a accepté un type de source de plus, `data/commentaires/nouvelle-energie/`,
-  **un seul Parquet par source**, daté de sa dernière mise à jour : quand une source change, son fichier remplace
-  l'ancien dans le même commit (choix de l'utilisateur : pas de fichiers presque identiques côte à côte, écart assumé
-  à la règle « on ajoute, on ne réécrit pas » ; une première version par lots incrémentaux n'a jamais été envoyée),
-  une source inchangée ne repart pas. Le site (Supabase) reste tel quel. **Avec le nom affiché des auteurs**, à la demande de l'utilisateur (pas d'anonymisation, contrairement
-  au site) ; l'identifiant de plateforme ne part pas. Nos colonnes différant des autres fichiers, l'export tient dans
-  le README du dataset une configuration `commentaires` à part et fait lister à `default` les autres dossiers. Lancé
-  après chaque collecte qui ramène du neuf, et par un bouton de l'interface.
-- 2026-11-13 (soir) : à la demande de l'utilisateur, les commentaires passent dans le dataset **privé**
-  `rag-politique/politique-sources-privees` et **sans nom d'auteur** : la colonne `auteur` est remplacée par `auteur_id`, HMAC-SHA256 (clé locale
-  `AUTEUR_CLE`, 16 caractères) de « source|identifiant de plateforme » — stable d'un export à l'autre, impossible à
-  remonter même en essayant des noms (contrairement à un simple hachage). Les fichiers et la configuration
-  `commentaires` ont été retirés du dataset public, dont le README a été rétabli à l'identique ; la note sur nos
-  colonnes est désormais dans le README du dataset privé.
-  Ensuite, avec son accord, l'historique de `main` du dataset public a été écrasé en un seul commit (44 fichiers
-  identiques à l'octet près, empreintes dans `donnees/huggingface/public_avant_squash.json`), et 4 blocs de stockage
-  de nos anciens fichiers ont été supprimés définitivement, puis, avec son autorisation, les 8 autres (rangés sous
-  `commentaires/train/`, qui portaient les deux autres versions). Vérifié : plus aucun de nos fichiers téléchargeable,
-  même par le numéro d'un ancien commit, et plus aucun bloc de stockage inutilisé dans le dataset public.
+- 2026-11-14 : les commentaires notés partent vers Cloudflare R2, bucket privé `rag-politique-sources-privees`
+  (`python -m cloudflare`, règles dans [CLOUDFLARE.md](CLOUDFLARE.md)), en vue d'une API de données du groupe ; tout
+  l'ancien export a été retiré du projet. Mêmes règles qu'avant : `data/commentaires/nouvelle-energie/`, **un seul
+  Parquet par source** remplacé en entier quand il change (l'ancien est supprimé après vérification du nouveau),
+  **sans nom d'auteur** (`auteur_id` = HMAC-SHA256 de « source|identifiant de plateforme », clé locale `AUTEUR_CLE`,
+  gardée telle quelle : les identifiants n'ont pas changé). Le bucket public `rag-politique-sources` et le bucket
+  privé ont été remplis le 2026-11-13 avec les fichiers du groupe, vérifiés par empreinte. Base D1 envisagée pour les
+  commentaires puis écartée : l'offre gratuite limite à 100 000 lignes écrites par jour, R2 suffit pour l'instant.
 
 ## Modération Facebook
 
@@ -163,6 +155,12 @@ ceux qui appellent une réponse. À part de l'analyse (paquet `moderation/`, ong
 | 2026-11-13 | **Site de modération** à la demande de l'utilisateur, à part du site public (projet Vercel `moderation-lisnard`, `moderation/site/`). Accès par mot de passe choisi par l'utilisateur : compte Supabase Auth partagé (adresse fixe, on ne tape que le mot de passe) portant `app_metadata.role = moderateur`, inscriptions fermées ; les tables privées `moderation` et `utilisateurs` ne s'ouvrent qu'à ce rôle (règles RLS), et `est_moderateur()` vérifie que le compte existe encore, si bien que changer le mot de passe (compte recréé) coupe toutes les sessions. Écartés : la protection par mot de passe de Vercel (payante) et une fonction serveur qui lirait avec la clé secrète (clé secrète hors de la base, plus de pièces). Retirer ou bloquer un membre depuis le site est impossible (API des groupes Facebook fermée en 2024) : le site ouvre sa fiche de membre du groupe, où l'administrateur le fait. Ajout d'un suivi partagé « Traité » / « Sans suite » (`moderation_suivi`). Première version : vues calculées par la base à chaque recherche (0,3 à 0,5 s sur 17 841 commentaires). |
 | 2026-11-13 | À la demande de l'utilisateur (offre gratuite de Supabase), le travail passe dans le navigateur : téléchargement complet une seule fois (≈ 18 pages de 1 000), gardé dans IndexedDB, puis seulement les nouveautés (colonne `maj` datée par déclencheur, table `moderation_retires` remplie à la suppression, suivi par date ; « à traiter » est écrit au lieu d'effacer la marque). Mesuré en ligne : rechargement = 4 requêtes vides (8 octets, 0,2 ms de base chacune), aucune requête pour filtrer ou trier, une par marque. Vues `moderation_site`, `moderation_auteurs`, `moderation_publications`, `moderation_bilan` retirées. Site mis en ligne : https://moderation-lisnard.vercel.app. |
 | 2026-11-13 | Connexion X automatique réessayée (une fois, profil temporaire) : toujours « temporairement limité votre connexion » juste après le pseudo. Le profil `sessions/x_profil/` n'avait aucune session : `collecte.connexion_x` y recopie maintenant la session valable et, à l'expiration, la fait renouveler par X sans fenêtre ni mot de passe (essai réel : fichier de cookies vidé, session rendue par le profil) ; le mot de passe ne sert que si X annule la session. Nouvelle option `--profil` après des cookies collés à la main. |
+
+## Vérification factuelle (depuis le 2026-11-14)
+
+- 2026-11-14 : paquet `verification/` créé à partir du « Dossier de vérification Lisnard » d'un collègue (16 thèmes, 69 affirmations) et du corpus RAG copié depuis R2. Décisions de l'utilisateur : un thème terminé avant le suivant, thème pilote = dette, dépense publique et fiscalité, échelle à six verdicts, tout en local jusqu'à son accord, chiffrages de mesures autorisés mais marqués comme estimations.
+- 2026-11-14 : thème 1 terminé (22 affirmations, 41 sources). Le site de l'Agence France Trésor refuse les téléchargements automatiques : la maturité moyenne de la dette reste à déposer à la main.
+- 2026-11-14 : les 16 thèmes terminés, 112 affirmations : 27 exactes, 27 plutôt exactes, 21 trompeuses, 11 fausses, 13 invérifiables, 13 opinions. Sites inaccessibles aux robots ce jour-là (à reprendre à la main ou plus tard) : Agence France Trésor, Légifrance, education.gouv.fr, oecd.org, DGEF et Interstats, Santé publique France (exploitants agricoles), ASPI ; data.gouv.fr et vie-publique.fr en panne (503) pour le thème 14. Comptes communaux : comptes individuels de la DGFiP sur data.economie.gouv.fr (2000-2025), plus longs que l'OFGL (2018-2025). `commun/lecture.fmi` lit désormais les fichiers du FMI à plusieurs pays.
 
 ## Pistes non faites
 

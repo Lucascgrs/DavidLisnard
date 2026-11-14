@@ -139,6 +139,22 @@ def decoder(brut: np.ndarray, moyennes: dict) -> dict[str, np.ndarray]:
     return d
 
 
+def ouvrir_suivi(journal=print):
+    """Démarre la sonde dans ce processus et ouvre la fenêtre de suivi (python -m suivi) dans un processus à part :
+    la fermer ne touche pas à l'entraînement. LISNARD_SANS_SUIVI=1 dans l'environnement : ni sonde ni fenêtre."""
+    if os.environ.get("LISNARD_SANS_SUIVI"):
+        return
+    try:
+        import tempfile
+        from pathlib import Path
+        from commun.taches import lancer_en_fond
+        (Path(tempfile.gettempdir()) / "lisnard_suivi.json").unlink(missing_ok=True)  # pas l'état d'un ancien lancement
+        import suivi.sonde  # noqa: F401  (l'importer suffit à démarrer son fil de lecture)
+        lancer_en_fond(["-m", "suivi", "--sans-brancher"])
+    except Exception as e:  # le suivi ne doit jamais empêcher l'entraînement
+        journal(f"  (fenêtre de suivi non ouverte : {e})")
+
+
 def entrainer(epoques=5, nom=None, graine=0, journal=print, lr=3e-5, titre=True, longueurs=None) -> str:
     """Affine le réseau et l'enregistre dans modeles/<nom>/ (par défaut le prochain affineN). Renvoie le nom.
     titre=False : le réseau ne lit pas le titre de la publication (essai du 2026-11-10).
@@ -146,6 +162,7 @@ def entrainer(epoques=5, nom=None, graine=0, journal=print, lr=3e-5, titre=True,
     import torch
     from transformers import AutoTokenizer
     nom = nom or versions.prochain_reseau()
+    ouvrir_suivi(journal)
     torch.manual_seed(graine)
     torch.set_num_threads(FILS)
     rnd = random.Random(graine)

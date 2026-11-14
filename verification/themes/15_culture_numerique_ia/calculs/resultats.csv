@@ -1,0 +1,8 @@
+affirmation,variante,grandeur,valeur,unite,annee,chiffre_lisnard,sources,methode,note
+NUM-01,rapport Draghi,Seuil de capitalisation qu'aucune entreprise de l'UE créée en 50 ans n'atteint,100.0,Md€,2024,100 milliards d'euros,DRAGHI-2024-A,M1,« all six US companies with a valuation above EUR 1 trillion have been created in this period »
+NUM-02,"États-Unis, 2025",Investissement privé dans l'IA,285.9,Md$,2025,près de 286 Md$,STANFORD-AI-INDEX-2026,M2,
+NUM-02,"États-Unis / Chine, 2025",Rapport des investissements privés dans l'IA,23.06,fois,2025,vingt-trois fois,STANFORD-AI-INDEX-2026,M2,Chine : 12.4 Md$ ; Europe : 20.92 Md$ ; hors fonds publics chinois
+NUM-04,"capacité de production < 10 nm, 2019",Part de Taïwan,92.0,%,2019,plus de 90 %,BCG-SIA-2021,M3,le reste (8 %) en Corée du Sud
+CULT-01,"Île-de-France, 2018",Dépenses du ministère de la Culture par habitant,196.0,€ par habitant,2018,801 € par Parisien,INSEE-TEF-2021-CULTURE,M4,
+CULT-01,"hors Île-de-France, 2018",Dépenses du ministère de la Culture par habitant,21.0,€ par habitant,2018,24 € par habitant de la province,INSEE-TEF-2021-CULTURE,M4,
+CULT-01,"rapport Île-de-France / reste, 2018",Écart de dépense par habitant,9.33,fois,2018,33 fois (801 / 24),INSEE-TEF-2021-CULTURE,M4,"les grands établissements nationaux (musées, opéras) sont comptés là où ils se trouvent"

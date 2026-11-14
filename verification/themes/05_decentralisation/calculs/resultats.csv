@@ -1,0 +1,26 @@
+affirmation,variante,grandeur,valeur,unite,annee,chiffre_lisnard,sources,methode,note
+DEC-01,"2014 → 2022, euros courants",Cumul des baisses de DGF du bloc communal (par rapport à 2013),44.57,Md€,2022,47 Md€ (2022) ; plus de 80 Md€ (2026),AN-QE-50991 ; AN-QE-95791,M1,baisse annuelle stabilisée à 5.99 Md€ depuis 2017
+DEC-01,"2014 → 2025, euros courants",Cumul des baisses de DGF du bloc communal (par rapport à 2013),62.53,Md€,2025,47 Md€ (2022) ; plus de 80 Md€ (2026),AN-QE-50991 ; AN-QE-95791,M1,baisse annuelle stabilisée à 5.99 Md€ depuis 2017
+DEC-01,"2014 → 2026, euros courants",Cumul des baisses de DGF du bloc communal (par rapport à 2013),68.52,Md€,2026,47 Md€ (2022) ; plus de 80 Md€ (2026),AN-QE-50991 ; AN-QE-95791,M1,baisse annuelle stabilisée à 5.99 Md€ depuis 2017
+DEC-01,2018 → 2025,DGF du bloc communal (communes + intercommunalités),19.09,Md€,2025,,OFGL-DGF-COMMUNES ; OFGL-DGF-GFP,M1,2018 : 18.37 Md€
+DEC-01,2019 → 2025,Perte cumulée due à l'absence d'indexation sur les prix (DGF 2018 indexée − DGF réelle),11.89,Md€,2025,,OFGL-DGF-COMMUNES ; OFGL-DGF-GFP ; EUROSTAT-INFLATION,M1,"ESTIMATION, non fiable à 100 % : l'État n'a jamais été tenu d'indexer la DGF ; ce manque à gagner n'est pas un prélèvement au sens strict"
+DEC-01,"2014 → 2025, baisses + non-indexation",Total (méthode proche de celle de l'AMF),74.42,Md€,2025,plus de 80 Md€,AN-QE-50991 ; AN-QE-95791 ; OFGL-DGF-COMMUNES ; OFGL-DGF-GFP ; EUROSTAT-INFLATION,M1,"ESTIMATION, non fiable à 100 %"
+DEC-02,2000-Q4,"Dette des administrations publiques locales, % du PIB",7.2,% du PIB,2000,"8,9 % ; 9 % stable depuis 30-35 ans",EUROSTAT-DETTE-LOCALE-TRIM,M2,
+DEC-02,2005-Q4,"Dette des administrations publiques locales, % du PIB",6.8,% du PIB,2005,"8,9 % ; 9 % stable depuis 30-35 ans",EUROSTAT-DETTE-LOCALE-TRIM,M2,
+DEC-02,2010-Q4,"Dette des administrations publiques locales, % du PIB",8.2,% du PIB,2010,"8,9 % ; 9 % stable depuis 30-35 ans",EUROSTAT-DETTE-LOCALE-TRIM,M2,
+DEC-02,2015-Q4,"Dette des administrations publiques locales, % du PIB",8.9,% du PIB,2015,"8,9 % ; 9 % stable depuis 30-35 ans",EUROSTAT-DETTE-LOCALE-TRIM,M2,
+DEC-02,2020-Q4,"Dette des administrations publiques locales, % du PIB",9.9,% du PIB,2020,"8,9 % ; 9 % stable depuis 30-35 ans",EUROSTAT-DETTE-LOCALE-TRIM,M2,
+DEC-02,2024-Q4,"Dette des administrations publiques locales, % du PIB",9.0,% du PIB,2024,"8,9 % ; 9 % stable depuis 30-35 ans",EUROSTAT-DETTE-LOCALE-TRIM,M2,
+DEC-02,2025-Q4,"Dette des administrations publiques locales, % du PIB",9.3,% du PIB,2025,"8,9 % ; 9 % stable depuis 30-35 ans",EUROSTAT-DETTE-LOCALE-TRIM,M2,
+DEC-02,2026-Q2,"Dette des administrations publiques locales, % du PIB",9.2,% du PIB,2026,"8,9 % ; 9 % stable depuis 30-35 ans",EUROSTAT-DETTE-LOCALE-TRIM,M2,
+DEC-02,2024-Q4,Part de la dette locale dans la dette publique,8.02,%,2024,8 % / 9 % (92 % ou 91 % pour l'État et la Sécurité sociale),EUROSTAT-DETTE-LOCALE-TRIM,M2,
+DEC-02,2025-Q4,Part de la dette locale dans la dette publique,8.04,%,2025,8 % / 9 % (92 % ou 91 % pour l'État et la Sécurité sociale),EUROSTAT-DETTE-LOCALE-TRIM,M2,
+DEC-03,"France, 2024","Dépense des administrations locales, % du PIB",11.3,% du PIB,2024,11 % (moins de 11 %),EUROSTAT-DEPENSES-SECTEURS,M3,
+DEC-03,"UE à 27, 2024","Dépense des administrations locales seules, % du PIB",11.2,% du PIB,2024,« presque 20 % » ; « 18 % chez nos voisins »,EUROSTAT-DEPENSES-SECTEURS,M3,
+DEC-03,"UE à 27, 2024","Dépense des administrations locales + États fédérés et régions autonomes, % du PIB",17.1,% du PIB,2024,« presque 20 % »,EUROSTAT-DEPENSES-SECTEURS,M3,
+DEC-03,"France, 2024",Dépense locale / dépense publique totale,19.76,%,2024,19 %,EUROSTAT-DEPENSES-SECTEURS,M3,dépenses non consolidées des sous-secteurs rapportées au total consolidé
+DEC-03,"UE à 27, 2024",Dépense locale seule / dépense publique totale,22.93,%,2024,34 % / 35 %,EUROSTAT-DEPENSES-SECTEURS,M3,
+DEC-03,"UE à 27, 2024",Dépense locale + États fédérés / dépense publique totale,34.94,%,2024,34 % / 35 %,EUROSTAT-DEPENSES-SECTEURS,M3,
+DEC-03,"Allemagne, 2024","Dépense des administrations locales seules, % du PIB",9.4,% du PIB,2024,,EUROSTAT-DEPENSES-SECTEURS,M3,États fédérés / régions autonomes : 14.1 % du PIB
+DEC-03,"Italie, 2024","Dépense des administrations locales seules, % du PIB",14.3,% du PIB,2024,,EUROSTAT-DEPENSES-SECTEURS,M3,États fédérés / régions autonomes : 0.0 % du PIB
+DEC-03,"Espagne, 2024","Dépense des administrations locales seules, % du PIB",6.1,% du PIB,2024,,EUROSTAT-DEPENSES-SECTEURS,M3,États fédérés / régions autonomes : 16.7 % du PIB

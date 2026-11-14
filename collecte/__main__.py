@@ -8,7 +8,7 @@ Résultats : donnees/<source>/ (un CSV par compte + <source>_tout.xlsx), donnees
 Une source qui échoue n'arrête pas les suivantes. À la fin, les données sont sauvegardées
 (donnees/sauvegardes/donnees.zip). Si du neuf a été collecté, les nouveaux commentaires sont ensuite notés par le
 modèle (option de l'onglet Analyse, cochée par défaut), puis publiés sur le site (« python -m web ») et
-exportés vers le dataset Hugging Face du groupe (« python -m huggingface »). Le
+exportés vers le bucket R2 privé du groupe sur Cloudflare (« python -m cloudflare »). Le
 rangement par thèmes, lui, se fait à la demande : c'est Claude qui lit (« python -m critiques »). Enfin, si
 Facebook a ramené du neuf, les nouveaux commentaires Facebook sont classés pour la modération (« python -m
 moderation classer », à part de l'analyse) et envoyés dans la table privée « moderation » de Supabase.
@@ -133,23 +133,23 @@ def publier_le_site(journal: Journal) -> None:
         journal(f"### Publication sur le site impossible : {type(e).__name__}: {e}")
 
 
-def exporter_vers_huggingface(journal: Journal) -> None:
-    """Après la publication : le fichier de chaque source qui a changé remplace l'ancien dans le dataset du groupe
-    (python -m huggingface, docs/HUGGINGFACE.md). Dans un processus à part : analyse/ a mis Hugging Face hors ligne
-    dans celui-ci. Une erreur ici ne fait jamais échouer la collecte."""
+def exporter_vers_cloudflare(journal: Journal) -> None:
+    """Après la publication : le fichier de chaque source qui a changé remplace l'ancien dans le bucket R2 du groupe
+    (python -m cloudflare, docs/CLOUDFLARE.md). Dans un processus à part, comme les autres envois. Une erreur ici ne
+    fait jamais échouer la collecte."""
     import os
     import subprocess
     from commun.config import RACINE
     from commun.taches import PYTHON
-    journal("### Export vers Hugging Face")
+    journal("### Export vers Cloudflare R2")
     try:
-        r = subprocess.run([PYTHON, "-m", "huggingface"], cwd=RACINE, capture_output=True, text=True,
+        r = subprocess.run([PYTHON, "-m", "cloudflare"], cwd=RACINE, capture_output=True, text=True,
                            encoding="utf-8", errors="replace", timeout=3600,
-                           env={**os.environ, "HF_HUB_OFFLINE": "0", "PYTHONIOENCODING": "utf-8"})
+                           env={**os.environ, "PYTHONIOENCODING": "utf-8"})
         if r.returncode:
-            journal(f"### Export vers Hugging Face impossible : {(r.stderr or r.stdout).strip().splitlines()[-1:]}")
+            journal(f"### Export vers Cloudflare R2 impossible : {(r.stderr or r.stdout).strip().splitlines()[-1:]}")
     except Exception as e:
-        journal(f"### Export vers Hugging Face impossible : {type(e).__name__}: {e}")
+        journal(f"### Export vers Cloudflare R2 impossible : {type(e).__name__}: {e}")
 
 
 def classer_pour_la_moderation(journal: Journal) -> None:
@@ -197,7 +197,7 @@ def main():
     if any(r.get("nouveaux") for r in resultats):
         noter_les_nouveaux(journal)
         publier_le_site(journal)
-        exporter_vers_huggingface(journal)
+        exporter_vers_cloudflare(journal)
     if any(r.get("nouveaux") for r in resultats if r.get("source") == "facebook"):
         classer_pour_la_moderation(journal)
 

@@ -1,0 +1,31 @@
+affirmation,variante,grandeur,valeur,unite,annee,chiffre_lisnard,sources,methode,note
+EUR-01,1995-2021,Plus bas indice de la France avant 2022 (UE = 100),101.0,indice,2021,,EUROSTAT-PIB-HAB-SPA,M1,la série commence en 1995
+EUR-01,2022,PIB par habitant de la France en SPA (UE = 100),98.0,indice,2022,« en dessous de la moyenne européenne »,EUROSTAT-PIB-HAB-SPA,M1,
+EUR-02,2022,PIB par habitant en SPA (UE = 100) : France moins Italie,0.0,points,2022,« derrière l'Italie »,EUROSTAT-PIB-HAB-SPA,M1,"France 98, Italie 98"
+EUR-01,2023,PIB par habitant de la France en SPA (UE = 100),99.0,indice,2023,« en dessous de la moyenne européenne »,EUROSTAT-PIB-HAB-SPA,M1,
+EUR-02,2023,PIB par habitant en SPA (UE = 100) : France moins Italie,1.0,points,2023,« derrière l'Italie »,EUROSTAT-PIB-HAB-SPA,M1,"France 99, Italie 98"
+EUR-01,2024,PIB par habitant de la France en SPA (UE = 100),99.0,indice,2024,« en dessous de la moyenne européenne »,EUROSTAT-PIB-HAB-SPA,M1,
+EUR-02,2024,PIB par habitant en SPA (UE = 100) : France moins Italie,1.0,points,2024,« derrière l'Italie »,EUROSTAT-PIB-HAB-SPA,M1,"France 99, Italie 98"
+EUR-03,"en dollars courants, tous pays, 1980",Rang mondial de la France pour le PIB par habitant,12.0,rang,1980,"7e il y a 30 ans, 27e aujourd'hui",FMI-PIB-HAB-DOLLARS ; FMI-PIB-HAB-PPA ; FMI-POPULATION ; FMI-PAYS,M2,sur 137 pays classés
+EUR-03,"en dollars courants, tous pays, 1995",Rang mondial de la France pour le PIB par habitant,13.0,rang,1995,"7e il y a 30 ans, 27e aujourd'hui",FMI-PIB-HAB-DOLLARS ; FMI-PIB-HAB-PPA ; FMI-POPULATION ; FMI-PAYS,M2,sur 175 pays classés
+EUR-03,"en dollars courants, tous pays, 2024",Rang mondial de la France pour le PIB par habitant,27.0,rang,2024,"7e il y a 30 ans, 27e aujourd'hui",FMI-PIB-HAB-DOLLARS ; FMI-PIB-HAB-PPA ; FMI-POPULATION ; FMI-PAYS,M2,sur 195 pays classés
+EUR-03,"en dollars courants, tous pays, 2025",Rang mondial de la France pour le PIB par habitant,26.0,rang,2025,"7e il y a 30 ans, 27e aujourd'hui",FMI-PIB-HAB-DOLLARS ; FMI-PIB-HAB-PPA ; FMI-POPULATION ; FMI-PAYS,M2,sur 195 pays classés
+EUR-03,"en dollars courants, pays de plus d'un million d'habitants, 1980",Rang mondial de la France pour le PIB par habitant,9.0,rang,1980,"7e il y a 30 ans, 27e aujourd'hui",FMI-PIB-HAB-DOLLARS ; FMI-PIB-HAB-PPA ; FMI-POPULATION ; FMI-PAYS,M2,sur 106 pays classés
+EUR-03,"en dollars courants, pays de plus d'un million d'habitants, 1995",Rang mondial de la France pour le PIB par habitant,11.0,rang,1995,"7e il y a 30 ans, 27e aujourd'hui",FMI-PIB-HAB-DOLLARS ; FMI-PIB-HAB-PPA ; FMI-POPULATION ; FMI-PAYS,M2,sur 142 pays classés
+EUR-03,"en dollars courants, pays de plus d'un million d'habitants, 2024",Rang mondial de la France pour le PIB par habitant,21.0,rang,2024,"7e il y a 30 ans, 27e aujourd'hui",FMI-PIB-HAB-DOLLARS ; FMI-PIB-HAB-PPA ; FMI-POPULATION ; FMI-PAYS,M2,sur 156 pays classés
+EUR-03,"en dollars courants, pays de plus d'un million d'habitants, 2025",Rang mondial de la France pour le PIB par habitant,20.0,rang,2025,"7e il y a 30 ans, 27e aujourd'hui",FMI-PIB-HAB-DOLLARS ; FMI-PIB-HAB-PPA ; FMI-POPULATION ; FMI-PAYS,M2,sur 157 pays classés
+EUR-03,"en parité de pouvoir d'achat, tous pays, 1980",Rang mondial de la France pour le PIB par habitant,19.0,rang,1980,"7e il y a 30 ans, 27e aujourd'hui",FMI-PIB-HAB-DOLLARS ; FMI-PIB-HAB-PPA ; FMI-POPULATION ; FMI-PAYS,M2,sur 138 pays classés
+EUR-03,"en parité de pouvoir d'achat, tous pays, 1995",Rang mondial de la France pour le PIB par habitant,21.0,rang,1995,"7e il y a 30 ans, 27e aujourd'hui",FMI-PIB-HAB-DOLLARS ; FMI-PIB-HAB-PPA ; FMI-POPULATION ; FMI-PAYS,M2,sur 174 pays classés
+EUR-03,"en parité de pouvoir d'achat, tous pays, 2024",Rang mondial de la France pour le PIB par habitant,30.0,rang,2024,"7e il y a 30 ans, 27e aujourd'hui",FMI-PIB-HAB-DOLLARS ; FMI-PIB-HAB-PPA ; FMI-POPULATION ; FMI-PAYS,M2,sur 195 pays classés
+EUR-03,"en parité de pouvoir d'achat, tous pays, 2025",Rang mondial de la France pour le PIB par habitant,30.0,rang,2025,"7e il y a 30 ans, 27e aujourd'hui",FMI-PIB-HAB-DOLLARS ; FMI-PIB-HAB-PPA ; FMI-POPULATION ; FMI-PAYS,M2,sur 195 pays classés
+EUR-03,"en parité de pouvoir d'achat, pays de plus d'un million d'habitants, 1980",Rang mondial de la France pour le PIB par habitant,14.0,rang,1980,"7e il y a 30 ans, 27e aujourd'hui",FMI-PIB-HAB-DOLLARS ; FMI-PIB-HAB-PPA ; FMI-POPULATION ; FMI-PAYS,M2,sur 106 pays classés
+EUR-03,"en parité de pouvoir d'achat, pays de plus d'un million d'habitants, 1995",Rang mondial de la France pour le PIB par habitant,16.0,rang,1995,"7e il y a 30 ans, 27e aujourd'hui",FMI-PIB-HAB-DOLLARS ; FMI-PIB-HAB-PPA ; FMI-POPULATION ; FMI-PAYS,M2,sur 141 pays classés
+EUR-03,"en parité de pouvoir d'achat, pays de plus d'un million d'habitants, 2024",Rang mondial de la France pour le PIB par habitant,21.0,rang,2024,"7e il y a 30 ans, 27e aujourd'hui",FMI-PIB-HAB-DOLLARS ; FMI-PIB-HAB-PPA ; FMI-POPULATION ; FMI-PAYS,M2,sur 156 pays classés
+EUR-03,"en parité de pouvoir d'achat, pays de plus d'un million d'habitants, 2025",Rang mondial de la France pour le PIB par habitant,22.0,rang,2025,"7e il y a 30 ans, 27e aujourd'hui",FMI-PIB-HAB-DOLLARS ; FMI-PIB-HAB-PPA ; FMI-POPULATION ; FMI-PAYS,M2,sur 157 pays classés
+EUR-04,"rapport Draghi, partie A",Part de l'écart de PIB par habitant UE / États-Unis (PPA) expliquée par la productivité,70.0,%,2024,70 %,DRAGHI-2024-A,M3,"productivité du travail de l'UE : 95 % du niveau américain en 1995, moins de 80 % aujourd'hui"
+EUR-05,"OTAN, estimation 2025",Dépenses de défense de la France (définition OTAN),61.78,Md€,2025,57 Md€,OTAN-DEPENSES-2025,M4,2.05 % du PIB ; 2024 : 59.6 Md€
+EUR-05,57 Md€ / PIB 2025,Part du PIB,1.91,%,2025,« à peine 2 % »,EUROSTAT-PIB-COURANT,M4,
+EUR-05,"de 2,06 % à 3.0 % du PIB 2025",Dépense supplémentaire annuelle,28.12,Md€,2025,27 Md€ par an,EUROSTAT-PIB-COURANT,M4,PIB 2025 : 2991 Md€
+EUR-05,"de 2,06 % à 3.5 % du PIB 2025",Dépense supplémentaire annuelle,43.07,Md€,2025,plus de 40 Md€ par an,EUROSTAT-PIB-COURANT,M4,PIB 2025 : 2991 Md€
+EUR-06,2025,Solde commercial de l'UE avec la Chine,-374.96,Md€,2025,"−360 Md€, « record »",COMEXT-UE-CHINE,M5,
+EUR-06,record de la série,"Solde commercial de l'UE avec la Chine, année la plus déficitaire",-397.79,Md€,2022,,COMEXT-UE-CHINE,M5,série 2010-2025

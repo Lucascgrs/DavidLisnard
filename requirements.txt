@@ -9,6 +9,9 @@ tzdata>=2025.1          # fuseau Europe/Paris sous Windows
 facebook-gql-scraper>=0.9.1   # groupes Facebook (requêtes internes du site ; corrigée dans collecte/sources/facebook.py)
 twscrape>=0.21                # X (recherches internes du site avec les cookies du compte de collecte)
 
+# Export vers Cloudflare R2 (API S3)
+boto3>=1.35
+
 # Interface
 sv-ttk>=2.6
 matplotlib>=3.9

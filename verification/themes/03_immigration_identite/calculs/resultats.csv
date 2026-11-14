@@ -1,0 +1,29 @@
+affirmation,variante,grandeur,valeur,unite,annee,chiffre_lisnard,sources,methode,note
+IMMI-01,"France, 2022",Premiers titres de séjour délivrés (ressortissants de pays tiers),326948.0,titres,2022,400 000 ; « 500 000 entrées annuelles légales »,EUROSTAT-PREMIERS-TITRES,M1,
+IMMI-01,"France, 2022",Part des premiers titres délivrés pour un motif professionnel,16.9,%,2022,13 % (août 2026) ; 17 % (fin août et septembre 2026),EUROSTAT-PREMIERS-TITRES,M1,famille 29.7 % ; études 32.3 % ; autres motifs (dont humanitaire) 21.1 %
+IMMI-01,"France, 2023",Premiers titres de séjour délivrés (ressortissants de pays tiers),338877.0,titres,2023,400 000 ; « 500 000 entrées annuelles légales »,EUROSTAT-PREMIERS-TITRES,M1,
+IMMI-01,"France, 2023",Part des premiers titres délivrés pour un motif professionnel,17.34,%,2023,13 % (août 2026) ; 17 % (fin août et septembre 2026),EUROSTAT-PREMIERS-TITRES,M1,famille 27.4 % ; études 33.2 % ; autres motifs (dont humanitaire) 22.1 %
+IMMI-01,"France, 2024",Premiers titres de séjour délivrés (ressortissants de pays tiers),345587.0,titres,2024,400 000 ; « 500 000 entrées annuelles légales »,EUROSTAT-PREMIERS-TITRES,M1,
+IMMI-01,"France, 2024",Part des premiers titres délivrés pour un motif professionnel,16.96,%,2024,13 % (août 2026) ; 17 % (fin août et septembre 2026),EUROSTAT-PREMIERS-TITRES,M1,famille 26.3 % ; études 32.6 % ; autres motifs (dont humanitaire) 24.1 %
+IMMI-01,"France, 2025",Premiers titres de séjour délivrés (ressortissants de pays tiers),377462.0,titres,2025,400 000 ; « 500 000 entrées annuelles légales »,EUROSTAT-PREMIERS-TITRES,M1,
+IMMI-01,"France, 2025",Part des premiers titres délivrés pour un motif professionnel,13.47,%,2025,13 % (août 2026) ; 17 % (fin août et septembre 2026),EUROSTAT-PREMIERS-TITRES,M1,famille 24.1 % ; études 31.4 % ; autres motifs (dont humanitaire) 31.1 %
+IMMI-02,2025 divisé par 8,Premiers titres restants,47182.75,titres,2025,diviser par huit ; 80 000 entrées par an,EUROSTAT-PREMIERS-TITRES,M2,"ESTIMATION, non fiable à 100 % : à motifs constants ; 80 000 correspond à une division par 4,7"
+IMMI-02,2025,Titres familiaux + humanitaires et autres (motifs en grande partie fondés sur le droit),208210.0,titres,2025,,EUROSTAT-PREMIERS-TITRES,M2,à comparer à l'objectif de 47 000 à 80 000 : supposerait de réduire aussi des titres que le droit européen et la CEDH encadrent
+IMMI-03,2022,"Renvois / ordres de quitter le territoire, France",7.52,%,2022,« autour de 10 % » ; 95 % non exécutées,EUROSTAT-OQTF ; EUROSTAT-RETOURS,M3,UE à 27 : 21.4 % ; UE hors France : 27.2 % ; écart avec l'UE hors France 19.7 points
+IMMI-03,2023,"Renvois / ordres de quitter le territoire, France",8.9,%,2023,« autour de 10 % » ; 95 % non exécutées,EUROSTAT-OQTF ; EUROSTAT-RETOURS,M3,UE à 27 : 23.1 % ; UE hors France : 28.6 % ; écart avec l'UE hors France 19.7 points
+IMMI-03,2024,"Renvois / ordres de quitter le territoire, France",12.94,%,2024,« autour de 10 % » ; 95 % non exécutées,EUROSTAT-OQTF ; EUROSTAT-RETOURS,M3,UE à 27 : 27.3 % ; UE hors France : 32.9 % ; écart avec l'UE hors France 19.9 points
+IMMI-03,2025,"Renvois / ordres de quitter le territoire, France",13.76,%,2025,« autour de 10 % » ; 95 % non exécutées,EUROSTAT-OQTF ; EUROSTAT-RETOURS,M3,UE à 27 : 32.1 % ; UE hors France : 39.3 % ; écart avec l'UE hors France 25.5 points
+IMMI-03,"Cour des comptes, 2022",OQTF exécutées (estimation de la Cour),10.0,%,2022,« autour de 10 % »,CC-IMMIGRATION-IRREGULIERE-2024,M3,134280 OQTF prononcées en 2022
+IMMI-04,2024,Dépenses réelles d'aide médicale de l'État (droit commun + soins urgents),1.39,Md€,2024,"près d'1,4 Md€",SENAT-SANTE-PLF2026,M4,dont droit commun 1256 M€
+IMMI-04,fin 2024,Bénéficiaires de l'AME de droit commun,465208.0,personnes,2024,près de 500 000,SENAT-SANTE-PLF2026,M4,461 833 au 31 mars 2025
+IMMI-04,2014 → 2024,Hausse des dépenses réelles d'AME en dix ans,70.0,%,2024,« deux fois plus qu'il y a 15 ans » (bénéficiaires),SENAT-SANTE-PLF2026,M4,
+IMMI-04,suppression,Économie brute maximale si l'AME de droit commun disparaît sans compensation,1256.0,M€,2024,700 M€ d'économies (programme),SENAT-SANTE-PLF2026,M4,"ESTIMATION, non fiable à 100 % : borne haute ; le remplacement par une aide d'urgence et le report de soins vers l'hôpital réduisent l'économie nette"
+IMMI-05,"Ifop, août-septembre 2025",Musulmans approuvant « tout ou partie » des positions islamistes,38.0,%,2025,38 % (contre 19 % il y a trente ans),IFOP-ISLAM-2025,M5,"échantillon de 1005 musulmans : marge d'erreur d'environ ±3 points ; le 19 % de 1998 mesurait des « positions intégristes », question différente"
+IMMI-06,1998 → 2018,Naissances de deux parents français,-13.29,%,2018,"-13,7 % en vingt ans",INSEE-NAISSANCES-NATIONALITE,M6,655856 → 568714
+IMMI-06,1998 → 2018,Naissances d'au moins un parent étranger,69.46,%,2018,+63 % en vingt ans,INSEE-NAISSANCES-NATIONALITE,M6,112050 → 189876
+IMMI-06,2002 → 2022,Naissances de deux parents français,-18.36,%,2022,"-13,7 % en vingt ans",INSEE-NAISSANCES-NATIONALITE,M6,658465 → 537595
+IMMI-06,2002 → 2022,Naissances d'au moins un parent étranger,40.31,%,2022,+63 % en vingt ans,INSEE-NAISSANCES-NATIONALITE,M6,134280 → 188402
+IMMI-06,2003 → 2023,Naissances de deux parents français,-24.77,%,2023,"-13,7 % en vingt ans",INSEE-NAISSANCES-NATIONALITE,M6,654357 → 492291
+IMMI-06,2003 → 2023,Naissances d'au moins un parent étranger,33.76,%,2023,+63 % en vingt ans,INSEE-NAISSANCES-NATIONALITE,M6,138687 → 185512
+IMMI-06,2025,Part des naissances d'au moins un parent étranger,28.34,%,2025,,INSEE-NAISSANCES-NATIONALITE,M6,série rompue en 2023 : le « second parent » peut être une femme
+IMMI-06,2010 → 2025,Baisse du nombre de naissances,22.71,%,2025,« près de 25 % de naissances en moins qu'en 2010 »,EUROSTAT-NAISSANCES,M6,833654 → 644343

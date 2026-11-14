@@ -259,7 +259,7 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
       <text x="625" y="282" class="petit">pages du site (HTML + JS)</text>
       <text x="625" y="300" class="petit">qui interrogent Supabase</text>
       <rect x="610" y="330" width="240" height="46" rx="10" style="fill:var(--bg);stroke:var(--s-pub)"/>
-      <text x="625" y="350" style="font-weight:600;fill:var(--s-pub)">Hugging Face (dataset du groupe)</text>
+      <text x="625" y="350" style="font-weight:600;fill:var(--s-pub)">Cloudflare R2 (stockage du groupe)</text>
       <text x="625" y="368" class="petit">privé, un Parquet par source, sans noms</text>
       <path d="M550 135 C590 135 575 352 608 352" marker-end="url(#fl2)" style="stroke:var(--muted);stroke-width:1.5;fill:none"/>
       <g style="stroke:var(--muted);stroke-width:1.5;fill:none">
@@ -270,7 +270,7 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
       <text x="579" y="86" text-anchor="middle" class="mono">publier</text>
     </svg>
   </div>
-  <p class="legende">La base est normalisée, en étoile : une source, un compte suivi (et son groupe), une publication, un auteur n'y sont écrits qu'une fois, et chaque commentaire ne porte que son texte, ses notes et des numéros vers eux (la semaine et la taille en mots sont calculées par la base). Les auteurs sont dans une table privée, que le site ne peut pas lire : il n'en voit qu'un numéro. Les fichiers du PC gardent leur forme ; la publication les traduit dans ce modèle. Elle est incrémentale : <code>donnees/web/publie.json</code> retient ce qui est déjà en ligne, et seules les lignes nouvelles ou dont la note a changé sont envoyées. Les commentaires notés partent aussi vers le dataset du groupe RAG politique, dans sa partie privée réservée aux membres, <span class="mono">rag-politique/politique-sources-privees</span>, dans <code>data/commentaires/nouvelle-energie/</code> : un seul fichier Parquet par source, sans aucun nom de compte (chaque auteur y devient un identifiant opaque, calculé avec une clé secrète gardée sur le PC), remplacé en entier quand la source change ({{hf_exportes}} commentaires dans ces fichiers, dont {{hf_attente}} en attente d'envoi ; le site n'en dépend pas ; règles dans <code>docs/HUGGINGFACE.md</code>).</p>
+  <p class="legende">La base est normalisée, en étoile : une source, un compte suivi (et son groupe), une publication, un auteur n'y sont écrits qu'une fois, et chaque commentaire ne porte que son texte, ses notes et des numéros vers eux (la semaine et la taille en mots sont calculées par la base). Les auteurs sont dans une table privée, que le site ne peut pas lire : il n'en voit qu'un numéro. Les fichiers du PC gardent leur forme ; la publication les traduit dans ce modèle. Elle est incrémentale : <code>donnees/web/publie.json</code> retient ce qui est déjà en ligne, et seules les lignes nouvelles ou dont la note a changé sont envoyées. Les commentaires notés partent aussi vers le stockage du groupe RAG politique sur Cloudflare R2, dans son bucket privé <span class="mono">rag-politique-sources-privees</span>, dans <code>data/commentaires/nouvelle-energie/</code> : un seul fichier Parquet par source, sans aucun nom de compte (chaque auteur y devient un identifiant opaque, calculé avec une clé secrète gardée sur le PC), remplacé en entier quand la source change ({{r2_exportes}} commentaires dans ces fichiers, dont {{r2_attente}} en attente d'envoi ; le site n'en dépend pas ; règles dans <code>docs/CLOUDFLARE.md</code>).</p>
   <div class="grille trois">
     <div class="carte"><span class="etiquette">Doublons</span><div class="chiffre">{{n_doublons}}</div><p>commentaires mis de côté ({{part_doublons}}) : le même texte, du même auteur, dans la même source. Seul le premier publié compte dans la synthèse, sur le site et dans les thèmes. Le même texte écrit par des personnes différentes reste compté : ce sont autant de voix.</p></div>
     <div class="carte"><span class="etiquette">« J'aime »</span><p>Un commentaire lu juste après sa publication en a peu. Quand une publication est relue, les nouveaux comptes vont dans <code>likes.json</code>, sans retoucher les CSV. Ils servent à la vue pondérée : chaque commentaire y pèse 1 + ses « j'aime ».</p></div>
@@ -644,6 +644,15 @@ cible L · ton 3 · forme 10 · système 10 · idées 3 · pertinence 8
     </div>
   </div>
   <p class="legende">Mesures ramenées à l'ensemble des commentaires (le test surreprésente les suspects) ; essais du 13 novembre 2026 sur les mêmes commentaires. Commandes : <code>python -m moderation classer</code>, <code>tirer</code>, <code>noter</code>, <code>entrainer</code>, <code>publier</code>, <code>motdepasse</code>, <code>site deployer</code>. Fichiers : <span class="mono">donnees/moderation/</span>, <span class="mono">modeles/moderation/</span>.</p>
+</section>
+
+<!-- ============ VÉRIFICATION ============ -->
+<section>
+  <div class="titre"><span class="etiquette" style="color:var(--s-annot)">À part · Vérification</span>
+  <h2>Vérifier les chiffres de David Lisnard</h2></div>
+  <p>Un travail séparé des commentaires, dans le paquet <code>verification/</code> : on recense ce que dit David Lisnard dans le corpus du RAG (copié en lecture seule depuis Cloudflare R2), puis, thème par thème, on télécharge les données publiques qui permettent de trancher, on refait les calculs et on rend un verdict.</p>
+  <p>Chaque thème a le même dossier : <code>affirmations.csv</code> (citations datées et sourcées), <code>position.md</code> (ce qu'il pense), <code>brut/</code> et <code>sources.csv</code> (fichiers d'origine, adresse, date, empreinte), <code>calculs/</code> (script, <code>METHODE.md</code>, <code>resultats.csv</code>, graphiques) et <code>analyse.md</code> (verdicts). L'échelle est la même partout : exact, plutôt exact, trompeur, faux, invérifiable, opinion ou promesse. Les chiffrages de mesures sont marqués comme estimations.</p>
+  <p>Commandes : <code>python -m verification corpus</code>, <code>telecharger &lt;thème&gt;</code>, <code>calculer &lt;thème&gt;</code>, <code>verifier</code> (catalogue, empreintes, renvois, verdicts) et <code>synthese</code> (registre de toutes les affirmations et tableau des verdicts). Rien n'est partagé avec le groupe sans accord. Les comptes de Cannes viennent des comptes individuels des communes de la DGFiP (2000-2025).</p>
   <p class="pied">Document généré le {{date}} par <code>python -m docs</code> depuis <code>docs/FONCTIONNEMENT.html</code>. Les chiffres viennent des données du projet à cette date.</p>
 </section>
 

@@ -1,0 +1,44 @@
+affirmation,variante,grandeur,valeur,unite,annee,chiffre_lisnard,sources,methode,note
+NRJ-01,2019,Part du nucléaire dans la production brute d'électricité,69.84,%,2019,70 %,EUROSTAT-PRODUCTION-ELEC,M1,
+NRJ-01,2020,Part du nucléaire dans la production brute d'électricité,66.41,%,2020,70 %,EUROSTAT-PRODUCTION-ELEC,M1,"année de la tribune (novembre 2020), marquée par la crise sanitaire"
+NRJ-02,2022,Part du nucléaire et des renouvelables dans la production brute d'électricité,86.04,%,2022,plus de 90 %,EUROSTAT-PRODUCTION-ELEC,M1,fossiles : 12.5 %
+NRJ-02,2024,Part du nucléaire et des renouvelables dans la production brute d'électricité,93.91,%,2024,plus de 90 %,EUROSTAT-PRODUCTION-ELEC,M1,fossiles : 4.8 %
+NRJ-03,"2024, aux taux de change courants",Part de la France dans le PIB mondial,2.84,%,2024,"2,4 %",FMI-PIB-DOLLARS,M2,
+NRJ-03,"2024, en parité de pouvoir d'achat",Part de la France dans le PIB mondial,2.23,%,2024,"2,4 %",FMI-PIB-PPA-PART,M2,
+NRJ-03,"2025, aux taux de change courants",Part de la France dans le PIB mondial,2.85,%,2025,"2,4 %",FMI-PIB-DOLLARS,M2,
+NRJ-03,"2025, en parité de pouvoir d'achat",Part de la France dans le PIB mondial,2.17,%,2025,"2,4 %",FMI-PIB-PPA-PART,M2,
+NRJ-03,"2023, émissions territoriales",Part de la France dans les émissions mondiales de CO2 fossile,0.71,%,2023,"0,7 %",GCB-OWID-CO2,M2,
+NRJ-03,"2025, émissions territoriales",Part de la France dans les émissions mondiales de CO2 fossile,0.65,%,2025,"0,7 %",GCB-OWID-CO2,M2,
+NRJ-03,"2024, émissions de consommation","Part de la France dans les émissions mondiales de CO2, importations comprises",1.03,%,2024,« il faut rajouter les produits importés »,GCB-OWID-CO2,M2,
+NRJ-04,1995 → 2025,Croissance du PIB en volume de l'UE à 27,62.75,%,2025,"« 70 % sur 30 ans, un peu plus »",EUROSTAT-PIB-VOLUME,M3,la série en volume commence en 1995
+NRJ-04,1995 → 2024,Croissance du PIB en volume de l'UE à 27,60.49,%,2024,"« 70 % sur 30 ans, un peu plus »",EUROSTAT-PIB-VOLUME,M3,la série en volume commence en 1995
+NRJ-04,1994 → 2024,"Évolution des émissions de gaz à effet de serre de l'UE à 27 (hors UTCATF, aviation internationale comprise)",-33.07,%,2024,-37 %,EUROSTAT-GES,M3,
+NRJ-04,1990 → 2024,"Évolution des émissions de gaz à effet de serre de l'UE à 27 (hors UTCATF, aviation internationale comprise)",-38.01,%,2024,-37 %,EUROSTAT-GES,M3,
+NRJ-04,1994 → 2024,Évolution des émissions de CO2 de l'UE à 27 (hors UTCATF),-32.81,%,2024,-37 %,EUROSTAT-GES,M3,
+NRJ-05,"France, toutes tranches","Hausse du prix hors TVA, moyenne 2024 / moyenne 2021",54.87,%,2024,+67 %,EUROSTAT-PRIX-ENTREPRISES,M4,
+NRJ-05,"France, toutes tranches","Prix de l'électricité hors TVA, moyenne 2024",165.4,€/MWh,2024,165 €/MWh,EUROSTAT-PRIX-ENTREPRISES,M4,toutes taxes comprises (TVA récupérable comprise) : 194 €/MWh
+NRJ-05,"France, 500 à 2 000 MWh/an","Hausse du prix hors TVA, moyenne 2024 / moyenne 2021",72.87,%,2024,+67 %,EUROSTAT-PRIX-ENTREPRISES,M4,
+NRJ-05,"France, 500 à 2 000 MWh/an","Prix de l'électricité hors TVA, moyenne 2024",179.35,€/MWh,2024,165 €/MWh,EUROSTAT-PRIX-ENTREPRISES,M4,toutes taxes comprises (TVA récupérable comprise) : 213 €/MWh
+NRJ-05,"France, 2 à 20 GWh/an","Hausse du prix hors TVA, moyenne 2024 / moyenne 2021",62.96,%,2024,+67 %,EUROSTAT-PRIX-ENTREPRISES,M4,
+NRJ-05,"France, 2 à 20 GWh/an","Prix de l'électricité hors TVA, moyenne 2024",142.75,€/MWh,2024,165 €/MWh,EUROSTAT-PRIX-ENTREPRISES,M4,toutes taxes comprises (TVA récupérable comprise) : 168 €/MWh
+NRJ-05,"France, 70 à 150 GWh/an","Hausse du prix hors TVA, moyenne 2024 / moyenne 2021",0.65,%,2024,+67 %,EUROSTAT-PRIX-ENTREPRISES,M4,
+NRJ-05,"France, 70 à 150 GWh/an","Prix de l'électricité hors TVA, moyenne 2024",77.55,€/MWh,2024,165 €/MWh,EUROSTAT-PRIX-ENTREPRISES,M4,toutes taxes comprises (TVA récupérable comprise) : 89 €/MWh
+NRJ-05,"France, plus de 150 GWh/an","Hausse du prix hors TVA, moyenne 2024 / moyenne 2021",19.23,%,2024,+67 %,EUROSTAT-PRIX-ENTREPRISES,M4,
+NRJ-05,"France, plus de 150 GWh/an","Prix de l'électricité hors TVA, moyenne 2024",78.75,€/MWh,2024,165 €/MWh,EUROSTAT-PRIX-ENTREPRISES,M4,toutes taxes comprises (TVA récupérable comprise) : 91 €/MWh
+NRJ-05,"États-Unis, industrie","Prix moyen de l'électricité, converti en euros",75.11,€/MWh,2024,73 €/MWh,EIA-PRIX-SECTEURS ; EUROSTAT-CHANGE-USD,M4,8.13 cents de dollar par kWh ; 1 € = 1.0824 $
+NRJ-05,"États-Unis, commerce et services","Prix moyen de l'électricité, converti en euros",117.79,€/MWh,2024,,EIA-PRIX-SECTEURS ; EUROSTAT-CHANGE-USD,M4,12.75 cents de dollar par kWh ; 1 € = 1.0824 $
+NRJ-06,"ménages, 1er février 2026",Tarif de l'accise sur l'électricité (majoration ZNI comprise),30.85,€/MWh,2026,"30,35 €/MWh",BOFIP-ACCISE-2026,M5,
+NRJ-06,"ménages, 2026 / 2019",Hausse de l'accise depuis 2019,37.11,%,2026,+37 %,BOFIP-ACCISE-2026 ; AN-QE16278-TICFE,M5,2019 : 22.5 €/MWh (TICFE)
+NRJ-06,"Allemagne, ménages","Taxe sur l'électricité (Stromsteuer), tarif normal",20.5,€/MWh,2026,,STROMSTG-3,M5,
+NRJ-06,"Allemagne, industrie manufacturière",Stromsteuer après allègement,0.5,€/MWh,2026,"0,5 €/MWh pour son industrie",STROMSTG-3 ; STROMSTG-9B,M5,
+NRJ-06,"France, PME et haute puissance",Tarif normal de l'accise (majoration ZNI comprise),26.58,€/MWh,2026,,BOFIP-ACCISE-2026,M5,tarifs réduits de 0 à 12 €/MWh pour certaines activités (industrie électro-intensive notamment)
+NRJ-07,prévision 2026,Charges de service public de l'énergie à compenser,12.94,Md€,2026,"12,9 Md€",CRE-CSPE-2026,M6,
+NRJ-07,prévision 2026,Charges de soutien à l'éolien terrestre,1.3,Md€,2026,"1,3 Md€",CRE-CSPE-2026,M6,soit 10 % du total
+NRJ-07,constaté 2023,Charges de soutien à l'éolien terrestre (négatives : reversement à l'État),-3.42,Md€,2023,,CRE-CSPE-2026,M6,prix de marché supérieurs aux tarifs garantis
+NRJ-07,"obligation d'achat, 2024",Coût d'achat unitaire de l'éolien terrestre,97.5,€/MWh,2024,"97,5 €/MWh « en 2025 »",CRE-CSPE-2026-ANNEXE1,M6,prévision 2026 : 100.6 €/MWh
+NRJ-08,EIA 2013,"Gaz de schiste techniquement récupérable, France",3879.41,milliards de m³,2013,3 879 milliards de m³,EIA-GAZ-SCHISTE-2013,M7,137 Tcf ; Pologne : 148 Tcf
+NRJ-08,consommation 2024,Années de consommation nationale de gaz couvertes,123.27,ans,2024,95 ans,EIA-GAZ-SCHISTE-2013 ; EUROSTAT-GAZ,M7,consommation intérieure 2024 : 31.5 milliards de m³
+NRJ-08,consommation 2019,Années de consommation nationale de gaz couvertes,92.89,ans,2019,95 ans,EIA-GAZ-SCHISTE-2013 ; EUROSTAT-GAZ,M7,consommation intérieure 2019 : 41.8 milliards de m³
+NRJ-09,DPE jusqu'au 31/12/2025,Coefficient de conversion de l'électricité en énergie primaire,2.3,,2025,malus de 230 %,AN-QE9713-DPE,M8,"soit 130 % de plus que l'énergie finale ; 1,9 depuis le 1er janvier 2026"
+NRJ-10,PPE d'avril 2020,Réacteurs à arrêter d'ici 2035,14.0,réacteurs,2020,quatorze,PPE-2020,M8,
+NRJ-11,"SDDR 2025, scénario de référence","Investissements de raccordement des parcs éoliens en mer, mis en service 2025-2039",37.0,Md€,2039,37 Md€,CRE-CONSULTATION-SDDR,M8,+ 10 Md€ pour les mises en service à partir de 2040

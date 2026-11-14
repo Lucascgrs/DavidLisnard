@@ -1,0 +1,11 @@
+affirmation,variante,grandeur,valeur,unite,annee,chiffre_lisnard,sources,methode,note
+RET-01,"Cour des comptes, prévision 2025","Déficit du système de retraite, tous régimes",-6.6,Md€,2025,"2,8 % du PIB (« vrai déséquilibre », 2020) contre 0,6 % (COR)",CC-RETRAITES-2025,M1,"-0.6 Md€ en comptant les produits financiers des régimes complémentaires ; soit environ 0,2 % du PIB"
+RET-01,régime des fonctionnaires de l'État,"Taux de cotisation employeur de l'État, fonctionnaires civils",78.28,%,2025,« jusqu'à 80 % du salaire des fonctionnaires »,CC-RETRAITES-2025,M1,militaires : 126.07 %
+RET-02,2023,Dépenses du système de retraite (Cour des comptes),388.4,Md€,2023,116 Md€ = 40 % du montant total des retraites,CC-RETRAITES-2025,M2,116 Md€ représentent 29.9 % de ce total
+RET-02,2024,Dépenses de protection sociale « vieillesse » (Eurostat),381.44,Md€,2024,,EUROSTAT-PROTSOC-VIEILLESSE,M2,116 Md€ en représentent 30.4 %
+RET-02,cohérence interne,Total des retraites implicite dans « 116 Md€ = 40 % »,290.0,Md€,,,CC-RETRAITES-2025,M2,"ESTIMATION, non fiable à 100 % : 290 Md€, nettement en dessous des dépenses réelles (378 à 388 Md€)"
+RET-03,"SMIC brut 2025, 10 % épargnés pendant 40 ans",Rendement annuel nécessaire pour atteindre 320 000 €,5.82,% par an,2025,plus de 320 000 €,EUROSTAT-SMIC,M3,"ESTIMATION, non fiable à 100 % : versement de 2162 € par an, sans hausse du SMIC ni frais ; à 4,7 % par an (rendement de l'Erafp) : 242863 €"
+RET-03,"320 000 € dans 40 ans, inflation de 2 % par an",Valeur en euros d'aujourd'hui,144924.93,€,2025,plus de 320 000 €,EUROSTAT-SMIC,M3,"ESTIMATION, non fiable à 100 % : inflation supposée de 2 % par an (cible de la BCE)"
+RET-04,"Erafp, 2006 → 2025",Taux de rendement interne annualisé depuis 2006,4.7,% par an,2025,"5,4 % par an depuis 2006",ERAFP-RA-2025,M4,"4,3 % à fin 2024 ; rendement nominal (inflation non déduite)"
+RET-05,LFI 2025,Subvention de l'État au régime de retraite de la SNCF,3.23,Md€,2025,"5,5 Md€, « une grosse moitié du budget de la Justice »",BUDGET-VERT-PLF2026,M5,"soit 31 % des crédits de la Justice (10.46 Md€, hors pensions)"
+RET-05,LFI 2025,"5,5 Md€ / crédits de la Justice",52.57,%,2025,« une grosse moitié »,BUDGET-VERT-PLF2026,M5,"5,5 Md€ = pensions totales du régime, financées aussi par les cotisations (montant non vérifié ici)"

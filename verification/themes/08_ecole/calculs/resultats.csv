@@ -1,0 +1,10 @@
+affirmation,variante,grandeur,valeur,unite,annee,chiffre_lisnard,sources,methode,note
+ECOLE-01,"PISA 2022, mathématiques, pays de l'UE participants",Score moyen de la France,474.0,points,2022,« derniers au classement PISA dans l'Europe »,OCDE-PISA-2022-MEXT,M1,"rang 15/26 ; derrière la France : Spain, Hungary, Portugal, Italy, Malta, Slovak Republic, Croatia, Greece, Romania, Cyprus, Bulgaria ; moyenne OCDE 472"
+ECOLE-01,"PISA 2018 → 2022, mathématiques",Variation du score de la France,-21.41,points,2022,« nous voit dégrader chaque année »,BM-PISA-2000-2018 ; OCDE-PISA-2022-MEXT,M1,2018 : 495 ; 2003 : 511 (série Banque mondiale)
+ECOLE-02,"2000 → 2024, euros courants",Hausse de la dépense publique d'éducation,81.26,%,2024,+40 % en vingt-cinq ans,EUROSTAT-COFOG-EDUCATION,M2,82.0 → 148.6 Md€
+ECOLE-02,"2000 → 2024, euros constants (déflateur du PIB)",Hausse de la dépense publique d'éducation,22.8,%,2024,+40 % en vingt-cinq ans,EUROSTAT-COFOG-EDUCATION ; EUROSTAT-PRIX-PIB,M2,
+ECOLE-02,"2001 → 2024, euros courants",Hausse de la dépense publique d'éducation,73.76,%,2024,+40 % en vingt-cinq ans,EUROSTAT-COFOG-EDUCATION,M2,85.5 → 148.6 Md€
+ECOLE-02,"2001 → 2024, euros constants (déflateur du PIB)",Hausse de la dépense publique d'éducation,19.96,%,2024,+40 % en vingt-cinq ans,EUROSTAT-COFOG-EDUCATION ; EUROSTAT-PRIX-PIB,M2,
+ECOLE-02,2000 → 2024,"Dépense publique d'éducation, % du PIB",5.1,% du PIB,2024,,EUROSTAT-COFOG-EDUCATION,M2,5.6 % en 2000
+ECOLE-02,2013 → 2024,"Évolution du nombre d'élèves (primaire, collège, lycée)",3.32,%,2024,,EUROSTAT-ELEVES,M2,le nombre d'élèves est stable : la hausse de la dépense n'est pas due à un afflux d'élèves
+ECOLE-03,"LFI 2025, hors pensions",Crédits de la mission Enseignement scolaire,64.27,Md€,2025,« pas 60 milliards […] moi j'arrive à 30 »,BUDGET-VERT-PLF2026,M3,dont l'essentiel en salaires d'enseignants

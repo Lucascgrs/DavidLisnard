@@ -50,7 +50,7 @@ class Application(tk.Tk):
         ttk.Button(entete, text="Dernier bilan", command=lambda: ouvrir(DONNEES / "bilan.md")).pack(side="right")
         ttk.Button(entete, text="Dossier des données", command=lambda: ouvrir(DONNEES)).pack(side="right", padx=6)
         ttk.Button(entete, text="Sauvegarder", command=self.sauvegarder).pack(side="right")
-        ttk.Button(entete, text="Export Hugging Face", command=self.exporter_hf).pack(side="right", padx=6)
+        ttk.Button(entete, text="Export Cloudflare", command=self.exporter_cloudflare).pack(side="right", padx=6)
         ttk.Button(entete, text="Tout lancer", style="Accent.TButton",
                    command=lambda: tout_lancer(self)).pack(side="right", padx=6)
 
@@ -88,19 +88,19 @@ class Application(tk.Tk):
         self.message("Sauvegarde lancée : donnees/sauvegardes/donnees.zip"
                      + (f" (la précédente date du {c['le'][:16]})." if c else "."))
 
-    def exporter_hf(self):
-        """Fichier de chaque source qui a changé → dataset privé rag-politique/politique-sources-privees (python -m huggingface,
-        docs/HUGGINGFACE.md). Aussi fait seul après chaque collecte qui ramène du neuf."""
+    def exporter_cloudflare(self):
+        """Fichier de chaque source qui a changé → bucket R2 privé rag-politique-sources-privees (python -m cloudflare,
+        docs/CLOUDFLARE.md). Aussi fait seul après chaque collecte qui ramène du neuf."""
         from commun.taches import en_cours, lancer_en_fond
-        if en_cours("huggingface"):
-            return self.message("Un export vers Hugging Face est déjà en cours : voir le journal.")
-        if not messagebox.askyesno("Exporter vers Hugging Face",
-                                   "Mettre à jour dans le dataset privé rag-politique/politique-sources-privees le "
+        if en_cours("cloudflare"):
+            return self.message("Un export vers Cloudflare est déjà en cours : voir le journal.")
+        if not messagebox.askyesno("Exporter vers Cloudflare",
+                                   "Mettre à jour dans le bucket R2 privé rag-politique-sources-privees le "
                                    "fichier de chaque source qui a changé (commentaires notés, auteurs remplacés "
                                    "par un identifiant) ? L'ancien fichier de ces sources est remplacé."):
             return
-        lancer_en_fond(["-m", "huggingface"], env={"HF_HUB_OFFLINE": "0"})
-        self.message("Export vers Hugging Face lancé : suivi dans le journal du tableau de bord.")
+        lancer_en_fond(["-m", "cloudflare"])
+        self.message("Export vers Cloudflare lancé : suivi dans le journal du tableau de bord.")
 
     def message(self, texte: str):
         """Message passager en bas de la fenêtre (6 secondes)."""

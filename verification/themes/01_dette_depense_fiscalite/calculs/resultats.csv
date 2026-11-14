@@ -1,0 +1,104 @@
+affirmation,variante,grandeur,valeur,unite,annee,chiffre_lisnard,sources,methode,note
+DETTE-01,"UE à 27, 2022","Dépense publique, % du PIB (France)",58.4,% du PIB,2022,58 % (2024) ; 57 % (2026),EUROSTAT-GOV10A-MAIN,M1,rang de la France : 1/27 ; 1er : FR (58.4 %)
+DETTE-01,"UE à 27, 2023","Dépense publique, % du PIB (France)",56.8,% du PIB,2023,58 % (2024) ; 57 % (2026),EUROSTAT-GOV10A-MAIN,M1,rang de la France : 1/27 ; 1er : FR (56.8 %)
+DETTE-01,"UE à 27, 2024","Dépense publique, % du PIB (France)",57.0,% du PIB,2024,58 % (2024) ; 57 % (2026),EUROSTAT-GOV10A-MAIN,M1,rang de la France : 2/27 ; 1er : FI (57.9 %)
+DETTE-01,"UE à 27, 2025","Dépense publique, % du PIB (France)",57.3,% du PIB,2025,58 % (2024) ; 57 % (2026),EUROSTAT-GOV10A-MAIN,M1,rang de la France : 2/27 ; 1er : FI (57.5 %)
+DETTE-01,"monde (FMI), 2023","Rang mondial de la France, dépense publique % du PIB",11,rang,2023,« champion du monde »,FMI-FM-DEPENSES,M1,"210 pays ; devant la France : TUV, NRU, KIR, LBY, MSR, TLS, UKR, MHL, DMA, FSM"
+DETTE-01,"OCDE (FMI), 2023",Rang de la France parmi les 38 pays de l'OCDE,1,rang,2023,« champion du monde »,FMI-FM-DEPENSES,M1,1er : FRA (56.8 %)
+DETTE-01,"monde (FMI), 2024","Rang mondial de la France, dépense publique % du PIB",12,rang,2024,« champion du monde »,FMI-FM-DEPENSES,M1,"210 pays ; devant la France : NRU, TUV, LBY, TLS, KIR, MSR, UKR, MHL, DMA, FSM, FIN"
+DETTE-01,"OCDE (FMI), 2024",Rang de la France parmi les 38 pays de l'OCDE,2,rang,2024,« champion du monde »,FMI-FM-DEPENSES,M1,1er : FIN (57.8 %)
+DETTE-01,"monde (FMI), 2025","Rang mondial de la France, dépense publique % du PIB",12,rang,2025,« champion du monde »,FMI-FM-DEPENSES,M1,"210 pays ; devant la France : NRU, LBY, MSR, TLS, KIR, TUV, MHL, UKR, FSM, DMA, FIN"
+DETTE-01,"OCDE (FMI), 2025",Rang de la France parmi les 38 pays de l'OCDE,2,rang,2025,« champion du monde »,FMI-FM-DEPENSES,M1,1er : FIN (57.5 %)
+DETTE-02,"Eurostat UE à 27, 2022","Impôts et cotisations sociales, % du PIB (France)",47.7,% du PIB,2022,"45,4 % (2022) ; 47 € pour 100 € (2026)",EUROSTAT-TAXAG,M2,rang 1/27 ; 1er : FR (47.7) ; zone euro 41.3
+DETTE-02,"Eurostat UE à 27, 2023","Impôts et cotisations sociales, % du PIB (France)",45.5,% du PIB,2023,"45,4 % (2022) ; 47 € pour 100 € (2026)",EUROSTAT-TAXAG,M2,rang 1/27 ; 1er : FR (45.5) ; zone euro 40.4
+DETTE-02,"Eurostat UE à 27, 2024","Impôts et cotisations sociales, % du PIB (France)",45.1,% du PIB,2024,"45,4 % (2022) ; 47 € pour 100 € (2026)",EUROSTAT-TAXAG,M2,rang 2/27 ; 1er : BE (45.2) ; zone euro 40.7
+DETTE-02,"Eurostat UE à 27, 2025","Impôts et cotisations sociales, % du PIB (France)",46.0,% du PIB,2025,"45,4 % (2022) ; 47 € pour 100 € (2026)",EUROSTAT-TAXAG,M2,rang 1/27 ; 1er : FR (46.0) ; zone euro 41.3
+DETTE-02,"OCDE, 2021","Recettes fiscales, % du PIB (France, définition OCDE)",45.06,% du PIB,2021,« le plus élevé de l'OCDE »,OCDE-RECETTES-FISCALES,M2,rang 2/38 ; 1er : DNK (47.5)
+DETTE-02,"OCDE, 2022","Recettes fiscales, % du PIB (France, définition OCDE)",45.86,% du PIB,2022,« le plus élevé de l'OCDE »,OCDE-RECETTES-FISCALES,M2,rang 1/38 ; 1er : FRA (45.9)
+DETTE-02,"OCDE, 2023","Recettes fiscales, % du PIB (France, définition OCDE)",43.85,% du PIB,2023,« le plus élevé de l'OCDE »,OCDE-RECETTES-FISCALES,M2,rang 2/38 ; 1er : DNK (44.0)
+DETTE-02,"OCDE, 2024","Recettes fiscales, % du PIB (France, définition OCDE)",43.46,% du PIB,2024,« le plus élevé de l'OCDE »,OCDE-RECETTES-FISCALES,M2,rang 2/37 ; 1er : DNK (45.2)
+DETTE-02,"monde (FMI), 2025","Rang mondial de la France, recettes publiques % du PIB",15,rang,2025,« record du monde »,FMI-FM-RECETTES,M2,"recettes publiques totales (impôts, cotisations et autres recettes), pas seulement les prélèvements"
+DETTE-03,"État, LFI 2026 (comptabilité budgétaire)","Charge d'intérêts / crédits de la mission Justice (PLF 2026, hors pensions)",5.46,fois,2026,7 fois,SENAT-EFE-PLF2027 ; BUDGET-VERT-PLF2026,M3,intérêts 58.0 Md€ ; Justice 10.63 Md€
+DETTE-03,"État, prévision révisée 2026","Charge d'intérêts / crédits de la mission Justice (PLF 2026, hors pensions)",5.8,fois,2026,7 fois,SENAT-EFE-PLF2027 ; BUDGET-VERT-PLF2026,M3,intérêts 61.6 Md€ ; Justice 10.63 Md€
+DETTE-03,"toutes administrations, 4 derniers trimestres connus (T3 2025-T2 2026)","Charge d'intérêts / crédits de la mission Justice (PLF 2026, hors pensions)",6.85,fois,2026,7 fois,EUROSTAT-INTERETS-TRIM ; BUDGET-VERT-PLF2026,M3,intérêts 72.8 Md€ ; Justice 10.63 Md€
+DETTE-03,"2024, toutes administrations",Intérêts payés (comptabilité nationale) / Justice exécutée 2024,6.12,fois,2024,5 fois (juillet 2024),EUROSTAT-GOV10A-MAIN ; BUDGET-VERT-PLF2026,M3,intérêts 60.1 Md€ ; Justice exécutée 9.83 Md€
+DETTE-03,"2024, État (PLF 2024)",Charge de la dette de l'État / Justice exécutée 2024 (hors pensions),5.23,fois,2024,5 fois (juillet 2024),PLF2024-DESTINATION ; BUDGET-VERT-PLF2026,M3,charge 51.4 Md€ ; Justice 9.83 Md€
+DETTE-04,"2025, État (LFI)",Charge de la dette de l'État (programme 117),54.21,Md€,2025,"66 Md€, premier poste",PAP2026-ENGAGEMENTS-FIN,M4,Enseignement scolaire 64.3 Md€ ; Défense 50.5 Md€ (hors pensions)
+DETTE-04,"2025, toutes administrations",Intérêts payés par toutes les administrations,65.72,Md€,2025,66 Md€,EUROSTAT-GOV10A-MAIN,M4,c'est ce périmètre qui donne 66 Md€ : il inclut Sécurité sociale et collectivités
+DETTE-04,"2026, État (révisé)",Charge de la dette de l'État,61.6,Md€,2026,74 / 70 / 77 Md€ en 2026 ; « supérieure au budget des armées »,SENAT-EFE-PLF2027,M4,"Enseignement scolaire 64.5 Md€ ; Défense 57.1 Md€ (PLF 2026, hors pensions)"
+DETTE-04,"2027, État (PLF 2027)",Charge de la dette de l'État,71.9,Md€,2027,premier poste,SENAT-EFE-PLF2027,M4,Enseignement scolaire 65.5 Md€ ; Défense 63.4 Md€ : premier poste en 2027
+DETTE-04,"toutes administrations, 4 derniers trimestres",Intérêts payés (T3 2025-T2 2026),72.78,Md€,2026,74 / 77 Md€ en 2026,EUROSTAT-INTERETS-TRIM,M4,
+DETTE-05,2025-Q3,Dette publique au sens de Maastricht,3484.13,Md€,2025-Q3,"3 482 Md€, 117,4 % (avril 2026)",EUROSTAT-DETTE-TRIM,M5,117.3 % du PIB
+DETTE-05,2026-Q1,Dette publique au sens de Maastricht,3535.93,Md€,2026-Q1,3 536 Md€ (juillet 2026),EUROSTAT-DETTE-TRIM,M5,117.7 % du PIB
+DETTE-05,2026-Q2,Dette publique au sens de Maastricht,3595.52,Md€,2026-Q2,3 500 Md€ (septembre 2026),EUROSTAT-DETTE-TRIM,M5,119.1 % du PIB
+DETTE-06,2017 → 2024,Hausse de la dette,46.08,%,2024,+46 %,EUROSTAT-EDP-DETTE,M6,2263 → 3306 Md€ (+1043 Md€)
+DETTE-06,2017 → 2024,Hausse du PIB en valeur,28.08,%,2024,+27 %,EUROSTAT-PIB,M6,
+DETTE-06,2015 → 2025,Croissance de la dette / croissance du PIB (rapport),1.73,rapport,2025,"« 40 % plus vite » (soit un rapport de 1,4)",EUROSTAT-EDP-DETTE ; EUROSTAT-PIB,M6,dette +62.1 % ; PIB +35.9 %
+DETTE-06,2016 → 2025,Croissance de la dette / croissance du PIB (rapport),1.7,rapport,2025,"« 40 % plus vite » (soit un rapport de 1,4)",EUROSTAT-EDP-DETTE ; EUROSTAT-PIB,M6,dette +58.0 % ; PIB +34.0 %
+DETTE-07,2017 → 2024,Dette en moins si le ratio avait suivi la zone euro,429.57,Md€,2024,400 Md€,EUROSTAT-EDP-DETTE ; EUROSTAT-PIB,M7,ratio France 98.8 → 112.6 (+13.8 pt) ; zone euro 87.4 → 86.6 (-0.8 pt)
+DETTE-07,2017 → 2024,Baisse des intérêts correspondante (proportionnelle à la dette),12.99,%,2024,« divisées par deux » (-50 %),EUROSTAT-EDP-DETTE,M7,"approximation haute : à taux moyen inchangé, les intérêts baissent comme l'encours"
+DETTE-07,2017 → 2025,Dette en moins si le ratio avait suivi la zone euro,495.97,Md€,2025,400 Md€,EUROSTAT-EDP-DETTE ; EUROSTAT-PIB,M7,ratio France 98.8 → 115.7 (+16.9 pt) ; zone euro 87.4 → 87.7 (+0.3 pt)
+DETTE-07,2017 → 2025,Baisse des intérêts correspondante (proportionnelle à la dette),14.33,%,2025,« divisées par deux » (-50 %),EUROSTAT-EDP-DETTE,M7,"approximation haute : à taux moyen inchangé, les intérêts baissent comme l'encours"
+DETTE-08,2025-Q1,Part de la dette négociable de l'État détenue par les non-résidents,54.7,%,2025-Q1,"54,7 % (novembre 2025)",BDF-NONRESIDENTS,M8,
+DETTE-08,2025-Q2,Part de la dette négociable de l'État détenue par les non-résidents,55.4,%,2025-Q2,,BDF-NONRESIDENTS,M8,
+DETTE-08,2025-Q4,Part de la dette négociable de l'État détenue par les non-résidents,56.0,%,2025-Q4,55 % / plus de la moitié (2026),BDF-NONRESIDENTS,M8,
+DETTE-08,2026 (PLF),Amortissements de titres à moyen et long terme / encours fin 2024,6.76,%,2026,"12,5 % du stock refinancé chaque année (1/8)",PAP2026-ENGAGEMENTS-FIN,M8,"hors titres courts (BTF), refinancés plusieurs fois par an : le refinancement brut total est bien plus élevé"
+DETTE-09,"toutes administrations, 2024",Déficit public,169.12,Md€,2024,170 Md€,EUROSTAT-GOV10A-MAIN,M9,5.8 % du PIB
+DETTE-09,"toutes administrations, 2024",Déficit / recettes publiques,11.25,%,2024,"37,8 %",EUROSTAT-GOV10A-MAIN,M9,
+DETTE-09,"État seul, 2024",Déficit budgétaire / recettes nettes de l'État,44.68,%,2024,"37,8 %",PAP2026-ENGAGEMENTS-FIN ; VM2026-TOME1,M9,
+DETTE-09,"État seul, 2025 révisé",Déficit budgétaire / recettes nettes de l'État,34.62,%,2025,"37,8 %",PAP2026-ENGAGEMENTS-FIN ; VM2026-TOME1,M9,
+DETTE-09,"toutes administrations, 2025","Déficit public, % du PIB",5.1,% du PIB,2025,"5,1 %",EUROSTAT-GOV10A-MAIN,M9,
+DETTE-10,"UE, 2022","Dépenses de protection sociale, % du PIB (France)",32.19,% du PIB,2022,33 % / 34 % / 31 %,EUROSTAT-PROTSOC-FONC,M10,rang 1/27 ; 1er FR (32.19)
+DETTE-10,"UE, 2023","Dépenses de protection sociale, % du PIB (France)",31.43,% du PIB,2023,33 % / 34 % / 31 %,EUROSTAT-PROTSOC-FONC,M10,rang 1/27 ; 1er FR (31.43)
+DETTE-10,"UE, 2024","Dépenses de protection sociale, % du PIB (France)",31.79,% du PIB,2024,33 % / 34 % / 31 %,EUROSTAT-PROTSOC-FONC,M10,rang 2/27 ; 1er FI (32.44)
+DETTE-10,"France, 2024","Dépenses de protection sociale, total (prestations + gestion)",1003.58,Md€,2024,900 à 950 Md€,EUROSTAT-PROTSOC-TYPE,M10,dont prestations 933 Md€
+DETTE-10,"Europe (UE + AELE), 2023","Rang de la France, dépenses sociales par habitant (en standard de pouvoir d'achat)",8,rang,2023,« record absolu du monde par rapport à la population »,EUROSTAT-PROTSOC-TYPE,M10,"devant : LU, CH, NO, DE, AT, NL, DK"
+DETTE-10,"OCDE, 2021","Rang de la France, dépenses sociales publiques par habitant (dollars PPA)",8,rang,2021,« record absolu du monde par rapport à la population »,OCDE-SOCX,M10,"devant : LUX, NOR, AUT, DNK, DEU, BEL, FIN"
+DETTE-10,"OCDE, 2022","Dépenses sociales publiques, % du PIB (France)",31.36,% du PIB,2022,,OCDE-SOCX,M10,rang 1/OCDE
+DETTE-11,"aides d'État au sens européen, 2022",Aides publiques aux entreprises,45.0,Md€,2022,144 / 145 / 157 Md€,HCSP-AIDES-2025,M11,
+DETTE-11,"Inspection générale des finances, 2024 (cité par le HCSP)",Aides publiques aux entreprises,88.0,Md€,CSP),144 / 145 / 157 Md€,HCSP-AIDES-2025,M11,
+DETTE-11,"Sénat, sens restreint, 2023",Aides publiques aux entreprises,108.0,Md€,2023,144 / 145 / 157 Md€,SENAT-AIDES-2025-SYN,M11,
+DETTE-11,"Haut-Commissariat au plan, 2023",Aides publiques aux entreprises,111.9,Md€,2023,144 / 145 / 157 Md€,HCSP-AIDES-2025,M11,
+DETTE-11,"Clersé-IRES, 2019",Aides publiques aux entreprises,157.0,Md€,2019,144 / 145 / 157 Md€,CLERSE-AIDES-2022,M11,
+DETTE-11,"Sénat, sens large, 2023",Aides publiques aux entreprises,211.0,Md€,2023,144 / 145 / 157 Md€,SENAT-AIDES-2025-SYN,M11,
+DETTE-11,"Clersé-IRES, vers 2000","Aides aux entreprises, % du PIB",3.0,% du PIB,2000,« environ 40 milliards au début des années 2000 »,CLERSE-AIDES-2022,M11,3 % du PIB de 2000 (≈ 1 480 Md€) ≈ 44 Md€
+DETTE-12,"Fipeco, sociétés non financières, 2022",Prélèvements sur les sociétés non financières,12.6,% du PIB,2022,"13,2 % (2021)",FIPECO-PO-ENTREPRISES-2022,M12,"2e de l'UE derrière la Suède ; Allemagne 9,3 %"
+DETTE-12,"Fipeco, nets des aides, 2022",Prélèvements nets des aides reçues,10.4,% du PIB,2022,,FIPECO-PO-ENTREPRISES-2022,M12,
+DETTE-12,"Écart avec l'Allemagne, 2022",Écart France - Allemagne,3.3,point de PIB,2022,"5,9 points avec la zone euro (13,2 - 7,3)",FIPECO-PO-ENTREPRISES-2022,M12,
+DETTE-13,"Eurostat, tous payeurs, 2024","Autres impôts sur la production (D29), % du PIB (France)",4.4,% du PIB,2024,"3,6 % ; médiane européenne 1,2 %",EUROSTAT-TAXAG,M13,"médiane UE à 27 : 1.40 % ; rang 2/27 (1re : Suède, où la taxe sur les salaires est classée ici)"
+DETTE-13,"Eurostat, tous payeurs, 2025","Autres impôts sur la production (D29), % du PIB (France)",4.4,% du PIB,2025,"3,6 % ; médiane européenne 1,2 %",EUROSTAT-TAXAG,M13,"médiane UE à 27 : 1.20 % ; rang 2/27 (1re : Suède, où la taxe sur les salaires est classée ici)"
+DETTE-13,"Fipeco, sociétés seules, 2022",Impôts sur la production payés par les sociétés,3.3,% du PIB,2022,"3,6 %",FIPECO-IMPOTS-PRODUCTION-2022,M13,zone euro 1.5 %
+DETTE-14,"célibataire au salaire moyen, 2022","Coin fiscal et social, % du coût du travail (France)",47.08,% du coût salarial,2022,« première marche du podium » ; 47 % contre 35 %,OCDE-IMPOTS-SALAIRES,M14,"rang 3/38 (devant : BEL, DEU) ; moyenne OCDE 34.7 % ; moyenne des 22 pays de l'UE membres de l'OCDE 41.3 %"
+DETTE-14,"célibataire au salaire moyen, 2025","Coin fiscal et social, % du coût du travail (France)",47.18,% du coût salarial,2025,« première marche du podium » ; 47 % contre 35 %,OCDE-IMPOTS-SALAIRES,M14,"rang 3/38 (devant : BEL, DEU) ; moyenne OCDE 35.1 % ; moyenne des 22 pays de l'UE membres de l'OCDE 41.7 %"
+DETTE-15,revenus 2023 (connus en septembre 2025),Foyers sans impôt net sur le revenu,55.0,% des foyers,2023,55 %,DGFIP-IR-2023-PDF,M15,19 millions de foyers imposés sur 41 millions (45 %)
+DETTE-15,revenus 2023,Part de l'impôt net payée par les 10 % de foyers les plus aisés,76.0,%,2023,70 %,DGFIP-IR-2023-PDF,M15,
+DETTE-15,revenus 2024 (calcul),Part de l'impôt net payée par le dernier dixième,74.32,%,2024,70 %,DGFIP-IR-2024,M15,les dixièmes ont le même nombre de foyers : part = moyenne D10 / somme des moyennes
+DETTE-16,PLF 2025,Nombre de dépenses fiscales,474.0,nombre,2025,474,VM2025-TOME2,M16,
+DETTE-16,PLF 2025,Coût des dépenses fiscales,85.1,Md€,2025,85 Md€,VM2025-TOME2,M16,
+DETTE-16,PLF 2025,Dépenses fiscales sur l'impôt sur le revenu / IR net attendu (LFI 2025),44.52,%,2025,"42 Md€ sur 94, « près de la moitié »",VM2025-TOME2 ; VM2026-TOME1,M16,42.07 Md€ / 94.5 Md€
+DETTE-16,PLF 2026,Nombre de dépenses fiscales,465.0,nombre,2026,465 (avril 2026),VM2026-TOME2,M16,
+DETTE-17,"22 pays de l'UE membres de l'OCDE, 2022",Part de la France dans les droits de succession et de donation,44.91,%,2022,45 %,OCDE-RECETTES-FISCALES ; EUROSTAT-PIB,M17,France 19.0 Md€ sur 42.2 Md€ (22 pays renseignés)
+DETTE-17,"22 pays de l'UE membres de l'OCDE, 2023",Part de la France dans les droits de succession et de donation,47.28,%,2023,45 %,OCDE-RECETTES-FISCALES ; EUROSTAT-PIB,M17,France 21.4 Md€ sur 45.3 Md€ (22 pays renseignés)
+DETTE-17,"22 pays de l'UE membres de l'OCDE, 2024",Part de la France dans les droits de succession et de donation,45.8,%,2024,45 %,OCDE-RECETTES-FISCALES ; EUROSTAT-PIB,M17,France 21.6 Md€ sur 47.1 Md€ (21 pays renseignés)
+DETTE-17,"UE à 27, impôts en capital (D91), 2024",Part de la France dans les impôts en capital de l'UE,41.38,%,2024,45 %,EUROSTAT-TAXAG,M17,D91 contient aussi d'autres impôts en capital : contrôle d'ordre de grandeur
+DETTE-18,"essence SP95, semaine du 4 mai 2026",Part des taxes dans le prix à la pompe (France),50.33,%,2026,"60 %, « la plus élevée du monde »",CE-BULLETIN-PETROLIER,M18,rang 9/27 dans l'UE ; 1er : MT (56.3 %)
+DETTE-18,"gazole, semaine du 4 mai 2026",Part des taxes dans le prix à la pompe (France),44.79,%,2026,"60 %, « la plus élevée du monde »",CE-BULLETIN-PETROLIER,M18,rang 3/27 dans l'UE ; 1er : MT (54.3 %)
+DETTE-18,"essence SP95, moyenne 2025",Part des taxes dans le prix à la pompe (France),56.76,%,2025,"60 %, « la plus élevée du monde »",CE-BULLETIN-PETROLIER,M18,rang 9/27 dans l'UE ; 1er : FI (61.7 %)
+DETTE-18,"gazole, moyenne 2025",Part des taxes dans le prix à la pompe (France),54.35,%,2025,"60 %, « la plus élevée du monde »",CE-BULLETIN-PETROLIER,M18,rang 4/27 dans l'UE ; 1er : IT (56.0 %)
+DETTE-19,"très grande entreprise (CA ≥ 3 Md€), 2025-2026","Taux d'IS légal, surtaxes comprises",36.46,%,2026,« dépasse 36 % »,BOFIP-CONTRIBUTION-EXCEPTIONNELLE ; SP-IMPOT-SOCIETES,M19,
+DETTE-19,"entreprise ordinaire, flat tax 31,4 %",Imposition cumulée d'un bénéfice distribué en dividende,49.12,%,2026,« excède 60 % »,SP-IMPOT-SOCIETES ; SP-PRELEVEMENTS-SOCIAUX ; SP-CEHR-CDHR ; BOFIP-CONTRIBUTION-EXCEPTIONNELLE,M19,
+DETTE-19,"entreprise ordinaire, flat tax + contribution hauts revenus 4 %",Imposition cumulée d'un bénéfice distribué en dividende,52.08,%,2026,« excède 60 % »,SP-IMPOT-SOCIETES ; SP-PRELEVEMENTS-SOCIAUX ; SP-CEHR-CDHR ; BOFIP-CONTRIBUTION-EXCEPTIONNELLE,M19,
+DETTE-19,"entreprise ordinaire, plancher de 20 % pour l'impôt (CDHR) + prélèvements sociaux 18,6 %",Imposition cumulée d'un bénéfice distribué en dividende,54.46,%,2026,« excède 60 % »,SP-IMPOT-SOCIETES ; SP-PRELEVEMENTS-SOCIAUX ; SP-CEHR-CDHR ; BOFIP-CONTRIBUTION-EXCEPTIONNELLE,M19,
+DETTE-19,"très grande entreprise, flat tax 31,4 %",Imposition cumulée d'un bénéfice distribué en dividende,56.41,%,2026,« excède 60 % »,SP-IMPOT-SOCIETES ; SP-PRELEVEMENTS-SOCIAUX ; SP-CEHR-CDHR ; BOFIP-CONTRIBUTION-EXCEPTIONNELLE,M19,
+DETTE-19,"très grande entreprise, flat tax + contribution hauts revenus 4 %",Imposition cumulée d'un bénéfice distribué en dividende,58.96,%,2026,« excède 60 % »,SP-IMPOT-SOCIETES ; SP-PRELEVEMENTS-SOCIAUX ; SP-CEHR-CDHR ; BOFIP-CONTRIBUTION-EXCEPTIONNELLE,M19,
+DETTE-19,"très grande entreprise, plancher de 20 % pour l'impôt (CDHR) + prélèvements sociaux 18,6 %",Imposition cumulée d'un bénéfice distribué en dividende,60.99,%,2026,« excède 60 % »,SP-IMPOT-SOCIETES ; SP-PRELEVEMENTS-SOCIAUX ; SP-CEHR-CDHR ; BOFIP-CONTRIBUTION-EXCEPTIONNELLE,M19,
+DETTE-20,200 Md€ d'économies (PIB et dépense 2025),Économies en % de la dépense publique,11.67,%,2025,,EUROSTAT-GOV10A-MAIN,M20,ESTIMATION : à PIB inchangé
+DETTE-20,200 Md€ d'économies (PIB et dépense 2025),Économies en points de PIB,6.69,point de PIB,2025,7 points = 200 Md€ ; 9 points visés,EUROSTAT-GOV10A-MAIN ; EUROSTAT-PIB,M20,ESTIMATION : à PIB inchangé
+DETTE-20,200 Md€ d'économies,"Dépense publique après économies, % du PIB (France)",50.61,% du PIB,2025,« resterait le pays à la dépense la plus élevée d'Europe » (200) ; « au-dessus des Pays-Bas » (300),EUROSTAT-GOV10A-MAIN ; EUROSTAT-PIB,M20,ESTIMATION à PIB inchangé ; rang 6/27 ; Pays-Bas 45.2 % ; Finlande 57.5 %
+DETTE-20,300 Md€ d'économies (PIB et dépense 2025),Économies en % de la dépense publique,17.5,%,2025,,EUROSTAT-GOV10A-MAIN,M20,ESTIMATION : à PIB inchangé
+DETTE-20,300 Md€ d'économies (PIB et dépense 2025),Économies en points de PIB,10.03,point de PIB,2025,7 points = 200 Md€ ; 9 points visés,EUROSTAT-GOV10A-MAIN ; EUROSTAT-PIB,M20,ESTIMATION : à PIB inchangé
+DETTE-20,300 Md€ d'économies,"Dépense publique après économies, % du PIB (France)",47.27,% du PIB,2025,« resterait le pays à la dépense la plus élevée d'Europe » (200) ; « au-dessus des Pays-Bas » (300),EUROSTAT-GOV10A-MAIN ; EUROSTAT-PIB,M20,ESTIMATION à PIB inchangé ; rang 14/27 ; Pays-Bas 45.2 % ; Finlande 57.5 %
+DETTE-21,salariés 2025,Gain mensuel moyen si 120 Md€ de cotisations allaient entièrement en salaire net,368.55,€ par mois et par salarié,2025,« presque 400 euros »,EUROSTAT-SALARIES,M21,"ESTIMATION, non fiable à 100 % : 27.1 millions de salariés ; suppose que toute la baisse va au salaire net"
+DETTE-21,première année (60 % de 80 Md€),Gain mensuel moyen la première année,147.42,€ par mois et par salarié,2025,« près de 200 euros » au départ,EUROSTAT-SALARIES,M21,"ESTIMATION, non fiable à 100 % ; même hypothèse"
+DETTE-21,C3S + CVAE,"Rendement de la C3S (2022) et de la CVAE (part État, 2025)",8.37,Md€,2025,40 Md€ de baisse des impôts de production,FIPECO-IMPOTS-PRODUCTION-2022 ; VM2026-TOME1,M21,"ESTIMATION : la suppression des deux impôts cités coûte environ 8 à 9 Md€, le reste des 40 Md€ n'est pas précisé"
+DETTE-22,Eurostat 2025,Baisse nécessaire pour atteindre la moyenne de la zone euro,140.58,Md€,2025,100 Md€,EUROSTAT-TAXAG ; EUROSTAT-PIB,M22,ESTIMATION à PIB inchangé : France 46.0 % ; zone euro 41.3 % ; écart 4.7 points

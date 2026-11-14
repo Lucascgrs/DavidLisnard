@@ -1,0 +1,14 @@
+affirmation,variante,grandeur,valeur,unite,annee,chiffre_lisnard,sources,methode,note
+BUR-01,Sénat 2025,Organismes publics nationaux recensés,1153.0,organismes,2025,1 153 / 1 200,SENAT-AGENCES-2025-SYN,M1,dont 434 opérateurs ; l'IGF en comptait déjà 1244 en 2012
+BUR-01,PLF 2026,Lignes de la liste des opérateurs (opérateurs ou catégories),431.0,lignes,2026,418 agences (janvier 2025),JAUNE-OPERATEURS-PLF2026,M1,une ligne peut regrouper une catégorie de plusieurs opérateurs
+BUR-01,PLF 2025,Emplois des opérateurs (sous plafond + hors plafond),479547.0,ETPT,2025,410 000 à 500 000 « recrutés »,SENAT-AGENCES-2025,M1,"stock d'emplois, pas des recrutements ; plus de la moitié dans l'enseignement supérieur et la recherche"
+BUR-01,PLF 2025 / LFI 2024,Financements publics des opérateurs,77.0,Md€,2025,83 à 100 Md€ « de fonctionnement »,SENAT-AGENCES-2025,M1,"80.6 Md€ en 2024 ; comprend les transferts reversés (France compétences 15,1 Md€…)"
+BUR-01,calcul,Charges de personnel et de fonctionnement des opérateurs (déduites du scénario du Sénat),27.5,Md€,2025,100 Md€ de fonctionnement,SENAT-AGENCES-2025,M1,"2,2 Md€ = 8 % de ces charges ⇒ environ 27,5 Md€"
+BUR-03,"Allemagne, 2021","Emploi des administrations publiques, % de l'emploi total",11.57,%,2021,21 % (France) ; 11 % (Allemagne),OCDE-EMPLOI-PUBLIC-2025,M3,
+BUR-03,"Allemagne, 2022","Emploi des administrations publiques, % de l'emploi total",11.14,%,2022,21 % (France) ; 11 % (Allemagne),OCDE-EMPLOI-PUBLIC-2025,M3,
+BUR-03,"Allemagne, 2023","Emploi des administrations publiques, % de l'emploi total",11.53,%,2023,21 % (France) ; 11 % (Allemagne),OCDE-EMPLOI-PUBLIC-2025,M3,
+BUR-03,"France, 2021","Emploi des administrations publiques, % de l'emploi total",21.36,%,2021,21 % (France) ; 11 % (Allemagne),OCDE-EMPLOI-PUBLIC-2025,M3,
+BUR-03,"France, 2022","Emploi des administrations publiques, % de l'emploi total",20.9,%,2022,21 % (France) ; 11 % (Allemagne),OCDE-EMPLOI-PUBLIC-2025,M3,
+BUR-03,"France, 2023","Emploi des administrations publiques, % de l'emploi total",20.74,%,2023,21 % (France) ; 11 % (Allemagne),OCDE-EMPLOI-PUBLIC-2025,M3,
+BUR-06,80 Md€ la première année,Économie demandée / financements publics de tous les opérateurs,103.9,%,2025,80 Md€,SENAT-AGENCES-2025,M6,"ESTIMATION, non fiable à 100 % : rapport des ordres de grandeur"
+BUR-06,"8 Md€ (hypothèse basse, novembre 2026)",Baisse demandée des charges de personnel et de fonctionnement,29.09,%,2025,au moins 8 Md€,SENAT-AGENCES-2025,M6,"ESTIMATION, non fiable à 100 % : à comparer au scénario du Sénat (8 %, 2,2 Md€) et à la ministre (2 à 3 Md€)"

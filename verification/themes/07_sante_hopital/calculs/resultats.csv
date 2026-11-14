@@ -1,0 +1,10 @@
+affirmation,variante,grandeur,valeur,unite,annee,chiffre_lisnard,sources,methode,note
+SANTE-01,"APL 2024, zone sous-dense (seuil DREES, moins de 2,5 consultations par an et par habitant)",Part de la population concernée,18.21,%,2024,87 % du territoire / des Français,DREES-APL-GENERALISTES,M1,part des communes concernées : 38.1 %
+SANTE-01,"APL 2024, moins de 4 consultations par an et par habitant (seuil large)",Part de la population concernée,61.08,%,2024,87 % du territoire / des Français,DREES-APL-GENERALISTES,M1,part des communes concernées : 82.6 %
+SANTE-02,"public + privé, 2024",Part des non-soignants (filière administrative + autres non soignants),26.19,%,2024,un tiers,DREES-EFFECTIFS-HOSPITALIERS,M2,368124 sur 1405769 salariés
+SANTE-02,"public + privé, 2024",Part de la seule filière administrative,11.28,%,2024,un tiers,DREES-EFFECTIFS-HOSPITALIERS,M2,
+SANTE-03,"UE à 27, 2024","Dépense courante de santé, % du PIB (France)",11.33,% du PIB,2024,« plus que ses voisins » ; 12 % du PIB,EUROSTAT-DEPENSE-SANTE,M3,rang 3/27 ; Allemagne 12.21 % ; 1er DE 12.21 % ; UE 10.16 %
+SANTE-03,"UE à 27, 2024","Rang de la France, dépense de santé par habitant (standard de pouvoir d'achat)",8.0,rang,2024,« plus que ses voisins »,EUROSTAT-DEPENSE-SANTE,M3,"devant : DE, AT, NL, LU, BE, SE, IE"
+SANTE-03,"France, 2024",Dépense en plus de la moyenne de l'UE (écart de % du PIB × PIB),34.33,Md€,2024,60 Md€ de plus que la moyenne européenne,EUROSTAT-DEPENSE-SANTE,M3,
+SANTE-04,"OCDE, 2023",Médecins en exercice pour 1 000 habitants,3.9,valeur,2023,"3,2 (26e de l'OCDE)",OCDE-MEDECINS,M4,rang 12/24 pays ayant une donnée pour 2023 ; médiane 3.9
+SANTE-04,"OCDE, 2023",Diplômés en médecine pour 100 000 habitants,11.28,valeur,2023,"9,5 (30e sur 36)",OCDE-DIPLOMES,M4,rang 21/26 pays ayant une donnée pour 2023 ; médiane 14.6

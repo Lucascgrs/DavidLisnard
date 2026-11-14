@@ -1,0 +1,20 @@
+affirmation,variante,grandeur,valeur,unite,annee,chiffre_lisnard,sources,methode,note
+AGRI-01,"Douanes, périmètre officiel",Solde des produits agricoles et agroalimentaires,0.2,Md€,2025,déficitaire,TRESOR-COMMERCE-2025,M1,« point bas historique » ; 7.7 Md€ en 2019
+AGRI-01,"chapitres 01 à 24, produits de la mer compris",Solde commercial,-1.48,Md€,2025,déficitaire,COMEXT-AGROALIMENTAIRE,M1,premier solde négatif de la série (depuis 2000) ; l'Académie d'agriculture date le précédent de 1978
+AGRI-01,"chapitres 01 à 24, hors produits de la mer",Solde commercial,3.55,Md€,2025,déficitaire,COMEXT-AGROALIMENTAIRE,M1,
+AGRI-02,"chapitres 01 à 24, 2022",Importations agricoles et alimentaires,75.02,Md€,2022,63 Md€,COMEXT-AGROALIMENTAIRE,M2,
+AGRI-02,"chapitres 01 à 24, 2022 / 2000",Rapport des importations 2022 / 2000 (euros courants),2.69,fois,2022,« plus du double »,COMEXT-AGROALIMENTAIRE,M2,2000 : 27.9 Md€
+AGRI-02,"hors produits de la mer et tabac, 2022",Importations agricoles et alimentaires,65.83,Md€,2022,63 Md€,COMEXT-AGROALIMENTAIRE,M2,
+AGRI-02,"hors produits de la mer et tabac, 2022 / 2000",Rapport des importations 2022 / 2000 (euros courants),2.84,fois,2022,« plus du double »,COMEXT-AGROALIMENTAIRE,M2,2000 : 23.1 Md€
+AGRI-03,"2022, chapitres 01 à 24",Solde commercial agroalimentaire,8.88,Md€,2022,"10,4 Md€",COMEXT-AGROALIMENTAIRE,M1,hors produits de la mer : 14.5 Md€ ; périmètre différent de celui des Douanes
+AGRI-03,"2024, chapitres 01 à 24",Solde commercial agroalimentaire,3.22,Md€,2024,"4,9 Md€",COMEXT-AGROALIMENTAIRE,M1,hors produits de la mer : 8.2 Md€ ; périmètre différent de celui des Douanes
+AGRI-03,"2025 / 2024, chapitres 01 à 24",Hausse des importations agroalimentaires,8.43,%,2025,"+8,5 %",COMEXT-AGROALIMENTAIRE,M1,"niveau 2025 : 85.7 Md€ (Lisnard : « plus de 64 milliards », autre périmètre)"
+AGRI-04,"exploitants, MSA",Surmortalité par suicide par rapport à la population générale (borne haute),28.0,%,2011,« 7 fois plus » (+600 %),AN-QE102524-SUICIDE,M3,"fourchette de 22 à 28 % ; soit 1,2 à 1,3 fois le risque moyen"
+AGRI-04,"affiliés MSA, 2015",Risque de suicide supérieur à celui des assurés du régime général,12.0,%,2015,« 7 fois plus »,AN-QE23624-SUICIDE-MSA,M3,chiffre de la MSA rapporté dans une question écrite
+AGRI-05,"exploitants, 2020",Taux de pauvreté monétaire,17.7,%,2020,« presque 40 % » ; « un sur quatre »,INSEE-PAUVRETE-EXPLOITANTS,M4,ensemble de la population : 14.4 %
+AGRI-06,1994 → 2024,"Revenu net d'entreprise agricole total, en termes réels (indicateur C)",-48.42,%,2024,−40 %,EUROSTAT-REVENU-AGRICOLE,M5,variations annuelles chaînées
+AGRI-06,1995 → 2025,"Revenu net d'entreprise agricole total, en termes réels (indicateur C)",-35.27,%,2025,−40 %,EUROSTAT-REVENU-AGRICOLE,M5,variations annuelles chaînées
+AGRI-06,1994 → 2024,"Revenu net d'entreprise agricole par actif non salarié, en termes réels (indicateur B)",21.67,%,2024,−40 %,EUROSTAT-REVENU-AGRICOLE,M5,variations annuelles chaînées
+AGRI-06,1995 → 2025,"Revenu net d'entreprise agricole par actif non salarié, en termes réels (indicateur B)",50.54,%,2025,−40 %,EUROSTAT-REVENU-AGRICOLE,M5,variations annuelles chaînées
+AGRI-07,2018,Consommation d'engrais azotés (en azote),2.25,millions de tonnes,2018,"2,2 millions de tonnes",EUROSTAT-ENGRAIS,M6,
+AGRI-07,2024,Consommation d'engrais azotés (en azote),1.82,millions de tonnes,2024,"2,2 millions de tonnes",EUROSTAT-ENGRAIS,M6,

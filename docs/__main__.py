@@ -18,7 +18,7 @@ from datetime import date, datetime
 
 from commun.config import DOCS, MODELES, perimetre
 from commun.fichiers import lire_csv, lire_json
-from huggingface import export as hf_export
+from cloudflare import export as r2_export
 
 SOURCE = DOCS / "FONCTIONNEMENT.html"
 PDF = DOCS / "FONCTIONNEMENT.pdf"
@@ -152,10 +152,10 @@ def chiffres() -> dict[str, str]:
         "n_doublons": entier(doublons),
         "part_doublons": decimal(100 * doublons / max(1, sum(sources.values())), 1) + " %",
         "sauvegarde_mo": f"{archive:.0f} Mo" if archive else "à faire",
-        # Export vers le dataset Hugging Face du groupe (huggingface/export.py, lu sur les lots locaux)
-        **(lambda e: {"hf_exportes": entier(e["exportes"]),
-                      "hf_attente": entier(sum(n for _, _, n, depose in e["sources"] if not depose))})(
-            hf_export.etat()),
+        # Export vers le bucket R2 du groupe sur Cloudflare (cloudflare/export.py, lu sur les lots locaux)
+        **(lambda e: {"r2_exportes": entier(e["exportes"]),
+                      "r2_attente": entier(sum(n for _, _, n, depose in e["sources"] if not depose))})(
+            r2_export.etat()),
         "th_selection": entier(th_etat["n_selection"]), "th_a_lire": entier(th_etat["a_lire"]),
         "n_chaines": str(len(p.get("youtube", {}).get("chaines", []))),
         "comptes_instagram": ", ".join(f"@{c}" for c in insta.get("comptes", [])) or "aucun compte",

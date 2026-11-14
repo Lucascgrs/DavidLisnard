@@ -1,0 +1,36 @@
+affirmation,variante,grandeur,valeur,unite,annee,chiffre_lisnard,sources,methode,note
+LOG-01,2017,"Logements commencés dans l'année (France hors Mayotte, données estimées)",433911.0,logements,2017,437 000,SDES-LOGEMENTS-MENSUEL,M1,
+LOG-01,2021,"Logements commencés dans l'année (France hors Mayotte, données estimées)",422307.0,logements,2021,345 000,SDES-LOGEMENTS-MENSUEL,M1,
+LOG-01,2024,"Logements commencés dans l'année (France hors Mayotte, données estimées)",264705.0,logements,2024,« en dessous de 300 000 »,SDES-LOGEMENTS-MENSUEL,M1,
+LOG-01,2025,"Logements commencés dans l'année (France hors Mayotte, données estimées)",268428.0,logements,2025,« en dessous de 300 000 »,SDES-LOGEMENTS-MENSUEL,M1,
+LOG-01,12 mois jusqu'à 09/2025,Logements commencés sur les 12 mois connus au moment de l'audition (22/10/2025),258577.0,logements,2025,« en dessous de 300 000 »,SDES-LOGEMENTS-MENSUEL,M1,"données estimées, révisées depuis"
+LOG-01,12 mois jusqu'à 09/2026,Logements commencés sur les 12 derniers mois connus,315026.0,logements,2026,« en dessous de 300 000 »,SDES-LOGEMENTS-MENSUEL,M1,
+LOG-01,plus bas depuis 2002,Année complète la plus basse de la série,264705.0,logements,2024,,SDES-LOGEMENTS-MENSUEL,M1,la série estimée commence en 2002
+LOG-01,1971-1975 (CRÉDOC),"Logements mis en chantier par an, seuil franchi de 1971 à 1975",500000.0,logements,1974,« quasiment 500 000 » en 1974,CREDOC-1986-CONSTRUCTION,M1,"au-dessus de 500 000 de 1971 à 1975, pic de 556000 en 1973, repassé sous 500 000 en 1976"
+LOG-01,métropole 1974 → métropole 2013,Hausse de la population (France métropolitaine),11.38,millions,2013,10 millions de plus,EUROSTAT-POPULATION,M1,la série métropolitaine s'arrête en 2013
+LOG-01,métropole 1974 → France entière 2025,Hausse de la population,16.56,millions,2025,10 millions de plus,EUROSTAT-POPULATION,M1,inclut les DOM (1.9 million en 2013)
+LOG-01,"1974, au moins 500 000",Logements commencés pour 1 000 habitants,9.56,‰,1974,,CREDOC-1986-CONSTRUCTION ; EUROSTAT-POPULATION,M1,borne basse : le nombre réel dépasse 500 000
+LOG-01,2025,Logements commencés pour 1 000 habitants,3.9,‰,2025,,SDES-LOGEMENTS-MENSUEL ; EUROSTAT-POPULATION,M1,
+LOG-02,France 2019,Dépenses publiques de logement (aménagement GF0601 + allocations GF1006),1.1,% du PIB,2019,"1,2 % (France) contre 0,5 % (UE)",EUROSTAT-COFOG-LOGEMENT,M2,"somme de deux valeurs arrondies à 0,1 point par Eurostat"
+LOG-02,France 2019,"Logement et équipements collectifs, au sens large (GF06)",1.1,% du PIB,2019,,EUROSTAT-COFOG-LOGEMENT,M2,"inclut eau, éclairage public, développement local"
+LOG-02,UE à 27 2019,Dépenses publiques de logement (aménagement GF0601 + allocations GF1006),0.5,% du PIB,2019,"1,2 % (France) contre 0,5 % (UE)",EUROSTAT-COFOG-LOGEMENT,M2,"somme de deux valeurs arrondies à 0,1 point par Eurostat"
+LOG-02,UE à 27 2019,"Logement et équipements collectifs, au sens large (GF06)",0.6,% du PIB,2019,,EUROSTAT-COFOG-LOGEMENT,M2,"inclut eau, éclairage public, développement local"
+LOG-02,France 2021,Dépenses publiques de logement (aménagement GF0601 + allocations GF1006),1.2,% du PIB,2021,"1,2 % (France) contre 0,5 % (UE)",EUROSTAT-COFOG-LOGEMENT,M2,"somme de deux valeurs arrondies à 0,1 point par Eurostat"
+LOG-02,France 2021,"Logement et équipements collectifs, au sens large (GF06)",1.2,% du PIB,2021,,EUROSTAT-COFOG-LOGEMENT,M2,"inclut eau, éclairage public, développement local"
+LOG-02,UE à 27 2021,Dépenses publiques de logement (aménagement GF0601 + allocations GF1006),0.8,% du PIB,2021,"1,2 % (France) contre 0,5 % (UE)",EUROSTAT-COFOG-LOGEMENT,M2,"somme de deux valeurs arrondies à 0,1 point par Eurostat"
+LOG-02,UE à 27 2021,"Logement et équipements collectifs, au sens large (GF06)",0.8,% du PIB,2021,,EUROSTAT-COFOG-LOGEMENT,M2,"inclut eau, éclairage public, développement local"
+LOG-02,France 2024,Dépenses publiques de logement (aménagement GF0601 + allocations GF1006),1.0,% du PIB,2024,"1,2 % (France) contre 0,5 % (UE)",EUROSTAT-COFOG-LOGEMENT,M2,"somme de deux valeurs arrondies à 0,1 point par Eurostat"
+LOG-02,France 2024,"Logement et équipements collectifs, au sens large (GF06)",1.4,% du PIB,2024,,EUROSTAT-COFOG-LOGEMENT,M2,"inclut eau, éclairage public, développement local"
+LOG-02,UE à 27 2024,Dépenses publiques de logement (aménagement GF0601 + allocations GF1006),0.5,% du PIB,2024,"1,2 % (France) contre 0,5 % (UE)",EUROSTAT-COFOG-LOGEMENT,M2,"somme de deux valeurs arrondies à 0,1 point par Eurostat"
+LOG-02,UE à 27 2024,"Logement et équipements collectifs, au sens large (GF06)",0.7,% du PIB,2024,,EUROSTAT-COFOG-LOGEMENT,M2,"inclut eau, éclairage public, développement local"
+LOG-02,France 2021,Dépenses publiques de logement (GF0601 + GF1006),30.51,Md€,2021,40 milliards d'euros,EUROSTAT-COFOG-LOGEMENT,M2,"hors dépenses fiscales (TVA réduite, dispositifs d'investissement locatif), comptées dans les 40 Md€"
+LOG-02,"2021, prestations seules","Prestations sociales de logement, France / UE",0.63,% du PIB,2021,,EUROSTAT-PROTSOC-LOGEMENT,M2,UE à 27 : 0.36 % ; rapport 1.8
+LOG-02,"2024, prestations seules","Prestations sociales de logement, France / UE",0.55,% du PIB,2024,,EUROSTAT-PROTSOC-LOGEMENT,M2,UE à 27 : 0.37 % ; rapport 1.5
+LOG-03,France 2021,Impôts récurrents sur la propriété immobilière (4100) / recettes fiscales totales,4.6,%,2021,"6 % (France) contre 3,3 % (OCDE)",OCDE-RECETTES-IMMOBILIER,M3,
+LOG-03,France 2021,Impôts 4100 + impôts sur les transactions (4400) / recettes fiscales totales,6.76,%,2021,"6 % (France) contre 3,3 % (OCDE)",OCDE-RECETTES-IMMOBILIER,M3,4400 inclut aussi les taxes sur les transactions financières
+LOG-03,moyenne OCDE 2021,Impôts récurrents sur la propriété immobilière (4100) / recettes fiscales totales,2.96,%,2021,"6 % (France) contre 3,3 % (OCDE)",OCDE-RECETTES-IMMOBILIER,M3,
+LOG-03,moyenne OCDE 2021,Impôts 4100 + impôts sur les transactions (4400) / recettes fiscales totales,4.44,%,2021,"6 % (France) contre 3,3 % (OCDE)",OCDE-RECETTES-IMMOBILIER,M3,4400 inclut aussi les taxes sur les transactions financières
+LOG-03,France 2023,Impôts récurrents sur la propriété immobilière (4100) / recettes fiscales totales,4.33,%,2023,"6 % (France) contre 3,3 % (OCDE)",OCDE-RECETTES-IMMOBILIER,M3,
+LOG-03,France 2023,Impôts 4100 + impôts sur les transactions (4400) / recettes fiscales totales,5.97,%,2023,"6 % (France) contre 3,3 % (OCDE)",OCDE-RECETTES-IMMOBILIER,M3,4400 inclut aussi les taxes sur les transactions financières
+LOG-03,moyenne OCDE 2023,Impôts récurrents sur la propriété immobilière (4100) / recettes fiscales totales,2.81,%,2023,"6 % (France) contre 3,3 % (OCDE)",OCDE-RECETTES-IMMOBILIER,M3,
+LOG-03,moyenne OCDE 2023,Impôts 4100 + impôts sur les transactions (4400) / recettes fiscales totales,3.92,%,2023,"6 % (France) contre 3,3 % (OCDE)",OCDE-RECETTES-IMMOBILIER,M3,4400 inclut aussi les taxes sur les transactions financières

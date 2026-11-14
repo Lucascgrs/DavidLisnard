@@ -33,6 +33,7 @@ Les notes viennent d'un modèle entraîné sur les commentaires notés à la mai
 |---|---|
 | Tout piloter (collecte, comptes suivis, analyse, synthèse, modération) | double-clic sur `Interface.bat` (ou `python -m interface`) |
 | Collecter sans l'interface | double-clic sur `Collecter.bat` (ou `python -m collecte`) |
+| Regarder un entraînement en cours (lot lu, perte, poids) | s'ouvre seule au lancement de l'affinage ; la fermer n'arrête pas l'entraînement ; rouvrir : `Suivi.bat` (ou `python -m suivi`) |
 | Installer les bibliothèques | `python -m pip install -r requirements.txt` |
 
 Toutes les commandes se lancent depuis le dossier du projet.
@@ -62,7 +63,7 @@ Ce qu'il faut faire une seule fois :
 
 ```
 DavidLisnard/
-├── Interface.bat, Collecter.bat     lanceurs (double-clic)
+├── Interface.bat, Collecter.bat, Suivi.bat   lanceurs (double-clic)
 ├── requirements.txt
 ├── config/                          réglages
 │   ├── perimetre.json               ce qui est collecté (modifiable depuis l'interface ; copie en .bak)
@@ -80,7 +81,7 @@ DavidLisnard/
 │   └── journal.py                   journal à l'écran et dans donnees/journal.log
 ├── collecte/                        « python -m collecte »
 │   ├── __main__.py                  une source après l'autre, bilan, sauvegarde, notation des nouveaux, site,
-│   │                                Hugging Face, puis classement des nouveaux Facebook pour la modération
+│   │                                Cloudflare R2, puis classement des nouveaux Facebook pour la modération
 │   ├── depot.py                     format des lignes, ajout sans doublon, état, Excel, bilan
 │   ├── sources/                     youtube.py, bluesky.py, instagram.py, facebook.py, x.py
 │   ├── perimetre.py                 ajout et retrait de chaînes, comptes, groupes et Pages (trouver_bluesky, trouver_facebook, trouver_x)
@@ -123,14 +124,15 @@ DavidLisnard/
 │   ├── acces.py                     jetons et clés (config/web.json, privé)
 │   ├── schema.sql                   tables, recherche en français, filtres, droits de lecture
 │   └── site/                        les pages : index (le projet), statistiques, commentaires, thèmes ; css/, js/
-├── huggingface/                     « python -m huggingface » : export vers le dataset du groupe (voir « Hugging Face »)
-│   └── export.py                    lots Parquet par source, envoi en un commit, README du dataset
+├── suivi/                          « python -m suivi » : fenêtre de suivi d'un affinage en cours (sonde injectée)
+├── cloudflare/                      « python -m cloudflare » : export vers le bucket R2 du groupe (voir « Cloudflare R2 »)
+│   └── export.py                    un Parquet par source, envoi vérifié, ancien fichier supprimé
 ├── PROCESS.md                       la mise à jour du projet, étape par étape
 ├── CLAUDE.md                        règles de travail de Claude sur ce projet
 ├── docs/
 │   ├── FONCTIONNEMENT.html / .pdf   document illustré « comment marche le projet » (source / PDF, python -m docs)
 │   ├── GRILLE.md                    ce que veut dire chaque note (la référence de l'annotation)
-│   ├── HUGGINGFACE.md               règles du dataset Hugging Face du groupe et ce que nous y déposons
+│   ├── CLOUDFLARE.md                règles du stockage R2 du groupe et ce que nous y déposons
 │   ├── HISTORIQUE.md                décisions, essais abandonnés, versions du modèle, ancienne organisation
 │   └── TRI_DES_CRITIQUES.pdf        méthode des 5 catégories de critiques et de doutes (choisie le 2026-11-12)
 ├── donnees/                         tout ce qui est collecté et calculé (privé, voir plus bas)
@@ -146,7 +148,7 @@ DavidLisnard/
 
 ```
 python -m collecte                          toutes les sources (YouTube, Bluesky, Instagram, Facebook, X), puis
-                                            notation, site, Hugging Face et classement pour la modération
+                                            notation, site, Cloudflare R2 et classement pour la modération
 python -m collecte youtube                  une seule source
 python -m collecte --reessayer instagram    relancer une source marquée abandonnée
 ```
@@ -463,29 +465,28 @@ commentaires filtrables (curseurs, puces) avec la vidéo d'origine, thèmes des 
   (supabase.com/dashboard/account/tokens) dans `config/web.json`, puis `python -m web tout`.
 - Un projet Supabase gratuit sans aucune visite pendant 7 jours est mis en pause : `python -m web installer` le relance.
 
-## Hugging Face
+## Cloudflare R2
 
-Les commentaires notés partent aussi vers le dataset **privé** du groupe RAG politique,
-[`rag-politique/politique-sources-privees`](https://huggingface.co/datasets/rag-politique/politique-sources-privees) (réservé aux membres ; jamais le dataset public). Règles du
-dataset et détail : [docs/HUGGINGFACE.md](docs/HUGGINGFACE.md).
+Les commentaires notés partent aussi vers le stockage du groupe RAG politique sur Cloudflare R2, dans le bucket
+**privé** `rag-politique-sources-privees` (jamais le bucket public `rag-politique-sources`). Règles et détail :
+[docs/CLOUDFLARE.md](docs/CLOUDFLARE.md).
 
 ```
-python -m huggingface              refait le fichier de chaque source, envoie ceux qui ont changé (un commit)
-python -m huggingface preparer     seulement les Parquet, dans donnees/huggingface/lots/
-python -m huggingface envoyer      seulement l'envoi des fichiers préparés qui diffèrent du dataset
-python -m huggingface etat         par source : fichier, commentaires, déposé ou en attente
+python -m cloudflare              refait le fichier de chaque source, envoie ceux qui ont changé
+python -m cloudflare preparer     seulement les Parquet, dans donnees/cloudflare/lots/
+python -m cloudflare envoyer      seulement l'envoi des fichiers préparés qui diffèrent du bucket
+python -m cloudflare etat         par source : fichier, commentaires, déposé ou en attente
 ```
 
 - Rangement : `data/commentaires/nouvelle-energie/<source>_<AAAA-MM-JJ>.parquet`, **un seul fichier par source**,
-  daté de sa dernière mise à jour. Quand une source change, son fichier remplace l'ancien (supprimé dans le même
-  commit) ; une source inchangée ne repart pas.
+  daté de sa dernière mise à jour. Quand une source change, le nouveau fichier est déposé et vérifié, puis l'ancien
+  supprimé ; une source inchangée ne repart pas.
 - Contenu : tous les commentaires notés de la source, sans doublon, notes du moment. **Aucun nom de compte** : la colonne
-  `auteur_id` est un identifiant opaque (HMAC avec la clé `AUTEUR_CLE` de `config/huggingface.env`, créée seule),
+  `auteur_id` est un identifiant opaque (HMAC avec la clé `AUTEUR_CLE` de `config/cloudflare.env`, créée seule),
   le même pour tous les commentaires d'un même compte.
-- Le site (Supabase, Vercel) n'en dépend pas : Hugging Face est une sortie en plus.
-- Automatique après chaque collecte qui ramène du neuf ; bouton **Export Hugging Face** en haut de l'interface.
-- Jeton : `HF_TOKEN` dans `config/huggingface.env` (privé), sinon celui de `hf auth login` ; droit d'écriture sur
-  l'organisation `rag-politique` obligatoire.
+- Le site (Supabase, Vercel) n'en dépend pas : R2 est une sortie en plus.
+- Automatique après chaque collecte qui ramène du neuf ; bouton **Export Cloudflare** en haut de l'interface.
+- Clés : `config/cloudflare.env` (privé, hors git ; modèle `config/cloudflare.exemple.env`).
 
 ## Thèmes
 
@@ -551,7 +552,7 @@ Facebook collecté (groupes et Page suivis, sans les publications elles-mêmes) 
   origine, catégorie du modèle, texte, auteur, lien direct. Sécurité par ligne active sans règle de lecture : seule la
   clé secrète la lit, le site ne la voit pas. Envoi
   incrémental (`donnees/moderation/publie.json`) après chaque `classer`, `noter` et `entrainer`, ou par
-  `python -m moderation publier [--tout]`. Rien sur Hugging Face.
+  `python -m moderation publier [--tout]`. Rien sur Cloudflare.
 - **Site de modération** (2026-11-13, https://moderation-lisnard.vercel.app, projet Vercel `moderation-lisnard`, pages dans `moderation/site/`, code dans
   `moderation/site.py`) : réservé aux modérateurs, à part du site public. On n'y entre qu'avec le mot de passe choisi
   par `python -m moderation motdepasse` (compte Supabase Auth partagé, rôle « moderateur » ; inscriptions fermées ;

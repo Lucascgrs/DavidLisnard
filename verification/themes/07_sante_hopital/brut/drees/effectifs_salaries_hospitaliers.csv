@@ -1,0 +1,369 @@
+﻿secteur;professions;professions_detaillees;annee;effectifs
+Public;3 - Sages-femmes;3 - Sages-femmes;2003;9091.0
+Public;4 - Infirmiers;4 - Infirmiers;2003;216936.0
+Public;5 - Aides-soignants;5 - Aides-soignants;2003;195609.0
+Public;6 - Filière administrative;6 - Filière administrative;2003;91477.0
+Public;4 - Infirmiers;4 - Infirmiers;2004;223416.0
+Public;7 - Autre personnel (soignants et non soignants);;2004;330480.0
+Public;1 - Médecins et assimilés;1 - Médecins et assimilés;2005;75934.0
+Public;3 - Sages-femmes;3 - Sages-femmes;2005;9627.0
+Public;1 - Médecins et assimilés;1 - Médecins et assimilés;2006;76178.0
+Public;3 - Sages-femmes;3 - Sages-femmes;2006;9992.0
+Public;6 - Filière administrative;6 - Filière administrative;2006;96963.0
+Public;7 - Autre personnel (soignants et non soignants);;2006;329821.0
+Public;3 - Sages-femmes;3 - Sages-femmes;2007;10369.0
+Public;4 - Infirmiers;4 - Infirmiers;2007;234293.0
+Public;5 - Aides-soignants;5 - Aides-soignants;2007;208878.0
+Public;1 - Médecins et assimilés;1 - Médecins et assimilés;2008;79155.0
+Public;2 - Internes;2 - Internes;2008;21882.0
+Public;3 - Sages-femmes;3 - Sages-femmes;2008;10560.0
+Public;5 - Aides-soignants;5 - Aides-soignants;2008;208867.0
+Public;6 - Filière administrative;6 - Filière administrative;2009;100147.0
+Public;3 - Sages-femmes;3 - Sages-femmes;2010;11259.0
+Public;5 - Aides-soignants;5 - Aides-soignants;2010;212075.0
+Public;6 - Filière administrative;6 - Filière administrative;2010;101623.0
+Public;;71 - Autres soignants;2010;169299.0
+Public;1 - Médecins et assimilés;1 - Médecins et assimilés;2011;84257.0
+Public;4 - Infirmiers;4 - Infirmiers;2012;248325.0
+Public;;71 - Autres soignants;2012;168801.0
+Public;;72 - Autres non soignants;2012;164663.0
+Public;3 - Sages-femmes;3 - Sages-femmes;2013;12320.0
+Public;5 - Aides-soignants;5 - Aides-soignants;2013;220422.0
+Public;7 - Autre personnel (soignants et non soignants);;2013;337420.0
+Public;;71 - Autres soignants;2013;170529.0
+Public;;72 - Autres non soignants;2013;166890.0
+Public;5 - Aides-soignants;5 - Aides-soignants;2014;221862.0
+Public;6 - Filière administrative;6 - Filière administrative;2014;103472.0
+Public;;71 - Autres soignants;2014;170593.0
+Public;;72 - Autres non soignants;2014;167464.0
+Public;3 - Sages-femmes;3 - Sages-femmes;2015;12589.0
+Public;5 - Aides-soignants;5 - Aides-soignants;2015;222368.0
+Public;3 - Sages-femmes;3 - Sages-femmes;2016;12574.0
+Public;4 - Infirmiers;4 - Infirmiers;2016;256717.0
+Public;5 - Aides-soignants;5 - Aides-soignants;2016;222001.0
+Public;6 - Filière administrative;6 - Filière administrative;2016;102763.0
+Public;7 - Autre personnel (soignants et non soignants);;2016;332700.0
+Public;1 - Médecins et assimilés;1 - Médecins et assimilés;2017;87037.0
+Public;5 - Aides-soignants;5 - Aides-soignants;2017;222554.0
+Public;7 - Autre personnel (soignants et non soignants);;2017;328241.0
+Public;5 - Aides-soignants;5 - Aides-soignants;2018;222036.0
+Public;;72 - Autres non soignants;2018;167730.0
+Public;3 - Sages-femmes;3 - Sages-femmes;2019;12917.0
+Public;4 - Infirmiers;4 - Infirmiers;2019;257194.0
+Public;5 - Aides-soignants;5 - Aides-soignants;2019;222044.0
+Public;1 - Médecins et assimilés;1 - Médecins et assimilés;2020;90604.0
+Public;4 - Infirmiers;4 - Infirmiers;2020;260757.0
+Public;2 - Internes;2 - Internes;2021;36520.0
+Public;6 - Filière administrative;6 - Filière administrative;2021;109930.0
+Public;5 - Aides-soignants;5 - Aides-soignants;2022;224870.0
+Public;7 - Autre personnel (soignants et non soignants);;2022;319786.0
+Public;2 - Internes;2 - Internes;2023;40264.0
+Public;5 - Aides-soignants;5 - Aides-soignants;2023;228477.0
+Public;7 - Autre personnel (soignants et non soignants);;2023;327001.0
+Public;;72 - Autres non soignants;2023;173519.0
+Public;6 - Filière administrative;6 - Filière administrative;2024;115516.0
+Public;;72 - Autres non soignants;2024;174337.0
+Privé;2 - Internes;2 - Internes;2003;1248.0
+Privé;3 - Sages-femmes;3 - Sages-femmes;2003;3285.0
+Privé;4 - Infirmiers;4 - Infirmiers;2003;65706.0
+Privé;6 - Filière administrative;6 - Filière administrative;2003;34350.0
+Privé;7 - Autre personnel (soignants et non soignants);;2003;89107.0
+Privé;1 - Médecins et assimilés;1 - Médecins et assimilés;2004;13791.0
+Privé;2 - Internes;2 - Internes;2004;1206.0
+Privé;1 - Médecins et assimilés;1 - Médecins et assimilés;2005;14016.0
+Privé;2 - Internes;2 - Internes;2005;1233.0
+Privé;5 - Aides-soignants;5 - Aides-soignants;2006;53262.0
+Privé;1 - Médecins et assimilés;1 - Médecins et assimilés;2007;14520.0
+Privé;2 - Internes;2 - Internes;2007;1337.0
+Privé;6 - Filière administrative;6 - Filière administrative;2007;36274.0
+Privé;1 - Médecins et assimilés;1 - Médecins et assimilés;2008;14874.0
+Privé;3 - Sages-femmes;3 - Sages-femmes;2008;3576.0
+Privé;4 - Infirmiers;4 - Infirmiers;2008;76361.0
+Privé;2 - Internes;2 - Internes;2009;1477.0
+Privé;4 - Infirmiers;4 - Infirmiers;2009;79490.0
+Privé;5 - Aides-soignants;5 - Aides-soignants;2009;57174.0
+Privé;6 - Filière administrative;6 - Filière administrative;2009;37569.0
+Privé;7 - Autre personnel (soignants et non soignants);;2009;89214.0
+Privé;1 - Médecins et assimilés;1 - Médecins et assimilés;2010;15607.0
+Privé;2 - Internes;2 - Internes;2010;1553.0
+Privé;3 - Sages-femmes;3 - Sages-femmes;2010;3932.0
+Privé;5 - Aides-soignants;5 - Aides-soignants;2010;58130.0
+Privé;6 - Filière administrative;6 - Filière administrative;2010;38494.0
+Privé;;71 - Autres soignants;2010;59637.0
+Privé;3 - Sages-femmes;3 - Sages-femmes;2011;4003.0
+Privé;5 - Aides-soignants;5 - Aides-soignants;2011;58874.0
+Privé;;72 - Autres non soignants;2011;29852.0
+Privé;1 - Médecins et assimilés;1 - Médecins et assimilés;2012;16352.0
+Privé;2 - Internes;2 - Internes;2012;1873.0
+Privé;4 - Infirmiers;4 - Infirmiers;2012;84234.0
+Privé;5 - Aides-soignants;5 - Aides-soignants;2012;58646.0
+Privé;6 - Filière administrative;6 - Filière administrative;2012;39910.0
+Privé;3 - Sages-femmes;3 - Sages-femmes;2013;3921.0
+Privé;4 - Infirmiers;4 - Infirmiers;2013;85739.0
+Privé;7 - Autre personnel (soignants et non soignants);;2013;91036.0
+Privé;;71 - Autres soignants;2013;60394.0
+Privé;;72 - Autres non soignants;2013;30641.0
+Privé;1 - Médecins et assimilés;1 - Médecins et assimilés;2014;16904.0
+Privé;4 - Infirmiers;4 - Infirmiers;2014;87291.0
+Privé;;72 - Autres non soignants;2014;31312.0
+Privé;1 - Médecins et assimilés;1 - Médecins et assimilés;2015;17226.0
+Privé;;72 - Autres non soignants;2015;31544.0
+Privé;1 - Médecins et assimilés;1 - Médecins et assimilés;2016;17946.0
+Privé;2 - Internes;2 - Internes;2016;2512.0
+Privé;4 - Infirmiers;4 - Infirmiers;2016;89842.0
+Privé;5 - Aides-soignants;5 - Aides-soignants;2016;60412.0
+Privé;6 - Filière administrative;6 - Filière administrative;2016;41519.0
+Privé;4 - Infirmiers;4 - Infirmiers;2017;89627.0
+Privé;6 - Filière administrative;6 - Filière administrative;2017;41667.0
+Privé;7 - Autre personnel (soignants et non soignants);;2017;92325.0
+Privé;3 - Sages-femmes;3 - Sages-femmes;2018;3784.0
+Privé;4 - Infirmiers;4 - Infirmiers;2018;89512.0
+Privé;6 - Filière administrative;6 - Filière administrative;2018;41243.0
+Privé;3 - Sages-femmes;3 - Sages-femmes;2019;3714.0
+Privé;;71 - Autres soignants;2019;59741.0
+Privé;;72 - Autres non soignants;2019;31522.0
+Privé;1 - Médecins et assimilés;1 - Médecins et assimilés;2020;19119.0
+Privé;2 - Internes;2 - Internes;2020;2654.0
+Privé;4 - Infirmiers;4 - Infirmiers;2020;89153.0
+Privé;6 - Filière administrative;6 - Filière administrative;2020;40957.0
+Privé;2 - Internes;2 - Internes;2021;2663.0
+Privé;3 - Sages-femmes;3 - Sages-femmes;2021;3550.0
+Privé;7 - Autre personnel (soignants et non soignants);;2021;93527.0
+Privé;2 - Internes;2 - Internes;2022;2884.0
+Privé;4 - Infirmiers;4 - Infirmiers;2022;87593.0
+Privé;6 - Filière administrative;6 - Filière administrative;2022;42159.0
+Privé;2 - Internes;2 - Internes;2023;3029.0
+Privé;7 - Autre personnel (soignants et non soignants);;2023;96929.0
+Privé;;71 - Autres soignants;2023;62743.0
+Privé;;72 - Autres non soignants;2023;34186.0
+Privé;2 - Internes;2 - Internes;2024;3181.0
+Privé;3 - Sages-femmes;3 - Sages-femmes;2024;3275.0
+Privé;4 - Infirmiers;4 - Infirmiers;2024;90360.0
+Privé;;71 - Autres soignants;2024;63386.0
+Privé;;72 - Autres non soignants;2024;35207.0
+Public;1 - Médecins et assimilés;1 - Médecins et assimilés;2003;74024.0
+Public;2 - Internes;2 - Internes;2004;19089.0
+Public;6 - Filière administrative;6 - Filière administrative;2004;94052.0
+Public;2 - Internes;2 - Internes;2005;19648.0
+Public;2 - Internes;2 - Internes;2007;21046.0
+Public;6 - Filière administrative;6 - Filière administrative;2007;98326.0
+Public;1 - Médecins et assimilés;1 - Médecins et assimilés;2009;80617.0
+Public;2 - Internes;2 - Internes;2009;23589.0
+Public;4 - Infirmiers;4 - Infirmiers;2009;236073.0
+Public;7 - Autre personnel (soignants et non soignants);;2009;325308.0
+Public;1 - Médecins et assimilés;1 - Médecins et assimilés;2010;80737.0
+Public;7 - Autre personnel (soignants et non soignants);;2010;331554.0
+Public;;72 - Autres non soignants;2010;162255.0
+Public;2 - Internes;2 - Internes;2011;25094.0
+Public;4 - Infirmiers;4 - Infirmiers;2011;242998.0
+Public;6 - Filière administrative;6 - Filière administrative;2011;103306.0
+Public;;71 - Autres soignants;2011;169063.0
+Public;2 - Internes;2 - Internes;2012;26152.0
+Public;5 - Aides-soignants;5 - Aides-soignants;2012;219313.0
+Public;7 - Autre personnel (soignants et non soignants);;2012;333464.0
+Public;2 - Internes;2 - Internes;2013;27422.0
+Public;4 - Infirmiers;4 - Infirmiers;2013;252052.0
+Public;3 - Sages-femmes;3 - Sages-femmes;2014;12527.0
+Public;7 - Autre personnel (soignants et non soignants);;2014;338057.0
+Public;7 - Autre personnel (soignants et non soignants);;2015;335431.0
+Public;2 - Internes;2 - Internes;2016;30769.0
+Public;;72 - Autres non soignants;2016;166897.0
+Public;2 - Internes;2 - Internes;2017;31532.0
+Public;4 - Infirmiers;4 - Infirmiers;2017;256797.0
+Public;6 - Filière administrative;6 - Filière administrative;2017;102689.0
+Public;;72 - Autres non soignants;2017;167294.0
+Public;2 - Internes;2 - Internes;2018;32284.0
+Public;3 - Sages-femmes;3 - Sages-femmes;2018;12788.0
+Public;4 - Infirmiers;4 - Infirmiers;2018;257058.0
+Public;6 - Filière administrative;6 - Filière administrative;2018;102746.0
+Public;7 - Autre personnel (soignants et non soignants);;2018;324293.0
+Public;;72 - Autres non soignants;2019;167850.0
+Public;2 - Internes;2 - Internes;2020;34900.0
+Public;6 - Filière administrative;6 - Filière administrative;2020;104709.0
+Public;1 - Médecins et assimilés;1 - Médecins et assimilés;2021;91959.0
+Public;3 - Sages-femmes;3 - Sages-femmes;2021;13312.0
+Public;4 - Infirmiers;4 - Infirmiers;2021;263659.0
+Public;7 - Autre personnel (soignants et non soignants);;2021;323270.0
+Public;;71 - Autres soignants;2021;149609.0
+Public;1 - Médecins et assimilés;1 - Médecins et assimilés;2022;91883.0
+Public;2 - Internes;2 - Internes;2022;38213.0
+Public;3 - Sages-femmes;3 - Sages-femmes;2022;13239.0
+Public;4 - Infirmiers;4 - Infirmiers;2022;259236.0
+Public;6 - Filière administrative;6 - Filière administrative;2022;111038.0
+Public;;71 - Autres soignants;2022;147169.0
+Public;;72 - Autres non soignants;2022;172617.0
+Public;1 - Médecins et assimilés;1 - Médecins et assimilés;2023;92854.0
+Public;3 - Sages-femmes;3 - Sages-femmes;2023;13450.0
+Public;;71 - Autres soignants;2023;153482.0
+Public;1 - Médecins et assimilés;1 - Médecins et assimilés;2024;95082.0
+Public;3 - Sages-femmes;3 - Sages-femmes;2024;13678.0
+Public;4 - Infirmiers;4 - Infirmiers;2024;267414.0
+Privé;1 - Médecins et assimilés;1 - Médecins et assimilés;2003;13306.0
+Privé;6 - Filière administrative;6 - Filière administrative;2004;34718.0
+Privé;4 - Infirmiers;4 - Infirmiers;2005;69589.0
+Privé;7 - Autre personnel (soignants et non soignants);;2005;88562.0
+Privé;2 - Internes;2 - Internes;2006;1284.0
+Privé;6 - Filière administrative;6 - Filière administrative;2006;35521.0
+Privé;3 - Sages-femmes;3 - Sages-femmes;2007;3403.0
+Privé;4 - Infirmiers;4 - Infirmiers;2007;74347.0
+Privé;7 - Autre personnel (soignants et non soignants);;2007;87869.0
+Privé;2 - Internes;2 - Internes;2008;1379.0
+Privé;5 - Aides-soignants;5 - Aides-soignants;2008;55642.0
+Privé;6 - Filière administrative;6 - Filière administrative;2008;36731.0
+Privé;7 - Autre personnel (soignants et non soignants);;2008;88142.0
+Privé;3 - Sages-femmes;3 - Sages-femmes;2009;3785.0
+Privé;7 - Autre personnel (soignants et non soignants);;2010;89551.0
+Privé;;72 - Autres non soignants;2010;29914.0
+Privé;1 - Médecins et assimilés;1 - Médecins et assimilés;2011;16106.0
+Privé;6 - Filière administrative;6 - Filière administrative;2011;38965.0
+Privé;7 - Autre personnel (soignants et non soignants);;2012;90148.0
+Privé;;71 - Autres soignants;2012;59472.0
+Privé;1 - Médecins et assimilés;1 - Médecins et assimilés;2013;16497.0
+Privé;5 - Aides-soignants;5 - Aides-soignants;2013;59427.0
+Privé;6 - Filière administrative;6 - Filière administrative;2013;40115.0
+Privé;2 - Internes;2 - Internes;2014;2365.0
+Privé;5 - Aides-soignants;5 - Aides-soignants;2014;59782.0
+Privé;7 - Autre personnel (soignants et non soignants);;2014;91845.0
+Privé;4 - Infirmiers;4 - Infirmiers;2015;88185.0
+Privé;6 - Filière administrative;6 - Filière administrative;2015;40723.0
+Privé;3 - Sages-femmes;3 - Sages-femmes;2016;3923.0
+Privé;7 - Autre personnel (soignants et non soignants);;2016;93337.0
+Privé;;71 - Autres soignants;2016;61329.0
+Privé;1 - Médecins et assimilés;1 - Médecins et assimilés;2017;18069.0
+Privé;2 - Internes;2 - Internes;2017;2570.0
+Privé;3 - Sages-femmes;3 - Sages-femmes;2017;3864.0
+Privé;;71 - Autres soignants;2017;61781.0
+Privé;1 - Médecins et assimilés;1 - Médecins et assimilés;2018;18344.0
+Privé;2 - Internes;2 - Internes;2018;2599.0
+Privé;7 - Autre personnel (soignants et non soignants);;2018;90885.0
+Privé;;71 - Autres soignants;2018;60093.0
+Privé;5 - Aides-soignants;5 - Aides-soignants;2019;58610.0
+Privé;7 - Autre personnel (soignants et non soignants);;2019;91262.0
+Privé;3 - Sages-femmes;3 - Sages-femmes;2020;3553.0
+Privé;4 - Infirmiers;4 - Infirmiers;2021;88704.0
+Privé;5 - Aides-soignants;5 - Aides-soignants;2021;57414.0
+Privé;6 - Filière administrative;6 - Filière administrative;2021;42436.0
+Privé;;71 - Autres soignants;2021;61193.0
+Privé;7 - Autre personnel (soignants et non soignants);;2022;94747.0
+Privé;;72 - Autres non soignants;2022;33112.0
+Privé;1 - Médecins et assimilés;1 - Médecins et assimilés;2023;20966.0
+Privé;3 - Sages-femmes;3 - Sages-femmes;2023;3367.0
+Privé;4 - Infirmiers;4 - Infirmiers;2023;89313.0
+Privé;7 - Autre personnel (soignants et non soignants);;2024;98593.0
+Public;2 - Internes;2 - Internes;2003;18183.0
+Public;7 - Autre personnel (soignants et non soignants);;2003;325118.0
+Public;1 - Médecins et assimilés;1 - Médecins et assimilés;2004;74810.0
+Public;3 - Sages-femmes;3 - Sages-femmes;2004;9344.0
+Public;5 - Aides-soignants;5 - Aides-soignants;2004;199479.0
+Public;4 - Infirmiers;4 - Infirmiers;2005;227434.0
+Public;5 - Aides-soignants;5 - Aides-soignants;2005;201890.0
+Public;6 - Filière administrative;6 - Filière administrative;2005;97964.0
+Public;7 - Autre personnel (soignants et non soignants);;2005;333078.0
+Public;2 - Internes;2 - Internes;2006;20491.0
+Public;4 - Infirmiers;4 - Infirmiers;2006;230266.0
+Public;5 - Aides-soignants;5 - Aides-soignants;2006;203068.0
+Public;1 - Médecins et assimilés;1 - Médecins et assimilés;2007;78890.0
+Public;7 - Autre personnel (soignants et non soignants);;2007;332531.0
+Public;4 - Infirmiers;4 - Infirmiers;2008;234765.0
+Public;6 - Filière administrative;6 - Filière administrative;2008;99607.0
+Public;7 - Autre personnel (soignants et non soignants);;2008;328917.0
+Public;3 - Sages-femmes;3 - Sages-femmes;2009;10826.0
+Public;5 - Aides-soignants;5 - Aides-soignants;2009;207435.0
+Public;2 - Internes;2 - Internes;2010;24092.0
+Public;4 - Infirmiers;4 - Infirmiers;2010;239175.0
+Public;3 - Sages-femmes;3 - Sages-femmes;2011;11908.0
+Public;5 - Aides-soignants;5 - Aides-soignants;2011;216616.0
+Public;7 - Autre personnel (soignants et non soignants);;2011;332026.0
+Public;;72 - Autres non soignants;2011;162963.0
+Public;1 - Médecins et assimilés;1 - Médecins et assimilés;2012;83711.0
+Public;3 - Sages-femmes;3 - Sages-femmes;2012;12049.0
+Public;6 - Filière administrative;6 - Filière administrative;2012;103397.0
+Public;1 - Médecins et assimilés;1 - Médecins et assimilés;2013;85198.0
+Public;6 - Filière administrative;6 - Filière administrative;2013;103135.0
+Public;1 - Médecins et assimilés;1 - Médecins et assimilés;2014;85614.0
+Public;2 - Internes;2 - Internes;2014;28719.0
+Public;4 - Infirmiers;4 - Infirmiers;2014;254285.0
+Public;1 - Médecins et assimilés;1 - Médecins et assimilés;2015;86085.0
+Public;2 - Internes;2 - Internes;2015;30274.0
+Public;4 - Infirmiers;4 - Infirmiers;2015;254957.0
+Public;6 - Filière administrative;6 - Filière administrative;2015;103558.0
+Public;;71 - Autres soignants;2015;168430.0
+Public;;72 - Autres non soignants;2015;167001.0
+Public;1 - Médecins et assimilés;1 - Médecins et assimilés;2016;86226.0
+Public;;71 - Autres soignants;2016;165803.0
+Public;3 - Sages-femmes;3 - Sages-femmes;2017;12694.0
+Public;;71 - Autres soignants;2017;160947.0
+Public;1 - Médecins et assimilés;1 - Médecins et assimilés;2018;87201.0
+Public;;71 - Autres soignants;2018;156563.0
+Public;1 - Médecins et assimilés;1 - Médecins et assimilés;2019;88586.0
+Public;2 - Internes;2 - Internes;2019;33279.0
+Public;6 - Filière administrative;6 - Filière administrative;2019;102668.0
+Public;7 - Autre personnel (soignants et non soignants);;2019;323841.0
+Public;;71 - Autres soignants;2019;155991.0
+Public;3 - Sages-femmes;3 - Sages-femmes;2020;13014.0
+Public;5 - Aides-soignants;5 - Aides-soignants;2020;225342.0
+Public;7 - Autre personnel (soignants et non soignants);;2020;330989.0
+Public;;71 - Autres soignants;2020;160273.0
+Public;;72 - Autres non soignants;2020;170716.0
+Public;5 - Aides-soignants;5 - Aides-soignants;2021;227858.0
+Public;;72 - Autres non soignants;2021;173661.0
+Public;4 - Infirmiers;4 - Infirmiers;2023;263999.0
+Public;6 - Filière administrative;6 - Filière administrative;2023;114827.0
+Public;2 - Internes;2 - Internes;2024;41980.0
+Public;5 - Aides-soignants;5 - Aides-soignants;2024;227505.0
+Public;7 - Autre personnel (soignants et non soignants);;2024;326433.0
+Public;;71 - Autres soignants;2024;152096.0
+Privé;5 - Aides-soignants;5 - Aides-soignants;2003;49850.0
+Privé;3 - Sages-femmes;3 - Sages-femmes;2004;3343.0
+Privé;4 - Infirmiers;4 - Infirmiers;2004;66991.0
+Privé;5 - Aides-soignants;5 - Aides-soignants;2004;50184.0
+Privé;7 - Autre personnel (soignants et non soignants);;2004;89015.0
+Privé;3 - Sages-femmes;3 - Sages-femmes;2005;3282.0
+Privé;5 - Aides-soignants;5 - Aides-soignants;2005;51607.0
+Privé;6 - Filière administrative;6 - Filière administrative;2005;35047.0
+Privé;1 - Médecins et assimilés;1 - Médecins et assimilés;2006;14362.0
+Privé;3 - Sages-femmes;3 - Sages-femmes;2006;3489.0
+Privé;4 - Infirmiers;4 - Infirmiers;2006;72519.0
+Privé;7 - Autre personnel (soignants et non soignants);;2006;87914.0
+Privé;5 - Aides-soignants;5 - Aides-soignants;2007;53977.0
+Privé;1 - Médecins et assimilés;1 - Médecins et assimilés;2009;15176.0
+Privé;4 - Infirmiers;4 - Infirmiers;2010;80987.0
+Privé;2 - Internes;2 - Internes;2011;1678.0
+Privé;4 - Infirmiers;4 - Infirmiers;2011;81599.0
+Privé;7 - Autre personnel (soignants et non soignants);;2011;89602.0
+Privé;;71 - Autres soignants;2011;59749.0
+Privé;3 - Sages-femmes;3 - Sages-femmes;2012;3967.0
+Privé;;72 - Autres non soignants;2012;30676.0
+Privé;2 - Internes;2 - Internes;2013;2206.0
+Privé;3 - Sages-femmes;3 - Sages-femmes;2014;3937.0
+Privé;6 - Filière administrative;6 - Filière administrative;2014;40703.0
+Privé;;71 - Autres soignants;2014;60533.0
+Privé;2 - Internes;2 - Internes;2015;2434.0
+Privé;3 - Sages-femmes;3 - Sages-femmes;2015;3898.0
+Privé;5 - Aides-soignants;5 - Aides-soignants;2015;59807.0
+Privé;7 - Autre personnel (soignants et non soignants);;2015;92257.0
+Privé;;71 - Autres soignants;2015;60714.0
+Privé;;72 - Autres non soignants;2016;32008.0
+Privé;5 - Aides-soignants;5 - Aides-soignants;2017;59077.0
+Privé;;72 - Autres non soignants;2017;30544.0
+Privé;5 - Aides-soignants;5 - Aides-soignants;2018;59167.0
+Privé;;72 - Autres non soignants;2018;30792.0
+Privé;1 - Médecins et assimilés;1 - Médecins et assimilés;2019;18711.0
+Privé;2 - Internes;2 - Internes;2019;2645.0
+Privé;4 - Infirmiers;4 - Infirmiers;2019;89821.0
+Privé;6 - Filière administrative;6 - Filière administrative;2019;41211.0
+Privé;5 - Aides-soignants;5 - Aides-soignants;2020;58004.0
+Privé;7 - Autre personnel (soignants et non soignants);;2020;91487.0
+Privé;;71 - Autres soignants;2020;59621.0
+Privé;;72 - Autres non soignants;2020;31866.0
+Privé;1 - Médecins et assimilés;1 - Médecins et assimilés;2021;19592.0
+Privé;;72 - Autres non soignants;2021;32334.0
+Privé;1 - Médecins et assimilés;1 - Médecins et assimilés;2022;20269.0
+Privé;3 - Sages-femmes;3 - Sages-femmes;2022;3411.0
+Privé;5 - Aides-soignants;5 - Aides-soignants;2022;56835.0
+Privé;;71 - Autres soignants;2022;61635.0
+Privé;5 - Aides-soignants;5 - Aides-soignants;2023;58139.0
+Privé;6 - Filière administrative;6 - Filière administrative;2023;42740.0
+Privé;1 - Médecins et assimilés;1 - Médecins et assimilés;2024;21400.0
+Privé;5 - Aides-soignants;5 - Aides-soignants;2024;58288.0
+Privé;6 - Filière administrative;6 - Filière administrative;2024;43064.0

@@ -1,0 +1,31 @@
+affirmation,variante,grandeur,valeur,unite,annee,chiffre_lisnard,sources,methode,note
+SECU-01,"Violences physiques (total), 2017 → 2022",Hausse des faits enregistrés,44.08,%,2022,+51 % (2017-2022) ; +63 % en 6 ans,SSMSI-DELINQUANCE-DEP,M1,289579 → 417232
+SECU-01,"Homicides, 2017 → 2022",Hausse des faits enregistrés,14.73,%,2022,+15 % (2017-2022),SSMSI-DELINQUANCE-DEP,M1,835 → 958
+SECU-01,"Violences physiques hors cadre familial, 2017 → 2022",Hausse des faits enregistrés,16.59,%,2022,,SSMSI-DELINQUANCE-DEP,M1,171894 → 200410
+SECU-01,"Violences physiques intrafamiliales, 2017 → 2022",Hausse des faits enregistrés,84.24,%,2022,,SSMSI-DELINQUANCE-DEP,M1,117685 → 216822
+SECU-01,"Violences physiques (total), 2017 → 2025",Hausse des faits enregistrés,63.14,%,2025,+51 % (programme),SSMSI-DELINQUANCE-DEP,M1,289579 → 472409
+SECU-01,"Homicides, 2017 → 2025",Hausse des faits enregistrés,16.77,%,2025,+16 % (programme),SSMSI-DELINQUANCE-DEP,M1,835 → 975
+SECU-01,"Tentatives d'homicide, 2017 → 2025",Hausse des faits enregistrés,96.02,%,2025,+90 % (programme),SSMSI-DELINQUANCE-DEP,M1,2284 → 4477
+SECU-01,"Violences physiques hors cadre familial, 2017 → 2025",Hausse des faits enregistrés,25.5,%,2025,,SSMSI-DELINQUANCE-DEP,M1,171894 → 215728
+SECU-01,"Violences physiques (total), 2016 → 2025 (dix ans)",Hausse des faits enregistrés,70.38,%,2025,+50 % en dix ans,SSMSI-DELINQUANCE-DEP,M1,277268 → 472409
+SECU-01,"Homicides, 2016 → 2025 (dix ans)",Hausse des faits enregistrés,7.03,%,2025,+43 % en dix ans,SSMSI-DELINQUANCE-DEP,M1,911 → 975
+SECU-01,"Homicides, 2017 → 2021",Hausse des faits enregistrés (déclaration de juillet 2022),0.6,%,2021,+12 % (07/2022),SSMSI-DELINQUANCE-DEP,M1,835 → 840
+SECU-01,2017 → 2025,Part de la hausse des violences physiques due aux violences intrafamiliales,76.02,%,2025,,SSMSI-DELINQUANCE-DEP,M1,hausse en grande partie liée au meilleur signalement des violences conjugales (selon le SSMSI)
+SECU-02,"France entière, 2026-09",Détenus en surnombre (détenus − places opérationnelles),26672.0,détenus,2026-09,20 000 places manquantes ; 30 000 (2025-2026),DAP-DETENUS-2026-09,M2,90020 détenus pour 63348 places ; densité 142.1 %
+SECU-02,"France entière, 2025-09",Détenus en surnombre (détenus − places opérationnelles),21697.0,détenus,2025-09,20 000 places manquantes ; 30 000 (2025-2026),DAP-DETENUS-2025-09,M2,84311 détenus pour 62614 places ; densité 134.7 %
+SECU-02,"Sénat, octobre 2025",Places manquantes pour ramener la densité à 100 % dans chaque établissement,22361.0,places,2025-10,20 000 / 30 000,SENAT-PENITENTIAIRE-PLF2026,M2,compte établissement par établissement : un établissement en sous-occupation ne compense pas une maison d'arrêt saturée
+SECU-02,"Europe (51 administrations), 31/01/2024","Taux de détention, France, pour 100 000 habitants",111.5,détenus pour 100 000 hab.,2024,« sous-taux d'incarcération »,COE-SPACE-I-2024,M2,médiane européenne 104.8 ; Allemagne 71.2
+SECU-03,"peines devenues exécutoires, 2024",Peines d'emprisonnement ferme non exécutées un an après,21.0,%,2024,40 % au bout de six mois,RSJ-2025-EXECUTION,M3,
+SECU-03,2025,Peines non mises à exécution immédiatement (au jugement),42.0,%,2025,40 % au bout de six mois,RSJ-2026-EXECUTION,M3,
+SECU-03,"peines exécutoires en 2020, à cinq ans",Peines jamais mises à exécution cinq ans après,10.0,%,2025,« une condamnation sur deux n'est pas appliquée »,RSJ-2026-EXECUTION,M3,
+SECU-03,"IGJ, 2021",Taux d'exécution immédiate (rapport IGJ de mars 2022),45.0,%,2021,45 % non exécutées à six mois (2021),IGJ-EXECUTION-PEINES-2022,M3,il était d'environ 30 % de 2017 à 2019
+SECU-04,"UE à 27, 2024",Juges professionnels pour 100 000 habitants (France),11.6,pour 100 000 hab.,2024,"10,9 ; médiane 17,7",CEPEJ-FRANCE-2024,M4,médiane UE 23.4
+SECU-04,"UE à 27, 2024",Procureurs pour 100 000 habitants (France),3.2,pour 100 000 hab.,2024,,CEPEJ-FRANCE-2024,M4,médiane UE 11.4
+SECU-05,2024,Communes ou intercommunalités ayant un service de police municipale / nombre de communes,13.13,%,2024,12 % ; 10 % ; 20 % ; 14 %,PM-EFFECTIFS-2024 ; GEO-COMMUNES,M5,4592 services sur 34969 communes ; borne haute (un service intercommunal couvre plusieurs communes)
+SECU-05,2024,Lignes avec au moins un policier municipal / nombre de communes,10.94,%,2024,12 %,PM-EFFECTIFS-2024 ; GEO-COMMUNES,M5,3824 lignes
+SECU-05,2014 → 2024,Hausse des effectifs de policiers municipaux,41.07,%,2024,+35 % / +36 % en dix ans,PM-EFFECTIFS-2014 ; PM-EFFECTIFS-2024,M5,20448 → 28846 agents
+SECU-06,Sénat 2024 (ministre de l'Économie),"Chiffre d'affaires annuel du narcotrafic, fourchette basse",3.5,Md€,2024,3 à 6 Md€ (2024) ; 8 Md€ (2026),SENAT-NARCOTRAFIC-2024,M6,
+SECU-07,"plan 15 000 (Sénat, juin 2023)",Coût d'investissement moyen par place,370.0,k€ par place,2023,,SENAT-PLAN15000-2023,M7,"ESTIMATION, non fiable à 100 % : coût moyen d'un plan en cours, hors inflation après 2023"
+SECU-07,20 000 places,Coût d'investissement estimé,7.4,Md€,2023,,SENAT-PLAN15000-2023,M7,"ESTIMATION, non fiable à 100 % : 20 000 × coût moyen du plan 15 000"
+SECU-07,20 000 places occupées,Coût de fonctionnement annuel estimé,0.93,Md€ par an,2024,,SENAT-PENITENTIAIRE-PLF2026,M7,"ESTIMATION, non fiable à 100 % : coût moyen d'une journée de détention (128 €) × 365 × 20 000"
+SECU-07,"plan 15 000, octobre 2025",Places brutes livrées depuis 2018,7504.0,places,2025,« elles ne sont toujours pas faites »,SENAT-PENITENTIAIRE-PLF2026,M7,

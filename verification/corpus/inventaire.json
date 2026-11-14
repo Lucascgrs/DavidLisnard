@@ -1,0 +1,74 @@
+[
+  {
+    "fichier": "articles.parquet",
+    "cle_r2": "data/articles/nouvelle-energie/2026-11-12.parquet",
+    "bucket": "rag-politique-sources",
+    "octets": 333655,
+    "sha256": "912eaad491ce75cb52ff4c6a0fc6feb38a63f098a65aacc5772f54e4c548b8d7",
+    "telecharge_le": "2026-11-14T01:01:25"
+  },
+  {
+    "fichier": "communication-parti.parquet",
+    "cle_r2": "data/communication-parti/nouvelle-energie/2026-11-12.parquet",
+    "bucket": "rag-politique-sources",
+    "octets": 1457563,
+    "sha256": "8a645746c01649878765a660305ea6fe0a28a51528d31d1763f7f3d708723c25",
+    "telecharge_le": "2026-11-14T01:01:26"
+  },
+  {
+    "fichier": "discours.parquet",
+    "cle_r2": "data/discours/nouvelle-energie/2026-11-12.parquet",
+    "bucket": "rag-politique-sources",
+    "octets": 203475,
+    "sha256": "d7a0d896e4117432d722c85f5b7200e713a24c8d837de6f34f9a59f933ec0ed0",
+    "telecharge_le": "2026-11-14T01:01:26"
+  },
+  {
+    "fichier": "documents.parquet",
+    "cle_r2": "data/documents/nouvelle-energie/2026-11-12.parquet",
+    "bucket": "rag-politique-sources",
+    "octets": 40654,
+    "sha256": "5f9f1f83e6e44533be0a5993c8013b53b9c99487e526f3280c501c5ca98e83d9",
+    "telecharge_le": "2026-11-14T01:01:26"
+  },
+  {
+    "fichier": "entretiens.parquet",
+    "cle_r2": "data/entretiens/nouvelle-energie/2026-11-12.parquet",
+    "bucket": "rag-politique-sources",
+    "octets": 227627,
+    "sha256": "3357161a5ba000d7e0f3b4548fc97147e2beeddec15286dbab694766225c933c",
+    "telecharge_le": "2026-11-14T01:01:26"
+  },
+  {
+    "fichier": "programmes.parquet",
+    "cle_r2": "data/programmes/nouvelle-energie/2026-11-12.parquet",
+    "bucket": "rag-politique-sources",
+    "octets": 55440,
+    "sha256": "527a654a1dc8ae2dbfeae310fe5fe15fb11cca361c45c85d0defd06d737a2513",
+    "telecharge_le": "2026-11-14T01:01:27"
+  },
+  {
+    "fichier": "reseaux-sociaux.parquet",
+    "cle_r2": "data/reseaux-sociaux/nouvelle-energie/2026-11-12.parquet",
+    "bucket": "rag-politique-sources",
+    "octets": 3417129,
+    "sha256": "0487e3f5fdc123c6ac344fb64d54e2db693dbb8c44cbb7991c7e72eef36ac5fa",
+    "telecharge_le": "2026-11-14T01:01:27"
+  },
+  {
+    "fichier": "tribunes.parquet",
+    "cle_r2": "data/tribunes/nouvelle-energie/2026-11-12.parquet",
+    "bucket": "rag-politique-sources",
+    "octets": 219810,
+    "sha256": "a5dfba0942ba3c7be3cb18ec74622d40fb867e43881341555bbf0a9b9d528cdb",
+    "telecharge_le": "2026-11-14T01:01:28"
+  },
+  {
+    "fichier": "videos.parquet",
+    "cle_r2": "data/videos/nouvelle-energie/2026-11-12.parquet",
+    "bucket": "rag-politique-sources",
+    "octets": 206478,
+    "sha256": "691fea0980836e1764a663cdba6bf928bb95e4386b89bcedec5658a7783b3ede",
+    "telecharge_le": "2026-11-14T01:01:28"
+  }
+]

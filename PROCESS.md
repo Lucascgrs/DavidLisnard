@@ -40,8 +40,8 @@ python -m collecte
 Une seule commande fait, dans l'ordre : la collecte du nouveau sur YouTube, Bluesky, Instagram, Facebook et X (incrémentale,
 `etat.json` par source), la sauvegarde `donnees/sauvegardes/donnees.zip`, la mise à jour de `corpus.csv` (doublons,
 « j'aime ») et des vecteurs, la notation des **seuls nouveaux** commentaires par le modèle en service, puis
-`python -m web publier`, et enfin l'export vers le dataset Hugging Face du groupe (le fichier des sources qui ont changé
-remplace l'ancien) (`python -m huggingface`, [docs/HUGGINGFACE.md](docs/HUGGINGFACE.md)), et, si Facebook a ramené du
+`python -m web publier`, et enfin l'export vers le bucket R2 du groupe sur Cloudflare (le fichier des sources qui ont
+changé remplace l'ancien) (`python -m cloudflare`, [docs/CLOUDFLARE.md](docs/CLOUDFLARE.md)), et, si Facebook a ramené du
 neuf, le classement des nouveaux commentaires Facebook pour la modération (partie M ; quelques secondes, envoyé dans
 la table privée `moderation` de Supabase). Facebook prend le plus de temps (jusqu'à 120 min par lancement, tant que l'arriéré
 depuis le 2026-07-31 n'est pas fini), puis Instagram (50 posts) : lancer en arrière-plan avec `python -u` et un
@@ -192,12 +192,12 @@ modifier d'abord `docs/FONCTIONNEMENT.html`, `README.md` et ce fichier (règle d
 python -m commun.sauvegarde            la sauvegarde de l'étape 1 précède les annotations et les thèmes du jour
 python -m web publier                  envoie ce qui a changé (notes, thèmes, synthèses)
 python -m web deployer                 seulement si web/site/ a changé
-python -m huggingface                  si des notes, des thèmes ou des commentaires ont changé depuis la collecte
+python -m cloudflare                   si des notes, des thèmes ou des commentaires ont changé depuis la collecte
                                        (annotation, renotation) : remplace le fichier des seules sources changées
 ```
 
-Sur Hugging Face, chaque source n'a qu'un fichier : quand elle change, le nouveau remplace l'ancien, une source
-inchangée ne repart pas. `python -m huggingface etat` montre ce qui est en attente.
+Sur Cloudflare R2, chaque source n'a qu'un fichier : quand elle change, le nouveau remplace l'ancien, une source
+inchangée ne repart pas. `python -m cloudflare etat` montre ce qui est en attente.
 
 Si le classifieur refuse `publier` ou `deployer`, ne pas contourner : demander à l'utilisateur de les lancer.
 
@@ -249,5 +249,5 @@ Le site de modération lit la base en direct : rien à faire à la mise à jour,
   est déjà dans `commentaires` ; catégorie retenue, auteur et lien direct se lisent dans la vue
   `moderation_complete`). Elle
   n'a aucune règle de lecture publique : le site ne la voit pas. Si l'envoi échoue (réseau, base en pause), le
-  journal le dit : relancer `python -m moderation publier`. Rien ne va sur le site ni sur Hugging Face, et
+  journal le dit : relancer `python -m moderation publier`. Rien ne va sur le site ni sur Cloudflare, et
   l'onglet, qui montre les auteurs et les liens, reste local.
