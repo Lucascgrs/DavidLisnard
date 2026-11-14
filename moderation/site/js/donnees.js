@@ -1,11 +1,11 @@
 // Les données du site, gardées dans le navigateur (IndexedDB) pour ménager la base gratuite :
-// - premier passage : tout est téléchargé une fois (≈ 18 pages de 1 000 commentaires) ;
+// - premier passage : tout est téléchargé une fois (quelques pages de 1 000 commentaires) ;
 // - ensuite : seules les lignes écrites depuis la dernière fois (colonne maj), les retraits et les marques de suivi
 //   sont redemandés ; quand rien n'a changé, chaque requête rend une liste vide en moins d'une milliseconde.
 // Filtres, tris et comptages se font ici, sur l'ordinateur du modérateur. Tout est effacé à la déconnexion.
 import { rest } from "./api.js";
 
-const VERSION = 1;          // changer quand la forme des données change : tout est retéléchargé
+const VERSION = 2;          // changer quand la forme des données change : tout est retéléchargé (2 : cible, un seul groupe)
 const PAGE = 1000;          // lignes par requête (plafond de l'API Supabase)
 const RECHARGER_JOURS = 7;  // filet de sécurité : tout retélécharger au-delà
 

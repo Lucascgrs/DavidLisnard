@@ -9,7 +9,14 @@ ceux qui appellent une réponse. Chaque commentaire Facebook collecté reçoit u
   sincère ; demande d'aide ; affirmation fausse à rectifier). Une question rhétorique n'en est pas une ;
 - autre : tout le reste, commentaires positifs compris.
 
-Le modèle est multilingual-e5-base affiné sur les annotations de Claude (donnees/moderation/annotations.csv).
+Le modèle est multilingual-e5-base affiné sur les annotations (donnees/moderation/annotations.csv), lues par
+Claude, ou par Gemini (PROMPT_GEMINI.md) puis relues par Claude.
+
+Cible d'un insultant (2026-11-14) : L s'il vise David Lisnard, Nouvelle Énergie ou leurs soutiens, A sinon. Donnée
+par la lecture (« L: » / « I: ») ; à défaut, cible L/A de l'analyse principale (publication.cibles()). Le modèle de
+modération ne la prédit pas : trop peu d'insultes visent Lisnard (16 sur 443).
+
+Mots surveillés (mots_surveilles.txt) : simple filtre du site de modération, hors modèle (site.ecrire_mots()).
 Les essais qui ont mené à ce choix (textdetox, zero-shot, Qwen3-4B) sont dans docs/HISTORIQUE.md.
 
 Le classement des nouveaux commentaires suit seul chaque collecte qui ramène du neuf sur Facebook

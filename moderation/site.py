@@ -29,6 +29,8 @@ from web.vercel import Vercel
 ICI = Path(__file__).resolve().parent
 SITE = ICI / "site"
 CONFIG_JS = SITE / "js" / "config.js"
+MOTS = ICI / "mots_surveilles.txt"
+MOTS_JS = SITE / "js" / "mots.js"
 PROJET_VERCEL = "moderation-lisnard"
 EMAIL = "moderateurs@moderation-lisnard.app"  # adresse du compte partagé, jamais montrée : on ne tape que le mot de passe
 LONGUEUR_MIN = 10
@@ -47,6 +49,29 @@ def ecrire_config() -> None:
         f"export const SUPABASE_URL = {json.dumps(a['supabase_url'])};\n"
         f"export const SUPABASE_CLE = {json.dumps(a['supabase_cle_publique'])};\n"
         f"export const EMAIL = {json.dumps(EMAIL)};\n", encoding="utf-8", newline="\n")
+    ecrire_mots()
+
+
+def lire_mots() -> list[dict]:
+    """Les mots surveillés (mots_surveilles.txt) : [{mot, rubrique}], dans l'ordre du fichier, sans doublon."""
+    sortie, rubrique, vus = [], "", set()
+    for ligne in MOTS.read_text(encoding="utf-8").splitlines():
+        ligne = ligne.split("#", 1)[0].strip()
+        if not ligne:
+            continue
+        if ligne.startswith("[") and ligne.endswith("]"):
+            rubrique = ligne[1:-1].strip()
+        elif ligne.lower() not in vus:
+            vus.add(ligne.lower())
+            sortie.append({"mot": ligne, "rubrique": rubrique})
+    return sortie
+
+
+def ecrire_mots() -> None:
+    """js/mots.js, lu par le site : la comparaison (accents, lettres répétées, chiffres déguisés) se fait là-bas."""
+    MOTS_JS.write_text(
+        "// Écrit par « python -m moderation site deployer » depuis moderation/mots_surveilles.txt : ne pas modifier.\n"
+        f"export const MOTS = {json.dumps(lire_mots(), ensure_ascii=False)};\n", encoding="utf-8", newline="\n")
 
 
 def fermer_inscriptions(journal=print) -> None:

@@ -170,7 +170,9 @@ python -m critiques trier [N] | ranger K fichier   catégorie des critiques et d
 python -m moderation etat                  classés, annotés, mesures du modèle
 python -m moderation classer               classe les commentaires Facebook pas encore classés
 python -m moderation tirer 250 questions   lot à annoter (modes : hasard, questions, insultes, doutes)
-python -m moderation noter K fichier       enregistre la lecture du lot K (« I: … » et « Q: … »)
+python -m moderation noter K fichier       enregistre la lecture du lot K (« L: … », « I: … », « Q: … ») ;
+                                          --par gemini si Gemini l'a lue (moderation/PROMPT_GEMINI.md)
+python -m moderation relire K fichier      relecture par Claude d'un lot lu par Gemini
 python -m moderation entrainer             réentraîne (≈ 30 min) puis reclasse tout
 python -m moderation publier [--tout]      envoie ce qui a changé dans la table privée moderation de Supabase
 python -m moderation motdepasse           choisit le mot de passe du site de modération (ferme les sessions ouvertes)
@@ -540,8 +542,11 @@ Facebook collecté (groupes et Page suivis, sans les publications elles-mêmes) 
   trouvées, le point faible. Relire avant de supprimer ou de bannir.
 - **Classement automatique** à la fin de chaque collecte qui ramène du neuf sur Facebook (quelques secondes, puis
   envoi dans Supabase) ; aussi par le bouton « Classer les nouveaux ». Les commentaires au texte vide sont écartés.
-- **À la demande seulement** ([PROCESS.md](PROCESS.md), partie M) : annoter des lots (`tirer` / `noter`),
+- **À la demande seulement** ([PROCESS.md](PROCESS.md), partie M) : annoter des lots (`tirer` / `noter`, par
+  Claude, ou par Gemini avec le prompt de `moderation/PROMPT_GEMINI.md` puis relus par Claude avec `relire`),
   réentraîner.
+- **Cible** : un insultant vise-t-il David Lisnard ou Nouvelle Énergie ? La lecture le dit (`L:` ou `I:`) ; à
+  défaut, la cible L/A de l'analyse principale (colonnes `cible` et `annotation_cible` de la table `moderation`).
 - **Fichiers** : `donnees/moderation/` (`annotations.csv`, `notes.csv`, `lots/`, `journal.log`). Les annotations et
   les lots sont dans la sauvegarde. L'onglet, qui montre les auteurs, reste local.
 - **Supabase** : table **privée** `moderation` (`web/schema.sql`), une ligne par commentaire classé ou annoté, même
@@ -556,9 +561,16 @@ Facebook collecté (groupes et Page suivis, sans les publications elles-mêmes) 
 - **Site de modération** (2026-11-13, https://moderation-lisnard.vercel.app, projet Vercel `moderation-lisnard`, pages dans `moderation/site/`, code dans
   `moderation/site.py`) : réservé aux modérateurs, à part du site public. On n'y entre qu'avec le mot de passe choisi
   par `python -m moderation motdepasse` (compte Supabase Auth partagé, rôle « moderateur » ; inscriptions fermées ;
-  changer le mot de passe coupe aussitôt les sessions ouvertes). Compteurs « à traiter », vue Commentaires (filtres
-  catégorie, certitude, suivi, période, groupe, texte, auteur, publication ; tri par date, insulte, question, auteurs
-  signalés), vues Auteurs et Publications, mode d'emploi. Liens vers le commentaire sur Facebook, la publication,
+  changer le mot de passe coupe aussitôt les sessions ouvertes). Un seul groupe, « Soutien David Lisnard 2027 » :
+  la base ne rend rien d'autre aux modérateurs (`moderation_publications()`), les autres groupes ne servent qu'à
+  l'entraînement. Compteurs « à traiter » (insultants, dont visant Lisnard / NE, questions, mots surveillés),
+  vue Commentaires (filtres catégorie, sujet Lisnard / NE ou autre, mots surveillés, certitude, suivi, période,
+  texte, auteur, publication ; tri par date, insulte, question, auteurs signalés), vues Auteurs et Publications,
+  vue Statistiques (évolution des insultants, questions et mots surveillés par jour ou par semaine ; commentaires
+  marqués « traité » par modérateur, et bilan par modérateur d'après le prénom donné à la connexion). Mots
+  surveillés : liste `moderation/mots_surveilles.txt` (provisoire, en attendant celle du gestionnaire), recopiée
+  dans `js/mots.js` au déploiement ; simple filtre dans le navigateur (accents, majuscules, lettres répétées et
+  chiffres déguisés ignorés ; mots surlignés), sans lien avec le modèle. Liens vers le commentaire sur Facebook, la publication,
   le profil de l'auteur et sa fiche de membre du groupe (où un administrateur peut le retirer ou le bloquer : l'API
   des groupes Facebook est fermée depuis 2024, on ne peut pas le faire depuis le site). Marques « Traité » /
   « Sans suite » partagées entre modérateurs (table `moderation_suivi`, jamais touchée par la publication).

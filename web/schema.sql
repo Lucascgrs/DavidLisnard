@@ -150,6 +150,12 @@ create table if not exists moderation (
   primary key (source, code)
 );
 create index if not exists moderation_publication on moderation (publication);
+-- Qui est visé (2026-11-14) : cible de l'analyse principale (L = David Lisnard ou Nouvelle Énergie, A = autre chose),
+-- écrite seulement si le commentaire n'est pas dans commentaires (sinon prise là) ; annotation_cible = cible donnée à
+-- la lecture d'un insultant (prioritaire).
+alter table moderation add column if not exists cible char(1) check (cible is null or cible in ('L', 'A'));
+alter table moderation add column if not exists annotation_cible char(1)
+  check (annotation_cible is null or annotation_cible in ('L', 'A'));
 
 alter table sources enable row level security;
 alter table comptes enable row level security;
@@ -188,7 +194,8 @@ with m as (
          case when m.p_autre is null then null
               when m.p_autre >= m.p_insultant and m.p_autre >= m.p_question then 'autre'
               when m.p_insultant >= m.p_question then 'insultant' else 'question' end as modele,
-         m.p_insultant, m.p_question, m.p_autre, m.version, m.annotation, m.classe_le
+         m.p_insultant, m.p_question, m.p_autre, m.version, m.annotation, m.classe_le,
+         coalesce(m.annotation_cible, m.cible, c.cible) as cible
   from public.moderation m
   left join public.commentaires c on c.source = m.source and c.code = m.code
 )
@@ -202,7 +209,8 @@ select s.nom || ':' || m.code as cle,
        case when p.lien is null then null
             when m.parent is null then p.lien || '?comment_id=' || m.code
             else p.lien || '?comment_id=' || m.parent || '&reply_comment_id=' || m.code end as lien,
-       m.publication as publication_id
+       m.publication as publication_id,
+       m.cible
 from m
 join public.sources s on s.id = m.source
 left join public.publications p on p.id = m.publication
@@ -290,7 +298,23 @@ drop policy if exists moderateurs on moderation;
 drop policy if exists moderateurs on utilisateurs;
 drop policy if exists moderateurs on moderation_suivi;
 drop policy if exists moderateurs on moderation_retires;
-create policy moderateurs on moderation for select to authenticated using ((select public.est_moderateur()));
+-- Le site de modération ne sert qu'aux groupes nommés ici : les commentaires des autres groupes restent dans la base
+-- (ils servent à entraîner le modèle) mais les modérateurs ne les voient pas, même en interrogeant l'API à la main.
+create or replace function public.moderation_publications()
+returns setof integer
+language sql stable
+as $$
+  select p.id from public.publications p join public.comptes k on k.id = p.compte
+  where k.source = (select id from public.sources where nom = 'facebook')
+    and k.nom in ('Soutien David Lisnard 2027')
+$$;
+revoke execute on function public.moderation_publications() from public, anon;
+grant execute on function public.moderation_publications() to authenticated;
+create policy moderateurs on moderation for select to authenticated using (
+  (select public.est_moderateur())
+  and coalesce(publication, (select c.publication from public.commentaires c
+                             where c.source = moderation.source and c.code = moderation.code))
+      in (select public.moderation_publications()));
 create policy moderateurs on utilisateurs for select to authenticated using ((select public.est_moderateur()));
 create policy moderateurs on moderation_retires for select to authenticated using ((select public.est_moderateur()));
 create policy moderateurs on moderation_suivi for all to authenticated
@@ -316,7 +340,8 @@ select m.code,
        coalesce(m.date, c.date) as date,
        coalesce(m.texte, c.texte) as texte,
        coalesce(u.nom, u.identifiant) as auteur, u.identifiant as auteur_id,
-       m.maj
+       m.maj,
+       coalesce(m.annotation_cible, m.cible, c.cible) as cible
 from public.moderation m
 left join public.commentaires c on c.source = m.source and c.code = m.code
 left join public.utilisateurs u on u.id = coalesce(m.utilisateur, c.utilisateur);
@@ -327,6 +352,7 @@ select p.id, p.titre, p.lien, p.date, k.nom as groupe, substring(p.lien from '/g
 from public.publications p
 join public.comptes k on k.id = p.compte
 where k.source = (select id from public.sources where nom = 'facebook')
+  and p.id in (select public.moderation_publications())
   and (select public.est_moderateur());
 
 revoke all on moderation_lignes, moderation_pubs from anon;

@@ -17,7 +17,23 @@ from commun.textes import empreinte
 from moderation import donnees as d
 
 ETAT = d.DOSSIER / "publie.json"
-MODELE = 2  # modèle normalisé de web/schema.sql (2026-11-13) ; un état d'un autre modèle fait tout renvoyer
+MODELE = 3  # 2 : modèle normalisé de web/schema.sql (2026-11-13) ; 3 : + cible (2026-11-14). Autre valeur : tout renvoyer
+
+
+def cibles() -> dict[str, str]:
+    """Cible retenue par l'analyse principale (L : parle de David Lisnard ou de Nouvelle Énergie, A : autre chose),
+    pour chaque commentaire Facebook : correction, sinon relecture de Claude, sinon modèle (analyse/stockage.py).
+    Un doublon (même auteur, même texte) prend celle du commentaire gardé."""
+    from analyse import stockage
+    from commun.fichiers import lire_csv
+    corpus = [l for l in lire_csv(stockage.CORPUS) if l["source"] == "facebook"]
+    notes = stockage.lire_notes(corpus)
+    sortie = {}
+    for l in corpus:
+        n = notes.get(l["cle"]) or notes.get(l.get("doublon_de") or "")
+        if n and n.get("cible") in ("L", "A"):
+            sortie[l["cle"]] = n["cible"]
+    return sortie
 
 
 def _sur_le_site() -> dict[str, str | None]:
@@ -35,7 +51,7 @@ def _sur_le_site() -> dict[str, str | None]:
 
 def lignes(num, sur_le_site: dict) -> list[dict]:
     """Une ligne par commentaire classé ou annoté, au format de la table moderation."""
-    notes, ann = d.lire_notes(), d.lire_annotations()
+    notes, ann, cib = d.lire_notes(), d.lire_annotations(), cibles()
     com = {c["cle"]: c for c in d.commentaires()}
     sortie = []
     for cle in sorted(set(notes) | set(ann)):
@@ -45,6 +61,8 @@ def lignes(num, sur_le_site: dict) -> list[dict]:
                  "p_insultant": f("p_insultant"), "p_question": f("p_question"), "p_autre": f("p_autre"),
                  "version": n["version"] if n else None, "annotation": a["categorie"] if a else None,
                  "classe_le": n["classe_le"] if n else None,
+                 "annotation_cible": (a.get("cible") or None) if a and a["categorie"] == "insultant" else None,
+                 "cible": None,
                  "publication": None, "utilisateur": None, "parent": None, "date": None, "texte": None}
         if c:
             parent = f"facebook:{c['parent_id']}" if c.get("parent_id") else None
@@ -58,7 +76,7 @@ def lignes(num, sur_le_site: dict) -> list[dict]:
                     if c.get("publication_id") and c.get("compte_source") else None,
                     "utilisateur": num.utilisateur("facebook", ident) if ident else None,
                     "parent": c.get("parent_id") or None, "date": (c.get("date") or "")[:19] or None,
-                    "texte": c.get("texte") or None})
+                    "texte": c.get("texte") or None, "cible": cib.get(cle)})
         sortie.append(ligne)
     return sortie
 

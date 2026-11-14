@@ -5,8 +5,12 @@
     python -m moderation classer --tout           reclasse tout avec le modèle en service
     python -m moderation tirer [N] [mode]         prépare un lot à annoter (250 par défaut) ; modes : hasard,
                                                   questions, insultes, doutes
-    python -m moderation noter K lecture.txt      enregistre la lecture du lot K (« I: 3, 17 » et « Q: 5, 9 »,
-                                                  le reste est « autre ») ; ajouter --test pour le jeu de test
+    python -m moderation noter K lecture.txt      enregistre la lecture du lot K (« L: 3 » insultes visant Lisnard
+                                                  ou Nouvelle Énergie, « I: 17 » autres insultes, « Q: 5, 9 »
+                                                  questions ; le reste est « autre ») ; --test pour le jeu de
+                                                  test ; --par gemini si c'est Gemini qui a lu (PROMPT_GEMINI.md)
+    python -m moderation relire K lecture.txt     relecture par Claude d'un lot lu par Gemini : remplace ses
+                                                  annotations et donne le taux d'accord
     python -m moderation entrainer                réentraîne (≈ 30 min), mesure, puis reclasse tout (≈ 30 min)
     python -m moderation publier [--tout]         envoie ce qui a changé dans la table privée « moderation » de
                                                   Supabase (aussi fait seul après classer, noter et entrainer)
@@ -15,7 +19,7 @@
     python -m moderation site deployer            met en ligne le site de modération (moderation/site/)
     python -m moderation site apercu              ouvre le site en local (http://localhost:8001)
 
-Les annotations sont faites par Claude, à la lecture, à la demande de l'utilisateur. Ce qui est annoté ne l'est
+Les annotations sont faites par Claude, ou par Gemini puis relues par Claude, à la demande de l'utilisateur. Ce qui est annoté ne l'est
 jamais deux fois. Le réentraînement se lance aussi depuis l'onglet « Modération » de l'interface.
 """
 import sys
@@ -54,7 +58,11 @@ def main(argv):
             modes = [a for a in args if not a.isdigit()]
             donnees.tirer(int(nombres[0]) if nombres else donnees.TAILLE_LOT, modes[0] if modes else "hasard")
         elif cmd == "noter":
-            donnees.noter(int(args[0]), args[1], test="--test" in args)
+            par = args[args.index("--par") + 1] if "--par" in args else ""
+            donnees.noter(int(args[0]), args[1], test="--test" in args, par=par)
+            modele.envoyer()  # l'annotation remplace la catégorie du modèle dans la table Supabase
+        elif cmd == "relire":
+            donnees.noter(int(args[0]), args[1], relire=True)
             modele.envoyer()  # l'annotation remplace la catégorie du modèle dans la table Supabase
         elif cmd == "publier":
             from moderation import publication

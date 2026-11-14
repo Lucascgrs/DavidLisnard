@@ -1,13 +1,17 @@
-// Site de modération : connexion, puis trois vues (commentaires, auteurs, publications).
+// Site de modération : connexion, puis quatre vues (commentaires, auteurs, publications, statistiques).
 // Les données sont gardées dans le navigateur (donnees.js) : filtres, tris et comptages se font ici, sans requête.
 // La base n'est interrogée que pour les nouveautés (au démarrage, puis de temps en temps si la page est ouverte)
 // et pour enregistrer une marque. Tout texte venu de Facebook est posé en textContent, jamais en HTML.
+// La base ne rend que les commentaires du groupe suivi par ce site (web/schema.sql, moderation_publications()).
 import { NonConnecte, connecte, connecter, deconnecter, suivre } from "./api.js";
 import { actualiser, charger, effacerCache, etat, noterSuivi } from "./donnees.js";
+import { RUBRIQUES, surligner, trouver } from "./surveillance.js";
+import { vueStats } from "./stats.js";
 
 const PAGE = 50;                    // cartes affichées à la fois (affichage seulement : tout est déjà là)
 const SUIVI_MIN = 3;                // marques des autres modérateurs : toutes les 3 min, page visible
 const TOUT_MIN = 15;                // nouveaux commentaires : toutes les 15 min, page visible (collecte : quelques fois par jour)
+const VUES = ["commentaires", "auteurs", "publications", "stats"];
 const $ = (id) => document.getElementById(id);
 const CATEGORIES = { insultant: "Insultant", question: "Question", autre: "Autre" };
 const SUIVIS = { traite: "Traité", sans_suite: "Sans suite" };
@@ -73,17 +77,19 @@ function preparer() {
     const pub = etat.pubs.get(l.publication) || null;
     const lien = facebook(pub?.lien)
       ? pub.lien + (l.parent ? `?comment_id=${l.parent}&reply_comment_id=${l.code}` : `?comment_id=${l.code}`) : null;
-    const c = { ...l, cle: `facebook:${l.code}`, categorie: l.categorie || "autre", pub, lien, t: enDate(l.date)?.getTime() ?? 0 };
+    const c = { ...l, cle: `facebook:${l.code}`, categorie: l.categorie || "autre", pub, lien, t: enDate(l.date)?.getTime() ?? 0,
+      mots: trouver(l.texte) };
     // Catégorie vérifiée à la lecture (annotation) : sûre à 100 %, pour l'affichage, les tris et le filtre de certitude.
     if (l.verifie) Object.assign(c, { pi: 0, pq: 0, pa: 0, [{ insultant: "pi", question: "pq", autre: "pa" }[c.categorie]]: 1 });
     commentaires.push(c);
     if (l.auteur_id) {
-      const a = auteurs.get(l.auteur_id) || { auteur_id: l.auteur_id, auteur: l.auteur, n: 0, insultants: 0, questions: 0, dernier: 0, groupes: {}, liste: [] };
+      const a = auteurs.get(l.auteur_id) || { auteur_id: l.auteur_id, auteur: l.auteur, n: 0, insultants: 0, questions: 0, mots: 0, dernier: 0, chemin: null, liste: [] };
       a.n++; a.liste.push(c);
       if (c.categorie === "insultant") a.insultants++;
       if (c.categorie === "question") a.questions++;
+      if (c.mots.length) a.mots++;
       if (c.t > a.dernier) a.dernier = c.t;
-      if (pub?.groupe) a.groupes[pub.groupe] = pub.chemin;
+      if (pub?.chemin) a.chemin = pub.chemin;
       auteurs.set(l.auteur_id, a);
     }
     if (pub) {
@@ -100,25 +106,20 @@ function preparer() {
 const aTraiter = (liste, cats) => liste.reduce((s, c) => s + (cats.includes(c.categorie) && suiviDe(c) === "a_traiter" ? 1 : 0), 0);
 
 // ── État des filtres (gardé dans l'adresse de la page, pour la partager) ─────────────────────────────────────
-const DEFAUT = { vue: "commentaires", categorie: "insultant", certitude: "", suivi: "a_traiter", periode: "", du: "", au: "",
-  groupes: [], texte: "", auteur: "", publication: "", auteur_id: "", auteur_nom: "", publication_id: "", publication_nom: "",
-  tri: "date" };
+const DEFAUT = { vue: "commentaires", categorie: "insultant", sujet: "", mots: "", rubrique: "", certitude: "", suivi: "a_traiter",
+  periode: "", du: "", au: "", texte: "", auteur: "", publication: "", auteur_id: "", auteur_nom: "", publication_id: "",
+  publication_nom: "", tri: "date", s_periode: "91", s_sujet: "" };
 let f = { ...DEFAUT };
 
 function lireAdresse() {
   const p = new URLSearchParams(location.hash.slice(1));
   f = { ...DEFAUT };
-  for (const k of Object.keys(DEFAUT)) {
-    if (!p.has(k)) continue;
-    f[k] = k === "groupes" ? p.getAll(k) : p.get(k);
-  }
+  for (const k of Object.keys(DEFAUT)) if (p.has(k)) f[k] = p.get(k);
+  if (!VUES.includes(f.vue)) f.vue = DEFAUT.vue;
 }
 function ecrireAdresse() {
   const p = new URLSearchParams();
-  for (const [k, v] of Object.entries(f)) {
-    if (k === "groupes") v.forEach((g) => p.append(k, g));
-    else if (v !== DEFAUT[k]) p.set(k, v);
-  }
+  for (const [k, v] of Object.entries(f)) if (v !== DEFAUT[k]) p.set(k, v);
   history.replaceState(null, "", "#" + p.toString());
 }
 
@@ -202,45 +203,32 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 
-// ── Compteurs du haut et liste des groupes ───────────────────────────────────────────────────────────────────
+// ── Compteurs du haut ────────────────────────────────────────────────────────────────────────────────────────
 function tuiles() {
-  const tuile = (classe, chiffre, libelle, regler) => el("button", {
+  const tuile = (classe, chiffre, libelle, regler, icone) => el("button", {
     type: "button", class: `tuile ${classe}`,
     onclick: () => { f = { ...DEFAUT, ...regler, vue: "commentaires" }; afficher(); },
-  }, el("span", { class: "chiffre" }, nombre(chiffre)), el("span", { class: "libelle" }, libelle));
+  }, el("span", { class: "icone", "aria-hidden": "true" }, icone), el("span", { class: "chiffre" }, nombre(chiffre)), el("span", { class: "libelle" }, libelle));
+  const vises = commentaires.filter((c) => c.categorie === "insultant" && c.cible === "L" && suiviDe(c) === "a_traiter").length;
+  const avecMots = commentaires.filter((c) => c.mots.length && suiviDe(c) === "a_traiter").length;
   $("tuiles").replaceChildren(
-    tuile("insultant", aTraiter(commentaires, ["insultant"]), "insultants à traiter", { categorie: "insultant" }),
-    tuile("question", aTraiter(commentaires, ["question"]), "questions à traiter", { categorie: "question" }),
-    tuile("ok", commentaires.filter((c) => suiviDe(c) === "traite").length, "marqués « traité »", { categorie: "", suivi: "traite" }),
-    tuile("", commentaires.length, "commentaires en tout", { categorie: "", suivi: "" }),
+    tuile("insultant", aTraiter(commentaires, ["insultant"]), "insultants à traiter", { categorie: "insultant" }, "!"),
+    tuile("lisnard", vises, "dont visant Lisnard / NE", { categorie: "insultant", sujet: "L" }, "◎"),
+    tuile("question", aTraiter(commentaires, ["question"]), "questions à traiter", { categorie: "question" }, "?"),
+    tuile("mots", avecMots, "mots surveillés à traiter", { categorie: "", mots: "oui" }, "⚑"),
+    tuile("ok", commentaires.filter((c) => suiviDe(c) === "traite").length, "marqués « traité »", { categorie: "", suivi: "traite" }, "✓"),
   );
-  const dernier = commentaires.reduce((m, c) => Math.max(m, c.t), 0);
-  $("aide-maj").textContent = dernier ? `Commentaire le plus récent : ${dateLongue(new Date(dernier).toISOString())}.` : "";
-}
-
-function listeGroupes() {
-  const parGroupe = new Map();
-  for (const c of commentaires) if (c.pub?.groupe) parGroupe.set(c.pub.groupe, (parGroupe.get(c.pub.groupe) || 0) + 1);
-  const groupes = [...parGroupe].sort((a, b) => b[1] - a[1]);
-  $("f-groupes").replaceChildren(...groupes.map(([g, n]) => el("label", {},
-    el("input", { type: "checkbox", value: g, checked: f.groupes.includes(g),
-      onchange: (ev) => { f.groupes = ev.target.checked ? [...f.groupes, g] : f.groupes.filter((x) => x !== g); afficher(); } }),
-    el("span", {}, g), el("span", { class: "n" }, nombre(n)))));
-  const choisi = $("p-groupe").value;
-  $("p-groupe").replaceChildren(el("option", { value: "" }, "Tous les groupes"), ...groupes.map(([g]) => el("option", { value: g }, g)));
-  $("p-groupe").value = choisi;
 }
 
 // ── Menu de l'auteur ─────────────────────────────────────────────────────────────────────────────────────────
-function menuAuteur(ancre, { nom, id, groupes }) {
+function menuAuteur(ancre, { nom, id, chemin }) {
   const m = $("menu");
   const lienMenu = (href, titre, detail) => href && el("a", { href, target: "_blank", rel: "noopener noreferrer", role: "menuitem" },
     titre, " ↗", detail && el("small", {}, detail));
   m.replaceChildren(
     el("div", { class: "entete-menu" }, nom || "Auteur inconnu"),
     lienMenu(profil(id), "Voir son profil Facebook"),
-    ...Object.entries(groupes || {}).filter(([, ch]) => ch).map(([g, ch]) =>
-      lienMenu(ficheGroupe(ch, id), `Sa fiche dans « ${raccourci(g, 34)} »`, "Administrateurs : « … » → Retirer du groupe, Bloquer, Mettre en sourdine")),
+    lienMenu(ficheGroupe(chemin, id), "Sa fiche dans le groupe", "Administrateurs : « … » → Retirer du groupe, Bloquer, Mettre en sourdine"),
     id && el("button", { type: "button", role: "menuitem", onclick: () => {
       fermerMenu();
       f = { ...DEFAUT, vue: "commentaires", categorie: "", suivi: "", auteur_id: id, auteur_nom: nom || id };
@@ -262,9 +250,9 @@ function fermerMenu() { $("menu").hidden = true; }
 document.addEventListener("click", (e) => { if (!e.target.closest("#menu, .auteur")) fermerMenu(); });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") fermerMenu(); });
 
-function boutonAuteur(nom, id, groupes) {
+function boutonAuteur(nom, id, chemin) {
   return el("button", { type: "button", class: "auteur", "aria-haspopup": "menu",
-    onclick: (ev) => { ev.stopPropagation(); menuAuteur(ev.currentTarget, { nom, id, groupes }); } }, nom || "Auteur inconnu");
+    onclick: (ev) => { ev.stopPropagation(); menuAuteur(ev.currentTarget, { nom, id, chemin }); } }, nom || "Auteur inconnu");
 }
 
 // Bouton « afficher la suite » commun aux trois vues : la liste est déjà calculée, on n'en montre qu'une partie.
@@ -284,17 +272,18 @@ function suite(zone, cible, liste, faire, libelle) {
 function filtrer() {
   const du = f.du ? Date.parse(f.du + "T00:00:00Z") : f.periode ? Date.now() - Number(f.periode) * 864e5 : null;
   const au = f.au ? Date.parse(f.au + "T00:00:00Z") + 864e5 : null;
-  const groupes = f.groupes.length ? new Set(f.groupes) : null;
   const mt = mots(f.texte), ma = mots(f.auteur), mp = mots(f.publication);
   const certitude = f.categorie && f.certitude ? Number(f.certitude) : null;
   const cleP = { insultant: "pi", question: "pq", autre: "pa" }[f.categorie];
   const liste = commentaires.filter((c) => {
     if (f.categorie && c.categorie !== f.categorie) return false;
+    if (f.sujet && c.cible !== f.sujet) return false;
+    if (f.mots && !c.mots.length) return false;
+    if (f.mots && f.rubrique && !c.mots.some((m) => m.rubrique === f.rubrique)) return false;
     if (certitude != null && !((c[cleP] ?? 0) >= certitude)) return false;
     if (f.suivi && suiviDe(c) !== f.suivi) return false;
     if (du != null && c.t < du) return false;
     if (au != null && c.t >= au) return false;
-    if (groupes && !groupes.has(c.pub?.groupe)) return false;
     if (f.auteur_id && c.auteur_id !== f.auteur_id) return false;
     if (f.publication_id && String(c.publication) !== f.publication_id) return false;
     if (mt.length && !contientTout(c.nt ??= normal(c.texte), mt)) return false;
@@ -317,20 +306,25 @@ function carteCommentaire(c) {
   const proba = c[{ insultant: "pi", question: "pq", autre: "pa" }[cat]];
   const badge = el("span", { class: `badge ${cat}`, title: c.verifie ? "Catégorie vérifiée à la lecture" : "Catégorie donnée par le modèle" },
     CATEGORIES[cat] || cat, proba != null ? ` · ${pourcent(proba)}` : "");
+  const sujet = c.cible === "L" && el("span", { class: "badge lisnard", title: cat === "insultant"
+    ? "L'insulte vise David Lisnard, Nouvelle Énergie ou leurs soutiens" : "Le commentaire parle de David Lisnard ou de Nouvelle Énergie" },
+  cat === "insultant" ? "vise Lisnard / NE" : "Lisnard / NE");
   const a = c.a;
   const recidive = a && a.insultants >= 2
     ? el("span", { class: "recidive", title: "Commentaires insultants de cet auteur, sur tous ses commentaires" }, `${a.insultants} insultants sur ${a.n}`)
     : a && a.n > 1 ? el("span", {}, `${a.n} commentaires`) : null;
-  const groupes = c.pub?.groupe ? { [c.pub.groupe]: c.pub.chemin } : {};
+  const motsTrouves = [...new Map(c.mots.map((m) => [m.mot, m])).values()];
 
   const infoSuivi = el("span", { class: "suivi-info" });
   const bTraite = el("button", { type: "button", class: "bouton" }, "✓ Traité");
   const bSans = el("button", { type: "button", class: "bouton" }, "Sans suite");
   const carte = el("article", { class: `carte commentaire ${cat}` },
-    el("div", { class: "tete" }, badge, boutonAuteur(c.auteur, c.auteur_id, groupes), recidive,
-      c.pub?.groupe && el("span", {}, c.pub.groupe), el("time", { datetime: c.date, title: dateLongue(c.date) }, quand(c.date)),
+    el("div", { class: "tete" }, badge, sujet, boutonAuteur(c.auteur, c.auteur_id, c.pub?.chemin), recidive,
+      el("time", { datetime: c.date, title: dateLongue(c.date) }, quand(c.date)),
       c.parent && el("span", {}, "réponse à un commentaire")),
-    el("p", { class: "texte" }, c.texte || ""),
+    el("p", { class: "texte" }, ...surligner(c.texte || "", c.mots)),
+    motsTrouves.length > 0 && el("div", { class: "mots-trouves" }, el("span", { class: "pale" }, "Mots surveillés :"),
+      motsTrouves.map((m) => el("span", { class: "mot", title: m.rubrique || "" }, m.mot, m.rubrique && el("small", {}, ` · ${m.rubrique}`)))),
     el("p", { class: "contexte" }, "Sous la publication : ",
       c.pub?.titre ? `« ${raccourci(c.pub.titre, 160)} »` : "(sans texte)", " ",
       c.pub && !f.publication_id && el("button", { type: "button", class: "lien", onclick: () => {
@@ -384,17 +378,18 @@ function puces() {
 }
 
 function majControles() {
-  for (const [id, cle] of [["f-categorie", "categorie"], ["f-suivi", "suivi"], ["f-periode", "periode"]]) {
+  for (const [id, cle] of [["f-categorie", "categorie"], ["f-sujet", "sujet"], ["f-mots", "mots"], ["f-suivi", "suivi"], ["f-periode", "periode"]]) {
     for (const b of $(id).querySelectorAll("button")) b.setAttribute("aria-pressed", b.dataset.v === f[cle] && !(cle === "periode" && f.du));
   }
   $("bloc-certitude").hidden = !f.categorie;
   $("f-certitude").value = f.certitude;
+  $("f-rubrique").hidden = !f.mots || RUBRIQUES.length < 2;
+  $("f-rubrique").value = f.rubrique;
   $("f-du").value = f.du; $("f-au").value = f.au;
   for (const [id, cle] of [["f-texte", "texte"], ["f-auteur", "auteur"], ["f-publication", "publication"]]) {
     if (document.activeElement !== $(id)) $(id).value = f[cle];
   }
   $("tri").value = f.tri;
-  for (const c of $("f-groupes").querySelectorAll("input")) c.checked = f.groupes.includes(c.value);
   puces();
 }
 
@@ -419,6 +414,7 @@ function vueAuteurs() {
   const tris = {
     a_traiter: (x, y) => y.a_traiter - x.a_traiter || y.insultants - x.insultants,
     insultants: (x, y) => y.insultants - x.insultants || y.n - x.n,
+    mots: (x, y) => y.mots - x.mots || y.insultants - x.insultants,
     questions: (x, y) => y.questions - x.questions || y.n - x.n,
     n: (x, y) => y.n - x.n,
     dernier: (x, y) => y.dernier - x.dernier,
@@ -428,19 +424,19 @@ function vueAuteurs() {
   const corps = $("a-lignes");
   corps.replaceChildren();
   suite($("a-suite"), corps, liste, (a) => el("tr", {},
-    el("td", {}, boutonAuteur(a.auteur, a.auteur_id, a.groupes)),
+    el("td", {}, boutonAuteur(a.auteur, a.auteur_id, a.chemin)),
     el("td", { class: `n ${a.insultants ? "fort" : ""}` }, nombre(a.insultants)),
     el("td", { class: "n" }, nombre(a.a_traiter)),
+    el("td", { class: `n ${a.mots ? "fort-mots" : ""}` }, nombre(a.mots)),
     el("td", { class: "n" }, nombre(a.questions)),
     el("td", { class: "n" }, nombre(a.n)),
-    el("td", { title: a.dernier ? new Date(a.dernier).toLocaleString("fr-FR") : "" }, quand(a.dernier)),
-    el("td", {}, Object.keys(a.groupes).join(" · "))), "Afficher les suivants");
+    el("td", { title: a.dernier ? new Date(a.dernier).toLocaleString("fr-FR") : "" }, quand(a.dernier))), "Afficher les suivants");
 }
 
 // ── Vue Publications ─────────────────────────────────────────────────────────────────────────────────────────
 function vuePublications() {
-  const mp = mots($("p-texte").value), groupe = $("p-groupe").value;
-  let liste = [...publications.values()].filter((p) => (!groupe || p.groupe === groupe) && (!mp.length || contientTout(p.nt ??= normal(p.titre), mp)));
+  const mp = mots($("p-texte").value);
+  let liste = [...publications.values()].filter((p) => !mp.length || contientTout(p.nt ??= normal(p.titre), mp));
   for (const p of liste) p.a_traiter = aTraiter(p.liste, ["insultant", "question"]);
   const tris = {
     a_traiter: (x, y) => y.a_traiter - x.a_traiter || y.insultants - x.insultants,
@@ -454,14 +450,14 @@ function vuePublications() {
   const zone = $("p-lignes");
   zone.replaceChildren();
   suite($("p-suite"), zone, liste, (p) => el("article", { class: "carte publication" },
-    el("div", { class: "tete" }, p.groupe && el("span", {}, p.groupe), p.date && el("time", { title: dateLongue(p.date) }, `publiée ${quand(p.date)}`),
+    el("div", { class: "tete" }, p.date && el("time", { title: dateLongue(p.date) }, `publiée ${quand(p.date)}`),
       el("span", {}, `dernier commentaire ${quand(p.dernier)}`)),
     el("p", { class: "titre-pub" }, p.titre ? raccourci(p.titre, 300) : el("span", { class: "pale" }, "(publication sans texte : photo, vidéo ou lien)")),
     el("div", { class: "chiffres" },
-      el("span", { class: p.insultants ? "fort" : "" }, `${nombre(p.insultants)} insultants`),
-      el("span", {}, `${nombre(p.questions)} questions`),
-      el("span", {}, `${nombre(p.a_traiter)} à traiter`),
-      el("span", {}, `${nombre(p.n)} commentaires`)),
+      el("span", { class: `pastille-chiffre insultant ${p.insultants ? "" : "zero"}` }, `${nombre(p.insultants)} insultants`),
+      el("span", { class: `pastille-chiffre question ${p.questions ? "" : "zero"}` }, `${nombre(p.questions)} questions`),
+      el("span", { class: "pastille-chiffre" }, `${nombre(p.a_traiter)} à traiter`),
+      el("span", { class: "pastille-chiffre" }, `${nombre(p.n)} commentaires`)),
     el("div", { class: "actions" },
       facebook(p.lien) && el("a", { class: "bouton", href: p.lien, target: "_blank", rel: "noopener noreferrer" }, "Ouvrir sur Facebook ↗"),
       el("button", { type: "button", class: "bouton", onclick: () => {
@@ -471,36 +467,48 @@ function vuePublications() {
       } }, "Voir ses commentaires"))), "Afficher les suivantes");
 }
 
+// ── Vue Statistiques ─────────────────────────────────────────────────────────────────────────────────────────
+function vueStatistiques() {
+  vueStats($("vue-stats"), {
+    commentaires, suivi: etat.suivi, reglages: { periode: f.s_periode, sujet: f.s_sujet },
+    changer: (cle, v) => { f[`s_${cle}`] = v; afficher({ garderPosition: true }); },
+  });
+}
+
 // ── Navigation ───────────────────────────────────────────────────────────────────────────────────────────────
 function afficher({ garderPosition = false } = {}) {
   const y = window.scrollY;
   fermerMenu();
   ecrireAdresse();
   tuiles();
-  listeGroupes();
+  $("tuiles").hidden = f.vue === "stats";
   for (const b of document.querySelectorAll(".onglets button")) {
     if (b.dataset.vue === f.vue) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
   }
-  for (const v of ["commentaires", "auteurs", "publications", "aide"]) $(`vue-${v}`).hidden = v !== f.vue;
+  for (const v of VUES) $(`vue-${v}`).hidden = v !== f.vue;
   if (f.vue === "commentaires") vueCommentaires();
   else if (f.vue === "auteurs") vueAuteurs();
   else if (f.vue === "publications") vuePublications();
+  else if (f.vue === "stats") vueStatistiques();
   if (garderPosition) window.scrollTo(0, y);
 }
 
 for (const b of document.querySelectorAll(".onglets button")) {
   b.addEventListener("click", () => { f.vue = b.dataset.vue; afficher(); window.scrollTo(0, 0); });
 }
-for (const [id, cle] of [["f-categorie", "categorie"], ["f-suivi", "suivi"], ["f-periode", "periode"]]) {
+for (const [id, cle] of [["f-categorie", "categorie"], ["f-sujet", "sujet"], ["f-mots", "mots"], ["f-suivi", "suivi"], ["f-periode", "periode"]]) {
   $(id).addEventListener("click", (e) => {
     const b = e.target.closest("button");
     if (!b) return;
     f[cle] = b.dataset.v;
     if (cle === "periode") { f.du = ""; f.au = ""; }
     if (cle === "categorie" && !f.categorie) f.certitude = "";
+    if (cle === "mots" && !f.mots) f.rubrique = "";
     afficher();
   });
 }
+$("f-rubrique").append(...RUBRIQUES.map((r) => el("option", { value: r }, r)));
+$("f-rubrique").addEventListener("change", (e) => { f.rubrique = e.target.value; afficher(); });
 $("f-certitude").addEventListener("change", (e) => { f.certitude = e.target.value; afficher(); });
 $("f-du").addEventListener("change", (e) => { f.du = e.target.value; f.periode = ""; afficher(); });
 $("f-au").addEventListener("change", (e) => { f.au = e.target.value; f.periode = ""; afficher(); });
@@ -512,7 +520,7 @@ $("reinitialiser").addEventListener("click", () => { f = { ...DEFAUT, categorie:
 $("a-nom").addEventListener("input", attendre(vueAuteurs));
 $("a-tri").addEventListener("change", vueAuteurs);
 $("p-texte").addEventListener("input", attendre(vuePublications));
-for (const id of ["p-groupe", "p-tri"]) $(id).addEventListener("change", vuePublications);
+$("p-tri").addEventListener("change", vuePublications);
 
 // ── Démarrage ────────────────────────────────────────────────────────────────────────────────────────────────
 async function demarrer() {

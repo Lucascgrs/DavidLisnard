@@ -4,6 +4,7 @@
     python -m cloudflare preparer     seulement les fichiers Parquet, dans donnees/cloudflare/lots/
     python -m cloudflare envoyer      seulement l'envoi des fichiers préparés qui diffèrent du bucket
     python -m cloudflare etat         par source : fichier, commentaires, déposé ou en attente
+    python -m cloudflare verification [--essai]   publie verification/ dans le bucket PUBLIC rag-politique-sources
 
 Clés : R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY et R2_ENDPOINT dans config/cloudflare.env. Relancé seul après chaque
 collecte qui ramène du neuf (collecte/__main__.py) et par le bouton « Export Cloudflare » de l'interface.
@@ -31,8 +32,13 @@ def main():
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     ap = argparse.ArgumentParser(prog="python -m cloudflare", description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("action", nargs="?", default="tout", choices=["tout", "preparer", "envoyer", "etat"])
+    ap.add_argument("action", nargs="?", default="tout", choices=["tout", "preparer", "envoyer", "etat", "verification"])
+    ap.add_argument("--essai", action="store_true", help="verification : n'envoie rien, affiche ce qui changerait")
     args = ap.parse_args()
+    if args.action == "verification":
+        from cloudflare import verification
+        verification.publier(print, essai=args.essai)
+        return
     if args.action == "etat":
         e = export.etat()
         for source, nom, n, depose in e["sources"]:

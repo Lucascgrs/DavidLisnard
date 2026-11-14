@@ -221,22 +221,35 @@ l'utilisateur le demande (« annote pour la modération », « réentraîne la m
 python -m moderation etat                       où on en est (classés, annotés, mesures du modèle)
 python -m moderation classer                    classe les commentaires Facebook pas encore classés (0,1 s chacun)
 python -m moderation tirer 250 questions        prépare un lot à annoter (modes : hasard, questions, insultes, doutes)
-python -m moderation noter K lecture.txt        enregistre la lecture du lot K
+python -m moderation noter K lecture.txt        enregistre la lecture du lot K (--par gemini si Gemini l'a lu)
+python -m moderation relire K lecture.txt       relecture par Claude d'un lot lu par Gemini (remplace, donne l'accord)
 python -m moderation entrainer                  réentraîne (≈ 30 min) puis reclasse tout (≈ 30 min)
 python -m moderation motdepasse                 change le mot de passe du site de modération (par l'utilisateur)
 python -m moderation site deployer              remet en ligne le site de modération après une modification des pages
 ```
 
-Le site de modération lit la base en direct : rien à faire à la mise à jour, la publication suffit.
+Le site de modération lit la base en direct : rien à faire à la mise à jour, la publication suffit. Il ne montre que
+le groupe « Soutien David Lisnard 2027 » (règle de la base, `moderation_publications()` dans `web/schema.sql`) ; les
+autres groupes restent classés et servent à l'entraînement. Les mots surveillés (`moderation/mots_surveilles.txt`,
+filtre du site, hors modèle) : après une modification de la liste, `python -m moderation site deployer`.
 
 - **Classer** : automatique à la fin de chaque collecte qui ramène du neuf sur Facebook ; à la main par le bouton
   « Classer les nouveaux » ou la commande (par exemple si la collecte a été lancée source par source sans Facebook,
   ou si l'envoi a échoué). Seuls les commentaires sans catégorie de la version en service sont traités ; ceux dont
   le texte est vide sont écartés, ceux dont la publication n'a pas de texte connu sont gardés.
-- **Annoter** : Claude lit le lot (`donnees/moderation/lots/lot_K.txt`) et écrit un fichier avec une ligne
-  `I: numéros` (insultants) et une ligne `Q: numéros` (questions) ; tout le reste du lot est « autre ». Les règles
-  sont celles de `moderation/__init__.py` : une critique dure sans injure n'est pas insultante ; une question
-  rhétorique n'est pas une question ; les commentaires positifs sont « autre ». Le mode `questions` est le plus
+- **Annoter** : le lot (`donnees/moderation/lots/lot_K.txt`) donne pour chaque commentaire la publication et, pour
+  une réponse, le commentaire parent (le contexte), puis le commentaire. La lecture tient en trois lignes :
+  `L: numéros` (insultants qui visent David Lisnard, Nouvelle Énergie ou leurs soutiens), `I: numéros` (autres
+  insultants), `Q: numéros` (questions) ; tout le reste du lot est « autre ». Les règles sont celles de
+  `moderation/__init__.py` et de `moderation/PROMPT_GEMINI.md` : une critique dure sans injure n'est pas insultante ;
+  une question rhétorique n'est pas une question ; les commentaires positifs sont « autre » ; en cas de doute sur la
+  cible d'une insulte, I.
+  - **Par Gemini** (choix de l'utilisateur, 2026-11-14) : l'utilisateur colle le prompt de
+    `moderation/PROMPT_GEMINI.md` dans Gemini (agent d'Antigravity, ouvert sur le projet), qui choisit les modes,
+    tire, lit et enregistre seul ses lots (`tirer`, puis `noter K gemini_K.txt --par gemini`). Claude relit
+    ensuite chaque lot de Gemini **en entier** (les lots à relire sont listés par `etat`) et enregistre sa lecture
+    par `relire K lecture.txt` ; le taux d'accord s'affiche, le noter dans `docs/HISTORIQUE.md`. Pas de
+    réentraînement tant qu'un lot de Gemini n'est pas relu. Le mode `questions` est le plus
   utile tant que le modèle trouve mal les questions. Un commentaire annoté ne l'est jamais deux fois ; plusieurs
   lots peuvent être tirés d'avance, ils ne se chevauchent pas (un lot tiré réserve ses commentaires). Le jeu de test
   (573 commentaires, `jeu=test`) ne change pas, pour que les versions restent comparables (`--test` seulement si
@@ -244,6 +257,10 @@ Le site de modération lit la base en direct : rien à faire à la mise à jour,
 - **Réentraîner** : sur demande, après des annotations (bouton « Réentraîner le modèle » ou commande). Jamais en
   même temps qu'une analyse ou un autre calcul lourd (étape 0). Ajouter une ligne à `docs/HISTORIQUE.md` avec la
   version (m2, m3…) et ses mesures, puis `python -m docs`.
+- **Cible** (« vise Lisnard / NE » sur le site) : celle de l'analyse principale (cible L/A, après corrections et
+  relectures), sauf pour un insultant annoté, dont la lecture (L ou I) l'emporte. Le modèle de modération ne la
+  prédit pas (seulement 16 insultes sur 443 visaient Lisnard ou Nouvelle Énergie le 2026-11-14). Après une
+  renotation complète de l'analyse, `python -m moderation publier` met les cibles à jour.
 - **Supabase** : chaque `classer`, `noter` et `entrainer` envoie ensuite ce qui a changé dans la table privée
   `moderation` (probabilités, version, annotation, et le commentaire : texte, auteur, date, publication, sauf s'il
   est déjà dans `commentaires` ; catégorie retenue, auteur et lien direct se lisent dans la vue

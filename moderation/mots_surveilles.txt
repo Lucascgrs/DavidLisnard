@@ -1,0 +1,186 @@
+# Mots surveillés du site de modération (filtre « Mots surveillés », surlignés dans les commentaires).
+#
+# Liste provisoire écrite par Claude le 2026-11-14, en attendant la liste officielle du gestionnaire du groupe :
+# la remplacer ou la compléter ici, puis « python -m moderation site deployer ». Elle ne sert pas au modèle : c'est
+# un simple filtre, appliqué dans le navigateur des modérateurs.
+#
+# Une ligne = un mot ou une expression de plusieurs mots. « * » à la fin : tous les mots qui commencent ainsi
+# (« connard* » prend aussi « connards », « connarde »). Les lignes [entre crochets] ouvrent une rubrique, affichée à
+# côté du mot trouvé. « # » : commentaire.
+# La comparaison ignore les majuscules, les accents, les lettres répétées (« connnnard ») et les chiffres ou signes
+# qui déguisent une lettre (« c0nnard », « s@lope », « enc*lé » n'est en revanche pas reconnu).
+
+[Insulte]
+con
+cons
+conne
+connes
+connard*
+connasse*
+connerie*
+couillon*
+abruti*
+debile*
+cretin*
+imbecile*
+idiot
+idiote
+idiots
+idiotes
+crevure*
+ordure*
+pourriture*
+pourri
+pourris
+raclure*
+salaud*
+salop*
+saloperie*
+merde*
+merdeu*
+enfoire*
+encule*
+batard*
+fdp
+fils de pute
+pute*
+putain
+petasse*
+pouffiasse*
+grognasse*
+trou du cul
+trou de cul
+tete de con
+gros porc
+sous merde
+dechet
+dechets
+dechet humain
+vermine
+cafard*
+blaireau*
+bouffon*
+guignol*
+clown
+tocard*
+nul a chier
+gogol*
+mongol*
+attarde*
+degenere*
+decerebre*
+cassos
+cas soc
+casos
+baltringue*
+minable*
+pauvre type
+pauvre con
+pauvre merde
+pauvre tache
+sac a merde
+lache cul
+leche cul
+leche-cul
+faux cul
+fion
+nique ta mere
+ntm
+ta gueule
+ferme ta gueule
+tg
+ta mere
+
+[Haine]
+bougnoul*
+bicot*
+negre*
+negro*
+youpin*
+feuj
+sale juif
+sale arabe
+sale noir
+sale race
+sales races
+race de
+macaque*
+singe
+pede
+pedes
+pedale*
+tapette*
+tarlouze*
+gouine*
+travelo*
+sous homme
+sous-homme
+untermensch*
+islamo-gauchiste*
+gauchiasse*
+droitard*
+fachos
+facho
+nazi
+nazis
+collabo*
+traitre*
+vendu
+vendus
+
+[Menace]
+creve
+crever
+je vais te
+on va te
+te buter
+le buter
+la buter
+les buter
+buter
+fusiller
+pendre
+pendu
+pendaison
+egorger
+decapiter
+balle dans la tete
+une balle
+tirer a vue
+a balles reelles
+coup de boule
+mettre une claque
+mettre une gifle
+casser la gueule
+peter la gueule
+defoncer
+eclater la tete
+cramer
+bruler vif
+guillotine*
+a mort
+mort aux
+on sait ou tu habites
+je sais ou tu habites
+
+[À surveiller]
+arnaque*
+escroc*
+escroquerie*
+mafieux
+mafia
+corrompu*
+voleur*
+menteur*
+mensonge*
+dictateur*
+dictature
+gourou
+secte
+bot
+bots
+faux compte
+fake
+desabonne*
+spam
+lien suspect

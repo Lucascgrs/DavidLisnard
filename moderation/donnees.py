@@ -1,8 +1,10 @@
 """Fichiers de la modération et lecture des commentaires Facebook.
 
 donnees/moderation/
-- annotations.csv : catégorie donnée par Claude à la lecture (cle, categorie, jeu, poids, annote_le, texte). Le jeu
+- annotations.csv : catégorie donnée à la lecture (cle, categorie, cible, jeu, poids, annote_le, par, texte). Le jeu
   « test » ne sert qu'à mesurer le modèle ; « poids » ramène ce test à la population (voir mesurer() dans modele.py) ;
+  « cible » (insultants seulement) : L si l'insulte vise David Lisnard, Nouvelle Énergie ou leurs soutiens, A sinon ;
+  « par » : qui a lu (vide = Claude ; « gemini » = lu par Gemini, pas encore relu ; « gemini+claude » = relu) ;
 - notes.csv : catégorie donnée par le modèle (cle, categorie, p_insultant, p_question, p_autre, version, classe_le) ;
 - lots/lot_N.json et lot_N.txt : lots tirés pour l'annotation ;
 - journal.log, avancement.json, EN_COURS (verrou de la tâche « moderation »).
@@ -26,8 +28,10 @@ MODELE = MODELES / "moderation"
 INFOS = MODELE / "infos.json"
 
 CATEGORIES = ["autre", "insultant", "question"]  # ordre des sorties du modèle
-LETTRES = {"I": "insultant", "Q": "question", "A": "autre"}
-CHAMPS_ANNOTATIONS = ["cle", "categorie", "jeu", "poids", "annote_le", "texte"]
+# Lettres des réponses de lecture : L = insultant visant Lisnard / Nouvelle Énergie, I = insultant visant autre chose,
+# Q = question ; tout le reste du lot est « autre ».
+LETTRES = {"L": ("insultant", "L"), "I": ("insultant", "A"), "Q": ("question", "")}
+CHAMPS_ANNOTATIONS = ["cle", "categorie", "cible", "jeu", "poids", "annote_le", "par", "texte"]
 CHAMPS_NOTES = ["cle", "categorie", "p_insultant", "p_question", "p_autre", "version", "classe_le"]
 TAILLE_LOT = 250
 
@@ -47,9 +51,11 @@ def commentaires() -> list[dict]:
             vus.add(cid)
             l["cle"] = f"facebook:{cid}"
             sortie.append(l)
+    textes = {l["commentaire_id"]: l["texte"] for l in sortie}
     for l in sortie:  # titre vide dans le CSV (ligne lue avant la publication) : texte de la publication
         if not (l.get("publication_titre") or "").strip():
             l["publication_titre"] = publications.get(l.get("publication_id"), "")
+        l["parent_texte"] = textes.get(l.get("parent_id") or "", "")
     return sortie
 
 
@@ -65,14 +71,17 @@ def infos_modele() -> dict | None:
     return lire_json(INFOS)
 
 
-def ajouter_annotations(nouvelles: list[dict]) -> int:
-    """Ajoute des annotations ; une clé déjà annotée ne l'est jamais une deuxième fois (elle est ignorée)."""
+def ajouter_annotations(nouvelles: list[dict], remplacer: bool = False) -> int:
+    """Ajoute des annotations ; une clé déjà annotée ne l'est jamais une deuxième fois (elle est ignorée), sauf
+    remplacer=True : relecture d'un lot lu par Gemini (le jeu et le poids d'origine sont gardés)."""
     a = lire_annotations()
     n = 0
     for l in nouvelles:
-        if l["cle"] in a:
+        if l["cle"] in a and not remplacer:
             continue
-        a[l["cle"]] = {"annote_le": maintenant(), "poids": "", "jeu": "entrainement", **l}
+        avant = a.get(l["cle"], {})
+        a[l["cle"]] = {"annote_le": maintenant(), "poids": avant.get("poids", ""),
+                       "jeu": avant.get("jeu", "entrainement"), **l}
         n += 1
     ecrire_csv(ANNOTATIONS, a.values(), CHAMPS_ANNOTATIONS)
     return n
@@ -88,6 +97,9 @@ def etat() -> dict:
             "insultants": sum(n["categorie"] == "insultant" for n in classes),
             "questions": sum(n["categorie"] == "question" for n in classes),
             "annotations": len(ann), "test": sum(a["jeu"] == "test" for a in ann.values()),
+            "a_relire": sorted(k for k, l in lots_lus().items() if l.get("par") == "gemini"),
+            "par": {p or "claude": sum((a.get("par") or "") == p for a in ann.values())
+                    for p in sorted({a.get("par") or "" for a in ann.values()})},
             "annotations_par_categorie": {c: sum(a["categorie"] == c for a in ann.values()) for c in CATEGORIES},
             "modele": i}
 
@@ -101,6 +113,10 @@ def afficher_etat() -> None:
     pc = e["annotations_par_categorie"]
     print(f"Annotés : {e['annotations']} dont {e['test']} gardés pour le test "
           f"(insultant {pc['insultant']}, question {pc['question']}, autre {pc['autre']})")
+    print("Lus par : " + ", ".join(f"{p} {n}" for p, n in e["par"].items()))
+    if e["a_relire"]:
+        print(f"Lots lus par Gemini à relire par Claude : {', '.join(map(str, e['a_relire']))}"
+              " (python -m moderation relire K lecture.txt)")
     if i:
         m = i["mesures"]
         print(f"Modèle {i['version']} entraîné le {i['le']} : accord {m['accord']:.0%} ; insultes {m['insultant']['justes']:.0%}"
@@ -143,38 +159,97 @@ def tirer(n: int = TAILLE_LOT, mode: str = "hasard") -> int:
     k = 1 + max([int(m.group(1)) for f in LOTS.glob("lot_*.json") if (m := re.match(r"lot_(\d+)", f.stem))] or [0])
     ecrire_json(LOTS / f"lot_{k}.json", {"mode": mode, "tire_le": maintenant(),
                                           "commentaires": {str(j): c["cle"] for j, c in enumerate(lot, 1)}})
-    lignes = [f"{j}|" + c["texte"].replace("\n", " / ")[:400] for j, c in enumerate(lot, 1)]
-    (LOTS / f"lot_{k}.txt").write_text("\n".join(lignes) + "\n", encoding="utf-8")
+    (LOTS / f"lot_{k}.txt").write_text(texte_du_lot(lot), encoding="utf-8")
     print(f"Lot {k} ({mode}, {len(lot)} commentaires) : {LOTS / f'lot_{k}.txt'}")
-    print("Réponse attendue dans un fichier texte : une ligne « I: numéros » (insultants) et une ligne « Q: numéros »"
-          " (questions), numéros séparés par des virgules ; tout le reste du lot est « autre ».")
+    print("Réponse attendue dans un fichier texte : une ligne « L: numéros » (insultes visant Lisnard / Nouvelle "
+          "Énergie), « I: numéros » (autres insultes) et « Q: numéros » (questions) ; le reste est « autre ». "
+          "Pour Gemini : moderation/PROMPT_GEMINI.md, puis « noter K fichier --par gemini ».")
     return k
 
 
-def noter(k: int, fichier: str, test: bool = False) -> None:
-    """Enregistre la lecture du lot k. `fichier` contient « I: 3, 17 » et « Q: 5, 9 » ; le reste du lot est
-    « autre ». Avec test=True, le lot rejoint le jeu de test (il ne servira qu'à mesurer)."""
-    lot = lire_json(LOTS / f"lot_{k}.json")
-    if not lot:
-        raise SystemExit(f"Lot {k} introuvable dans {LOTS}")
-    numeros = lot["commentaires"]
-    choix: dict[str, str] = {}
+def _court(t: str, n: int) -> str:
+    t = " ".join((t or "").split())
+    return t if len(t) <= n else t[:n - 1] + "…"
+
+
+def texte_du_lot(lot: list[dict]) -> str:
+    """Un bloc par commentaire : son numéro, la publication et, pour une réponse, le commentaire auquel il répond
+    (le contexte, pour savoir qui est visé), puis le commentaire lui-même, seul à classer."""
+    blocs = []
+    for j, c in enumerate(lot, 1):
+        b = [f"#{j}", f"Publication : {_court(c.get('publication_titre'), 200) or '(sans texte : photo, vidéo ou lien)'}"]
+        if c.get("parent_texte"):
+            b.append(f"En réponse à : {_court(c['parent_texte'], 250)}")
+        b.append(f"COMMENTAIRE : {_court(c['texte'], 600)}")
+        blocs.append("\n".join(b))
+    return "\n\n".join(blocs) + "\n"
+
+
+def lots_lus() -> dict[int, dict]:
+    """Les lots tirés, par numéro (le fichier json : mode, commentaires, et « par » une fois lus)."""
+    sortie = {}
+    for f in LOTS.glob("lot_*.json"):
+        if m := re.match(r"lot_(\d+)$", f.stem):
+            sortie[int(m.group(1))] = lire_json(f) or {}
+    return sortie
+
+
+def lire_reponse(fichier: str, numeros: dict) -> dict[str, tuple[str, str]]:
+    """Lit « L: 3, 17 », « I: 4 », « Q: 5, 9 » (une ligne par lettre ; tolère le gras Markdown, « #12 », les
+    espaces et les autres lignes de Gemini). Rend numéro → (catégorie, cible)."""
+    choix: dict[str, tuple[str, str]] = {}
     for ligne in open(fichier, encoding="utf-8-sig").read().splitlines():
-        m = re.match(r"\s*([IQ])\s*:\s*(.*)$", ligne)
+        m = re.match(r"\s*[*_`>-]*\s*([LIQ])\s*[*_`]*\s*:\s*[*_`]*(.*)$", ligne)
         if not m:
             continue
-        for x in re.split(r"[,\s]+", m.group(2).strip()):
+        reste = re.sub(r"[*_`#.]", " ", m.group(2)).strip()
+        if reste.lower() in ("", "aucun", "aucune", "rien", "néant", "none", "-"):
+            continue
+        for x in re.split(r"[,;\s]+", reste):
             if not x:
                 continue
             if x not in numeros:
-                raise SystemExit(f"Numéro {x} absent du lot {k}")
+                raise SystemExit(f"Numéro {x!r} absent du lot (ligne « {ligne.strip()} »)")
             if x in choix and choix[x] != LETTRES[m.group(1)]:
                 raise SystemExit(f"Numéro {x} donné à deux catégories")
             choix[x] = LETTRES[m.group(1)]
+    return choix
+
+
+def noter(k: int, fichier: str, test: bool = False, par: str = "", relire: bool = False) -> None:
+    """Enregistre la lecture du lot k. `fichier` contient « L: … », « I: … » et « Q: … » ; le reste du lot est
+    « autre ». Avec test=True, le lot rejoint le jeu de test (il ne servira qu'à mesurer). par="gemini" : lu par
+    Gemini, à relire. relire=True : relecture par Claude d'un lot lu par Gemini ; remplace ses annotations et dit
+    combien Gemini en avait jugé autrement."""
+    f_lot = LOTS / f"lot_{k}.json"
+    lot = lire_json(f_lot)
+    if not lot:
+        raise SystemExit(f"Lot {k} introuvable dans {LOTS}")
+    if relire and lot.get("par") != "gemini":
+        raise SystemExit(f"Le lot {k} n'a pas été lu par Gemini (par : {lot.get('par') or 'Claude'}).")
+    if not relire and lot.get("lu_le"):
+        raise SystemExit(f"Le lot {k} est déjà noté (le {lot['lu_le']}) ; une relecture passe par « relire ».")
+    numeros = lot["commentaires"]
+    choix = lire_reponse(fichier, numeros)
     textes = {c["cle"]: c["texte"] for c in commentaires()}
-    nouvelles = [{"cle": cle, "categorie": choix.get(j, "autre"), "jeu": "test" if test else "entrainement",
-                  "texte": textes.get(cle, "")} for j, cle in numeros.items()]
-    n = ajouter_annotations(nouvelles)
-    par = {c: sum(x["categorie"] == c for x in nouvelles) for c in CATEGORIES}
-    print(f"Lot {k} : {n} annotations enregistrées ({par['insultant']} insultants, {par['question']} questions, "
-          f"{par['autre']} autres){' — jeu de test' if test else ''}.")
+    avant = lire_annotations()
+    qui = "gemini+claude" if relire else par
+    nouvelles = []
+    for j, cle in numeros.items():
+        cat, cible = choix.get(j, ("autre", ""))
+        jeu = avant.get(cle, {}).get("jeu", "entrainement") if relire else ("test" if test else "entrainement")
+        nouvelles.append({"cle": cle, "categorie": cat, "cible": cible, "jeu": jeu, "par": qui,
+                          "texte": textes.get(cle, "")})
+    ecarts = [x for x in nouvelles if (a := avant.get(x["cle"])) and (a["categorie"], a.get("cible", "")) !=
+              (x["categorie"], x["cible"])]
+    n = ajouter_annotations(nouvelles, remplacer=relire)
+    ecrire_json(f_lot, {**lot, "par": qui, "lu_le": maintenant()})
+    nb = {c: sum(x["categorie"] == c for x in nouvelles) for c in CATEGORIES}
+    vises = sum(x["cible"] == "L" for x in nouvelles)
+    print(f"Lot {k} : {n} annotations enregistrées ({nb['insultant']} insultants dont {vises} visant Lisnard / "
+          f"Nouvelle Énergie, {nb['question']} questions, {nb['autre']} autres){' — jeu de test' if test else ''}"
+          f"{' — lu par ' + qui if qui else ''}.")
+    if relire:
+        print(f"Relecture : {len(ecarts)} corrections sur {len(nouvelles)} "
+              f"({1 - len(ecarts) / max(len(nouvelles), 1):.0%} d'accord avec Gemini).")
+
