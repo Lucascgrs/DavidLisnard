@@ -54,16 +54,6 @@
         "groupe": "soutien"
       },
       {
-        "nom": "Soutien David Lisnard 2027",
-        "id": "842316026535041",
-        "groupe": "soutien"
-      },
-      {
-        "nom": "Soutien à David Lisnard",
-        "id": "802159377468775",
-        "groupe": "soutien"
-      },
-      {
         "nom": "Soutien Lisnard Lot, Cantal et Aveyron",
         "id": "2526290980742790",
         "groupe": "soutien"
@@ -111,18 +101,6 @@
         "id": "1401879880426561543",
         "nom": "Nouvelle Énergie",
         "groupe": "officiel"
-      },
-      {
-        "pseudo": "AvecLisnard",
-        "id": "630943126",
-        "nom": "Avec David Lisnard",
-        "groupe": "soutien"
-      },
-      {
-        "pseudo": "DavidLPresident",
-        "id": "1043764939633111040",
-        "nom": "Lisnard Président",
-        "groupe": "soutien"
       }
     ],
     "recherche": true,

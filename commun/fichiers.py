@@ -6,6 +6,7 @@ jamais le bon.
 """
 import csv
 import json
+import time
 from pathlib import Path
 
 csv.field_size_limit(10**8)  # certains commentaires et légendes dépassent la limite par défaut (128 ko)
@@ -23,7 +24,21 @@ def ecrire_json(chemin: Path, contenu, indent: int = 1) -> None:
     chemin.parent.mkdir(parents=True, exist_ok=True)
     tmp = chemin.with_suffix(chemin.suffix + ".tmp")
     tmp.write_text(json.dumps(contenu, ensure_ascii=False, indent=indent), encoding="utf-8")
-    tmp.replace(chemin)
+    remplacer(tmp, chemin)
+
+
+def remplacer(tmp: Path, chemin: Path, essais: int = 40, pause: float = 0.5) -> None:
+    """tmp.replace(chemin), en réessayant : sous Windows, le remplacement est refusé (WinError 5/32) tant qu'un autre
+    programme (interface, antivirus, indexation, autre collecte) a le fichier ouvert, ce qui ne dure que quelques
+    instants. Sans cela, une collecte entière s'arrêtait sur cette erreur passagère."""
+    for k in range(essais):
+        try:
+            Path(tmp).replace(chemin)
+            return
+        except PermissionError:
+            if k == essais - 1:
+                raise
+            time.sleep(pause)
 
 
 def lire_csv(chemin: Path) -> list[dict]:
@@ -48,7 +63,7 @@ def ecrire_csv(chemin: Path, lignes, champs: list[str]) -> None:
         w = csv.DictWriter(h, champs, delimiter=";", extrasaction="ignore")
         w.writeheader()
         w.writerows(lignes)
-    tmp.replace(chemin)
+    remplacer(tmp, chemin)
 
 
 def compter_lignes_csv(chemin: Path) -> int:
