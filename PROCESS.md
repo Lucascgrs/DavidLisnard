@@ -225,6 +225,7 @@ python -m moderation noter K lecture.txt        enregistre la lecture du lot K (
 python -m moderation relire K lecture.txt       relecture par Claude d'un lot lu par Gemini (remplace, donne l'accord)
 python -m moderation entrainer                  réentraîne (≈ 30 min) puis reclasse tout (≈ 30 min)
 python -m moderation motdepasse                 change le mot de passe du site de modération (par l'utilisateur)
+python -m web motdepasse                        change le mot de passe du site d'analyse (par l'utilisateur)
 python -m moderation site deployer              remet en ligne le site de modération après une modification des pages
 ```
 

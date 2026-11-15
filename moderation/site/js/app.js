@@ -1,16 +1,16 @@
 // Site de modération : connexion, puis quatre vues (commentaires, auteurs, publications, statistiques).
 // Les données sont gardées dans le navigateur (donnees.js) : filtres, tris et comptages se font ici, sans requête.
-// La base n'est interrogée que pour les nouveautés (au démarrage, puis de temps en temps si la page est ouverte)
-// et pour enregistrer une marque. Tout texte venu de Facebook est posé en textContent, jamais en HTML.
+// La base n'est interrogée que pour les nouveautés (au démarrage et au bouton « Actualiser »), pour les marques des
+// autres modérateurs (toutes les 10 s, page visible) et pour enregistrer une marque. Tout texte venu de Facebook est posé en textContent, jamais en HTML.
 // La base ne rend que les commentaires du groupe suivi par ce site (web/schema.sql, moderation_publications()).
 import { NonConnecte, connecte, connecter, deconnecter, suivre } from "./api.js";
-import { actualiser, charger, effacerCache, etat, noterSuivi } from "./donnees.js";
+import { actualiser, charger, effacerCache, etat, marquesRecentes, noterSuivi } from "./donnees.js";
 import { RUBRIQUES, surligner, trouver } from "./surveillance.js";
 import { vueStats } from "./stats.js";
 
 const PAGE = 50;                    // cartes affichées à la fois (affichage seulement : tout est déjà là)
-const SUIVI_MIN = 3;                // marques des autres modérateurs : toutes les 3 min, page visible
-const TOUT_MIN = 15;                // nouveaux commentaires : toutes les 15 min, page visible (collecte : quelques fois par jour)
+const SUIVI_S = 10;                 // marques des autres modérateurs : toutes les 10 s, page visible
+// Nouveaux commentaires : à l'ouverture et au bouton « Actualiser » seulement (collecte : quelques fois par jour).
 const VUES = ["commentaires", "auteurs", "publications", "stats"];
 const $ = (id) => document.getElementById(id);
 const CATEGORIES = { insultant: "Insultant", question: "Question", autre: "Autre" };
@@ -166,18 +166,16 @@ function echec(e) {
 }
 
 // ── Actualisation ────────────────────────────────────────────────────────────────────────────────────────────
-let derniereComplete = 0, enCours = false;
-async function synchroniser({ seulementSuivi = false } = {}) {
+let enCours = false, marquesEnCours = false;
+async function synchroniser() {
   if (enCours) return;
   enCours = true;
   $("actualiser").disabled = true;
   const premiere = !etat.complet;
   try {
     const change = await actualiser({
-      seulementSuivi,
       avancement: premiere ? (n) => { $("etat-donnees").textContent = `Premier chargement : ${nombre(n)} commentaires…`; } : null,
     });
-    if (!seulementSuivi) derniereComplete = Date.now();
     if (change || premiere) { preparer(); afficher({ garderPosition: !premiere }); }
   } catch (e) {
     echec(e);
@@ -191,17 +189,27 @@ function majEtatDonnees() {
   $("etat-donnees").textContent = etat.synchro ? `À jour ${quand(etat.synchro)}` : "";
 }
 $("actualiser").addEventListener("click", () => synchroniser());
-setInterval(() => {
-  majEtatDonnees();
-  if (document.hidden || !connecte() || $("ecran-site").hidden) return;
-  if (Date.now() - derniereComplete > TOUT_MIN * 60000) synchroniser();
-  else if (Date.now() - etat.synchro > SUIVI_MIN * 60000) synchroniser({ seulementSuivi: true });
-}, 30_000);
-document.addEventListener("visibilitychange", () => {
-  if (!document.hidden && connecte() && !$("ecran-site").hidden && Date.now() - etat.synchro > SUIVI_MIN * 60000) {
-    synchroniser({ seulementSuivi: Date.now() - derniereComplete < TOUT_MIN * 60000 });
+
+// Marques des autres modérateurs : les cartes affichées changent sur place (couleur, « Traité par … ») sans être
+// retirées de la liste, pour que rien ne saute sous les yeux de celui qui lit ; la liste se refiltre au prochain
+// changement de filtre ou d'onglet. Les compteurs du haut, eux, sont recalculés tout de suite.
+async function suivreLesAutres() {
+  if (marquesEnCours || enCours || !etat.complet || document.hidden || !connecte() || $("ecran-site").hidden) return;
+  marquesEnCours = true;
+  try {
+    const codes = new Set(await marquesRecentes());
+    if (!codes.size) return;
+    for (const carte of document.querySelectorAll("article.commentaire")) if (codes.has(carte.dataset.code)) carte.poser?.();
+    tuiles();
+    if (f.vue === "stats") vueStatistiques();
+  } catch (e) {
+    if (e instanceof NonConnecte) echec(e); else console.warn(e);  // réseau coupé : on réessaiera dans 10 s
+  } finally {
+    marquesEnCours = false;
   }
-});
+}
+setInterval(() => { majEtatDonnees(); suivreLesAutres(); }, SUIVI_S * 1000);
+document.addEventListener("visibilitychange", () => suivreLesAutres());
 
 // ── Compteurs du haut ────────────────────────────────────────────────────────────────────────────────────────
 function tuiles() {
@@ -209,11 +217,9 @@ function tuiles() {
     type: "button", class: `tuile ${classe}`,
     onclick: () => { f = { ...DEFAUT, ...regler, vue: "commentaires" }; afficher(); },
   }, el("span", { class: "icone", "aria-hidden": "true" }, icone), el("span", { class: "chiffre" }, nombre(chiffre)), el("span", { class: "libelle" }, libelle));
-  const vises = commentaires.filter((c) => c.categorie === "insultant" && c.cible === "L" && suiviDe(c) === "a_traiter").length;
   const avecMots = commentaires.filter((c) => c.mots.length && suiviDe(c) === "a_traiter").length;
   $("tuiles").replaceChildren(
     tuile("insultant", aTraiter(commentaires, ["insultant"]), "insultants à traiter", { categorie: "insultant" }, "!"),
-    tuile("lisnard", vises, "dont visant Lisnard / NE", { categorie: "insultant", sujet: "L" }, "◎"),
     tuile("question", aTraiter(commentaires, ["question"]), "questions à traiter", { categorie: "question" }, "?"),
     tuile("mots", avecMots, "mots surveillés à traiter", { categorie: "", mots: "oui" }, "⚑"),
     tuile("ok", commentaires.filter((c) => suiviDe(c) === "traite").length, "marqués « traité »", { categorie: "", suivi: "traite" }, "✓"),
@@ -318,7 +324,7 @@ function carteCommentaire(c) {
   const infoSuivi = el("span", { class: "suivi-info" });
   const bTraite = el("button", { type: "button", class: "bouton" }, "✓ Traité");
   const bSans = el("button", { type: "button", class: "bouton" }, "Sans suite");
-  const carte = el("article", { class: `carte commentaire ${cat}` },
+  const carte = el("article", { class: `carte commentaire ${cat}`, "data-code": c.code },
     el("div", { class: "tete" }, badge, sujet, boutonAuteur(c.auteur, c.auteur_id, c.pub?.chemin), recidive,
       el("time", { datetime: c.date, title: dateLongue(c.date) }, quand(c.date)),
       c.parent && el("span", {}, "réponse à un commentaire")),
@@ -365,6 +371,7 @@ function carteCommentaire(c) {
   };
   bTraite.addEventListener("click", () => marquer("traite"));
   bSans.addEventListener("click", () => marquer("sans_suite"));
+  carte.poser = poser;  // appelé quand un autre modérateur marque ce commentaire (suivreLesAutres)
   poser();
   return carte;
 }

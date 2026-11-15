@@ -1,4 +1,4 @@
-// L'état des filtres, partagé par les pages Statistiques et Commentaires : lu et écrit dans l'adresse (liens
+// L'état des filtres, de la page Commentaires (la page Statistiques a été retirée le 2026-11-14) : lu et écrit dans l'adresse (liens
 // partageables, « voir ces commentaires » d'une page à l'autre), et traduit en filtre pour la base.
 import { CRITERES } from "./commun.js";
 

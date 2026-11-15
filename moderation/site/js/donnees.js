@@ -1,7 +1,9 @@
 // Les données du site, gardées dans le navigateur (IndexedDB) pour ménager la base gratuite :
 // - premier passage : tout est téléchargé une fois (quelques pages de 1 000 commentaires) ;
-// - ensuite : seules les lignes écrites depuis la dernière fois (colonne maj), les retraits et les marques de suivi
-//   sont redemandés ; quand rien n'a changé, chaque requête rend une liste vide en moins d'une milliseconde.
+// - ensuite, à l'ouverture du site et au bouton « Actualiser » : seules les lignes écrites depuis la dernière fois
+//   (colonne maj), les retraits et les marques de suivi sont redemandés ;
+// - toutes les quelques secondes, page visible : les marques de suivi seulement (marquesRecentes), pour que chacun
+//   voie aussitôt ce que font les autres. Quand rien n'a changé, la requête rend une liste vide en moins d'une ms.
 // Filtres, tris et comptages se font ici, sur l'ordinateur du modérateur. Tout est effacé à la déconnexion.
 import { rest } from "./api.js";
 
@@ -86,7 +88,7 @@ async function suiviDepuis(le) {
     (l) => l.le);
   for (const s of ls) etat.suivi.set(s.code, { etat: s.etat, par: s.par, le: s.le });
   if (ls.length) etat.curseurs.suivi = ls[ls.length - 1].le;
-  return ls.length;
+  return ls;
 }
 
 async function retiresDepuis(le) {
@@ -142,24 +144,30 @@ export async function charger() {
   return true;
 }
 
-/** Met à jour depuis la base. seulementSuivi : juste les marques des autres modérateurs (le plus fréquent).
+/** Met à jour les commentaires depuis la base (ouverture du site et bouton « Actualiser » seulement).
  *  Rend vrai si quelque chose a changé. */
-export async function actualiser({ seulementSuivi = false, avancement } = {}) {
+export async function actualiser({ avancement } = {}) {
   let change = 0;
   if (!etat.complet || Date.now() - etat.complet > RECHARGER_JOURS * 864e5) {
     await toutTelecharger(avancement);
     change = 1;
-  } else if (seulementSuivi) {
-    change += await suiviDepuis(etat.curseurs.suivi);
   } else {
     change += await pubsDepuis(etat.curseurs.pub);
     change += await lignesDepuis(etat.curseurs.maj, etat.curseurs.code);
     change += await retiresDepuis(etat.curseurs.retires);
-    change += await suiviDepuis(etat.curseurs.suivi);
+    change += (await suiviDepuis(etat.curseurs.suivi)).length;
   }
   etat.synchro = Date.now();
   if (change) sauver();
   return change > 0;
+}
+
+/** Les marques posées depuis la dernière demande (par les autres modérateurs surtout) : demandé toutes les
+ *  quelques secondes, page visible. Une requête par index, vide presque toujours. Rend les codes changés. */
+export async function marquesRecentes() {
+  const ls = await suiviDepuis(etat.curseurs.suivi);
+  if (ls.length) sauver();
+  return ls.map((s) => s.code);
 }
 
 /** Une marque posée ici : gardée tout de suite, sans attendre la prochaine actualisation. */

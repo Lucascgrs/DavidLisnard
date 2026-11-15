@@ -4,8 +4,8 @@
   même source : analyse/corpus.py) ;
 - les publications (vidéos, posts) auxquelles ils répondent, pour le lien vers l'original ;
 - « meta » : chiffres du projet, comptes suivis, qualité du modèle (page Le projet, listes de filtres) ;
-- « cube » : les comptages par semaine × compte × type × cible × exploitable, d'où la page Statistiques recalcule
-  tout instantanément, quels que soient les filtres. Chaque comptage existe deux fois : une voix par commentaire,
+- « cube » : les comptages par semaine × compte × type × cible × exploitable, d'où les pages Le projet et Commentaires
+  recalculent leurs chiffres dans le navigateur. Chaque comptage existe deux fois : une voix par commentaire,
   et pondéré par les « j'aime » (colonnes « p_… » : un commentaire pèse 1 + ses « j'aime », lui-même et ceux qui
   l'approuvent) ;
 - « themes » : ce que disent les commentaires argumentés sur lui, rangés par thème et par sens (python -m

@@ -1,6 +1,7 @@
 -- Base Supabase du site. Rejouable sans risque : « python -m web installer » l'exécute à chaque fois.
--- Le public (rôle anon) ne peut que lire ; seuls « python -m web publier » et « python -m moderation publier »
--- écrivent, avec la clé secrète.
+-- Rien n'est lisible sans connexion (rôle anon) : le site public se lit avec le mot de passe défini par
+-- « python -m web motdepasse » (compte partagé de rôle « lecteur »), et ne peut que lire ; seuls
+-- « python -m web publier » et « python -m moderation publier » écrivent, avec la clé secrète.
 --
 -- Modèle normalisé (2026-11-13) : chaque donnée n'est écrite qu'une fois, les tables se rejoignent par des clés
 -- entières.
@@ -120,7 +121,7 @@ create index if not exists commentaires_parent on commentaires (source, parent) 
 create index if not exists commentaires_recherche on commentaires
   using gin (to_tsvector('public.fr'::regconfig, texte));
 
--- Données calculées en bloc : « meta » (chiffres du projet), « cube » (page Statistiques), « themes ».
+-- Données calculées en bloc : « meta » (chiffres du projet), « cube » (comptages par semaine), « themes ».
 create table if not exists syntheses (
   nom     text primary key,
   donnees jsonb not null,
@@ -169,16 +170,37 @@ drop policy if exists lecture on comptes;
 drop policy if exists lecture on publications;
 drop policy if exists lecture on commentaires;
 drop policy if exists lecture on syntheses;
-create policy lecture on sources for select to anon, authenticated using (true);
-create policy lecture on comptes for select to anon, authenticated using (true);
-create policy lecture on publications for select to anon, authenticated using (true);
-create policy lecture on commentaires for select to anon, authenticated using (true);
-create policy lecture on syntheses for select to anon, authenticated using (true);
+
+-- Accès par mot de passe (2026-11-14) : on se connecte par Supabase Auth au compte partagé des lecteurs
+-- (« python -m web motdepasse », adresse fixe, rôle app_metadata.role = « lecteur » que seule la clé secrète peut
+-- écrire ; inscriptions fermées). Le compte des modérateurs lit aussi ces tables (ses vues les rejoignent). Le compte
+-- doit encore exister : changer le mot de passe (compte recréé) coupe aussitôt les sessions ouvertes.
+create or replace function public.peut_lire()
+returns boolean
+language sql stable security definer
+set search_path = ''
+as $$
+  select coalesce(auth.jwt() -> 'app_metadata' ->> 'role', '') in ('lecteur', 'moderateur')
+     and exists (select 1 from auth.users u where u.id = auth.uid())
+$$;
+revoke execute on function public.peut_lire() from public, anon;
+grant execute on function public.peut_lire() to authenticated;
+create policy lecture on sources for select to authenticated using ((select public.peut_lire()));
+create policy lecture on comptes for select to authenticated using ((select public.peut_lire()));
+create policy lecture on publications for select to authenticated using ((select public.peut_lire()));
+-- commentaires : la règle ne vérifie que la connexion (seuls les deux comptes partagés existent, inscriptions et
+-- connexions anonymes fermées) ; le compte est vérifié par selection() et commentaire(), par où passe le site. Une
+-- règle qui appelle peut_lire() interdirait à PostgreSQL d'utiliser l'index de la recherche plein texte (l'opérateur
+-- @@ n'est pas « leakproof ») : 6 s au lieu de 0,1 s, mesuré le 2026-11-14.
+create policy lecture on commentaires for select to authenticated using (true);
+create policy lecture on syntheses for select to authenticated using ((select public.peut_lire()));
+revoke all on sources, comptes, publications, commentaires, syntheses from anon;
 revoke insert, update, delete, truncate on sources, comptes, publications, commentaires, syntheses
-  from anon, authenticated;
-grant select on sources, comptes, publications, commentaires, syntheses to anon, authenticated;
+  from authenticated;
+grant select on sources, comptes, publications, commentaires, syntheses to authenticated;
 revoke all on utilisateurs, moderation from anon, authenticated;
 alter role anon set statement_timeout = '8s';  -- 3 s par défaut : trop court quand la base sort de veille
+alter role authenticated set statement_timeout = '8s';  -- le site public se lit maintenant sous ce rôle
 
 -- Tout ce qu'il faut à un administrateur, en une ligne : catégorie, texte, auteur, publication et lien direct vers
 -- le commentaire (lien de la publication + comment_id, et reply_comment_id pour une réponse). security_invoker :
@@ -395,7 +417,8 @@ returns setof commentaires
 language sql stable
 as $$
   select c.* from public.commentaires c
-  where ($1->>'du' is null or c.semaine >= ($1->>'du')::date)
+  where (select public.peut_lire())
+    and ($1->>'du' is null or c.semaine >= ($1->>'du')::date)
     and ($1->>'au' is null or c.semaine <= ($1->>'au')::date)
     and ($1->'sources' is null or c.source in (select s.id from public.sources s where $1->'sources' ? s.nom))
     and (($1->'groupes' is null and $1->'comptes' is null)
@@ -421,7 +444,8 @@ returns setof commentaires
 language sql stable
 as $$
   select c.* from public.commentaires c
-  where c.source = (select s.id from public.sources s where s.nom = split_part(cle, ':', 1))
+  where (select public.peut_lire())
+    and c.source = (select s.id from public.sources s where s.nom = split_part(cle, ':', 1))
     and c.code = substr(cle, strpos(cle, ':') + 1)
 $$;
 
@@ -455,7 +479,8 @@ as $$
                      from public.utilisateurs))
 $$;
 
-grant execute on function selection(jsonb), evolution(jsonb), commentaire(text) to anon, authenticated;
+revoke execute on function selection(jsonb), evolution(jsonb), commentaire(text) from public, anon;
+grant execute on function selection(jsonb), evolution(jsonb), commentaire(text) to authenticated;
 revoke execute on function correspondances() from public, anon, authenticated;
 grant execute on function correspondances() to service_role;
 

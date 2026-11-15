@@ -123,7 +123,7 @@ DavidLisnard/
 │   ├── supabase.py, vercel.py       les deux services (API, sans Node)
 │   ├── acces.py                     jetons et clés (config/web.json, privé)
 │   ├── schema.sql                   tables, recherche en français, filtres, droits de lecture
-│   └── site/                        les pages : index (le projet), statistiques, commentaires, thèmes ; css/, js/
+│   └── site/                        les pages : index (le projet), commentaires, thèmes ; css/, js/
 ├── suivi/                          « python -m suivi » : fenêtre de suivi d'un affinage en cours (sonde injectée)
 ├── cloudflare/                      « python -m cloudflare » : export vers le bucket R2 du groupe (voir « Cloudflare R2 »)
 │   └── export.py                    un Parquet par source, envoi vérifié, ancien fichier supprimé
@@ -208,6 +208,7 @@ python -m web tout                          installer la base, publier les donn�
 python -m web publier                       envoyer ce qui a changé (aussi fait après chaque collecte)
 python -m web deployer                      remettre les pages en ligne après une modification de web/site/
 python -m web apercu                        les pages en local (http://localhost:8000), sur les données en ligne
+python -m web motdepasse                    choisir le mot de passe du site (ferme les sessions ouvertes)
 ```
 
 **Annotation et entraînement**
@@ -415,7 +416,7 @@ Chaque commentaire a aussi :
   compte ; les suivants restent dans les fichiers et sont notés, mais sortent de la synthèse, du site et des thèmes
   (colonne `doublon_de` de `corpus.csv` ; case « Montrer aussi les doublons » dans l'interface). Le même texte écrit
   par des personnes différentes n'est pas un doublon : ce sont autant de voix.
-- **Vue pondérée par les « j'aime »**, en option, dans la Synthèse et sur la page Statistiques du site : chaque
+- **Vue pondérée par les « j'aime »**, en option, dans la Synthèse : chaque
   commentaire pèse 1 + ses « j'aime » (lui-même et ceux qui l'approuvent), au lieu d'une voix par commentaire.
   Les « j'aime » sont ceux de la dernière lecture : quand une publication est relue, les nouveaux comptes vont dans
   `donnees/<source>/likes.json`. Un commentaire dont la publication n'est plus relue garde ses « j'aime » d'alors.
@@ -438,18 +439,20 @@ Chaque commentaire a aussi :
 
 ## Site public
 
-Le site montre le travail à tout le monde : explication du projet, statistiques filtrables par semaine,
+Le site montre le travail, **avec un mot de passe** (`python -m web motdepasse`, à communiquer) : explication du projet,
 commentaires filtrables (curseurs, puces) avec la vidéo d'origine, thèmes des éloges et des critiques. Adresse : `site_url` dans `config/web.json`.
 
 - **Pages** (`web/site/`, HTML + JavaScript sans bibliothèque ni étape de construction) hébergées par **Vercel**.
 - **Données** dans **Supabase** (PostgreSQL), modèle normalisé (`web/schema.sql`) : `sources`, `comptes` (et leur
   groupe), `publications`, `utilisateurs` (auteurs, **privée**), `commentaires` (le texte, les notes et des numéros
   vers les autres tables), `syntheses`, et `moderation` (privée). Chaque donnée n'est écrite qu'une fois ; les fichiers
-  locaux gardent leur forme, la publication les traduit. Le public lit avec la clé publique, en lecture seule (règles
-  RLS) ; seuls `python -m web publier` et `python -m moderation publier` écrivent, avec la clé secrète. Les filtres de
+  locaux gardent leur forme, la publication les traduit. Sans connexion, la base ne rend rien : le site se connecte
+  au compte partagé des lecteurs (Supabase Auth, adresse fixe, on ne tape que le mot de passe, rôle `lecteur`,
+  inscriptions fermées) et lit en lecture seule (règles RLS, `peut_lire()`) ; changer le mot de passe recrée le compte
+  et ferme les sessions ; seuls `python -m web publier` et `python -m moderation publier` écrivent, avec la clé secrète. Les filtres de
   la page Commentaires sont appliqués par la base (fonctions `selection` et `evolution`, qui prennent le filtre jsonb
   comme paramètre unique et sans nom ; `commentaire` lit un commentaire par sa clé « source:code ») ;
-  la page Statistiques recalcule tout dans le navigateur à partir du « cube » (comptages par semaine et par compte).
+  la page Le projet et la frise de la page Commentaires lisent le « cube » (comptages par semaine et par compte).
 - **Pas d'API à héberger** (ni Railway ni autre) : les pages interrogent Supabase directement. Les deux offres
   gratuites suffisent (base d'environ 115 Mo sur 500).
 - **Ce qui est publié** : les commentaires notés de YouTube, d'Instagram, de Bluesky et de Facebook, sans
@@ -459,13 +462,20 @@ commentaires filtrables (curseurs, puces) avec la vidéo d'origine, thèmes des 
   `web/site/` a changé : `python -m web deployer` est à relancer une fois.
 - **Date et modèle** : chaque page affiche, sous son titre et en pied de page, la date de la dernière collecte et
   la version du modèle (avec sa date d'entraînement), lues dans la synthèse « meta ».
-- **Pondération** : sur la page Statistiques, l'interrupteur « Pondérer par les « j'aime » » (colonnes `p_…` du cube).
 - **Mise à jour** : après chaque collecte qui ramène du neuf, la publication suit la notation (seules les lignes
   nouvelles ou changées partent, grâce à `donnees/web/publie.json`). Bouton « Mettre à jour le site » dans l'onglet
   Analyse → Modèle.
 - **Mise en place** (une fois) : coller un jeton Vercel (vercel.com/account/settings/tokens) et un jeton Supabase
   (supabase.com/dashboard/account/tokens) dans `config/web.json`, puis `python -m web tout`.
 - Un projet Supabase gratuit sans aucune visite pendant 7 jours est mis en pause : `python -m web installer` le relance.
+
+### Site de la vérification
+
+Un second site, sans mot de passe ni base de données : https://verification-lisnard.vercel.app. Il présente, thème
+par thème, ce que disent David Lisnard et Nouvelle Énergie, les chiffres publics, les calculs et une conclusion, à
+partir du paquet `verification/` (voir `verification/README.md`). Les données sont écrites en dur dans les pages :
+après un changement dans un thème, `python -m verification site deployer` (même jeton Vercel que ci-dessus) ;
+`python -m verification site apercu` pour le voir en local.
 
 ## Cloudflare R2
 
@@ -504,17 +514,20 @@ Ce qu'on lui reproche et ce qu'on salue, rangé par thème (onglet **Thèmes** d
 - **Comptes** : en commentaires et en auteurs distincts (empreinte anonyme), pour qu'un habitué ne pèse pas plus
   qu'un autre. Le site publie toutes les sources sans auteurs (chaque auteur y devient un simple numéro,
   pour compter les auteurs distincts d'une période).
-- **Période** (page du site) : depuis le début, 12, 6 ou 3 derniers mois, 30 derniers jours, ou des mois choisis.
-  Comptes, barres et commentaires se limitent à la période ; chaque thème affiche sa part des avis et la compare à
-  la période précédente de même durée (« en hausse », « en baisse »), avec un tri « En hausse ». Les synthèses
+- **Période** (page du site) : curseur sur les 12 derniers mois, précédés d'un cran « Depuis le début » qui regroupe
+  le reste, et raccourcis 3, 6, 12 mois, Tout. Comptes, barres et commentaires se limitent à la période ; chaque
+  thème affiche sa part des avis et la compare à la période précédente de même durée (« en hausse », « en baisse »).
+  Sur le site, sujets, types d'avis et types de critique sont des colonnes de cases (une ou plusieurs) ; classement par nombre
+  de commentaires ou d'auteurs. Les synthèses
   restent celles de toute la période. L'adresse de la page garde la période choisie.
 - **Catégorie des critiques et des doutes** ([docs/TRI_DES_CRITIQUES.pdf](docs/TRI_DES_CRITIQUES.pdf)) : chaque
   critique (C) ou doute (D) porte une catégorie, ce que le programme peut en faire : 1 opposition de principe,
   2 demande de précision, 3 objection sur une mesure, 4 doute sur la faisabilité, 5 suggestion. Les éloges n'en ont
   pas. Elle est donnée à la lecture (`n | T5 | C3 | phrase` ; `noter` refuse un C ou un D sans chiffre, ou un E avec),
   donc une seule fois par commentaire. `trier` et `ranger` ne servent qu'à ce qui aurait été rangé sans catégorie.
-  L'onglet et la page Thèmes filtrent par catégorie (Toutes, Tout sauf les oppositions de principe, ou une seule ;
-  paramètre d'adresse `cat` sur le site) ; choisir une catégorie écarte les éloges.
+  L'onglet Thèmes de l'interface filtre par catégorie (Toutes, Tout sauf les oppositions de principe, ou une seule) ;
+  la page Thèmes du site par « Type de critique », une ou plusieurs (paramètre d'adresse `cat`, liste séparée par
+  des virgules) ; un filtre actif écarte les éloges.
 - **Synthèses** : une par thème et par sens dès 3 commentaires. `a-resumer` ne signale que celles qui manquent ou
   ont reçu depuis au moins 5 commentaires et 25 % de plus (repère `synthese_le` dans `themes.json`).
 - **Mise à jour** : à la demande, pas à chaque collecte, et toujours par Claude ([PROCESS.md](PROCESS.md),
@@ -563,7 +576,7 @@ Facebook collecté (groupes et Page suivis, sans les publications elles-mêmes) 
   par `python -m moderation motdepasse` (compte Supabase Auth partagé, rôle « moderateur » ; inscriptions fermées ;
   changer le mot de passe coupe aussitôt les sessions ouvertes). Un seul groupe, « Soutien David Lisnard 2027 » :
   la base ne rend rien d'autre aux modérateurs (`moderation_publications()`), les autres groupes ne servent qu'à
-  l'entraînement. Compteurs « à traiter » (insultants, dont visant Lisnard / NE, questions, mots surveillés),
+  l'entraînement. Compteurs « à traiter » (insultants, questions, mots surveillés),
   vue Commentaires (filtres catégorie, sujet Lisnard / NE ou autre, mots surveillés, certitude, suivi, période,
   texte, auteur, publication ; tri par date, insulte, question, auteurs signalés), vues Auteurs et Publications,
   vue Statistiques (évolution des insultants, questions et mots surveillés par jour ou par semaine ; commentaires
@@ -576,8 +589,9 @@ Facebook collecté (groupes et Page suivis, sans les publications elles-mêmes) 
   « Sans suite » partagées entre modérateurs (table `moderation_suivi`, jamais touchée par la publication).
   **Ménager la base gratuite** : chaque navigateur télécharge tout une fois (≈ 18 requêtes, 2 à 7 Mo), le garde
   (IndexedDB, effacé à la déconnexion), puis ne demande que ce qui a changé (`moderation.maj` daté par un
-  déclencheur, `moderation_retires` pour les retraits, `moderation_suivi.le`) : 4 requêtes vides au démarrage,
-  toutes les 15 min page ouverte (le suivi toutes les 3 min), ou par « Actualiser ». Filtres, tris et comptages se
+  déclencheur, `moderation_retires` pour les retraits, `moderation_suivi.le`) : 4 requêtes vides au démarrage ou
+  par « Actualiser » (jamais seules). Les marques des autres modérateurs, elles, sont redemandées toutes les 10 s
+  page visible (1 requête par index, vide presque toujours) et changent les cartes sur place. Filtres, tris et comptages se
   font dans le navigateur (`js/donnees.js`, `js/app.js`), sans requête ; tout retélécharger au bout de 7 jours.
   Vues `moderation_lignes`, `moderation_pubs` et fonction `suivre()` dans `web/schema.sql` ; rien à faire à la
   publication. Après une modification des pages : `python -m moderation site deployer`.

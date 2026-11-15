@@ -1,4 +1,5 @@
 // Page « Le projet » : chiffres du corpus, l'essentiel en une phrase, qualité mesurée du modèle.
+import "./connexion.js";  // en premier : la page attend le mot de passe
 import { TITRES, BAS, HAUT, el, nombre, pc, decimal, moisLong, messageErreur } from "./commun.js";
 import { synthese } from "./donnees.js";
 import { remplirPied } from "./pied.js";
@@ -59,7 +60,7 @@ function enBref(cube) {
     el("div", { class: "legende-rep" }, el("span", { style: { "--c": "var(--bas)" } }, `hostiles (tonalité ≤ ${BAS})`),
       el("span", { style: { "--c": "var(--milieu)" } }, "neutres ou mitigés"), el("span", { style: { "--c": "var(--haut)" } }, `favorables (≥ ${HAUT})`)),
     el("p", { class: "doux petit", style: { margin: "16px 0 0" } }, "Toutes sources et toutes périodes. ",
-      el("a", { href: "statistiques.html" }, "Le détail par semaine et par compte →")));
+      el("a", { href: "commentaires.html" }, "Parcourir les commentaires →")));
 }
 
 function qualite(m) {

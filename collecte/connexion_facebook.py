@@ -17,6 +17,7 @@ import time
 from commun.config import FICHIER_FACEBOOK_ENV, SESSIONS, lire_env
 
 FICHIER_COOKIES = SESSIONS / "facebook_cookies.json"
+FICHIER_ETAT_GQL = SESSIONS / "facebook_gql_etat.json"  # cache de la bibliothèque (requêtes internes, jeton fb_dtsg)
 PROFIL = SESSIONS / "facebook_profil"
 ATTENTE_MAX_S = 600
 # En-têtes d'une vraie navigation : sans eux, Facebook répond « Error » (HTTP 400) aux pages demandées par un script.
@@ -59,6 +60,17 @@ def sauver_cookies(cookies: list[dict]) -> None:
     tmp = FICHIER_COOKIES.with_suffix(".tmp")
     tmp.write_text(json.dumps(cookies, indent=1), encoding="utf-8")
     tmp.replace(FICHIER_COOKIES)
+
+
+def oublier_jeton() -> None:
+    """Le jeton fb_dtsg en cache est lié à l'ancienne session : gardé après une nouvelle connexion, Facebook refuse
+    toutes les requêtes internes (pris à tort pour une demande de vérification, 2026-11-15)."""
+    try:
+        etat = json.loads(FICHIER_ETAT_GQL.read_text(encoding="utf-8"))
+    except (FileNotFoundError, ValueError):
+        return
+    if etat.pop("fb_dtsg", None) is not None:
+        FICHIER_ETAT_GQL.write_text(json.dumps(etat), encoding="utf-8")
 
 
 def verifier() -> str | None:
@@ -117,6 +129,7 @@ def connecter(journal=print) -> None:
             page.wait_for_timeout(5000)  # laisse Facebook poser xs, fr, etc.
             sauver_cookies([{"name": c["name"], "value": c["value"]} for c in ctx.cookies()
                             if "facebook.com" in c["domain"]])
+            oublier_jeton()
         finally:
             ctx.close()
 

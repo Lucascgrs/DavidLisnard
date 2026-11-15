@@ -1,12 +1,15 @@
 // Page Thèmes : ce que disent les commentaires argumentés sur lui, rangés par thème et par sens (synthèse « themes »,
 // écrite par python -m web publier depuis la lecture de python -m critiques). Un thème ouvert montre sa définition,
 // les synthèses par sens, l'évolution par mois et les commentaires, chacun avec son résumé.
-// Le filtre « Période » recompte tout dans le navigateur à partir de la date de chaque commentaire rattaché, et compare
-// avec la période de même durée juste avant (évolution affichée dans la liste, tri « En hausse »).
-// Le filtre « Catégorie » ne garde que les critiques et les doutes d'une catégorie (champ « cat » de chaque
-// rattachement, de 1 à 5 : opposition de principe, demande de précision, objection sur une mesure, doute sur la
-// faisabilité, suggestion) ; « traitables » = tout sauf les oppositions de principe. Tous les comptes suivent.
-import { SOURCES, el, nombre, dateCourte, moisCourt, moisLong, ajouterJours, debounce, segments, messageErreur } from "./commun.js";
+// Le filtre « Période » (curseur sur les mois) recompte tout dans le navigateur à partir de la date de chaque
+// commentaire rattaché, et compare avec la période de même durée juste avant (évolution affichée dans la liste).
+// Sujets, types d'avis et types de critique sont des puces : une ou plusieurs à la fois. Le type de critique ne garde
+// que les critiques et les doutes des catégories choisies (champ « cat » de chaque rattachement, de 1 à 5 : opposition
+// de principe, demande de précision, objection sur une mesure, doute sur la faisabilité, suggestion) ; les éloges
+// n'ont pas de catégorie et sont alors écartés. Tous les comptes suivent.
+import "./connexion.js";  // en premier : la page attend le mot de passe
+import { SOURCES, el, nombre, dateCourte, moisCourt, moisLong, ajouterJours, debounce, segments, puces, messageErreur } from "./commun.js";
+import { curseur } from "./curseur.js";
 import { synthese } from "./donnees.js";
 import { ouvrir, ouvrirDepuisAdresse } from "./fiche.js";
 import { remplirPied } from "./pied.js";
@@ -20,18 +23,17 @@ const COULEUR = { E: "var(--haut)", C: "var(--bas)", D: "var(--doute)" };
 const PAR_PAGE = 30;
 // Catégories d'une critique ou d'un doute : libellés publiés avec les données (critiques/donnees.py).
 const categories = () => D.categories || {};
-const TRAITABLES = ["2", "3", "4", "5"];
-const filtreCat = () => vue.cat !== "toutes";
-/** Le rattachement passe-t-il le filtre « Catégorie » ? (une catégorie choisie écarte les éloges) */
-const gardeCat = (l) => !filtreCat() || (l.sens !== "E" && (vue.cat === "traitables" ? TRAITABLES.includes(l.cat) : l.cat === vue.cat));
+const filtreCat = () => vue.cats !== null;
+/** Le rattachement passe-t-il le filtre « Type de critique » ? (un filtre actif écarte les éloges) */
+const gardeCat = (l) => !filtreCat() || (l.sens !== "E" && vue.cats.includes(l.cat));
+const tousSens = () => vue.sens.length === 3;
+const elogesSeuls = () => vue.sens.length === 1 && vue.sens[0] === "E";
 const sansAccents = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 
-// Périodes proposées : nombre de jours jusqu'au commentaire rattaché le plus récent ; « mois » = mois choisis à la main.
-const PERIODES = [["tout", "Depuis le début"], ["365", "12 derniers mois"], ["182", "6 derniers mois"], ["91", "3 derniers mois"],
-  ["30", "30 derniers jours"], ["mois", "Choisir les mois"]];
 
 let D, S, BORNES, TOTAL;  // S : comptes de chaque thème sur la période choisie (et la précédente) ; TOTAL : leurs sommes
-const vue = { famille: "toutes", sens: "tous", cat: "toutes", q: "", tri: "nombre", theme: null, montres: PAR_PAGE, periode: "tout", du: null, au: null };
+// familles : null = tous les sujets ; sens : liste (E, C, D) ; cats : null = toutes les catégories ; du, au : mois « AAAA-MM ».
+const vue = { familles: null, sens: ["E", "C", "D"], cats: null, q: "", tri: "nombre", theme: null, montres: PAR_PAGE, du: null, au: null };
 
 demarrer();
 
@@ -45,8 +47,6 @@ async function demarrer() {
   remplirPied(meta);
   const dates = D.themes.flatMap((t) => t.liens.map((l) => l.date)).filter(Boolean).sort();
   BORNES = { premier: dates[0], dernier: dates[dates.length - 1] };
-  $("pertinence").textContent = D.regles.pertinence_min;
-  $("mots").textContent = D.regles.mots_min;
   lireAdresse();
   construireFiltres();
   calculer();
@@ -57,27 +57,25 @@ async function demarrer() {
 
 function lireAdresse() {
   const p = new URL(location.href).searchParams;
-  if (p.get("famille") in D.familles) vue.famille = p.get("famille");
-  if (p.get("sens") in SENS) vue.sens = p.get("sens");
-  if (p.get("cat") === "traitables" || p.get("cat") in categories()) vue.cat = p.get("cat");
-  if (filtreCat() && vue.sens === "E") vue.sens = "tous";
-  if (["nombre", "auteurs", "hausse", "nom"].includes(p.get("tri"))) vue.tri = p.get("tri");
-  if (PERIODES.some(([k]) => k === p.get("periode"))) vue.periode = p.get("periode");
+  const liste = (k, permis) => { const v = (p.get(k) || "").split(",").filter((x) => x in permis); return v.length ? v : null; };
+  vue.familles = liste("famille", D.familles);
+  vue.sens = liste("sens", SENS) || Object.keys(SENS);
+  vue.cats = liste("cat", categories());
+  if (vue.cats && vue.cats.length === Object.keys(categories()).length) vue.cats = null;
+  if (filtreCat() && elogesSeuls()) vue.sens = Object.keys(SENS);
+  if (p.get("tri") === "auteurs") vue.tri = "auteurs";
   const mois = listeMois();
-  vue.du = mois.includes(p.get("du")) ? p.get("du") : mois[Math.max(0, mois.length - 3)];
+  vue.du = mois.includes(p.get("du")) ? p.get("du") : mois[0];
   vue.au = mois.includes(p.get("au")) && p.get("au") >= vue.du ? p.get("au") : mois[mois.length - 1];
-  if (vue.tri === "hausse" && vue.periode === "tout") vue.tri = "nombre";
-  vue.q = p.get("q") || "";
   vue.theme = p.get("t");
 }
 function ecrireAdresse() {
   const p = new URLSearchParams(new URL(location.href).searchParams);
   for (const k of ["famille", "sens", "cat", "tri", "q", "t", "periode", "du", "au"]) p.delete(k);
-  if (filtreCat()) p.set("cat", vue.cat);
-  if (vue.periode !== "tout") p.set("periode", vue.periode);
-  if (vue.periode === "mois") { p.set("du", vue.du); p.set("au", vue.au); }
-  if (vue.famille !== "toutes") p.set("famille", vue.famille);
-  if (vue.sens !== "tous") p.set("sens", vue.sens);
+  if (filtreCat()) p.set("cat", vue.cats.join(","));
+  if (bornes()) { p.set("du", vue.du); p.set("au", vue.au); }
+  if (vue.familles) p.set("famille", vue.familles.join(","));
+  if (!tousSens()) p.set("sens", vue.sens.join(","));
   if (vue.tri !== "nombre") p.set("tri", vue.tri);
   if (vue.q) p.set("q", vue.q);
   if (vue.theme) p.set("t", vue.theme);
@@ -87,56 +85,67 @@ function ecrireAdresse() {
 // ---------- Filtres ----------
 
 function construireFiltres() {
-  const combien = (k) => D.themes.filter((t) => t.famille === k).length;
-  // Du sujet le plus fourni au moins fourni (la base ne garde pas l'ordre des clés).
-  const familles = segments([["toutes", `Tous les thèmes (${D.themes.length})`], ...Object.entries(D.familles)
-    .filter(([k]) => combien(k)).sort((a, b) => combien(b[0]) - combien(a[0])).map(([k, nom]) => [k, `${nom} (${combien(k)})`])], vue.famille,
-    (v) => { vue.famille = v; changer(); }, "Sujet des thèmes");
-  const sens = segments([["tous", "Tous les avis"], ...Object.entries(SENS)], vue.sens, (v) => {
-    vue.sens = v;
-    if (v === "E" && filtreCat()) { vue.cat = "toutes"; cat?.fixer("toutes"); }  // un éloge n'a pas de catégorie
-    changer();
-  }, "Type d'avis");
-  const cat = Object.keys(categories()).length ? segments([["toutes", "Toutes"], ["traitables", "Tout sauf les oppositions de principe"],
-    ...Object.entries(categories())], vue.cat, (v) => {
-    vue.cat = v;
-    if (v !== "toutes" && vue.sens === "E") { vue.sens = "tous"; sens.fixer("tous"); }
-    changer();
-  }, "Catégorie des critiques et des doutes") : null;
-  const tri = segments([["nombre", "Nombre de commentaires"], ["auteurs", "Nombre d'auteurs"], ["hausse", "En hausse"], ["nom", "Ordre alphabétique"]], vue.tri,
-    (v) => { vue.tri = v; changer(); }, "Classement");
-  const boutonHausse = tri.element.children[2];
-  const montrerHausse = () => { boutonHausse.hidden = vue.periode === "tout"; };
-  montrerHausse();
-  // Mois choisis à la main : deux listes « du … au … » (si le début passe après la fin, l'autre liste suit).
-  const mois = listeMois();
-  const choixMois = (valeur, quand) => {
-    const s = el("select", { "aria-label": quand }, ...mois.map((m) => el("option", { value: m }, moisLong(`${m}-01`))));
-    s.value = valeur;
-    return s;
+  const etiquette = (t) => el("span", { class: "etiquette" }, t);
+
+  // Période : curseur sur les 12 derniers mois (95 % des rattachements en novembre 2026), précédés d'un cran
+  // « Depuis le début » qui regroupe tout le reste ; derrière la piste, le nombre de rattachements de chaque cran.
+  const tous = listeMois();
+  const fenetre = tous.slice(-12), avant = tous.slice(0, -12);
+  const crans = avant.length ? [null, ...fenetre] : fenetre;  // null : tout ce qui précède la fenêtre
+  const dernier = crans.length - 1;
+  const parMois = (m) => D.themes.reduce((n, t) => { const v = t.mois[m]; return n + (v ? v.E + v.C + v.D : 0); }, 0);
+  const histo = crans.map((m) => (m ? parMois(m) : avant.reduce((n, x) => n + parMois(x), 0)));
+  const cranDe = (m) => Math.max(0, crans.indexOf(m));
+  const fixerPeriode = ([i, j]) => {
+    vue.du = crans[i] ?? tous[0];
+    vue.au = crans[j] ?? avant[avant.length - 1];
   };
-  const du = choixMois(vue.du, "Premier mois"), au = choixMois(vue.au, "Dernier mois");
-  du.addEventListener("change", () => { if (du.value > au.value) au.value = du.value; vue.du = du.value; vue.au = au.value; changer(); });
-  au.addEventListener("change", () => { if (du.value > au.value) du.value = au.value; vue.du = du.value; vue.au = au.value; changer(); });
-  const blocMois = el("div", { class: "choix-mois", hidden: vue.periode !== "mois" }, "du", du, "au", au);
-  const periode = segments(PERIODES, vue.periode, (v) => {
-    vue.periode = v;
-    blocMois.hidden = v !== "mois";
-    if (v === "tout" && vue.tri === "hausse") { vue.tri = "nombre"; tri.fixer("nombre"); }
-    montrerHausse();
+  const nomCran = (i) => (crans[i] ? moisLong(`${crans[i]}-01`) : "avant");
+  const periode = curseur({
+    min: 0, max: Math.max(0, dernier), valeurs: [cranDe(vue.du), crans[0] === null && avant.includes(vue.au) ? 0 : cranDe(vue.au)],
+    histo, etiquette: "Période", format: nomCran,
+    plage: (i, j) => [i === 0 ? "Depuis le début" : `De ${nomCran(i)}`,
+      j === dernier ? "à aujourd'hui" : crans[j] ? `à ${nomCran(j)}` : `à ${moisLong(`${avant[avant.length - 1]}-01`)}`],
+    onchange: (v) => { fixerPeriode(v); changer(); },
+  });
+  const raccourcis = el("div", { class: "raccourcis" }, ...[["3 mois", 3], ["6 mois", 6], ["12 mois", 12], ["Tout", null]].map(([t, n]) =>
+    el("button", { type: "button", class: "puce-choix", onclick: () => {
+      const v = [n ? Math.max(0, dernier - n + 1) : 0, dernier];
+      periode.fixer(v); fixerPeriode(v); changer();
+    } }, t)));
+
+  // Sujets : du plus fourni au moins fourni (la base ne garde pas l'ordre des clés).
+  const combien = (k) => D.themes.filter((t) => t.famille === k).length;
+  const sujets = Object.keys(D.familles).filter(combien).sort((a, b) => combien(b) - combien(a));
+  const familles = puces(sujets.map((k) => [k, D.familles[k], combien(k)]), vue.familles || sujets, (v) => {
+    vue.familles = v.length === sujets.length ? null : v; changer();
+  });
+
+  const pastille = (k) => el("span", { class: "pastille", style: { background: COULEUR[k] } });
+  const cles = Object.keys(categories());
+  let cat = null;
+  const sens = puces(Object.keys(SENS).map((k) => [k, [pastille(k), SENS[k]]]), vue.sens, (v) => {
+    vue.sens = Object.keys(SENS).filter((k) => v.includes(k));
+    // Un éloge n'a pas de type de critique : n'afficher que les éloges retire ce filtre.
+    if (elogesSeuls() && filtreCat()) { vue.cats = null; cat?.fixer(cles); }
     changer();
-  }, "Période");
-  const champ = el("input", { type: "search", placeholder: "retraites, Cannes, Macron…", "aria-label": "Chercher un thème", value: vue.q });
-  champ.addEventListener("input", debounce(() => { vue.q = champ.value.trim(); changer(); }, 250));
-  $("filtres").replaceChildren(el("div", { class: "barre-filtres-themes" },
-    el("div", { class: "filtre-periode" }, el("span", { class: "etiquette" }, "Période des commentaires"), periode.element, blocMois),
-    el("div", {}, el("span", { class: "etiquette" }, "Afficher les thèmes qui portent sur"), familles.element),
-    el("div", {}, el("span", { class: "etiquette" }, "Type d'avis"), sens.element),
-    cat ? el("div", {}, el("span", { class: "etiquette" }, "Critiques et doutes : ce que le programme peut en faire"), cat.element,
-      el("p", { class: "pale petit aide-categorie", id: "aide-categorie" })) : null,
-    el("div", {}, el("span", { class: "etiquette" }, "Classer les thèmes par"), tri.element),
-    el("div", {}, el("span", { class: "etiquette" }, "Chercher un thème"), el("div", { class: "recherche" },
-      el("span", { html: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>' }), champ))));
+  });
+  cat = cles.length ? puces(Object.entries(categories()), vue.cats || cles, (v) => {
+    vue.cats = v.length === cles.length ? null : cles.filter((k) => v.includes(k));
+    if (filtreCat() && elogesSeuls()) { vue.sens = ["C", "D"]; sens.fixer(vue.sens); }
+    changer();
+  }) : null;
+  const tri = segments([["nombre", "Nombre de commentaires"], ["auteurs", "Nombre d'auteurs"]], vue.tri,
+    (v) => { vue.tri = v; changer(); }, "Classement");
+
+  const colonne = (titre, ...enfants) => el("div", { class: "colonne-filtre" }, etiquette(titre), ...enfants);
+  $("filtres").replaceChildren(el("div", { class: "filtres-themes" },
+    el("div", { class: "filtre-periode" }, etiquette("Période des commentaires"), periode.element, raccourcis),
+    el("div", { class: "colonnes-filtres" },
+      colonne("Sujets", familles.element),
+      colonne("Type d'avis", sens.element),
+      cat ? colonne("Type de critique", cat.element, el("p", { class: "pale petit aide-categorie", id: "aide-categorie" })) : null,
+      colonne("Classer les thèmes par", tri.element))));
 }
 
 function changer() {
@@ -156,12 +165,11 @@ function listeMois() {
 }
 const jours = (a, b) => Math.round((Date.parse(`${b}T12:00:00Z`) - Date.parse(`${a}T12:00:00Z`)) / 864e5);
 
-/** Bornes (dates incluses) de la période choisie et de la précédente, de même durée ; null pour « depuis le début ». */
+/** Bornes (dates incluses) de la période choisie et de la précédente, de même durée ; null pour toute la période. */
 function bornes() {
-  if (vue.periode === "tout") return null;
-  let du, au;
-  if (vue.periode === "mois") { du = `${vue.du}-01`; au = ajouterJours(`${moisSuivant(vue.au)}-01`, -1); }
-  else { au = BORNES.dernier; du = ajouterJours(au, 1 - Number(vue.periode)); }
+  const mois = listeMois();
+  if (!vue.du || (vue.du === mois[0] && vue.au === mois[mois.length - 1])) return null;
+  const du = `${vue.du}-01`, au = ajouterJours(`${moisSuivant(vue.au)}-01`, -1);
   const duree = jours(du, au) + 1;
   return { du, au, avantDu: ajouterJours(du, -duree), avantAu: ajouterJours(du, -1), avantComplet: ajouterJours(du, -duree) >= BORNES.premier };
 }
@@ -175,7 +183,7 @@ function compterPeriode() {
     const liens = b ? tous.filter((l) => l.date >= b.du && l.date <= b.au) : tous;
     const n = { E: 0, C: 0, D: 0 }, a = { E: new Set(), C: new Set(), D: new Set() };
     for (const l of liens) { n[l.sens]++; a[l.sens].add(l.a ?? l.cle); }
-    const avant = b ? tous.filter((l) => l.date >= b.avantDu && l.date <= b.avantAu && (vue.sens === "tous" || l.sens === vue.sens)).length : null;
+    const avant = b ? tous.filter((l) => l.date >= b.avantDu && l.date <= b.avantAu && vue.sens.includes(l.sens)).length : null;
     // Par mois : les comptes publiés, ou recomptés sur la catégorie choisie.
     let mois = t.mois;
     if (filtreCat()) {
@@ -189,8 +197,8 @@ function compterPeriode() {
   for (const t of D.themes) { TOTAL.maintenant += compte(t); TOTAL.avant += S.get(t.id).avant || 0; }
 }
 
-const compte = (t) => { const s = S.get(t.id); return vue.sens === "tous" ? s.n.E + s.n.C + s.n.D : s.n[vue.sens]; };
-const auteurs = (t) => { const s = S.get(t.id); return vue.sens === "tous" ? s.auteurs.E + s.auteurs.C + s.auteurs.D : s.auteurs[vue.sens]; };
+const compte = (t) => { const s = S.get(t.id); return vue.sens.reduce((n, k) => n + s.n[k], 0); };
+const auteurs = (t) => { const s = S.get(t.id); return vue.sens.reduce((n, k) => n + s.auteurs[k], 0); };
 // Évolution : la part du thème parmi les rattachements de la période, comparée à sa part sur la période précédente de
 // même durée. On compare des parts, pas des nombres : la collecte des derniers mois est bien plus fournie que l'ancienne.
 const part = (t) => (TOTAL.maintenant ? compte(t) / TOTAL.maintenant : 0);
@@ -209,10 +217,10 @@ function evolution(t) {
 
 function choisir() {
   const q = sansAccents(vue.q);
-  const ts = D.themes.filter((t) => (vue.famille === "toutes" || t.famille === vue.famille) && compte(t) > 0
+  const ts = D.themes.filter((t) => (!vue.familles || vue.familles.includes(t.famille)) && compte(t) > 0
     && (!q || sansAccents(`${t.nom} ${t.definition}`).includes(q)));
-  const cle = { nombre: compte, auteurs, hausse: ecart, nom: null }[vue.tri];
-  return ts.sort((a, b) => (cle ? cle(b) - cle(a) : a.nom.localeCompare(b.nom, "fr")));
+  const cle = vue.tri === "auteurs" ? auteurs : compte;
+  return ts.sort((a, b) => cle(b) - cle(a) || a.nom.localeCompare(b.nom, "fr"));
 }
 
 function calculer() {
@@ -226,14 +234,14 @@ function calculer() {
   fiche();
 }
 
-/** Sous le filtre « Catégorie » : ce que veut dire la catégorie choisie. */
+/** Sous le filtre « Type de critique » : ce que veut dire le type choisi, s'il n'y en a qu'un. */
 function aideCategorie() {
   const p = $("aide-categorie");
   if (!p) return;
-  const definition = D.definitions_categories?.[vue.cat];
-  p.textContent = vue.cat === "toutes" ? "Chaque critique ou doute est rangé dans une catégorie ; les éloges n'en ont pas."
-    : vue.cat === "traitables" ? "Demandes de précision, objections, doutes sur la faisabilité et suggestions : ce à quoi un programme peut répondre."
-      : definition ? `${categories()[vue.cat]} : ${definition}.` : "";
+  const seul = vue.cats?.length === 1 ? vue.cats[0] : null;
+  const definition = seul && D.definitions_categories?.[seul];
+  p.textContent = definition ? `${categories()[seul]} : ${definition}.`
+    : filtreCat() ? "Les éloges n'ont pas de type : ils sont écartés tant que ce filtre est actif." : "";
 }
 
 function chiffres() {
@@ -270,8 +278,8 @@ function liste(ts) {
     el("span", { class: "doux petit" }, `${nombre(compte(t))} · ${nombre(auteurs(t))} auteur${auteurs(t) > 1 ? "s" : ""} `, evolution(t)),
     barre(t)));
   $("liste-themes").replaceChildren(el("div", { class: "tete" }, el("h2", {}, `${ts.length} thèmes`),
-    el("p", {}, `${vue.sens === "tous" ? "Bleu : éloges, rouge : critiques, jaune : doutes ou questions."
-      : `Classés selon le nombre de ${COURT[vue.sens]}.`}${bornes() ? " La part du thème est comparée à celle de la période de même durée juste avant." : ""} Cliquer sur un thème pour lire ce qu'on en dit.`)),
+    el("p", {}, `${tousSens() ? "Bleu : éloges, rouge : critiques, jaune : doutes ou questions."
+      : `Classés selon le nombre de ${vue.sens.map((k) => COURT[k]).join(" et ")}.`}${bornes() ? " La part du thème est comparée à celle de la période de même durée juste avant." : ""} Cliquer sur un thème pour lire ce qu'on en dit.`)),
     ...(lignes.length ? lignes : [el("p", { class: "doux" }, "Aucun thème ne correspond.")]));
 }
 
@@ -280,7 +288,7 @@ function fiche() {
   if (!t) return $("theme").replaceChildren();
   const s = S.get(t.id);
   const b = bornes();
-  const sensMontres = vue.sens === "tous" ? Object.keys(SENS) : [vue.sens];
+  const sensMontres = vue.sens;
   const resumes = sensMontres.filter((k) => t.synthese[k] && s.n[k]).map((k) => el("div", { class: "synthese-sens" },
     el("h3", {}, el("span", { class: "pastille", style: { background: COULEUR[k] } }), `${SENS[k]} · ${nombre(s.n[k])}`,
       el("span", { class: "doux petit" }, ` (${nombre(s.auteurs[k])} auteurs)`)),
@@ -288,13 +296,14 @@ function fiche() {
   if ((b || filtreCat()) && resumes.length) resumes.push(el("p", { class: "pale petit" }, filtreCat()
     ? "Ces résumés portent sur toutes les critiques et tous les doutes du thème ; les nombres et les commentaires, sur la catégorie choisie."
     : "Ces résumés portent sur toute la période ; les nombres et les commentaires, sur la période choisie."));
-  const liens = s.liens.filter((l) => vue.sens === "tous" || l.sens === vue.sens);
+  const liens = s.liens.filter((l) => vue.sens.includes(l.sens));
   // Répartition des critiques et des doutes du thème par catégorie (sur la période choisie, toutes catégories).
   const parCat = {};
   for (const l of t.liens) if (l.cat && (!b || (l.date >= b.du && l.date <= b.au))) parCat[l.cat] = (parCat[l.cat] || 0) + 1;
   const repartition = Object.keys(parCat).length ? el("p", { class: "doux petit repartition-categories" }, "Critiques et doutes : ",
     ...Object.entries(categories()).filter(([k]) => parCat[k]).flatMap(([k, nom], i) => [i ? " · " : "",
-      el("button", { type: "button", class: "lien", "aria-pressed": String(vue.cat === k), onclick: () => choisirCategorie(vue.cat === k ? "toutes" : k) },
+      el("button", { type: "button", class: "lien", "aria-pressed": String(vue.cats?.length === 1 && vue.cats[0] === k),
+        onclick: () => choisirCategorie(vue.cats?.length === 1 && vue.cats[0] === k ? null : k) },
         `${nom.toLowerCase()} ${nombre(parCat[k])}`)])) : null;
   const cartes = liens.slice(0, vue.montres).map((l) => el("article", { class: "resume-theme" },
     el("p", { class: "resume" }, el("span", { class: "pastille", style: { background: COULEUR[l.sens] }, title: SENS[l.sens] }), l.resume),
@@ -311,10 +320,10 @@ function fiche() {
     el("div", { class: "liste-commentaires" }, ...cartes), plus);
 }
 
-/** Choix d'une catégorie depuis la fiche d'un thème : même effet que le filtre du haut, qui est reconstruit. */
+/** Choix d'une catégorie depuis la fiche d'un thème (null : toutes) : même effet que le filtre du haut, reconstruit. */
 function choisirCategorie(k) {
-  vue.cat = k;
-  if (k !== "toutes" && vue.sens === "E") vue.sens = "tous";
+  vue.cats = k ? [k] : null;
+  if (k && elogesSeuls()) vue.sens = ["C", "D"];
   construireFiltres();
   changer();
 }

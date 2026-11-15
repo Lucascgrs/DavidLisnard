@@ -1,5 +1,6 @@
 // Page Commentaires : filtres à gauche (tous à cliquer ou à glisser), liste paginée à droite, fiche au clic.
 // Les filtres sont appliqués par la base (selection) ; l'adresse garde l'état pour partager une recherche.
+import "./connexion.js";  // en premier : la page attend le mot de passe
 import { CRITERES, TITRES, BORNES, SOURCES, GROUPES, BAS, HAUT, ARGUMENTE, EXPLOITABLE, el, nombre, sur20, dateCourte,
   moisCourt, moisLong, finDeSemaine, debounce, puces, segments, messageErreur } from "./commun.js";
 import { synthese, selection, evolution as lireEvolution } from "./donnees.js";
@@ -20,6 +21,14 @@ const PRESETS = {
 };
 
 let meta, cube, S, etat, controles = {};
+
+// Filtre « Comptes » : deux familles seulement ; la liste en dessous permet toujours de choisir compte par compte.
+const FAMILLES = { officiel: "Comptes officiels", autres: "Autres comptes" };
+const AUTRES = Object.keys(GROUPES).filter((g) => g !== "officiel");
+const famillesDe = (groupes) => (!groupes ? Object.keys(FAMILLES)
+  : [...(groupes.includes("officiel") ? ["officiel"] : []), ...(groupes.some((g) => g !== "officiel") ? ["autres"] : [])]);
+const groupesDe = (familles) => (familles.length === 2 ? null : familles[0] === "officiel" ? ["officiel"] : AUTRES);
+const libelleGroupes = (groupes) => famillesDe(groupes).map((f) => FAMILLES[f]).join(" + ");
 
 demarrer();
 
@@ -73,16 +82,16 @@ function construireFiltres() {
   controles.sources = puces(Object.entries(SOURCES).map(([k, v]) => [k, v]), etat.sources || Object.keys(SOURCES), (v) => {
     etat.sources = v.length === Object.keys(SOURCES).length ? null : v; majListeComptes(); changer();
   });
-  controles.groupes = puces(Object.entries(GROUPES).map(([k, v]) => [k, v]), etat.groupes || Object.keys(GROUPES), (v) => {
-    etat.groupes = v.length === Object.keys(GROUPES).length ? null : v; majListeComptes(); changer();
+  controles.groupes = puces(Object.entries(FAMILLES), famillesDe(etat.groupes), (v) => {
+    etat.groupes = groupesDe(v); majListeComptes(); changer();
   });
   controles.listeComptes = el("div", { class: "liste-comptes", role: "group", "aria-label": "Comptes" });
   majListeComptes();
 
   controles.type = segments([["tous", "Tous"], ["principal", "Commentaires"], ["reponse", "Réponses"]], etat.type, (v) => { etat.type = v; changer(); }, "Type");
-  controles.cible = segments([["", "Tous"], ["L", "Parlent de lui"], ["A", "D'autre chose"]], etat.cible || "", (v) => { etat.cible = v || null; changer(); }, "Sujet");
+  controles.cible = segments([["", "Tous"], ["L", "Lisnard"], ["A", "Autres"]], etat.cible || "", (v) => { etat.cible = v || null; changer(); }, "Sujet");
   controles.mots = segments(TAILLES.map(([n, t]) => [String(n), t]), String(etat.mots), (v) => { etat.mots = +v; changer(); }, "Taille");
-  controles.fiab = segments([["toutes", "Toutes"], ["bm", "Bonne ou moyenne"], ["bonne", "Bonne"]], etat.fiab, (v) => { etat.fiab = v; changer(); }, "Fiabilité");
+  controles.fiab = segments([["toutes", "Toutes"], ["bm", "Moyenne et plus"], ["bonne", "Bonne"]], etat.fiab, (v) => { etat.fiab = v; changer(); }, "Fiabilité");
 
   controles.notes = {};
   const notes = CRITERES.map((k) => {
@@ -153,7 +162,7 @@ function reinitialiser() {
   controles.q.value = "";
   controles.periode.fixer([0, S.length - 1]);
   controles.sources.fixer(Object.keys(SOURCES));
-  controles.groupes.fixer(Object.keys(GROUPES));
+  controles.groupes.fixer(Object.keys(FAMILLES));
   controles.type.fixer("tous"); controles.cible.fixer(""); controles.fiab.fixer("toutes"); controles.mots.fixer("0");
   for (const k of CRITERES) { controles.notes[k].curseur.fixer([0, 20]); controles.notes[k].valeur.textContent = "toutes"; }
   $("tri").value = "recent";
@@ -168,13 +177,13 @@ function filtresActifs() {
   if (etat.q) p.push([`« ${etat.q} »`, retirer(() => { etat.q = ""; })]);
   if (etat.du || etat.au) p.push([`${etat.du ? `du ${dateCourte(etat.du)}` : "depuis le début"} ${etat.au ? `au ${dateCourte(finDeSemaine(etat.au))}` : "à aujourd'hui"}`, retirer(() => { etat.du = etat.au = null; })]);
   if (etat.sources) p.push([etat.sources.map((s) => SOURCES[s]).join(" + "), retirer(() => { etat.sources = null; })]);
-  if (etat.groupes) p.push([etat.groupes.map((g) => GROUPES[g]).join(" + "), retirer(() => { etat.groupes = null; })]);
+  if (etat.groupes) p.push([libelleGroupes(etat.groupes), retirer(() => { etat.groupes = null; })]);
   for (const c of etat.comptes || []) p.push([c, retirer(() => { etat.comptes = etat.comptes.filter((x) => x !== c); if (!etat.comptes.length) etat.comptes = null; })]);
   if (etat.type !== "tous") p.push([etat.type === "reponse" ? "Réponses" : "Commentaires principaux", retirer(() => { etat.type = "tous"; })]);
-  if (etat.cible) p.push([etat.cible === "L" ? "Parlent de lui" : "Parlent d'autre chose", retirer(() => { etat.cible = null; })]);
+  if (etat.cible) p.push([etat.cible === "L" ? "Sujet : Lisnard" : "Sujet : autres", retirer(() => { etat.cible = null; })]);
   for (const k of CRITERES) if (etat.notes[k][0] > 0 || etat.notes[k][1] < 20) p.push([`${TITRES[k]} ${texteNote(etat.notes[k])}`, retirer(() => { etat.notes[k] = [0, 20]; })]);
   if (etat.mots) p.push([`${etat.mots} mots et plus`, retirer(() => { etat.mots = 0; })]);
-  if (etat.fiab !== "toutes") p.push([etat.fiab === "bonne" ? "Fiabilité bonne" : "Fiabilité bonne ou moyenne", retirer(() => { etat.fiab = "toutes"; })]);
+  if (etat.fiab !== "toutes") p.push([etat.fiab === "bonne" ? "Fiabilité bonne" : "Fiabilité moyenne et plus", retirer(() => { etat.fiab = "toutes"; })]);
   $("actifs").replaceChildren(...p.map(([t, f]) => el("button", { type: "button", onclick: f, "aria-label": `Retirer le filtre ${t}` }, t)));
 }
 
@@ -183,7 +192,7 @@ function synchroniser() {
   controles.q.value = etat.q;
   controles.periode.fixer([indiceDu(etat.du), indiceAu(etat.au)]);
   controles.sources.fixer(etat.sources || Object.keys(SOURCES));
-  controles.groupes.fixer(etat.groupes || Object.keys(GROUPES));
+  controles.groupes.fixer(famillesDe(etat.groupes));
   controles.type.fixer(etat.type); controles.cible.fixer(etat.cible || ""); controles.fiab.fixer(etat.fiab);
   controles.mots.fixer(String(etat.mots));
   for (const k of CRITERES) { controles.notes[k].curseur.fixer(etat.notes[k]); controles.notes[k].valeur.textContent = texteNote(etat.notes[k]); }

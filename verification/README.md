@@ -12,6 +12,8 @@ vient du « Dossier de vérification Lisnard » d'un collègue.
 verification/
 ├── corpus/                     Parquet du RAG copiés depuis R2 (lecture seule) + inventaire.json
 ├── commun/                     corpus, téléchargements tracés, lecture des formats Eurostat/OCDE/FMI
+├── conclusions.py, site.py      le site public : conclusion courte de chaque affirmation, générateur des pages
+├── site/                       pages du site (générées), styles, script des filtres, vercel.json
 ├── registre_affirmations.csv   toutes les affirmations, avec leur verdict (généré)
 ├── SYNTHESE.md                 tableau des verdicts (généré)
 └── themes/NN_nom/
@@ -37,7 +39,21 @@ python -m verification telecharger 1        refait les téléchargements du thè
 python -m verification calculer 1           refait les calculs du thème 1 (quelques minutes : lecture des PDF)
 python -m verification verifier             contrôles : catalogue, empreintes, renvois, verdicts, estimations
 python -m verification synthese             régénère registre_affirmations.csv et SYNTHESE.md
+python -m verification site                 régénère le site statique (site/)
+python -m verification site apercu          … et l'ouvre en local (http://localhost:8010)
+python -m verification site deployer        … et le met en ligne : https://verification-lisnard.vercel.app
 ```
+
+## Le site
+
+Une page d'accueil et une page par thème (ce qu'il dit, ce que disent les chiffres, conclusion). Le site affiche,
+à la place du verdict, une étiquette qui dit la nature de l'écart (« Superlatif », « Chiffre grossi »…) et une
+famille de couleur (`etiquette()` dans `site.py`) ; les verdicts d'`analyse.md` ne changent pas. Tout est écrit en dur dans les pages : aucune base de données, aucun appel réseau. `site.py` lit les
+fichiers des thèmes ; `conclusions.py` ajoute, pour chaque affirmation, la conclusion en une phrase, le type d'écart
+(qui sert d'étiquette) et le petit graphique « annoncé /
+mesuré ». La génération s'arrête si une affirmation n'y a pas d'entrée, ou si une
+valeur d'un graphique ne figure pas dans `analyse.md`. Après un changement dans un thème : relancer
+`python -m verification site deployer`. Ne pas modifier les `*.html` de `site/` à la main.
 
 ## Règles
 

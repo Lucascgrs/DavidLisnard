@@ -1,4 +1,5 @@
 """Mise en ligne des pages de web/site/ sur Vercel, par son API (pas besoin de Node ni de la commande vercel)."""
+import base64
 import time
 from pathlib import Path
 
@@ -6,6 +7,7 @@ import requests
 
 API = "https://api.vercel.com"
 PROJET = "analyse-commentaires-lisnard"
+BINAIRES = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico", ".pdf", ".woff", ".woff2"}
 
 
 class ErreurVercel(Exception):
@@ -30,8 +32,15 @@ class Vercel:
     def deployer(self, dossier: Path, journal=print, projet: str = PROJET) -> str:
         """Envoie tous les fichiers du dossier en production et attend que le site réponde. Rend son adresse.
         projet : nom du projet Vercel (créé au premier envoi) ; le site de modération a le sien."""
-        fichiers = [{"file": p.relative_to(dossier).as_posix(), "data": p.read_text(encoding="utf-8")}
-                    for p in sorted(dossier.rglob("*")) if p.is_file()]
+        fichiers = []
+        for p in sorted(dossier.rglob("*")):
+            if not p.is_file():
+                continue
+            nom = p.relative_to(dossier).as_posix()
+            if p.suffix.lower() in BINAIRES:  # images : envoyées en base64
+                fichiers.append({"file": nom, "data": base64.b64encode(p.read_bytes()).decode(), "encoding": "base64"})
+            else:
+                fichiers.append({"file": nom, "data": p.read_text(encoding="utf-8")})
         d = self.appel("POST", "/v13/deployments", params={"skipAutoDetectionConfirmation": "1"}, json={
             "name": projet, "files": fichiers, "target": "production",
             "projectSettings": {"framework": None, "buildCommand": None, "installCommand": None,

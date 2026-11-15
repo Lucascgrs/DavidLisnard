@@ -1,11 +1,9 @@
-// Lecture des données dans Supabase (lecture seule, clé publique). Les filtres sont appliqués par la base :
-// fonctions selection(f) et evolution(f) de web/schema.sql.
+// Lecture des données dans Supabase (lecture seule), avec la session ouverte par le mot de passe du site
+// (connexion.js). Les filtres sont appliqués par la base : fonctions selection(f) et evolution(f) de web/schema.sql.
 import { SUPABASE_URL, SUPABASE_CLE } from "./config.js";
+import { jetonAcces, sessionRefusee, NonConnecte } from "./connexion.js";
 
 const REST = `${SUPABASE_URL}/rest/v1`;
-const ENTETES = SUPABASE_CLE.startsWith("sb_")
-  ? { apikey: SUPABASE_CLE }
-  : { apikey: SUPABASE_CLE, Authorization: `Bearer ${SUPABASE_CLE}` };
 // Modèle normalisé (web/schema.sql) : source, compte et groupe se lisent par la publication. remettre() redonne à
 // chaque commentaire la forme qu'attendent les pages (cle « source:code », source, compte, groupe, parent).
 const CHAMPS = "source:sources(nom),code,date,semaine,reponse,parent,likes,mots,texte,tonalite,forme,systeme,idees,"
@@ -22,11 +20,14 @@ function remettre(c) {
 }
 
 async function demander(chemin, { methode = "GET", corps, entetes = {}, signal } = {}) {
+  let jet;
+  try { jet = await jetonAcces(); } catch (e) { if (e instanceof NonConnecte) sessionRefusee(); throw e; }
   const r = await fetch(`${REST}/${chemin}`, {
     method: methode, signal,
-    headers: { ...ENTETES, ...(corps ? { "Content-Type": "application/json" } : {}), ...entetes },
+    headers: { apikey: SUPABASE_CLE, Authorization: `Bearer ${jet}`, ...(corps ? { "Content-Type": "application/json" } : {}), ...entetes },
     body: corps ? JSON.stringify(corps) : undefined,
   });
+  if (r.status === 401 || r.status === 403) { sessionRefusee(); throw new NonConnecte(); }
   if (!r.ok) throw new Error(`${r.status} ${await r.text()}`);
   return r;
 }

@@ -6,6 +6,8 @@
     python -m web deployer      met en ligne les pages de web/site/ (après une modification des pages)
     python -m web tout          les trois à la suite
     python -m web apercu        ouvre les pages en local (http://localhost:8000), sur les données en ligne
+    python -m web motdepasse    choisit le mot de passe du site (le demande deux fois) ; ferme les sessions ouvertes
+                                avec l'ancien. Sans connexion, le site ne montre rien.
 
 Après chaque collecte qui ramène du neuf, la publication se fait seule (collecte/__main__.py).
 """
@@ -32,12 +34,15 @@ def main():
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     ap = argparse.ArgumentParser(prog="python -m web", description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("action", choices=["installer", "publier", "deployer", "tout", "apercu"])
+    ap.add_argument("action", choices=["installer", "publier", "deployer", "tout", "apercu", "motdepasse"])
     ap.add_argument("--tout", action="store_true", help="publier : renvoyer toutes les lignes")
     ap.add_argument("--port", type=int, default=8000)
     args = ap.parse_args()
     if args.action == "apercu":
         return apercu(args.port)
+    if args.action == "motdepasse":
+        from web import comptes
+        return publication.definir_mot_de_passe(comptes.demander_mot_de_passe("du site"))
     try:
         if args.action in ("installer", "publier", "tout"):
             with verrou("web"):  # une seule écriture dans la base à la fois

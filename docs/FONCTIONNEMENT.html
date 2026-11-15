@@ -138,7 +138,7 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
       <text x="780" y="66" text-anchor="middle" style="font-weight:600;fill:var(--s-pub)">5 · Résultats</text>
       <text x="780" y="94" text-anchor="middle" class="petit">interface</text>
       <text x="780" y="112" text-anchor="middle" class="petit">sur le PC</text>
-      <text x="780" y="140" text-anchor="middle" class="petit">site public</text>
+      <text x="780" y="140" text-anchor="middle" class="petit">site (mot de passe)</text>
       <text x="780" y="158" text-anchor="middle" class="petit">Supabase + Vercel</text>
       <text x="780" y="178" text-anchor="middle" class="petit">+ thèmes lus</text>
 
@@ -252,12 +252,12 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
       <text x="625" y="112" style="font-family:var(--mono);font-size:11.5px">commentaires, syntheses</text>
       <text x="625" y="132" style="font-family:var(--mono);font-size:11.5px">utilisateurs (privée)</text>
       <text x="625" y="158" class="petit">normalisée, auteurs jamais lus</text>
-      <text x="625" y="176" class="petit">lecture seule pour le public</text>
-      <text x="625" y="194" class="petit">(règles RLS)</text>
+      <text x="625" y="176" class="petit">lecture seule, avec le mot de passe</text>
+      <text x="625" y="194" class="petit">du site (règles RLS)</text>
       <rect x="610" y="235" width="240" height="84" rx="10" style="fill:var(--bg);stroke:var(--s-pub)"/>
       <text x="625" y="260" style="font-weight:600;fill:var(--s-pub)">Vercel</text>
       <text x="625" y="282" class="petit">pages du site (HTML + JS)</text>
-      <text x="625" y="300" class="petit">qui interrogent Supabase</text>
+      <text x="625" y="300" class="petit">qui interrogent Supabase après connexion</text>
       <rect x="610" y="330" width="240" height="46" rx="10" style="fill:var(--bg);stroke:var(--s-pub)"/>
       <text x="625" y="350" style="font-weight:600;fill:var(--s-pub)">Cloudflare R2 (stockage du groupe)</text>
       <text x="625" y="368" class="petit">privé, un Parquet par source, sans noms</text>
@@ -276,6 +276,7 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
     <div class="carte"><span class="etiquette">« J'aime »</span><p>Un commentaire lu juste après sa publication en a peu. Quand une publication est relue, les nouveaux comptes vont dans <code>likes.json</code>, sans retoucher les CSV. Ils servent à la vue pondérée : chaque commentaire y pèse 1 + ses « j'aime ».</p></div>
     <div class="carte"><span class="etiquette">Sauvegarde</span><div class="chiffre">{{sauvegarde_mo}}</div><p><code>donnees/sauvegardes/donnees.zip</code>, refaite à la fin de chaque collecte : CSV bruts (Instagram d'abord), annotations, thèmes. Une seule copie : la nouvelle est écrite à part, relue, puis remplace l'ancienne. Refusée si un CSV a rétréci.</p></div>
   </div>
+  <p class="legende">Accès au site : depuis le 14 novembre 2026, rien ne se lit sans le mot de passe du site, choisi par <code>python -m web motdepasse</code>. Comme pour la modération, c'est un compte partagé de Supabase Auth (adresse fixe, on ne tape que le mot de passe, rôle « lecteur », inscriptions fermées) ; la base refuse tout à qui n'est pas connecté, et changer le mot de passe recrée le compte et ferme les sessions ouvertes. Pour la table des commentaires, le compte est vérifié dans les fonctions de recherche plutôt que par une règle de la table : une telle règle empêchait la base d'utiliser l'index de la recherche plein texte (6 s au lieu de 0,1 s).</p>
 </section>
 
 <!-- ============ GRILLE ============ -->
@@ -546,7 +547,7 @@ cible L · ton 3 · forme 10 · système 10 · idées 3 · pertinence 8
       </g>
     </svg>
   </div>
-  <p>On repère sur le site, on agit sur Facebook (supprimer, retirer ou bloquer : Facebook ne permet pas de le faire d'ailleurs), puis on marque le commentaire. Changer le mot de passe ferme toutes les sessions. Pour ménager la base gratuite, chaque navigateur télécharge tout une fois, le garde, puis ne demande que les nouveautés ; filtres et tris se font sur l'ordinateur du modérateur.</p>
+  <p>On repère sur le site, on agit sur Facebook (supprimer, retirer ou bloquer : Facebook ne permet pas de le faire d'ailleurs), puis on marque le commentaire. Changer le mot de passe ferme toutes les sessions. Pour ménager la base gratuite, chaque navigateur télécharge tout une fois, le garde, puis ne demande les nouveaux commentaires qu'à l'ouverture du site ou au bouton « Actualiser » ; filtres et tris se font sur l'ordinateur du modérateur. Seules les marques sont redemandées toutes les 10 secondes, page visible : ce qu'un modérateur marque apparaît presque aussitôt chez les autres, sur la carte elle-même (« Traité par … »).</p>
   <p>Le site ne montre qu'un groupe, « Soutien David Lisnard 2027 » : la base ne rend rien d'autre aux modérateurs, les autres groupes servent seulement à entraîner le modèle. Chaque commentaire porte aussi un <b>sujet</b> : il parle de David Lisnard ou de Nouvelle Énergie (pour un insultant : il les vise), ou d'autre chose. C'est la cible de l'analyse principale, sauf quand la lecture d'un insultant a tranché. À côté du modèle, une liste de <b>mots surveillés</b> (<span class="mono">moderation/mots_surveilles.txt</span>) sert de simple filtre : les mots trouvés sont surlignés, sans tenir compte des accents, des lettres répétées ni des chiffres déguisés. L'onglet <b>Statistiques</b> suit l'évolution des insultants, des questions et des mots surveillés, et ce que chaque modérateur a marqué « traité ».</p>
   <h3>S'améliorer : à la demande seulement</h3>
   <div class="schema">
@@ -654,6 +655,7 @@ cible L · ton 3 · forme 10 · système 10 · idées 3 · pertinence 8
   <p>Un travail séparé des commentaires, dans le paquet <code>verification/</code> : on recense ce que dit David Lisnard dans le corpus du RAG (copié en lecture seule depuis Cloudflare R2), puis, thème par thème, on télécharge les données publiques qui permettent de trancher, on refait les calculs et on rend un verdict.</p>
   <p>Chaque thème a le même dossier : <code>affirmations.csv</code> (citations datées et sourcées), <code>position.md</code> (ce qu'il pense), <code>brut/</code> et <code>sources.csv</code> (fichiers d'origine, adresse, date, empreinte), <code>calculs/</code> (script, <code>METHODE.md</code>, <code>resultats.csv</code>, graphiques) et <code>analyse.md</code> (verdicts). L'échelle est la même partout : exact, plutôt exact, trompeur, faux, invérifiable, opinion ou promesse. Les chiffrages de mesures sont marqués comme estimations.</p>
   <p>Commandes : <code>python -m verification corpus</code>, <code>telecharger &lt;thème&gt;</code>, <code>calculer &lt;thème&gt;</code>, <code>verifier</code> (catalogue, empreintes, renvois, verdicts) et <code>synthese</code> (registre de toutes les affirmations et tableau des verdicts). Publié dans le bucket R2 public par <code>python -m cloudflare verification</code> : originaux sous <code>originaux/ne/verification/</code>, calculs et synthèse sous <code>data/programmes/nouvelle-energie/verification/</code>. Les comptes de Cannes viennent des comptes individuels des communes de la DGFiP (2000-2025).</p>
+  <p>Site public de la vérification, à part du site des commentaires : <span class="mono">verification-lisnard.vercel.app</span>, une page d'accueil avec les 16 thèmes et une page par thème en trois temps : ce qu'il dit (une carte par idée, tirée de <code>position.md</code>, sans l'évolution ni ses sources), ce que disent les chiffres (une carte numérotée par affirmation) et la conclusion. Le site n'affiche pas le verdict d'<code>analyse.md</code> mais une étiquette qui dit la nature de l'écart (superlatif, arrondi, périmètres mélangés, chiffre grossi, contexte manquant…), colorée selon sa famille : exact, proche, à nuancer, inexact, invérifiable, opinion ou promesse ; un superlatif, un arrondi ou un chiffre daté n'est jamais « inexact ». Dépliée, une affirmation montre la citation exacte, l'étiquette, un petit graphique « ce qu'il annonce / données publiques », l'explication point par point, puis, repliés, ses autres formulations, le calcul et les sources. Le site est statique : toutes les données sont écrites dans les pages à la génération, sans base de données ni appel réseau. <code>python -m verification site</code> lit les fichiers des thèmes et <code>verification/conclusions.py</code> (conclusion courte, type d'écart qui sert d'étiquette, valeurs des graphiques, contrôlées contre <code>analyse.md</code>) ; <code>site apercu</code> l'ouvre en local, <code>site deployer</code> le met en ligne.</p>
   <p class="pied">Document généré le {{date}} par <code>python -m docs</code> depuis <code>docs/FONCTIONNEMENT.html</code>. Les chiffres viennent des données du projet à cette date.</p>
 </section>
 

@@ -15,7 +15,7 @@ from analyse.criteres import CRITERES
 from commun.config import DONNEES
 from commun.fichiers import ecrire_json, lire_json
 from commun.textes import empreinte
-from web import acces, export
+from web import acces, comptes, export
 from web.supabase import Base, Gestion
 from web.vercel import Vercel
 
@@ -25,6 +25,7 @@ SCHEMA = ICI / "schema.sql"
 ETAT = DONNEES / "web" / "publie.json"
 CONFIG_JS = SITE / "js" / "config.js"
 MODELE = 2  # modèle normalisé de schema.sql (2026-11-13) ; un état d'un autre modèle fait tout renvoyer
+EMAIL = "lecteurs@analyse-lisnard.app"  # compte partagé du site, jamais montré : on ne tape que le mot de passe
 
 
 def installer(journal=print) -> None:
@@ -45,10 +46,18 @@ def installer(journal=print) -> None:
 
 
 def ecrire_config_js(url: str, cle_publique: str) -> None:
-    """La clé publique ne permet que de lire (règles de la base) : elle peut figurer dans les pages."""
-    CONFIG_JS.write_text("// Écrit par « python -m web installer ». Clé publique : lecture seule.\n"
+    """La clé publique peut figurer dans les pages : sans connexion au compte des lecteurs, elle ne donne accès à
+    rien (règles de la base)."""
+    CONFIG_JS.write_text("// Écrit par « python -m web installer » et « deployer ». Clé publique : sans connexion,\n"
+                         "// elle ne donne accès à rien (règles de web/schema.sql).\n"
                          f"export const SUPABASE_URL = {json.dumps(url)};\n"
-                         f"export const SUPABASE_CLE = {json.dumps(cle_publique)};\n", encoding="utf-8")
+                         f"export const SUPABASE_CLE = {json.dumps(cle_publique)};\n"
+                         f"export const EMAIL = {json.dumps(EMAIL)};\n", encoding="utf-8", newline="\n")
+
+
+def definir_mot_de_passe(mot_de_passe: str, journal=print) -> None:
+    """(Re)crée le compte des lecteurs du site avec ce mot de passe ; ferme toutes les sessions de l'ancien."""
+    comptes.definir_mot_de_passe(EMAIL, "lecteur", mot_de_passe, journal)
 
 
 def _empreintes(lignes: list[dict], cle) -> dict[str, str]:
@@ -196,8 +205,10 @@ def publier(tout: bool = False, journal=print) -> dict:
 
 def deployer(journal=print) -> str:
     a = acces.exiger("vercel_jeton")
-    if not CONFIG_JS.exists() or "supabase.co" not in CONFIG_JS.read_text(encoding="utf-8"):
-        raise acces.AccesManquant("lancer d'abord « python -m web installer » (js/config.js ne pointe pas vers Supabase)")
+    if not a.get("supabase_url") or not a.get("supabase_cle_publique"):
+        raise acces.AccesManquant("lancer d'abord « python -m web installer » (adresse et clé de Supabase inconnues)")
+    ecrire_config_js(a["supabase_url"], a["supabase_cle_publique"])
+    comptes.fermer_inscriptions(journal)
     url = Vercel(a["vercel_jeton"]).deployer(SITE, journal)
     acces.sauver(site_url=url)
     journal(f"   en ligne : {url}")

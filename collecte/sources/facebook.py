@@ -38,13 +38,12 @@ import re
 import time
 from datetime import datetime, timedelta, timezone
 
-from collecte.connexion_facebook import (FICHIER_COOKIES, NAVIGATEUR, NAVIGATION, ErreurConnexion, connecter,
-                                         lire_cookies, sauver_cookies)
+from collecte.connexion_facebook import (FICHIER_COOKIES, FICHIER_ETAT_GQL, NAVIGATEUR, NAVIGATION, ErreurConnexion,
+                                         connecter, lire_cookies, sauver_cookies)
 from collecte.depot import PRINCIPAL, REPONSE, SourceImpossible
 from commun.config import SESSIONS, perimetre
 from commun.textes import abreger, date_paris
 
-FICHIER_ETAT_GQL = SESSIONS / "facebook_gql_etat.json"  # identifiants des requêtes internes et jeton, en cache
 DELAI_S = 60  # attente maximale d'une réponse de Facebook
 CONNUS_DAFFILEE = 10  # relecture d'un post : on s'arrête après 10 commentaires déjà connus d'affilée
 # Réponses de Facebook qui signalent un freinage ou une vérification (codes d'erreur de l'API interne).

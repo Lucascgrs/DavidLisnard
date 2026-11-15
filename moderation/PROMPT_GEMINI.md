@@ -95,6 +95,54 @@ insultante (alors L ou I).
 
 Si un commentaire est à la fois insultant et une question, l'insulte l'emporte (L ou I).
 
+ERREURS DÉJÀ VUES DANS TES LOTS PRÉCÉDENTS (relus par un autre lecteur) : évite-les.
+1. Trop de Q. Une Q doit pouvoir recevoir une réponse UTILE de l'équipe de campagne. Ce ne sont PAS des Q :
+   - les questions rhétoriques ou indignées : « Depuis quand Philippe est de droite ? », « Macron a été maire ? »,
+     « Il a fait quoi pour la France Lisnard ? », « C'est quoi ce poster mal fait ?? », « Et Attal ? » ;
+   - les questions posées à un autre commentateur pendant une discussion : « Michel, quel mensonge ? »,
+     « Et vous, vous êtes quoi dans tout ça ? », « Valérie, pour qui alors ? », « les points communs avec Macron ? » ;
+   - les questions sur d'autres candidats ou l'actualité générale : « Ils ont tous les parrainages ? »,
+     « Il n'a pas été des années au PS, Mélenchon ? », « Qui sont les 25 totalitaires ? », « C'est qui ce type ? »
+     (à propos de Teddy Riner).
+   Sont bien des Q : où voir le direct, comment adhérer ou prendre sa carte, quel groupe local, le programme sur un
+   point précis (retraites, héritage, Europe…), « pouvez-vous donner la source de ce sondage ? », un adhérent qui
+   s'inquiète d'un choix du candidat (« Que faites-vous avec cet opportuniste d'Alexandre Jardin ? »), une demande
+   aux modérateurs (« Il n'y a pas de modérateurs pour ce groupe ? »), ou une simple marque d'intérêt pour un groupe
+   local (« Intéressée pour Salon », « L'ouest de l'étang de Berre »).
+2. Affirmations fausses, ou reproches sur le programme que l'équipe doit préciser : Q même sans point
+   d'interrogation. Exemples : « en plus il était macroniste », « il a donné ses voix à Mélenchon en 2022 » (il lui
+   a donné un parrainage, pas sa voix ; le message collé partout « VOUS AVEZ DONNÉ VOS VOIES À MACRON ET À
+   MÉLENCHON » est donc Q à chaque fois), « Macron a demandé à voter Lisnard », « il aura des macronistes auprès de
+   lui », « aucun programme, aucun allié », « ce sont des adhérents virtuels, manipulation », et les reproches sur
+   les retraités (désindexation des pensions au-dessus de 2 200 €, abattement de 10 %) : ces pistes existent, mais
+   leurs modalités sont à préciser par l'équipe, donc Q.
+3. Trop de I sur des étiquettes. Sans injure ni mépris ajouté, c'est AUTRE : « fasciste », « bolcheviques »,
+   « despote », « traître », « des fach… », « taupe macronienne », « LFI = dictature comme Hitler », « la droite la
+   plus bête du monde », « mon cul c'est du poulet », « C con » (= c'est con), « T'as pas de vie ? », « Bande fake ».
+   En revanche, le mépris sur la santé mentale, le physique, l'intelligence ou le genre reste insultant : « il est
+   fou », « bipolaire », « votre QI », « blague d'analphabète », « la caniche de LFI », « La Fiente Insoumise »,
+   « nazillons », « 25 nazis » (traiter des personnes de nazis), « bientôt l'AVC ».
+4. Trop de L. L exige une INJURE qui vise Lisnard, Nouvelle Énergie ou ses soutiens. Une critique dure de Lisnard
+   sans injure est AUTRE, même violente : « attention à ce Lisnard, c'est une taupe macronienne », « cet homme
+   prétentieux, à virer », « foutage de gueule », « Casse-toi » seul, ou un long réquisitoire sur ses propos sans
+   injure. Mais une injure lancée à un soutien PARCE QU'il soutient Lisnard est bien L : « Tu as aussi fait
+   confiance à Macron, pauvre cloche ! » sous « Je choisis David Lisnard ».
+5. Lots 9 à 12 : tu es devenu trop prudent. Tes Q et tes I sont presque tous justes, mais tu en oublies.
+   - Q oubliées : un soutien qui demande où est Lisnard ou pourquoi il n'est pas invité (« Où est David Lisnard ? »,
+     « Pourquoi c'est Darmanin et pas Lisnard ? », « Cependant il est invité nulle part ? », « Lisnard a refusé d'y
+     aller ! Pourquoi ? ») ; « Et Sarah Knafo ? » sous une publication sur Lisnard ou la primaire ; qui sera Premier
+     ministre ou dans son équipe (« Je veux qu'il en parle », « jamais de réponse sur cette question ») ; « j'attends
+     le programme » ; un doute sur le sondage publié par le groupe (« C'est quoi ce sondage ? », « Info ou intox ? ») ;
+     les modalités de la primaire (« Qui va pouvoir voter ? ») ; « Que fait Attal dans cette primaire ? » ; quelqu'un
+     qui demande comment regarder le direct ou rejoindre un groupe local, même en répondant à un autre commentateur.
+   - I oubliées, quand le mépris vise l'intelligence ou dégrade la personne : « votre bêtise dépasse votre
+     intelligence », « vous manquez d'intelligence ? », « la débilité humaine », « ces guignols incompétents », « un
+     bébé inculte », « ce mec c'est la gestapo », « que des peignes-cul », « être un blaireau, c'est bien », des
+     moqueries sur le corps de la femme d'un commentateur.
+   - L oubliés : « charlot », « clown », « guignol » ou « faux cul » lancés à Lisnard sont des injures, donc L
+     (« C'est un charlot comme les autres », « Un nouveau clown pour un nouveau cirque » sous un sondage sur lui).
+     Une simple moquerie sans mot injurieux reste AUTRE (« Lisnard l'enfumeur », « Lisnard le renard »).
+
 Garde le même niveau d'exigence du premier au dernier lot : ne deviens ni plus sévère ni plus indulgent avec
 la fatigue.
 

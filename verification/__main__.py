@@ -7,6 +7,7 @@
   calculer <theme>           refait les calculs du thème à partir de brut/
   verifier [theme]           contrôles automatiques (catalogue, empreintes, renvois, verdicts)
   synthese                   régénère SYNTHESE.md à partir des resultats et du registre
+  site [apercu|deployer]     régénère le site statique (site/) ; apercu l'ouvre en local, deployer le met en ligne
 
 <theme> = numéro (1) ou nom du dossier (01_dette_depense_fiscalite).
 """
@@ -24,6 +25,8 @@ def dossier_theme(nom: str):
 
 
 def main(args: list[str]) -> None:
+    if sys.stdout:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     if not args or args[0] in {"-h", "--help", "aide"}:
         print(__doc__)
         return
@@ -54,6 +57,9 @@ def main(args: list[str]) -> None:
     elif cmd == "synthese":
         from .synthese import ecrire_synthese
         print(ecrire_synthese())
+    elif cmd == "site":
+        from .site import main as site
+        site(args[1:])
     else:
         raise SystemExit(f"Commande inconnue : {cmd}\n{__doc__}")
 

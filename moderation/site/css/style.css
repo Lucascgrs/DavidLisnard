@@ -163,7 +163,6 @@ input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible
 .tuile.question, .chiffre-cle.question { --c: var(--question); --c-pale: var(--question-pale); --c-texte: var(--question-texte); }
 .tuile.mots, .chiffre-cle.mots { --c: var(--mots); --c-pale: var(--mots-pale); --c-texte: var(--mots-texte); }
 .tuile.ok, .chiffre-cle.ok { --c: var(--ok); --c-pale: var(--ok-pale); --c-texte: var(--ok-texte); }
-.tuile.lisnard { --c: var(--bleu); }
 
 /* Filtres */
 .explorateur { display: grid; grid-template-columns: 280px 1fr; gap: 20px; align-items: start; }
