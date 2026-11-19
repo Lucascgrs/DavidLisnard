@@ -14,6 +14,13 @@
     python -m moderation entrainer                réentraîne (≈ 30 min), mesure, puis reclasse tout (≈ 30 min)
     python -m moderation publier [--tout]         envoie ce qui a changé dans la table privée « moderation » de
                                                   Supabase (aussi fait seul après classer, noter et entrainer)
+    python -m moderation reponses                 synchronise les réponses préparées : moderation/reponses.xlsx ↔
+                                                  Supabase (ce que les modérateurs écrivent sur le site est gardé)
+    python -m moderation themes etat              réponses préparées, commentaires rangés par thème, reste à ranger
+    python -m moderation themes tirer [N] [mode]  prépare un lot à ranger par thème (100 par défaut, les plus récents
+                                                  d'abord) ; modes : reponses (ceux qui appellent une réponse), tout
+    python -m moderation themes noter K fichier   enregistre la lecture du lot K (« 12: T31 T43 » ou « 12: - ») ;
+                                                  --par gemini si c'est Gemini qui a lu (PROMPT_GEMINI_THEMES.md)
     python -m moderation motdepasse               choisit le mot de passe du site de modération (le demande deux
                                                   fois) ; ferme les sessions ouvertes avec l'ancien
     python -m moderation site deployer            met en ligne le site de modération (moderation/site/)
@@ -39,12 +46,34 @@ def cmd_site(argv) -> bool:
     return True
 
 
+def cmd_reponses(argv) -> None:
+    """Réponses préparées et thèmes des commentaires (moderation/reponses.py) : sans charger le modèle."""
+    from moderation import modele, reponses
+    args = argv[2:]
+    if argv[0] == "reponses":
+        reponses.synchroniser()
+    elif argv[1:2] == ["etat"]:
+        reponses.afficher_etat()
+    elif argv[1:2] == ["tirer"]:
+        nombres = [a for a in args if a.isdigit()]
+        modes = [a for a in args if not a.isdigit()]
+        reponses.tirer(int(nombres[0]) if nombres else reponses.TAILLE_LOT, modes[0] if modes else "reponses")
+    elif argv[1:2] == ["noter"] and len(args) >= 2:
+        reponses.noter(int(args[0]), args[1], par=args[args.index("--par") + 1] if "--par" in args else "")
+        modele.envoyer()  # les thèmes partent dans la table moderation de Supabase
+    else:
+        raise SystemExit(f"Commande inconnue : {' '.join(argv)}\n{__doc__}")
+
+
 def main(argv):
     sys.stdout.reconfigure(encoding="utf-8")
     if not argv or argv[0] in ("-h", "--help", "aide"):
         print(__doc__)
         return
     if cmd_site(argv):
+        return
+    if argv[0] in ("reponses", "themes"):
+        cmd_reponses(argv)
         return
     from moderation import donnees, modele
     cmd, args = argv[0], argv[1:]

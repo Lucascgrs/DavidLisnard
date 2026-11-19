@@ -26,6 +26,11 @@ catégories et les commentaires eux-mêmes (texte, auteur, date ; le lien se dé
 moderation_complete) sont gardés dans la table privée « moderation » de Supabase (publication.py), reliée aux
 tables publications, utilisateurs et commentaires (modèle normalisé de web/schema.sql).
 
+Réponses préparées (2026-11-19, reponses.py) : sous chaque commentaire, le site propose des réponses toutes faites,
+rangées par thème (ceux de l'analyse) et par objection ; bibliothèque dans moderation/reponses.xlsx et dans Supabase,
+modifiable par les modérateurs depuis le site (« python -m moderation reponses » synchronise). Les commentaires sont
+rangés par thème par lots lus par Gemini (PROMPT_GEMINI_THEMES.md) ou par Claude.
+
 Mode hors ligne : même règle que l'analyse (analyse/__init__.py), posée ici avant tout import de transformers.
 """
 import analyse  # noqa: F401 — pose HF_HUB_OFFLINE=1 si le modèle de départ est déjà sur le disque

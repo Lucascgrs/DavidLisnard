@@ -7,7 +7,7 @@
 // Filtres, tris et comptages se font ici, sur l'ordinateur du modérateur. Tout est effacé à la déconnexion.
 import { rest } from "./api.js";
 
-const VERSION = 2;          // changer quand la forme des données change : tout est retéléchargé (2 : cible, un seul groupe)
+const VERSION = 3;          // changer quand la forme des données change : tout est retéléchargé (2 : cible, un seul groupe ; 3 : thèmes, réponses)
 const PAGE = 1000;          // lignes par requête (plafond de l'API Supabase)
 const RECHARGER_JOURS = 7;  // filet de sécurité : tout retélécharger au-delà
 
@@ -52,7 +52,9 @@ export const etat = {
   lignes: new Map(),   // code → ligne de moderation_lignes
   pubs: new Map(),     // id → publication (moderation_pubs)
   suivi: new Map(),    // code → { etat, par, le }
-  curseurs: { maj: null, code: null, retires: null, suivi: null, pub: 0 },
+  reponses: new Map(), // id → réponse préparée (table reponses)
+  themesRep: new Map(), // id → thème des réponses (table reponses_themes)
+  curseurs: { maj: null, code: null, retires: null, suivi: null, pub: 0, reponses: null, themes: null },
   complet: 0,          // heure du dernier téléchargement complet
   synchro: 0,          // heure de la dernière actualisation
 };
@@ -111,15 +113,31 @@ async function pubsDepuis(id) {
   return ls.length;
 }
 
+// Réponses préparées et leurs thèmes : quelques centaines de lignes, redemandées depuis la dernière écriture (maj).
+async function bibliothequeDepuis(table, carte, cle) {
+  let depuis = etat.curseurs[cle];
+  const ls = await pages(
+    (cur) => { if (cur) depuis = cur; return `${table}?select=*${depuis ? `&maj=gt.${enc(depuis)}` : ""}&order=maj.asc&limit=${PAGE}`; },
+    (l) => l.maj);
+  for (const l of ls) carte.set(l.id, l);
+  if (ls.length) etat.curseurs[cle] = ls[ls.length - 1].maj;
+  return ls.length;
+}
+async function bibliotheque() {
+  return (await bibliothequeDepuis("reponses_themes", etat.themesRep, "themes"))
+    + (await bibliothequeDepuis("reponses", etat.reponses, "reponses"));
+}
+
 async function toutTelecharger(avancement) {
-  etat.lignes.clear(); etat.pubs.clear(); etat.suivi.clear();
-  etat.curseurs = { maj: null, code: null, retires: null, suivi: null, pub: 0 };
+  etat.lignes.clear(); etat.pubs.clear(); etat.suivi.clear(); etat.reponses.clear(); etat.themesRep.clear();
+  etat.curseurs = { maj: null, code: null, retires: null, suivi: null, pub: 0, reponses: null, themes: null };
   // Les retraits antérieurs ne comptent pas : on part de l'état actuel. Repère pris avant, pour ne rien manquer.
   const dernier = await (await rest("moderation_retires?select=le&order=le.desc&limit=1")).json();
   etat.curseurs.retires = dernier[0]?.le || "1970-01-01T00:00:00Z";
   await pubsDepuis(0);
   await lignesDepuis(null, null, avancement);
   await suiviDepuis(null);
+  await bibliotheque();
   etat.complet = Date.now();
 }
 
@@ -128,6 +146,7 @@ function sauver() {
     version: VERSION, complet: etat.complet, synchro: etat.synchro, curseurs: etat.curseurs,
     lignes: [...etat.lignes.values()], pubs: [...etat.pubs.values()],
     suivi: [...etat.suivi].map(([code, s]) => ({ code, ...s })),
+    reponses: [...etat.reponses.values()], themesRep: [...etat.themesRep.values()],
   });
 }
 
@@ -138,6 +157,8 @@ export async function charger() {
   etat.lignes = new Map(c.lignes.map((l) => [l.code, l]));
   etat.pubs = new Map(c.pubs.map((p) => [p.id, p]));
   etat.suivi = new Map(c.suivi.map(({ code, ...s }) => [code, s]));
+  etat.reponses = new Map((c.reponses || []).map((r) => [r.id, r]));
+  etat.themesRep = new Map((c.themesRep || []).map((t) => [t.id, t]));
   etat.curseurs = c.curseurs;
   etat.complet = c.complet;
   etat.synchro = c.synchro;
@@ -156,6 +177,7 @@ export async function actualiser({ avancement } = {}) {
     change += await lignesDepuis(etat.curseurs.maj, etat.curseurs.code);
     change += await retiresDepuis(etat.curseurs.retires);
     change += (await suiviDepuis(etat.curseurs.suivi)).length;
+    change += await bibliotheque();
   }
   etat.synchro = Date.now();
   if (change) sauver();
@@ -175,3 +197,16 @@ export function noterSuivi(code, s) {
   etat.suivi.set(code, s);
   sauver();
 }
+
+/** Ajoute ou modifie une réponse préparée (ou un thème) ; rend la ligne telle qu'enregistrée par la base. */
+async function enregistrer(table, carte, ligne) {
+  const r = await rest(`${table}?on_conflict=id`, {
+    methode: "POST", corps: [ligne], entetes: { Prefer: "resolution=merge-duplicates,return=representation" },
+  });
+  const [l] = await r.json();
+  carte.set(l.id, l);
+  sauver();
+  return l;
+}
+export const enregistrerReponse = (ligne) => enregistrer("reponses", etat.reponses, ligne);
+export const enregistrerTheme = (ligne) => enregistrer("reponses_themes", etat.themesRep, ligne);

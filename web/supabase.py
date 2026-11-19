@@ -116,6 +116,24 @@ class Base:
             liste = ",".join('"' + str(v).replace('"', '\\"') + '"' for v in valeurs[i:i + paquet])
             self._envoi("DELETE", table, params={**(filtre or {}), colonne: f"in.({liste})"})
 
+    def lire(self, table: str, ordre: str, select: str = "*", paquet: int = 1000) -> list[dict]:
+        """Toutes les lignes d'une table, par pages de `paquet` (triées par `ordre`, une colonne unique)."""
+        lignes = []
+        while True:
+            for essai in range(4):
+                try:
+                    r = _verifier(self.s.get(f"{self.url}/{table}", timeout=180, params={
+                        "select": select, "order": ordre, "limit": paquet, "offset": len(lignes)}))
+                    break
+                except (requests.ConnectionError, requests.Timeout):
+                    if essai == 3:
+                        raise
+                    time.sleep(5 * (essai + 1))
+            page = r.json()
+            lignes += page
+            if len(page) < paquet:
+                return lignes
+
     def appeler(self, fonction: str, arguments: dict | None = None):
         """Appelle une fonction SQL (rpc) et rend son résultat."""
         for essai in range(4):

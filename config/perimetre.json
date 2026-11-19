@@ -44,7 +44,7 @@
     "depuis": "2026-07-31",
     "posts_par_lancement": 100,
     "relire_si_moins_de_jours": 10,
-    "abandon_si_10_posts_depassent_minutes": 50
+    "abandon_si_10_posts_depassent_minutes": 60
   },
   "facebook": {
     "groupes": [

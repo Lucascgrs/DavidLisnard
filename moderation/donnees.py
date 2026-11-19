@@ -1,11 +1,14 @@
 """Fichiers de la modération et lecture des commentaires Facebook.
 
+Les commentaires et leur classement par le modèle sont dans la table centrale donnees/analyse/corpus.csv (lignes
+Facebook ; colonnes mod_categorie, mod_p_insultant, mod_p_question, mod_p_autre, mod_version, mod_le :
+analyse/corpus.py). Le texte n'est recopié nulle part ailleurs.
+
 donnees/moderation/
-- annotations.csv : catégorie donnée à la lecture (cle, categorie, cible, jeu, poids, annote_le, par, texte). Le jeu
+- annotations.csv : catégorie donnée à la lecture (cle, categorie, cible, jeu, poids, annote_le, par). Le jeu
   « test » ne sert qu'à mesurer le modèle ; « poids » ramène ce test à la population (voir mesurer() dans modele.py) ;
   « cible » (insultants seulement) : L si l'insulte vise David Lisnard, Nouvelle Énergie ou leurs soutiens, A sinon ;
   « par » : qui a lu (vide = Claude ; « gemini » = lu par Gemini, pas encore relu ; « gemini+claude » = relu) ;
-- notes.csv : catégorie donnée par le modèle (cle, categorie, p_insultant, p_question, p_autre, version, classe_le) ;
 - lots/lot_N.json et lot_N.txt : lots tirés pour l'annotation ;
 - journal.log, avancement.json, EN_COURS (verrou de la tâche « moderation »).
 modeles/moderation/ : le modèle en service et infos.json (version, mesures sur le test, historique).
@@ -13,6 +16,7 @@ modeles/moderation/ : le modèle en service et infos.json (version, mesures sur 
 import random
 import re
 
+from analyse import corpus as cp
 from commun.config import DONNEES, MODELES
 from commun.fichiers import ecrire_csv, ecrire_json, lire_csv, lire_json
 from commun.textes import maintenant
@@ -20,7 +24,6 @@ from commun.textes import maintenant
 TACHE = "moderation"
 DOSSIER = DONNEES / "moderation"
 ANNOTATIONS = DOSSIER / "annotations.csv"
-NOTES = DOSSIER / "notes.csv"
 LOTS = DOSSIER / "lots"
 JOURNAL = DOSSIER / "journal.log"
 AVANCEMENT = DOSSIER / "avancement.json"
@@ -31,31 +34,31 @@ CATEGORIES = ["autre", "insultant", "question"]  # ordre des sorties du modèle
 # Lettres des réponses de lecture : L = insultant visant Lisnard / Nouvelle Énergie, I = insultant visant autre chose,
 # Q = question ; tout le reste du lot est « autre ».
 LETTRES = {"L": ("insultant", "L"), "I": ("insultant", "A"), "Q": ("question", "")}
-CHAMPS_ANNOTATIONS = ["cle", "categorie", "cible", "jeu", "poids", "annote_le", "par", "texte"]
-CHAMPS_NOTES = ["cle", "categorie", "p_insultant", "p_question", "p_autre", "version", "classe_le"]
+CHAMPS_ANNOTATIONS = ["cle", "categorie", "cible", "jeu", "poids", "annote_le", "par"]
+# Classement du modèle tel que le lit le reste du code → colonne du corpus.
+EN_COLONNE = {"categorie": "mod_categorie", "p_insultant": "mod_p_insultant", "p_question": "mod_p_question",
+              "p_autre": "mod_p_autre", "version": "mod_version", "classe_le": "mod_le"}
 TAILLE_LOT = 250
 
 
 def commentaires() -> list[dict]:
-    """Les commentaires Facebook collectés (donnees/facebook/*.csv), sans les publications elles-mêmes, sans texte
-    vide ni doublon. Chaque ligne reçoit sa clé « facebook:<identifiant> », comme dans le corpus de l'analyse."""
-    vus, sortie, publications = set(), [], {}
-    for f in sorted((DONNEES / "facebook").glob("*.csv")):
-        for l in lire_csv(f):
-            cid = l.get("commentaire_id") or ""
-            if cid and cid == l.get("publication_id"):
-                publications[cid] = l.get("texte") or ""  # la publication elle-même : son texte sert de titre
-                continue
-            if not cid or not (l.get("texte") or "").strip() or cid in vus:
-                continue
-            vus.add(cid)
-            l["cle"] = f"facebook:{cid}"
-            sortie.append(l)
-    textes = {l["commentaire_id"]: l["texte"] for l in sortie}
-    for l in sortie:  # titre vide dans le CSV (ligne lue avant la publication) : texte de la publication
-        if not (l.get("publication_titre") or "").strip():
-            l["publication_titre"] = publications.get(l.get("publication_id"), "")
-        l["parent_texte"] = textes.get(l.get("parent_id") or "", "")
+    """Les commentaires Facebook du corpus, sans les publications elles-mêmes ni texte vide (doublons compris : chacun
+    est modéré). Chaque ligne garde les noms de la collecte qu'utilisent l'onglet et la table « moderation »
+    (compte_source, commentaire_id, parent_id, auteur, auteur_id), le texte du commentaire auquel elle répond, et pour
+    titre, quand la ligne n'en a pas, le texte de la publication."""
+    lignes = [l for l in cp.lire() if l["source"] == "facebook"]
+    publications = {l["publication_id"]: l["texte"] for l in lignes if l["cle"] == f"facebook:{l['publication_id']}"}
+    noms = cp.auteurs(["facebook"])
+    sortie = []
+    for l in lignes:
+        cid = l["cle"].split(":", 1)[1]
+        if cid == l["publication_id"] or not l["texte"].strip():
+            continue
+        ident, nom = noms.get(l["cle"], ("", ""))
+        sortie.append({**l, "compte_source": l["compte"], "commentaire_id": cid,
+                       "parent_id": l["parent_cle"].split(":", 1)[1] if l["parent_cle"] else "",
+                       "auteur_id": ident, "auteur": nom,
+                       "publication_titre": l["publication_titre"] or publications.get(l["publication_id"], "")})
     return sortie
 
 
@@ -64,7 +67,21 @@ def lire_annotations() -> dict[str, dict]:
 
 
 def lire_notes() -> dict[str, dict]:
-    return {l["cle"]: l for l in lire_csv(NOTES)}
+    """Le classement du modèle, par clé : {cle, categorie, p_insultant, p_question, p_autre, version, classe_le}."""
+    champs = list(EN_COLONNE.values())
+    retour = {v: k for k, v in EN_COLONNE.items()}
+    return {cle: {"cle": cle, **{retour[c]: v for c, v in l.items()}} for cle, l in cp.lire_colonnes(champs).items()}
+
+
+def enregistrer_notes(notes: dict[str, dict]) -> int:
+    """Écrit dans le corpus le classement de ces commentaires ({cle: {categorie, p_…, version, classe_le}})."""
+    return cp.enregistrer({k: {EN_COLONNE[c]: v for c, v in n.items() if c in EN_COLONNE} for k, n in notes.items()},
+                          list(EN_COLONNE.values()))
+
+
+def textes() -> dict[str, str]:
+    """Texte de chaque commentaire Facebook, par clé (les annotations n'en gardent pas de copie)."""
+    return {l["cle"]: l["texte"] for l in commentaires()}
 
 
 def infos_modele() -> dict | None:
@@ -231,15 +248,13 @@ def noter(k: int, fichier: str, test: bool = False, par: str = "", relire: bool 
         raise SystemExit(f"Le lot {k} est déjà noté (le {lot['lu_le']}) ; une relecture passe par « relire ».")
     numeros = lot["commentaires"]
     choix = lire_reponse(fichier, numeros)
-    textes = {c["cle"]: c["texte"] for c in commentaires()}
     avant = lire_annotations()
     qui = "gemini+claude" if relire else par
     nouvelles = []
     for j, cle in numeros.items():
         cat, cible = choix.get(j, ("autre", ""))
         jeu = avant.get(cle, {}).get("jeu", "entrainement") if relire else ("test" if test else "entrainement")
-        nouvelles.append({"cle": cle, "categorie": cat, "cible": cible, "jeu": jeu, "par": qui,
-                          "texte": textes.get(cle, "")})
+        nouvelles.append({"cle": cle, "categorie": cat, "cible": cible, "jeu": jeu, "par": qui})
     ecarts = [x for x in nouvelles if (a := avant.get(x["cle"])) and (a["categorie"], a.get("cible", "")) !=
               (x["categorie"], x["cible"])]
     n = ajouter_annotations(nouvelles, remplacer=relire)

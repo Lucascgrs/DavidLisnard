@@ -1,8 +1,8 @@
 """Les fichiers de l'analyse, tous dans donnees/analyse/.
 
-- corpus.csv : copie de travail des commentaires collectés (analyse/corpus.py) ;
+- corpus.csv : la table centrale, une ligne par commentaire : ce qui vient de la collecte, les notes du modèle et le
+  classement de la modération (analyse/corpus.py) ;
 - vecteurs/ : vecteurs de sens des textes (analyse/vecteurs.py) ;
-- scores.csv : les notes du modèle, une ligne par commentaire ;
 - corrections.csv : les notes corrigées à la main dans l'interface (elles priment et servent à l'entraînement) ;
 - annotation/ : lots, annotations de Claude, constance, recalage (analyse/annotation.py) ;
 - avancement.json : où en est l'analyse en cours (lu par l'interface) ;
@@ -20,7 +20,6 @@ from commun.textes import maintenant
 ANALYSE = DONNEES / "analyse"
 CORPUS = ANALYSE / "corpus.csv"
 VECTEURS = ANALYSE / "vecteurs"
-SCORES = ANALYSE / "scores.csv"
 CORRECTIONS = ANALYSE / "corrections.csv"
 ANNOTATION = ANALYSE / "annotation"
 AVANCEMENT = ANALYSE / "avancement.json"
@@ -30,16 +29,28 @@ EXPORTS = ANALYSE / "exports"
 JOURNAL_REENTRAINEMENT = ANALYSE / "reentrainement.log"
 CONSTANCE = ANNOTATION / "constance.json"
 
-CHAMPS_SCORES = ["cle", "version"] + CRITERES + ["cible", "p_autre", "fiabilite", "le"]
 CHAMPS_CORRECTIONS = ["cle", "cible"] + CRITERES + ["le"]
+# Notes du modèle telles que les lit le reste du code ; dans le corpus, « version » et « le » s'appellent
+# note_version et note_le.
+EN_COLONNE = {"version": "note_version", "le": "note_le"}
 
 
-def lire_scores() -> dict[str, dict]:
-    return lire_csv_par_cle(SCORES)
+def lire_scores(corpus: list[dict] | None = None) -> dict[str, dict]:
+    """Les notes du modèle, par clé : {cle, version, 5 notes, cible, p_autre, fiabilite, le}. Lues dans le corpus
+    (colonnes note_…), ou dans les lignes `corpus` déjà chargées."""
+    from analyse.corpus import CHAMPS_NOTES, lire_colonnes
+    if corpus is None:
+        lignes = lire_colonnes(CHAMPS_NOTES + ["cle"]).values()
+    else:
+        lignes = (l for l in corpus if l.get("note_version"))
+    retour = {v: k for k, v in EN_COLONNE.items()}
+    return {l["cle"]: {"cle": l["cle"], **{retour.get(c, c): l.get(c) or "" for c in CHAMPS_NOTES}} for l in lignes}
 
 
-def ecrire_scores(scores: dict[str, dict]) -> None:
-    ecrire_csv(SCORES, scores.values(), CHAMPS_SCORES)
+def enregistrer_scores(scores: dict[str, dict]) -> int:
+    """Écrit dans le corpus les notes du modèle de ces commentaires ({cle: {version, 5 notes, cible, …, le}})."""
+    from analyse.corpus import CHAMPS_NOTES, enregistrer
+    return enregistrer({k: {EN_COLONNE.get(c, c): v for c, v in n.items()} for k, n in scores.items()}, CHAMPS_NOTES)
 
 
 def lire_corrections() -> dict[str, dict]:
@@ -58,7 +69,7 @@ def lire_notes(corpus: list[dict] | None = None) -> dict[str, dict]:
     3. les notes du modèle.
     Les lots de contrôle de constance (renotation à l'aveugle) ne comptent pas."""
     from analyse.annotation import LOTS_CONSTANCE, annotations
-    notes = lire_scores()
+    notes = lire_scores(corpus)
     par_texte = {}
     for a in annotations():
         if int(a["lot"]) >= LOTS_CONSTANCE:

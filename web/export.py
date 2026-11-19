@@ -1,4 +1,5 @@
-"""Ce que le site publie, calculé depuis donnees/analyse/ (corpus.csv + scores.csv + corrections.csv).
+"""Ce que le site publie, calculé depuis donnees/analyse/ (corpus.csv, avec les notes du modèle, + annotations et
+corrections.csv).
 
 - les commentaires notés de YouTube, d'Instagram, de Bluesky, des groupes Facebook publics et de X, sans auteur ni doublon (même auteur, même texte,
   même source : analyse/corpus.py) ;
@@ -74,17 +75,11 @@ def charger() -> tuple[list[dict], dict[str, dict]]:
 
 
 def auteurs() -> dict[str, tuple[str, str]]:
-    """Clé du commentaire → (identifiant de l'auteur, nom affiché), lus dans les fichiers collectés (donnees/<source>/,
-    sans les modifier) : le corpus ne garde qu'une empreinte de l'auteur. L'identifiant est celui de la plateforme,
-    à défaut le nom (comme l'empreinte auteur_h d'analyse/corpus.py). Vont dans la table privée utilisateurs."""
-    sortie = {}
-    for source in SOURCES_PUBLIEES:
-        for f in sorted((DONNEES / source).glob("*.csv")):
-            for l in lire_csv(f):
-                ident = (l.get("auteur_id") or l.get("auteur") or "").strip()
-                if ident and l.get("commentaire_id"):
-                    sortie.setdefault(f"{source}:{l['commentaire_id']}", (ident, (l.get("auteur") or "").strip()))
-    return sortie
+    """Clé du commentaire → (identifiant de l'auteur, nom affiché), lus dans les fichiers collectés par
+    analyse.corpus.auteurs() : le corpus ne garde qu'une empreinte de l'auteur. Vont dans la table privée
+    utilisateurs."""
+    from analyse.corpus import auteurs as lire_auteurs
+    return lire_auteurs(SOURCES_PUBLIEES)
 
 
 def cube(commentaires: list[dict]) -> dict:

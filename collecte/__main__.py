@@ -4,7 +4,7 @@
     python -m collecte youtube bluesky          seulement celles-là
     python -m collecte --reessayer instagram    relance une source abandonnée (critère des 30 minutes)
 
-Résultats : donnees/<source>/ (un CSV par compte + <source>_tout.xlsx), donnees/bilan.md, donnees/journal.log.
+Résultats : donnees/<source>/ (un CSV par compte), donnees/bilan.md, donnees/journal.log.
 Une source qui échoue n'arrête pas les suivantes. À la fin, les données sont sauvegardées
 (donnees/sauvegardes/donnees.zip). Si du neuf a été collecté, les nouveaux commentaires sont ensuite notés par le
 modèle (option de l'onglet Analyse, cochée par défaut), puis publiés sur le site (« python -m web ») et
@@ -75,12 +75,7 @@ def collecter(nom: str, journal: Journal, reessayer: bool) -> dict:
                                  "nouveaux": depot.nouveaux, "duree": resultat["duree"],
                                  "message": resultat.get("message", "")}
         depot.sauver_etat()
-        try:
-            xlsx = depot.excel()
-            if xlsx:
-                journal(f"   {depot.nouveaux} nouveaux, {resultat['total']} au total → {xlsx}")
-        except Exception as e:
-            journal(f"   Excel non écrit : {e}")
+        journal(f"   {depot.nouveaux} nouveaux, {resultat['total']} au total")
     return resultat
 
 

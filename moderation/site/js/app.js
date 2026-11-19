@@ -7,6 +7,7 @@ import { NonConnecte, connecte, connecter, deconnecter, suivre } from "./api.js"
 import { actualiser, charger, effacerCache, etat, marquesRecentes, noterSuivi } from "./donnees.js";
 import { RUBRIQUES, surligner, trouver } from "./surveillance.js";
 import { vueStats } from "./stats.js";
+import { fermerReponses, nombreReponses, nomTheme, ouvrirReponses, reponsesDu, themesActifs, themesDu } from "./reponses.js";
 
 const PAGE = 50;                    // cartes affichées à la fois (affichage seulement : tout est déjà là)
 const SUIVI_S = 10;                 // marques des autres modérateurs : toutes les 10 s, page visible
@@ -106,7 +107,7 @@ function preparer() {
 const aTraiter = (liste, cats) => liste.reduce((s, c) => s + (cats.includes(c.categorie) && suiviDe(c) === "a_traiter" ? 1 : 0), 0);
 
 // ── État des filtres (gardé dans l'adresse de la page, pour la partager) ─────────────────────────────────────
-const DEFAUT = { vue: "commentaires", categorie: "insultant", sujet: "", mots: "", rubrique: "", certitude: "", suivi: "a_traiter",
+const DEFAUT = { vue: "commentaires", categorie: "insultant", sujet: "", theme: "", mots: "", rubrique: "", certitude: "", suivi: "a_traiter",
   periode: "", du: "", au: "", texte: "", auteur: "", publication: "", auteur_id: "", auteur_nom: "", publication_id: "",
   publication_nom: "", tri: "date", s_periode: "91", s_sujet: "" };
 let f = { ...DEFAUT };
@@ -153,8 +154,9 @@ $("form-connexion").addEventListener("submit", async (ev) => {
 // Déconnexion : la session et les données gardées dans ce navigateur sont effacées.
 $("deconnexion").addEventListener("click", () => {
   deconnecter();
+  fermerReponses();
   effacerCache();
-  etat.lignes.clear(); etat.pubs.clear(); etat.suivi.clear(); etat.complet = 0;
+  etat.lignes.clear(); etat.pubs.clear(); etat.suivi.clear(); etat.reponses.clear(); etat.themesRep.clear(); etat.complet = 0;
   commentaires = [];
   ecranConnexion();
 });
@@ -284,6 +286,8 @@ function filtrer() {
   const liste = commentaires.filter((c) => {
     if (f.categorie && c.categorie !== f.categorie) return false;
     if (f.sujet && c.cible !== f.sujet) return false;
+    if (f.theme === "avec" && !themesDu(c).length) return false;
+    if (f.theme && f.theme !== "avec" && !themesDu(c).includes(f.theme)) return false;
     if (f.mots && !c.mots.length) return false;
     if (f.mots && f.rubrique && !c.mots.some((m) => m.rubrique === f.rubrique)) return false;
     if (certitude != null && !((c[cleP] ?? 0) >= certitude)) return false;
@@ -315,19 +319,16 @@ function carteCommentaire(c) {
   const sujet = c.cible === "L" && el("span", { class: "badge lisnard", title: cat === "insultant"
     ? "L'insulte vise David Lisnard, Nouvelle Énergie ou leurs soutiens" : "Le commentaire parle de David Lisnard ou de Nouvelle Énergie" },
   cat === "insultant" ? "vise Lisnard / NE" : "Lisnard / NE");
-  const a = c.a;
-  const recidive = a && a.insultants >= 2
-    ? el("span", { class: "recidive", title: "Commentaires insultants de cet auteur, sur tous ses commentaires" }, `${a.insultants} insultants sur ${a.n}`)
-    : a && a.n > 1 ? el("span", {}, `${a.n} commentaires`) : null;
   const motsTrouves = [...new Map(c.mots.map((m) => [m.mot, m])).values()];
 
   const infoSuivi = el("span", { class: "suivi-info" });
   const bTraite = el("button", { type: "button", class: "bouton" }, "✓ Traité");
   const bSans = el("button", { type: "button", class: "bouton" }, "Sans suite");
   const carte = el("article", { class: `carte commentaire ${cat}`, "data-code": c.code },
-    el("div", { class: "tete" }, badge, sujet, boutonAuteur(c.auteur, c.auteur_id, c.pub?.chemin), recidive,
+    el("div", { class: "tete" }, badge, sujet, boutonAuteur(c.auteur, c.auteur_id, c.pub?.chemin),
       el("time", { datetime: c.date, title: dateLongue(c.date) }, quand(c.date)),
-      c.parent && el("span", {}, "réponse à un commentaire")),
+      c.parent && el("span", {}, "réponse à un commentaire"),
+      themesDu(c).map((t) => el("span", { class: "badge theme", title: "Thème du commentaire (pour les réponses préparées)" }, nomTheme(t)))),
     el("p", { class: "texte" }, ...surligner(c.texte || "", c.mots)),
     motsTrouves.length > 0 && el("div", { class: "mots-trouves" }, el("span", { class: "pale" }, "Mots surveillés :"),
       motsTrouves.map((m) => el("span", { class: "mot", title: m.rubrique || "" }, m.mot, m.rubrique && el("small", {}, ` · ${m.rubrique}`)))),
@@ -338,6 +339,9 @@ function carteCommentaire(c) {
         afficher();
       } }, "voir tous ses commentaires")),
     el("div", { class: "actions" },
+      el("button", { type: "button", class: `bouton reponses ${nombreReponses(c) ? "avec" : ""}`, title: "Réponses toutes faites pour ce commentaire",
+        onclick: () => ouvrirReponses(c, { message, echec, prenom, apres: () => afficher({ garderPosition: true }) }) },
+      "💬 Réponses", nombreReponses(c) ? ` (${nombreReponses(c)})` : ""),
       c.lien && el("a", { class: "bouton", href: c.lien, target: "_blank", rel: "noopener noreferrer" }, "Ouvrir sur Facebook ↗"),
       facebook(c.pub?.lien) && el("a", { class: "bouton", href: c.pub.lien, target: "_blank", rel: "noopener noreferrer" }, "La publication ↗"),
       el("span", { class: "espace" }), infoSuivi, bTraite, bSans));
@@ -388,6 +392,7 @@ function majControles() {
   for (const [id, cle] of [["f-categorie", "categorie"], ["f-sujet", "sujet"], ["f-mots", "mots"], ["f-suivi", "suivi"], ["f-periode", "periode"]]) {
     for (const b of $(id).querySelectorAll("button")) b.setAttribute("aria-pressed", b.dataset.v === f[cle] && !(cle === "periode" && f.du));
   }
+  majFiltreTheme();
   $("bloc-certitude").hidden = !f.categorie;
   $("f-certitude").value = f.certitude;
   $("f-rubrique").hidden = !f.mots || RUBRIQUES.length < 2;
@@ -398,6 +403,16 @@ function majControles() {
   }
   $("tri").value = f.tri;
   puces();
+}
+
+// Filtre « Thème » : les thèmes qui ont des réponses préparées ou des commentaires rangés.
+function majFiltreTheme() {
+  const choix = $("f-theme");
+  const avant = choix.value;
+  choix.replaceChildren(el("option", { value: "" }, "Tous"), el("option", { value: "avec" }, "Rangés dans un thème"),
+    ...themesActifs().map((t) => el("option", { value: t.id }, `${t.nom} (${reponsesDu(t.id).length} réponses)`)));
+  choix.value = f.theme || "";
+  if (choix.value !== (f.theme || "")) choix.value = avant;
 }
 
 function vueCommentaires() {
@@ -517,6 +532,7 @@ for (const [id, cle] of [["f-categorie", "categorie"], ["f-sujet", "sujet"], ["f
 $("f-rubrique").append(...RUBRIQUES.map((r) => el("option", { value: r }, r)));
 $("f-rubrique").addEventListener("change", (e) => { f.rubrique = e.target.value; afficher(); });
 $("f-certitude").addEventListener("change", (e) => { f.certitude = e.target.value; afficher(); });
+$("f-theme").addEventListener("change", (e) => { f.theme = e.target.value; afficher(); });
 $("f-du").addEventListener("change", (e) => { f.du = e.target.value; f.periode = ""; afficher(); });
 $("f-au").addEventListener("change", (e) => { f.au = e.target.value; f.periode = ""; afficher(); });
 for (const [id, cle] of [["f-texte", "texte"], ["f-auteur", "auteur"], ["f-publication", "publication"]]) {

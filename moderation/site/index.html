@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <title>Modération · Soutien David Lisnard 2027</title>
+  <title>Modération · Cap 2027 avec David Lisnard</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
   <script type="module" src="js/app.js"></script>
@@ -67,6 +67,10 @@
                 <button type="button" data-v="L" class="s-lisnard" title="Commentaires qui parlent de David Lisnard ou de Nouvelle Énergie (pour un insultant : qui les visent)">Lisnard / Nouvelle Énergie</button>
                 <button type="button" data-v="A" title="Autres personnalités, autres partis, disputes entre commentateurs…">Autres sujets</button>
               </div>
+            </fieldset>
+            <fieldset>
+              <legend>Thème <span class="pale">(réponses préparées)</span></legend>
+              <select id="f-theme"><option value="">Tous</option></select>
             </fieldset>
             <fieldset>
               <legend>Mots surveillés</legend>
@@ -179,6 +183,8 @@
     </main>
   </div>
 
+  <div id="voile" class="voile" hidden></div>
+  <aside id="panneau" class="panneau" aria-label="Réponses préparées" hidden></aside>
   <div id="menu" class="menu carte" role="menu" hidden></div>
   <div id="message" class="message" role="status" hidden></div>
 </body>

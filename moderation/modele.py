@@ -10,7 +10,8 @@ import random
 import shutil
 import time
 
-from commun.fichiers import ecrire_csv, ecrire_json, lire_csv
+from analyse import corpus as cp
+from commun.fichiers import ecrire_json
 from commun.taches import verifier_arret, verrou
 from commun.textes import maintenant
 from moderation import donnees as d
@@ -76,7 +77,8 @@ def entrainer() -> None:
     torch = _torch()
     from transformers import AutoModelForSequenceClassification, AutoTokenizer
     with verrou(d.TACHE, sans_veille=True):
-        ann = list(d.lire_annotations().values())
+        textes = d.textes()
+        ann = [{**a, "texte": textes[a["cle"]]} for a in d.lire_annotations().values() if a["cle"] in textes]
         app = [a for a in ann if a["jeu"] != "test"]
         test = [a for a in ann if a["jeu"] == "test"]
         journal(f"Réentraînement : {len(app)} annotations d'entraînement, {len(test)} de test.")
@@ -145,6 +147,9 @@ def _classer(tout: bool, mod=None, tok=None, version: str | None = None) -> None
         journal("Aucun modèle de modération : lancer d'abord « python -m moderation entrainer ».")
         return
     version = version or infos["version"]
+    if n := cp.manquants("facebook"):  # collectés depuis la dernière mise à jour du corpus
+        journal(f"Mise à jour du corpus : {n} commentaires Facebook pas encore dedans.")
+        cp.mettre_a_jour()
     notes = {} if tout else {k: v for k, v in d.lire_notes().items() if v["version"] == version}
     a_faire = [c for c in d.commentaires() if c["cle"] not in notes]
     if not a_faire:
@@ -156,7 +161,6 @@ def _classer(tout: bool, mod=None, tok=None, version: str | None = None) -> None
         from transformers import AutoModelForSequenceClassification, AutoTokenizer
         tok = AutoTokenizer.from_pretrained(d.MODELE)
         mod = AutoModelForSequenceClassification.from_pretrained(d.MODELE).eval()
-    garde = {} if tout else {k: v for k, v in d.lire_notes().items() if v["version"] == version}
     t0 = time.time()
     for debut in range(0, len(a_faire), 2000):  # enregistré par tranches : un arrêt garde ce qui est fait
         tranche = a_faire[debut:debut + 2000]
@@ -164,14 +168,15 @@ def _classer(tout: bool, mod=None, tok=None, version: str | None = None) -> None
                     avancement=lambda f, t: ecrire_json(d.AVANCEMENT, {"tache": "classement", "fait": debut + f,
                                                                        "total": len(a_faire)}))
         le = maintenant()
+        nouvelles = {}
         for c, p in zip(tranche, P):
-            garde[c["cle"]] = {"cle": c["cle"], "categorie": d.CATEGORIES[max(range(3), key=lambda k: p[k])],
-                               "p_autre": f"{p[0]:.3f}", "p_insultant": f"{p[1]:.3f}", "p_question": f"{p[2]:.3f}",
-                               "version": version, "classe_le": le}
-        ecrire_csv(d.NOTES, garde.values(), d.CHAMPS_NOTES)
+            nouvelles[c["cle"]] = {"categorie": d.CATEGORIES[max(range(3), key=lambda k: p[k])],
+                                   "p_autre": f"{p[0]:.3f}", "p_insultant": f"{p[1]:.3f}", "p_question": f"{p[2]:.3f}",
+                                   "version": version, "classe_le": le}
+        d.enregistrer_notes(nouvelles)
         journal(f"  {debut + len(tranche)}/{len(a_faire)} classés ({time.time() - t0:.0f} s)")
     d.AVANCEMENT.unlink(missing_ok=True)
-    n = list(garde.values())
+    n = [x for x in d.lire_notes().values() if x["version"] == version]
     journal(f"Classement terminé : {sum(x['categorie'] == 'insultant' for x in n)} insultants, "
             f"{sum(x['categorie'] == 'question' for x in n)} questions sur {len(n)} commentaires.")
     envoyer()
@@ -192,5 +197,6 @@ def remesurer() -> dict:
     from transformers import AutoModelForSequenceClassification, AutoTokenizer
     tok = AutoTokenizer.from_pretrained(d.MODELE)
     mod = AutoModelForSequenceClassification.from_pretrained(d.MODELE).eval()
-    test = [a for a in lire_csv(d.ANNOTATIONS) if a["jeu"] == "test"]
-    return mesurer(test, predire(mod, tok, [a["texte"] for a in test], arret=False))
+    textes = d.textes()
+    test = [a for a in d.lire_annotations().values() if a["jeu"] == "test" and a["cle"] in textes]
+    return mesurer(test, predire(mod, tok, [textes[a["cle"]] for a in test], arret=False))

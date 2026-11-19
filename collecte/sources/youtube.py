@@ -59,10 +59,12 @@ class Api:
             if raisons & {"commentsDisabled", "videoNotFound", "forbidden", "channelNotFound",
                           "playlistNotFound", "notFound"}:
                 return {"_erreur": sorted(raisons)[0]}
-            if r.status_code in (500, 502, 503, 429):
+            if r.status_code in (500, 502, 503, 429) or "processingFailure" in raisons:  # pannes passagères de YouTube
                 time.sleep(5 * (essai + 1))
                 continue
             raise SourceImpossible(f"API YouTube : HTTP {r.status_code} {sorted(raisons)} sur {methode}")
+        if methode in ("commentThreads", "comments"):  # une vidéo capricieuse n'arrête pas toute la collecte
+            return {"_erreur": "processingFailure"}
         raise SourceImpossible(f"API YouTube injoignable après 6 essais ({methode}).")
 
     def pages(self, methode: str, **params):
@@ -255,6 +257,10 @@ def _lire(api: Api, depot, journal, a_lire: list[str], infos: dict, vues: dict, 
             continue
         compte = compte_de(v)
         lignes, erreur = commentaires_video(api, depot, compte, vid, v, fichier)
+        if erreur == "processingFailure":  # panne passagère : on garde ce qui est lu, la vidéo sera relue au prochain passage
+            depot.ajouter(compte, lignes, fichier, bilan)
+            journal(f"    [{n}/{len(a_lire)}] {v['titre'][:70]} : erreur passagère de YouTube, à relire plus tard")
+            continue
         ajoutes = depot.ajouter(compte, lignes, fichier, bilan)
         vues[vid] = {"commentaires": v["commentaires"] or 0,
                      "lu_le": datetime.now(timezone.utc).isoformat(timespec="seconds")}

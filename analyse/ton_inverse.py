@@ -2,7 +2,7 @@
 
 Sur les commentaires de test (jeux « test » et « test_rare ») que Claude a notés comme parlant de Lisnard (cible L),
 une inversion est une tonalité de Claude de 6 ou moins (critique) notée 14 ou plus par le modèle (éloge), ou
-l'inverse. Les notes du modèle sont celles de donnees/analyse/scores.csv : la mesure suit donc la version qui a noté
+l'inverse. Les notes du modèle sont celles du corpus (colonnes note_…) : la mesure suit donc la version qui a noté
 le corpus, sans rien recalculer. Mêmes seuils que le rapport du modèle (reproche ≤ 6, éloge ≥ 14).
 
     python -m analyse.ton_inverse
@@ -18,7 +18,7 @@ ARGUMENTE = 12  # pertinence à partir de laquelle un commentaire est « argumen
 
 
 def mesurer() -> dict:
-    scores = {r["cle"]: r for r in lire_csv(stockage.SCORES)}
+    scores = stockage.lire_scores()
     tests = [a for a in lire_csv(stockage.ANNOTATION / "annotations.csv")
              if a["jeu"].startswith("test") and a["cible"] == "L" and a["cle"] in scores]
 

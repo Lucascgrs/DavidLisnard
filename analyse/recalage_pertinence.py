@@ -13,8 +13,9 @@ Méthode :
    de la grille, on mesure son erreur par validation croisée, puis on réécrit les pertinences. Les commentaires de
    l'échantillon reçoivent leur note renotée.
 
-L'ancienne note est toujours lue dans annotations_avant_recalage.csv (copie faite au premier « appliquer ») :
-relancer « appliquer » redonne exactement le même résultat, et les lots postérieurs au 142 ne sont jamais touchés.
+L'ancienne note est gardée dans la colonne pertinence_origine d'annotations.csv (remplie au premier « appliquer » ;
+vide quand la note n'a jamais été recalée) et c'est toujours elle qui est lue : relancer « appliquer » redonne
+exactement le même résultat, et les lots postérieurs au 142 ne sont jamais touchés.
 Bilan : donnees/analyse/annotation/recalage/bilan.json.
 
     python -m analyse.recalage_pertinence tirer 400
@@ -26,10 +27,9 @@ import json
 import math
 import random
 import re
-import shutil
 import sys
 
-from analyse.annotation import ANNOTATIONS, DOSSIER
+from analyse.annotation import ANNOTATIONS, CHAMPS_NOTES, DOSSIER
 from analyse.corpus import lire
 from commun.fichiers import ecrire_csv, lire_csv
 from commun.textes import abreger
@@ -37,7 +37,6 @@ from commun.textes import abreger
 RECAL = DOSSIER / "recalage"
 ECHANTILLON = RECAL / "echantillon.csv"
 NOTES = RECAL / "notes.csv"
-COPIE = DOSSIER / "annotations_avant_recalage.csv"
 LOTS_DERIVES = range(18, 143)  # lots 18 à 142
 
 
@@ -47,7 +46,7 @@ def _derives(lignes):
 
 def _anciennes_notes() -> dict[str, int]:
     """Pertinence d'origine de chaque annotation (avant tout recalage)."""
-    return {l["cle"]: int(l["pertinence"]) for l in lire_csv(COPIE if COPIE.exists() else ANNOTATIONS)}
+    return {l["cle"]: int(l.get("pertinence_origine") or l["pertinence"]) for l in lire_csv(ANNOTATIONS)}
 
 
 def tirer(n: int, graine: int = 0):
@@ -136,8 +135,6 @@ def appliquer():
              "moyenne_renotee": float(y.mean()), "moyenne_ancienne": float(ancien.mean())}
     print(json.dumps(bilan, ensure_ascii=False, indent=1))
     modele.fit(X, y)
-    if not COPIE.exists():
-        shutil.copy2(ANNOTATIONS, COPIE)
     changes = 0
     for a in _derives(annot):
         if a["cle"] in notes:
@@ -147,13 +144,15 @@ def appliquer():
             nouv = int(round(float(np.clip(modele.predict(x)[0], 0, 20))))
         if a["cible"] == "A":
             nouv = min(nouv, 4)
+        origine = str(anciennes[a["cle"]])
+        a["pertinence_origine"] = "" if str(nouv) == origine else origine
         if str(nouv) != a["pertinence"]:
             a["pertinence"] = str(nouv)
             changes += 1
-    ecrire_csv(ANNOTATIONS, annot, list(annot[0].keys()))
+    ecrire_csv(ANNOTATIONS, annot, CHAMPS_NOTES)
     bilan["annotations_modifiees"] = changes
     (RECAL / "bilan.json").write_text(json.dumps(bilan, ensure_ascii=False, indent=1), encoding="utf-8")
-    print(f"{changes} pertinences réécrites ; ancienne version dans {COPIE.name}")
+    print(f"{changes} pertinences réécrites ; note d'origine dans la colonne pertinence_origine")
 
 
 if __name__ == "__main__":

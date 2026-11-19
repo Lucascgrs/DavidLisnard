@@ -90,17 +90,12 @@ def cle_auteurs() -> bytes:
 
 def auteurs() -> dict[str, str]:
     """Identifiant opaque de l'auteur (« u » + 16 caractères), par clé « source:commentaire_id ». Le compte (identifiant
-    de plateforme, à défaut nom affiché, comme web/export.py) est lu dans les CSV de collecte (donnees/<source>/) et ne
-    sort jamais d'ici : seul part son HMAC avec la clé locale."""
-    cle, sortie = cle_auteurs(), {}
-    for source in SOURCES:
-        for f in sorted((DONNEES / source).glob("*.csv")):
-            for l in lire_csv(f):
-                compte = (l.get("auteur_id") or l.get("auteur") or "").strip()
-                if compte and l.get("commentaire_id"):
-                    sortie.setdefault(f"{source}:{l['commentaire_id']}",
-                                      "u" + hmac.new(cle, f"{source}|{compte}".encode(), hashlib.sha256).hexdigest()[:16])
-    return sortie
+    de plateforme, à défaut nom affiché : analyse.corpus.auteurs(), lu dans les CSV de collecte) ne sort jamais
+    d'ici : seul part son HMAC avec la clé locale."""
+    from analyse.corpus import auteurs as lire_auteurs
+    cle = cle_auteurs()
+    return {k: "u" + hmac.new(cle, f"{k.split(':', 1)[0]}|{compte}".encode(), hashlib.sha256).hexdigest()[:16]
+            for k, (compte, _) in lire_auteurs(SOURCES).items()}
 
 
 def lignes_par_source() -> dict[str, list[dict]]:

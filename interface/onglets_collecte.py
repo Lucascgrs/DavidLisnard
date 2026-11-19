@@ -77,7 +77,6 @@ class Carte:
         self.b_arreter.pack(side="left", padx=6)
         self.b_forcer = ttk.Button(bas, text="Forcer l'arrêt", command=self.forcer)
         ttk.Button(bas, text="Dossier", command=lambda: ouvrir(DONNEES / source)).pack(side="right")
-        ttk.Button(bas, text="Ouvrir l'Excel", command=self.excel).pack(side="right", padx=6)
         self.abandonnee = False
 
     def lancer(self):
@@ -100,10 +99,6 @@ class Carte:
             threading.Thread(target=forcer_arret, args=(self.source,), daemon=True).start()
             self.app.journal_texte(f"--- {SOURCES[self.source]} : arrêt forcé")
             self.app.after(1500, self.app.apres_action)
-
-    def excel(self):
-        if not ouvrir(DONNEES / self.source / f"{self.source}_tout.xlsx"):
-            messagebox.showinfo("Excel", "Pas encore de fichier Excel pour cette source.")
 
     def maj(self, comptes: dict | None):
         C = COULEURS

@@ -1,4 +1,4 @@
-"""Dépôt d'une source : format des lignes, ajout sans doublon, état de la collecte, Excel et bilan.
+"""Dépôt d'une source : format des lignes, ajout sans doublon, état de la collecte et bilan.
 
 Une ligne = un commentaire (ou un message Bluesky). Les fichiers ne font que grandir : une ligne déjà enregistrée
 n'est jamais réécrite ni supprimée.
@@ -9,7 +9,6 @@ changé, la nouvelle valeur va dans donnees/<source>/likes.json ({identifiant: j
 priorité. Les CSV, eux, ne sont pas retouchés.
 """
 import csv
-import re
 from pathlib import Path
 
 from commun.config import DONNEES, SOURCES
@@ -25,8 +24,6 @@ COLONNES = [
     "texte", "likes", "collecte_le",
 ]
 PRINCIPAL, REPONSE = "principal", "réponse"
-LIGNES_MAX_EXCEL = 1_048_000  # limite d'Excel ; les CSV, eux, restent complets
-_CARACTERES_INTERDITS = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f]")  # refusés par Excel
 
 
 class SourceImpossible(Exception):
@@ -35,8 +32,8 @@ class SourceImpossible(Exception):
 
 
 class Depot:
-    """Le dossier donnees/<source>/ : un CSV par compte suivi, l'état de la collecte (etat.json), l'Excel
-    récapitulatif."""
+    """Le dossier donnees/<source>/ : un CSV par compte suivi, l'état de la collecte (etat.json) et les « j'aime »
+    relevés depuis (likes.json)."""
 
     def __init__(self, source: str):
         self.source = source
@@ -138,47 +135,6 @@ class Depot:
 
     def total(self) -> int:
         return sum(compter_lignes_csv(c) for c in self.dossier.glob("*.csv"))
-
-    def excel(self) -> Path | None:
-        """<source>_tout.xlsx : tous les CSV de la source, une feuille. Recréé à chaque lancement."""
-        from openpyxl import Workbook
-        from openpyxl.utils import get_column_letter
-
-        fichiers = sorted(self.dossier.glob("*.csv"))
-        if not fichiers:
-            return None
-        classeur = Workbook(write_only=True)
-        feuille = classeur.create_sheet(self.source)
-        largeurs = {"texte": 90, "publication_titre": 45, "compte_source": 25, "auteur": 22,
-                    "publication_lien": 30, "date": 19, "publication_date": 19, "collecte_le": 19}
-        for i, c in enumerate(COLONNES, 1):
-            feuille.column_dimensions[get_column_letter(i)].width = largeurs.get(c, 14)
-        feuille.freeze_panes = "A2"
-        feuille.append(COLONNES)
-        n = 0
-        for chemin in fichiers:
-            with open(chemin, encoding="utf-8-sig", newline="") as f:
-                for ligne in csv.DictReader(f, delimiter=";"):
-                    if n >= LIGNES_MAX_EXCEL:
-                        break
-                    valeurs = []
-                    for c in COLONNES:
-                        v = _CARACTERES_INTERDITS.sub("", ligne.get(c, "") or "")[:32_000]
-                        if c == "likes" and v.isdigit():
-                            v = int(v)
-                        elif v.startswith("="):  # openpyxl en ferait une formule
-                            v = " " + v
-                        valeurs.append(v)
-                    feuille.append(valeurs)
-                    n += 1
-        sortie = self.dossier / f"{self.source}_tout.xlsx"
-        tmp = sortie.with_name(sortie.stem + "_tmp.xlsx")
-        classeur.save(tmp)
-        try:
-            tmp.replace(sortie)
-        except PermissionError:  # le fichier est ouvert dans Excel
-            sortie = tmp
-        return sortie
 
 
 def compter_par_source() -> dict:

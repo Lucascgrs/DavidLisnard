@@ -1,7 +1,7 @@
 """Onglet « Modération » : commentaires Facebook à modérer (insultants) ou qui appellent une réponse (questions).
 
-À part de l'analyse principale (voir moderation/__init__.py). Les catégories viennent de donnees/moderation/notes.csv,
-écrit par « python -m moderation classer » ; quand un commentaire a été annoté par Claude, c'est l'annotation qui
+À part de l'analyse principale (voir moderation/__init__.py). Les catégories viennent des colonnes mod_… du corpus
+(donnees/analyse/corpus.csv), écrites par « python -m moderation classer » ; quand un commentaire a été annoté par Claude, c'est l'annotation qui
 est affichée (repérée « annoté »). Rien n'est publié sur le site : cet onglet montre les auteurs et les liens. Les catégories (sans les auteurs) vont
 aussi dans la table privée « moderation » de Supabase, que le site ne peut pas lire (moderation/publication.py).
 """

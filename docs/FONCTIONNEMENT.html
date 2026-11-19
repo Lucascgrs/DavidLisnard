@@ -200,7 +200,6 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
       <p class="comment">X n'a plus d'accès gratuit. Avec les cookies d'un compte dédié, la bibliothèque <code>twscrape</code> envoie les recherches internes du site, sans navigateur ; seule la recherche « conversation_id: » rend toutes les réponses d'un post (544 contre 36 en lisant le post, essai du 12 novembre 2026). Les petits fils sont lus par paquets de dix. Rythme : {{x_par_quart}} recherches au plus par quart d'heure (X en permet 50), {{x_pause}} s entre deux requêtes, {{x_minutes}} min par lancement, {{x_quota}} requêtes par jour ; le récent d'abord (les posts suivis de moins de {{x_relire}} jours sont relus, ceux qui le citent le sont au bout de {{x_attendre}} jours), puis l'arriéré jusqu'au {{x_depuis}}. Au moindre freinage, repos de {{x_repos}} h. La connexion se fait une fois dans un Chrome visible (X refuse le mot de passe envoyé par un script).</p>
     </div>
   </div>
-  <p class="note">Écartés : TikTok (le contournement de sa protection anti-robots a été refusé), Reddit (bloqué par le réseau), WhatsApp (la discussion d'adhérents collectée jusqu'au 12 novembre 2026 : des échanges entre militants, pas l'avis du public ; retirée avec tout ce qui en venait). Threads demande une connexion : à tenter plus tard, avec un compte créé pour la collecte.</p>
 </section>
 
 <!-- ============ STOCKAGE ============ -->
@@ -208,6 +207,7 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
   <div class="titre"><span class="etiquette" style="color:var(--s-stock)">Étape 2 · Stockage</span>
   <h2>Où et comment c'est rangé</h2></div>
   <p>Tout est d'abord stocké sur le PC, dans des fichiers lisibles (CSV, ouvrables dans Excel, et JSON). Il n'y a pas de base de données locale. Seul ce qui est publiable part ensuite en ligne.</p>
+  <p>Une règle : chaque information n'est rangée qu'à un endroit. Ce qu'on ne peut pas refaire, ce sont les CSV de la collecte et le travail fait à la main (annotations, corrections, thèmes, catégories de modération) : ce sont eux qui sont sauvegardés. Tout le reste se recalcule à partir d'eux et tient dans une seule table, <span class="mono">corpus.csv</span>, une ligne par commentaire : ce qui vient de la collecte, les notes du modèle d'analyse et le classement du modèle de modération. Les fichiers de travail ne recopient pas les textes : ils renvoient au corpus par la clé du commentaire (« source:identifiant »).</p>
   <div class="schema">
     <svg viewBox="0 0 860 380">
       <defs><marker id="fl2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--muted)"/></marker></defs>
@@ -226,18 +226,20 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
         <text x="20" y="308" style="fill:var(--s-annot)">donnees/critiques/</text>
         <text x="40" y="328" class="mono">themes.json · rattachements.csv</text>
       </g>
-      <rect x="320" y="40" width="230" height="110" rx="10" style="fill:var(--s-stock-bg);stroke:var(--s-stock)"/>
+      <rect x="320" y="40" width="230" height="150" rx="10" style="fill:var(--s-stock-bg);stroke:var(--s-stock)"/>
       <text x="335" y="66" style="font-family:var(--mono);font-size:13px;fill:var(--s-stock)">analyse/corpus.csv</text>
-      <text x="335" y="88" class="petit">une ligne par commentaire :</text>
-      <text x="335" y="106" class="petit">texte, date, compte, likes,</text>
-      <text x="335" y="124" class="petit">texte du parent, titre de la vidéo</text>
-      <text x="335" y="142" class="petit">auteur remplacé par une empreinte</text>
-      <rect x="320" y="175" width="230" height="64" rx="10" style="fill:var(--s-annot-bg);stroke:var(--s-annot)"/>
-      <text x="335" y="200" style="font-family:var(--mono);font-size:13px;fill:var(--s-annot)">annotation/annotations.csv</text>
-      <text x="335" y="222" class="petit">les notes données par Claude</text>
-      <rect x="320" y="255" width="230" height="64" rx="10" style="fill:var(--s-modele-bg);stroke:var(--s-modele)"/>
-      <text x="335" y="280" style="font-family:var(--mono);font-size:13px;fill:var(--s-modele)">analyse/scores.csv</text>
-      <text x="335" y="302" class="petit">notes du modèle (modeles/{{version}}/)</text>
+      <text x="335" y="88" class="petit">la table centrale, une ligne</text>
+      <text x="335" y="106" class="petit">par commentaire : texte, date,</text>
+      <text x="335" y="124" class="petit">compte, likes, parent, titre,</text>
+      <text x="335" y="142" class="petit">auteur remplacé par une empreinte,</text>
+      <text x="335" y="160" class="petit">notes du modèle ({{version}}),</text>
+      <text x="335" y="178" class="petit">classement de la modération</text>
+      <rect x="320" y="205" width="230" height="64" rx="10" style="fill:var(--s-annot-bg);stroke:var(--s-annot)"/>
+      <text x="335" y="230" style="font-family:var(--mono);font-size:13px;fill:var(--s-annot)">annotations, corrections</text>
+      <text x="335" y="252" class="petit">le travail à la main, par clé</text>
+      <rect x="320" y="285" width="230" height="64" rx="10" style="fill:var(--s-modele-bg);stroke:var(--s-modele)"/>
+      <text x="335" y="310" style="font-family:var(--mono);font-size:13px;fill:var(--s-modele)">modeles/{{version}}/</text>
+      <text x="335" y="332" class="petit">écrit ses notes dans le corpus</text>
       <g style="stroke:var(--muted);stroke-width:1.5;fill:none">
         <path d="M250 70 C285 70 290 90 318 92" marker-end="url(#fl2)"/>
         <path d="M250 120 C285 120 290 98 318 96" marker-end="url(#fl2)"/>
@@ -264,19 +266,19 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
       <path d="M550 135 C590 135 575 352 608 352" marker-end="url(#fl2)" style="stroke:var(--muted);stroke-width:1.5;fill:none"/>
       <g style="stroke:var(--muted);stroke-width:1.5;fill:none">
         <path d="M550 95 H608" marker-end="url(#fl2)"/>
-        <path d="M550 285 C580 285 580 150 608 150" marker-end="url(#fl2)" style="stroke-dasharray:5 4"/>
+        <path d="M550 317 C588 317 588 180 552 180" marker-end="url(#fl2)" style="stroke-dasharray:5 4"/>
+        <path d="M550 237 C580 237 580 150 608 150" marker-end="url(#fl2)" style="stroke-dasharray:5 4"/>
         <path d="M730 210 V233" marker-end="url(#fl2)"/>
       </g>
       <text x="579" y="86" text-anchor="middle" class="mono">publier</text>
     </svg>
   </div>
-  <p class="legende">La base est normalisée, en étoile : une source, un compte suivi (et son groupe), une publication, un auteur n'y sont écrits qu'une fois, et chaque commentaire ne porte que son texte, ses notes et des numéros vers eux (la semaine et la taille en mots sont calculées par la base). Les auteurs sont dans une table privée, que le site ne peut pas lire : il n'en voit qu'un numéro. Les fichiers du PC gardent leur forme ; la publication les traduit dans ce modèle. Elle est incrémentale : <code>donnees/web/publie.json</code> retient ce qui est déjà en ligne, et seules les lignes nouvelles ou dont la note a changé sont envoyées. Les commentaires notés partent aussi vers le stockage du groupe RAG politique sur Cloudflare R2, dans son bucket privé <span class="mono">rag-politique-sources-privees</span>, dans <code>data/commentaires/nouvelle-energie/</code> : un seul fichier Parquet par source, sans aucun nom de compte (chaque auteur y devient un identifiant opaque, calculé avec une clé secrète gardée sur le PC), remplacé en entier quand la source change ({{r2_exportes}} commentaires dans ces fichiers, dont {{r2_attente}} en attente d'envoi ; le site n'en dépend pas ; règles dans <code>docs/CLOUDFLARE.md</code>).</p>
+  <p class="legende">La base est normalisée, en étoile : sources, comptes, publications et auteurs n'y sont écrits qu'une fois, et les auteurs sont dans une table privée que le site ne lit pas. La publication est incrémentale (<code>donnees/web/publie.json</code>) : seules les lignes nouvelles ou renotées partent. Les commentaires notés sont aussi envoyés, sans aucun nom de compte, au bucket R2 privé du groupe RAG politique : un fichier Parquet par source, {{r2_exportes}} commentaires (règles dans <code>docs/CLOUDFLARE.md</code>).</p>
   <div class="grille trois">
     <div class="carte"><span class="etiquette">Doublons</span><div class="chiffre">{{n_doublons}}</div><p>commentaires mis de côté ({{part_doublons}}) : le même texte, du même auteur, dans la même source. Seul le premier publié compte dans la synthèse, sur le site et dans les thèmes. Le même texte écrit par des personnes différentes reste compté : ce sont autant de voix.</p></div>
     <div class="carte"><span class="etiquette">« J'aime »</span><p>Un commentaire lu juste après sa publication en a peu. Quand une publication est relue, les nouveaux comptes vont dans <code>likes.json</code>, sans retoucher les CSV. Ils servent à la vue pondérée : chaque commentaire y pèse 1 + ses « j'aime ».</p></div>
-    <div class="carte"><span class="etiquette">Sauvegarde</span><div class="chiffre">{{sauvegarde_mo}}</div><p><code>donnees/sauvegardes/donnees.zip</code>, refaite à la fin de chaque collecte : CSV bruts (Instagram d'abord), annotations, thèmes. Une seule copie : la nouvelle est écrite à part, relue, puis remplace l'ancienne. Refusée si un CSV a rétréci.</p></div>
+    <div class="carte"><span class="etiquette">Sauvegarde</span><div class="chiffre">{{sauvegarde_mo}}</div><p><code>donnees/sauvegardes/donnees.zip</code>, refaite à la fin de chaque collecte : CSV bruts (Instagram d'abord), annotations, corrections, thèmes, modération, dans le format où le projet les lit. Le corpus, les vecteurs et les modèles se recalculent et n'y sont pas. Une seule copie : la nouvelle est écrite à part, relue, puis remplace l'ancienne. Refusée si un CSV a rétréci.</p></div>
   </div>
-  <p class="legende">Accès au site : depuis le 14 novembre 2026, rien ne se lit sans le mot de passe du site, choisi par <code>python -m web motdepasse</code>. Comme pour la modération, c'est un compte partagé de Supabase Auth (adresse fixe, on ne tape que le mot de passe, rôle « lecteur », inscriptions fermées) ; la base refuse tout à qui n'est pas connecté, et changer le mot de passe recrée le compte et ferme les sessions ouvertes. Pour la table des commentaires, le compte est vérifié dans les fonctions de recherche plutôt que par une règle de la table : une telle règle empêchait la base d'utiliser l'index de la recherche plein texte (6 s au lieu de 0,1 s).</p>
 </section>
 
 <!-- ============ GRILLE ============ -->
@@ -473,7 +475,7 @@ cible L · ton 3 · forme 10 · système 10 · idées 3 · pertinence 8
 <section>
   <div class="titre"><span class="etiquette" style="color:var(--s-annot)">À part · Modération</span>
   <h2>Modérer les groupes Facebook</h2></div>
-  <p>Demandée par le gestionnaire d'un groupe de soutien : repérer ce qu'il faut modérer et ce qui appelle une réponse. Séparée du reste : ni notes, ni thèmes, rien sur le site public ; un site à part, protégé par mot de passe, sert aux modérateurs.</p>
+  <p>Demandée par le gestionnaire d'un groupe de soutien : repérer ce qu'il faut modérer et ce qui appelle une réponse. Rien sur le site public : un site à part, protégé par mot de passe, sert aux modérateurs.</p>
   <div class="schema">
     <svg viewBox="0 0 860 300">
       <defs><marker id="flm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--muted)"/></marker></defs>
@@ -547,8 +549,47 @@ cible L · ton 3 · forme 10 · système 10 · idées 3 · pertinence 8
       </g>
     </svg>
   </div>
-  <p>On repère sur le site, on agit sur Facebook (supprimer, retirer ou bloquer : Facebook ne permet pas de le faire d'ailleurs), puis on marque le commentaire. Changer le mot de passe ferme toutes les sessions. Pour ménager la base gratuite, chaque navigateur télécharge tout une fois, le garde, puis ne demande les nouveaux commentaires qu'à l'ouverture du site ou au bouton « Actualiser » ; filtres et tris se font sur l'ordinateur du modérateur. Seules les marques sont redemandées toutes les 10 secondes, page visible : ce qu'un modérateur marque apparaît presque aussitôt chez les autres, sur la carte elle-même (« Traité par … »).</p>
-  <p>Le site ne montre qu'un groupe, « Soutien David Lisnard 2027 » : la base ne rend rien d'autre aux modérateurs, les autres groupes servent seulement à entraîner le modèle. Chaque commentaire porte aussi un <b>sujet</b> : il parle de David Lisnard ou de Nouvelle Énergie (pour un insultant : il les vise), ou d'autre chose. C'est la cible de l'analyse principale, sauf quand la lecture d'un insultant a tranché. À côté du modèle, une liste de <b>mots surveillés</b> (<span class="mono">moderation/mots_surveilles.txt</span>) sert de simple filtre : les mots trouvés sont surlignés, sans tenir compte des accents, des lettres répétées ni des chiffres déguisés. L'onglet <b>Statistiques</b> suit l'évolution des insultants, des questions et des mots surveillés, et ce que chaque modérateur a marqué « traité ».</p>
+  <p>On repère sur le site, on agit sur Facebook, puis on marque le commentaire « traité » : les autres modérateurs le voient en quelques secondes. Pour ménager la base gratuite, chaque navigateur garde les données et ne demande ensuite que les nouveaux commentaires.</p>
+  <p>Le site ne montre que le groupe « Cap 2027 avec David Lisnard » ; les autres groupes servent seulement à entraîner le modèle. Chaque commentaire porte un <b>sujet</b> (David Lisnard ou Nouvelle Énergie, ou autre chose). Une liste de <b>mots surveillés</b> (<span class="mono">moderation/mots_surveilles.txt</span>) les surligne, et l'onglet <b>Statistiques</b> suit insultants, questions, mots surveillés et commentaires traités par modérateur.</p>
+  <h3>Les réponses préparées</h3>
+  <div class="schema">
+    <svg viewBox="0 0 860 190">
+      <defs><marker id="flr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--muted)"/></marker></defs>
+      <rect x="10" y="20" width="190" height="96" rx="10" style="fill:var(--s-annot-bg);stroke:var(--s-annot)"/>
+      <text x="105" y="44" text-anchor="middle" style="font-weight:600;fill:var(--s-annot)">Ranger par thème</text>
+      <text x="105" y="66" text-anchor="middle" class="mono">12: T31 T43</text>
+      <text x="105" y="86" text-anchor="middle" class="petit">lots lus par Gemini ou Claude</text>
+      <text x="105" y="102" text-anchor="middle" class="petit">{{rep_ranges}} rangés · {{rep_a_ranger}} à ranger</text>
+      <rect x="250" y="20" width="200" height="96" rx="10" style="fill:var(--s-stock-bg);stroke:var(--s-stock)"/>
+      <text x="350" y="44" text-anchor="middle" style="font-weight:600;fill:var(--s-stock)">Bibliothèque</text>
+      <text x="350" y="70" text-anchor="middle" style="font-family:var(--display);font-size:20px;font-weight:700">{{rep_reponses}} réponses</text>
+      <text x="350" y="90" text-anchor="middle" class="petit">{{rep_objections}} objections, {{rep_themes}} thèmes</text>
+      <text x="350" y="106" text-anchor="middle" class="petit">sur {{rep_themes_tous}}</text>
+      <rect x="500" y="20" width="160" height="96" rx="10" style="fill:var(--surface);stroke:var(--line)"/>
+      <text x="580" y="44" text-anchor="middle" style="font-weight:600">reponses.xlsx</text>
+      <text x="580" y="66" text-anchor="middle" class="petit">Excel, dans le dépôt</text>
+      <text x="580" y="86" text-anchor="middle" class="mono">reponses</text>
+      <text x="580" y="102" text-anchor="middle" class="petit">synchronise ⇄</text>
+      <rect x="700" y="20" width="150" height="96" rx="10" style="fill:var(--s-pub-bg);stroke:var(--s-pub)"/>
+      <text x="775" y="44" text-anchor="middle" style="font-weight:600;fill:var(--s-pub)">Site : 💬 Réponses</text>
+      <text x="775" y="66" text-anchor="middle" class="petit">copier, ouvrir</text>
+      <text x="775" y="82" text-anchor="middle" class="petit">le commentaire ;</text>
+      <text x="775" y="98" text-anchor="middle" class="petit">ajouter, modifier</text>
+      <g style="stroke:var(--muted);stroke-width:1.6;fill:none">
+        <path d="M200,68 H246" marker-end="url(#flr)"/>
+        <path d="M450,68 H496" marker-end="url(#flr)"/><path d="M496,78 H454" marker-end="url(#flr)"/>
+        <path d="M660,68 H696" marker-end="url(#flr)"/><path d="M696,78 H664" marker-end="url(#flr)"/>
+      </g>
+      <text x="10" y="146" style="font-weight:600">Cinq styles par objection</text>
+      <rect x="200" y="134" width="120" height="20" rx="10" style="fill:#e1f2e6"/><text x="260" y="148" text-anchor="middle" class="petit">avec des chiffres</text>
+      <rect x="330" y="134" width="100" height="20" rx="10" style="fill:var(--s-pub-bg)"/><text x="380" y="148" text-anchor="middle" class="petit">argumentée</text>
+      <rect x="440" y="134" width="80" height="20" rx="10" style="fill:var(--surface);stroke:var(--line)"/><text x="480" y="148" text-anchor="middle" class="petit">courte</text>
+      <rect x="530" y="134" width="110" height="20" rx="10" style="fill:#fdf0e2"/><text x="585" y="148" text-anchor="middle" class="petit">bienveillante</text>
+      <rect x="650" y="134" width="130" height="20" rx="10" style="fill:#ece9fd"/><text x="715" y="148" text-anchor="middle" class="petit">punchline (+ GIF)</text>
+      <text x="430" y="178" text-anchor="middle" class="petit">chaque chiffre a sa source : ses propres textes ou un chiffre jugé exact par la vérification</text>
+    </svg>
+  </div>
+  <p>Pour répondre vite aux commentaires qui l'appellent (une question, ou une critique non insultante de Lisnard ou de Nouvelle Énergie), chacun est rangé dans un à trois <b>thèmes</b> par Gemini ou Claude. Le bouton <b>💬 Réponses</b> montre les réponses préparées de ces thèmes : on copie, on ouvre le commentaire et on colle sur Facebook, qui ne laisse aucun site remplir sa zone de réponse. Les modérateurs ajoutent et modifient réponses et thèmes depuis le site ; <code>python -m moderation reponses</code> les synchronise avec <span class="mono">moderation/reponses.xlsx</span> (en cas de conflit, le site l'emporte ; une réponse retirée est désactivée, jamais supprimée).</p>
   <h3>S'améliorer : à la demande seulement</h3>
   <div class="schema">
     <svg viewBox="0 0 860 170">
@@ -645,17 +686,17 @@ cible L · ton 3 · forme 10 · système 10 · idées 3 · pertinence 8
       </div>
     </div>
   </div>
-  <p class="legende">Mesures ramenées à l'ensemble des commentaires (le test surreprésente les suspects) ; essais du 13 novembre 2026 sur les mêmes commentaires. Commandes : <code>python -m moderation classer</code>, <code>tirer</code>, <code>noter</code>, <code>relire</code>, <code>entrainer</code>, <code>publier</code>, <code>motdepasse</code>, <code>site deployer</code>. Fichiers : <span class="mono">donnees/moderation/</span>, <span class="mono">modeles/moderation/</span>.</p>
+  <p class="legende">Mesures ramenées à l'ensemble des commentaires ; essais du 13 novembre 2026. Commandes <code>python -m moderation</code> : <code>classer</code>, <code>tirer</code>, <code>noter</code>, <code>relire</code>, <code>entrainer</code>, <code>publier</code>, <code>motdepasse</code>, <code>site deployer</code>, <code>reponses</code>, <code>themes tirer</code>, <code>themes noter</code>. Fichiers : <span class="mono">donnees/moderation/</span>, colonnes <span class="mono">mod_…</span> du corpus, <span class="mono">modeles/moderation/</span>.</p>
 </section>
 
 <!-- ============ VÉRIFICATION ============ -->
 <section>
   <div class="titre"><span class="etiquette" style="color:var(--s-annot)">À part · Vérification</span>
   <h2>Vérifier les chiffres de David Lisnard</h2></div>
-  <p>Un travail séparé des commentaires, dans le paquet <code>verification/</code> : on recense ce que dit David Lisnard dans le corpus du RAG (copié en lecture seule depuis Cloudflare R2), puis, thème par thème, on télécharge les données publiques qui permettent de trancher, on refait les calculs et on rend un verdict.</p>
-  <p>Chaque thème a le même dossier : <code>affirmations.csv</code> (citations datées et sourcées), <code>position.md</code> (ce qu'il pense), <code>brut/</code> et <code>sources.csv</code> (fichiers d'origine, adresse, date, empreinte), <code>calculs/</code> (script, <code>METHODE.md</code>, <code>resultats.csv</code>, graphiques) et <code>analyse.md</code> (verdicts). L'échelle est la même partout : exact, plutôt exact, trompeur, faux, invérifiable, opinion ou promesse. Les chiffrages de mesures sont marqués comme estimations.</p>
-  <p>Commandes : <code>python -m verification corpus</code>, <code>telecharger &lt;thème&gt;</code>, <code>calculer &lt;thème&gt;</code>, <code>verifier</code> (catalogue, empreintes, renvois, verdicts) et <code>synthese</code> (registre de toutes les affirmations et tableau des verdicts). Publié dans le bucket R2 public par <code>python -m cloudflare verification</code> : originaux sous <code>originaux/ne/verification/</code>, calculs et synthèse sous <code>data/programmes/nouvelle-energie/verification/</code>. Les comptes de Cannes viennent des comptes individuels des communes de la DGFiP (2000-2025).</p>
-  <p>Site public de la vérification, à part du site des commentaires : <span class="mono">verification-lisnard.vercel.app</span>, une page d'accueil avec les 16 thèmes et une page par thème en trois temps : ce qu'il dit (une carte par idée, tirée de <code>position.md</code>, sans l'évolution ni ses sources), ce que disent les chiffres (une carte numérotée par affirmation) et la conclusion. Le site n'affiche pas le verdict d'<code>analyse.md</code> mais une étiquette qui dit la nature de l'écart (superlatif, arrondi, périmètres mélangés, chiffre grossi, contexte manquant…), colorée selon sa famille : exact, proche, à nuancer, inexact, invérifiable, opinion ou promesse ; un superlatif, un arrondi ou un chiffre daté n'est jamais « inexact ». Dépliée, une affirmation montre la citation exacte, l'étiquette, un petit graphique « ce qu'il annonce / données publiques », l'explication point par point, puis, repliés, ses autres formulations, le calcul et les sources. Le site est statique : toutes les données sont écrites dans les pages à la génération, sans base de données ni appel réseau. <code>python -m verification site</code> lit les fichiers des thèmes et <code>verification/conclusions.py</code> (conclusion courte, type d'écart qui sert d'étiquette, valeurs des graphiques, contrôlées contre <code>analyse.md</code>) ; <code>site apercu</code> l'ouvre en local, <code>site deployer</code> le met en ligne.</p>
+  <p>Travail séparé, dans <code>verification/</code> : on recense ce que dit David Lisnard dans le corpus du RAG puis, thème par thème, on télécharge les données publiques, on refait les calculs et on rend un verdict.</p>
+  <p>Chaque thème a le même dossier : <code>affirmations.csv</code>, <code>position.md</code>, <code>brut/</code> et <code>sources.csv</code>, <code>calculs/</code> et <code>analyse.md</code> (verdicts). Échelle commune : exact, plutôt exact, trompeur, faux, invérifiable, opinion ou promesse.</p>
+  <p>Commandes <code>python -m verification</code> : <code>corpus</code>, <code>telecharger &lt;thème&gt;</code>, <code>calculer &lt;thème&gt;</code>, <code>verifier</code>, <code>synthese</code>. Publié dans le bucket R2 public par <code>python -m cloudflare verification</code>.</p>
+  <p>Site public à part : <span class="mono">verification-lisnard.vercel.app</span>, une page par thème en trois temps (ce qu'il dit, ce que disent les chiffres, la conclusion). Chaque affirmation porte une étiquette qui dit la nature de l'écart (superlatif, arrondi, chiffre grossi…) et se déplie sur la citation, un petit graphique, l'explication et les sources. Site statique, généré par <code>python -m verification site</code> (avec <code>verification/conclusions.py</code>, contrôlé contre <code>analyse.md</code>) ; <code>site deployer</code> le met en ligne.</p>
   <p class="pied">Document généré le {{date}} par <code>python -m docs</code> depuis <code>docs/FONCTIONNEMENT.html</code>. Les chiffres viennent des données du projet à cette date.</p>
 </section>
 

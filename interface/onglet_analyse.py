@@ -5,7 +5,7 @@ Trois sous-onglets :
 - Synthèse (analyse_synthese) : chiffres clés, perception, évolution, sources, exemples, sur la sélection filtrée ;
 - Modèle (analyse_modele) : version en service, qualité mesurée, réentraînement, analyse après la collecte.
 
-Les notes viennent de donnees/analyse/scores.csv, écrit par « python -m analyse ». L'interface ne note rien
+Les notes viennent des colonnes de notes du corpus (donnees/analyse/corpus.csv), écrites par « python -m analyse ». L'interface ne note rien
 elle-même ; les corrections faites à la main vont dans corrections.csv et priment sur les notes du modèle.
 """
 import threading

@@ -76,7 +76,7 @@ def chiffres() -> dict[str, str]:
     th_lus = lire_csv(critiques.LUS) if critiques.LUS.exists() else []
     th_etat = critiques.resultats()  # sélection d'aujourd'hui et reste à lire
     from analyse.ton_inverse import mesurer as ton_inverse
-    inv = ton_inverse()  # carte « Ton inversé » : notes du corpus (scores.csv) contre celles de Claude sur le test
+    inv = ton_inverse()  # carte « Ton inversé » : notes du modèle dans le corpus contre celles de Claude sur le test
     from commun import sauvegarde
     from commun.config import DONNEES
     doublons = 0
@@ -209,7 +209,18 @@ def moderation_chiffres() -> dict[str, str]:
             # Largeurs des barres du schéma « Ce que vaut le modèle » (300 px pour l'accord, 200 pour les autres).
             "mod_w_accord": f"{300 * m.get('accord', 0):.0f}", "mod_w_ins_j": f"{200 * ins.get('justes', 0):.0f}",
             "mod_w_ins_t": f"{200 * ins.get('trouves', 0):.0f}", "mod_w_q_j": f"{200 * q.get('justes', 0):.0f}",
-            "mod_w_q_t": f"{200 * q.get('trouves', 0):.0f}"}
+            "mod_w_q_t": f"{200 * q.get('trouves', 0):.0f}", **reponses_chiffres()}
+
+
+def reponses_chiffres() -> dict[str, str]:
+    """Schéma « Les réponses préparées » (moderation/reponses.py)."""
+    from moderation import reponses
+    f = reponses.lire_fichier()
+    actives = [r for r in f["reponses"].values() if r["actif"]]
+    e = reponses.etat()
+    return {"rep_reponses": entier(len(actives)), "rep_objections": entier(len({(r["theme"], r["objection"]) for r in actives})),
+            "rep_themes": entier(len({r["theme"] for r in actives})), "rep_themes_tous": entier(e["themes"]),
+            "rep_ranges": entier(e["avec_theme"] + e["par_claude_analyse"]), "rep_a_ranger": entier(e["a_lire"])}
 
 
 def remplir(modele: str, valeurs: dict[str, str]) -> str:

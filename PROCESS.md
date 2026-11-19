@@ -109,8 +109,9 @@ python -m analyse.ton_inverse                             contrôle : part de «
 - Rien d'autre de lourd pendant ce temps. Les annotations ajoutées pendant l'entraînement ne servent qu'au suivant.
 - `python -m analyse` voit seul que les notes viennent d'une ancienne version et renote tout (2 à 5 h, à 10-30 commentaires par seconde).
 - Comparer les mesures de `donnees/analyse/RAPPORT_MODELE.md` à celles de la version précédente et le dire.
-- Garder les deux dernières versions `modeles/vN/` et leurs réseaux `affineN` (champ `reseau` de `infos.json`) ;
-  proposer de supprimer les plus anciennes (environ 570 Mo chacune).
+- Une fois la nouvelle version validée et le corpus renoté, supprimer l'ancienne `modeles/vN/` et son réseau
+  `affineN` (champ `reseau` de `infos.json`) : on ne garde que la version en service. Noter ses mesures dans
+  `docs/HISTORIQUE.md` avant.
 
 ## 5. Lire les nouveaux commentaires pour les thèmes
 
@@ -227,10 +228,14 @@ python -m moderation entrainer                  réentraîne (≈ 30 min) puis r
 python -m moderation motdepasse                 change le mot de passe du site de modération (par l'utilisateur)
 python -m web motdepasse                        change le mot de passe du site d'analyse (par l'utilisateur)
 python -m moderation site deployer              remet en ligne le site de modération après une modification des pages
+python -m moderation reponses                   synchronise les réponses préparées (moderation/reponses.xlsx ↔ site)
+python -m moderation themes etat                commentaires rangés par thème pour les réponses, reste à ranger
+python -m moderation themes tirer 100           lot à ranger par thème (les plus récents qui appellent une réponse)
+python -m moderation themes noter K f --par gemini   enregistre la lecture (« 12: T31 T43 » ou « 12: - »)
 ```
 
 Le site de modération lit la base en direct : rien à faire à la mise à jour, la publication suffit. Il ne montre que
-le groupe « Soutien David Lisnard 2027 » (règle de la base, `moderation_publications()` dans `web/schema.sql`) ; les
+le groupe « Cap 2027 avec David Lisnard » (règle de la base, `moderation_publications()` dans `web/schema.sql`) ; les
 autres groupes restent classés et servent à l'entraînement. Les mots surveillés (`moderation/mots_surveilles.txt`,
 filtre du site, hors modèle) : après une modification de la liste, `python -m moderation site deployer`.
 
@@ -258,6 +263,20 @@ filtre du site, hors modèle) : après une modification de la liste, `python -m 
 - **Réentraîner** : sur demande, après des annotations (bouton « Réentraîner le modèle » ou commande). Jamais en
   même temps qu'une analyse ou un autre calcul lourd (étape 0). Ajouter une ligne à `docs/HISTORIQUE.md` avec la
   version (m2, m3…) et ses mesures, puis `python -m docs`.
+- **Réponses préparées** (2026-11-19, `moderation/reponses.py`) : le site propose sous chaque commentaire les
+  réponses toutes faites de ses thèmes. Deux choses, **seulement sur demande** :
+  - **Ranger les commentaires par thème** (« range les commentaires Facebook par thème ») : par Gemini, avec le prompt
+    de `moderation/PROMPT_GEMINI_THEMES.md` que l'utilisateur colle dans Antigravity, ou par Claude s'il le demande,
+    avec les mêmes commandes (`themes tirer 100`, lire `lots_themes/lot_K.txt`, écrire une ligne
+    `numéro: T31 T43` ou `numéro: -` par commentaire, `themes noter K fichier`). Seuls les commentaires jamais rangés
+    sont tirés, les plus récents d'abord ; ceux déjà lus par Claude pour l'analyse (étape 5) gardent leurs thèmes.
+    Pas de relecture obligatoire des lots de Gemini : une erreur ne fait que proposer de moins bonnes réponses.
+  - **Enrichir la bibliothèque** : avant d'écrire ou de modifier des réponses dans `moderation/reponses.xlsx`, lancer
+    `python -m moderation reponses` (pour récupérer ce que les modérateurs ont écrit sur le site), écrire, puis le
+    relancer. Une réponse chiffrée ne cite que des faits sourcés (colonne Sources) : ses propres textes
+    (`python -m verification chercher`) ou des chiffres jugés exacts ou plutôt exacts dans `verification/` ; une
+    mesure se présente comme une proposition. Un thème ajouté à l'analyse (étape 5) arrive seul dans le fichier à la
+    synchronisation suivante.
 - **Cible** (« vise Lisnard / NE » sur le site) : celle de l'analyse principale (cible L/A, après corrections et
   relectures), sauf pour un insultant annoté, dont la lecture (L ou I) l'emporte. Le modèle de modération ne la
   prédit pas (seulement 16 insultes sur 443 visaient Lisnard ou Nouvelle Énergie le 2026-11-14). Après une

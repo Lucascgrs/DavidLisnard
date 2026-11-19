@@ -19,7 +19,7 @@ Fais 4 lots d'annotation pour la modération Facebook de ce projet, l'un après 
 de confirmation entre les lots.
 
 CONTEXTE
-Le projet modère le groupe Facebook de soutien « Soutien David Lisnard 2027 » (David Lisnard, maire de Cannes,
+Le projet modère le groupe Facebook de soutien « Cap 2027 avec David Lisnard » (David Lisnard, maire de Cannes,
 candidat à la présidentielle 2027 avec son mouvement Nouvelle Énergie). Un modèle classe chaque commentaire ;
 tes lectures servent à l'entraîner. Le dossier de travail est la racine du projet (celui qui contient
 PROCESS.md et le dossier moderation/). Les commandes se lancent depuis ce dossier, dans le terminal (Windows,

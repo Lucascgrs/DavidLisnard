@@ -9,9 +9,11 @@ Ce qui est copié, dans cet ordre (le plus irremplaçable d'abord) :
 2. les autres sources (YouTube, Bluesky, Facebook, X) ;
 3. le travail fait à la main : annotations (donnees/analyse/annotation/), corrections de l'interface
    (donnees/analyse/corrections.csv), lecture par thèmes (donnees/critiques/) et annotations de la modération
-   (donnees/moderation/annotations.csv et lots/).
-Pour chaque source : les CSV bruts, etat.json (ce qui a déjà été lu) et likes.json. Les Excel, la copie de travail,
-les vecteurs et les notes du modèle ne sont pas copiés : tout cela se recalcule.
+   (donnees/moderation/annotations.csv et lots/, et pour les réponses préparées themes.csv et lots_themes/).
+Pour chaque source : les CSV bruts, etat.json (ce qui a déjà été lu) et likes.json. Les fichiers sont copiés tels
+quels, dans le format où le projet les lit : une sauvegarde se restaure en dézippant dans donnees/. Le corpus
+(donnees/analyse/corpus.csv, avec les notes des deux modèles), les vecteurs et les modèles ne sont pas copiés : tout
+cela se recalcule depuis les fichiers ci-dessus (python -m analyse, python -m moderation classer --tout).
 
 Une seule sauvegarde est gardée. La nouvelle est d'abord écrite dans un fichier temporaire, relue en entier, et ne
 remplace l'ancienne qu'ensuite : on ne se retrouve jamais sans sauvegarde, même si l'écriture est coupée.
@@ -62,6 +64,12 @@ def fichiers() -> list[tuple[Path, str, bool]]:
     if (moderation / "annotations.csv").exists():
         sortie.append((moderation / "annotations.csv", "moderation/annotations.csv", False))
     sortie += [(f, f.relative_to(DONNEES).as_posix(), False) for f in sorted((moderation / "lots").glob("*"))
+               if f.is_file()]
+    # Réponses préparées (moderation/reponses.py) : thèmes des commentaires, lots, état de la synchronisation.
+    for nom in ("themes.csv", "reponses_etat.json"):
+        if (moderation / nom).exists():
+            sortie.append((moderation / nom, f"moderation/{nom}", False))
+    sortie += [(f, f.relative_to(DONNEES).as_posix(), False) for f in sorted((moderation / "lots_themes").glob("*"))
                if f.is_file()]
     return sortie
 

@@ -328,7 +328,7 @@ language sql stable
 as $$
   select p.id from public.publications p join public.comptes k on k.id = p.compte
   where k.source = (select id from public.sources where nom = 'facebook')
-    and k.nom in ('Soutien David Lisnard 2027')
+    and k.nom in ('Cap 2027 avec David Lisnard')
 $$;
 revoke execute on function public.moderation_publications() from public, anon;
 grant execute on function public.moderation_publications() to authenticated;
@@ -349,6 +349,9 @@ revoke delete on moderation_suivi from authenticated;
 -- Vues de la première version du site (tout calculé par la base à chaque recherche) : remplacées.
 drop view if exists moderation_bilan, moderation_auteurs, moderation_publications, moderation_site;
 
+-- Thèmes du commentaire (« T31 T43 ») : ceux de la lecture pour les réponses préparées (moderation/reponses.py).
+alter table moderation add column if not exists themes text;
+
 -- Les commentaires, sous forme compacte : la publication (titre, lien, groupe) est envoyée à part, une seule fois.
 create or replace view moderation_lignes with (security_invoker = true) as
 select m.code,
@@ -363,7 +366,8 @@ select m.code,
        coalesce(m.texte, c.texte) as texte,
        coalesce(u.nom, u.identifiant) as auteur, u.identifiant as auteur_id,
        m.maj,
-       coalesce(m.annotation_cible, m.cible, c.cible) as cible
+       coalesce(m.annotation_cible, m.cible, c.cible) as cible,
+       m.themes  -- thèmes du commentaire, pour les réponses préparées (ajouté le 2026-11-19, donc en dernier)
 from public.moderation m
 left join public.commentaires c on c.source = m.source and c.code = m.code
 left join public.utilisateurs u on u.id = coalesce(m.utilisateur, c.utilisateur);
@@ -478,6 +482,58 @@ as $$
     'utilisateurs', (select coalesce(jsonb_object_agg(source || '|' || identifiant, id), '{}')
                      from public.utilisateurs))
 $$;
+
+-- ── Réponses préparées pour les modérateurs (2026-11-19, moderation/reponses.py) ───────────────────────────────
+-- Thèmes de la réponse (ceux de l'analyse, T1…, et ceux qu'ajoutent les modérateurs, M-…) et réponses toutes faites,
+-- plusieurs par objection, dans des styles différents. Le fichier moderation/reponses.xlsx et ces tables se
+-- synchronisent dans les deux sens (« python -m moderation reponses ») : ce qu'un modérateur écrit sur le site est
+-- gardé. Le site lit, ajoute et modifie (compte des modérateurs seulement), sans jamais supprimer : une réponse
+-- retirée passe à actif = false. Les thèmes de chaque commentaire sont dans moderation.themes (plus haut).
+create table if not exists reponses_themes (
+  id          text primary key,
+  nom         text not null,
+  famille     text,
+  definition  text,
+  actif       boolean not null default true,
+  par         text,                      -- « Claude », « analyse », ou le prénom du modérateur
+  maj         timestamptz not null default clock_timestamp()
+);
+create table if not exists reponses (
+  id          text primary key,
+  theme       text not null references reponses_themes (id) on update cascade,
+  objection   text not null,             -- ce à quoi elle répond (« C'est un Macron bis »)
+  style       text not null,             -- chiffres, arguments, courte, bienveillante, punchline…
+  titre       text not null,
+  texte       text not null,
+  gif         text,                      -- mot à chercher dans les GIF de Facebook (réponses humoristiques)
+  sources     text,                      -- d'où viennent les chiffres, pour vérifier avant de publier
+  ordre       integer not null default 0,
+  actif       boolean not null default true,
+  par         text,
+  maj         timestamptz not null default clock_timestamp()
+);
+create index if not exists reponses_theme on reponses (theme);
+create or replace function public.reponses_dater()
+returns trigger language plpgsql as $$
+begin
+  new.maj := clock_timestamp();
+  return new;
+end $$;
+drop trigger if exists dater on reponses_themes;
+create trigger dater before update on reponses_themes for each row execute function public.reponses_dater();
+drop trigger if exists dater on reponses;
+create trigger dater before update on reponses for each row execute function public.reponses_dater();
+alter table reponses_themes enable row level security;
+alter table reponses enable row level security;
+drop policy if exists moderateurs on reponses_themes;
+drop policy if exists moderateurs on reponses;
+create policy moderateurs on reponses_themes for all to authenticated
+  using ((select public.est_moderateur())) with check ((select public.est_moderateur()));
+create policy moderateurs on reponses for all to authenticated
+  using ((select public.est_moderateur())) with check ((select public.est_moderateur()));
+revoke all on reponses_themes, reponses from anon;
+revoke delete, truncate on reponses_themes, reponses from authenticated;
+grant select, insert, update on reponses_themes, reponses to authenticated;
 
 revoke execute on function selection(jsonb), evolution(jsonb), commentaire(text) from public, anon;
 grant execute on function selection(jsonb), evolution(jsonb), commentaire(text) to authenticated;

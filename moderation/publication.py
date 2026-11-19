@@ -17,7 +17,7 @@ from commun.textes import empreinte
 from moderation import donnees as d
 
 ETAT = d.DOSSIER / "publie.json"
-MODELE = 3  # 2 : modèle normalisé de web/schema.sql (2026-11-13) ; 3 : + cible (2026-11-14). Autre valeur : tout renvoyer
+MODELE = 4  # 2 : modèle normalisé (2026-11-13) ; 3 : + cible (2026-11-14) ; 4 : + themes (2026-11-19). Autre valeur : tout renvoyer
 
 
 def cibles() -> dict[str, str]:
@@ -51,7 +51,8 @@ def _sur_le_site() -> dict[str, str | None]:
 
 def lignes(num, sur_le_site: dict) -> list[dict]:
     """Une ligne par commentaire classé ou annoté, au format de la table moderation."""
-    notes, ann, cib = d.lire_notes(), d.lire_annotations(), cibles()
+    from moderation import reponses
+    notes, ann, cib, themes = d.lire_notes(), d.lire_annotations(), cibles(), reponses.themes_par_commentaire()
     com = {c["cle"]: c for c in d.commentaires()}
     sortie = []
     for cle in sorted(set(notes) | set(ann)):
@@ -62,7 +63,7 @@ def lignes(num, sur_le_site: dict) -> list[dict]:
                  "version": n["version"] if n else None, "annotation": a["categorie"] if a else None,
                  "classe_le": n["classe_le"] if n else None,
                  "annotation_cible": (a.get("cible") or None) if a and a["categorie"] == "insultant" else None,
-                 "cible": None,
+                 "cible": None, "themes": themes.get(cle) or None,
                  "publication": None, "utilisateur": None, "parent": None, "date": None, "texte": None}
         if c:
             parent = f"facebook:{c['parent_id']}" if c.get("parent_id") else None

@@ -16,3 +16,7 @@ __pycache__/
 *.tmp
 config/web.json
 docs/FONCTIONNEMENT_rendu.html
+
+# Fichier Excel ouvert (verrou de Microsoft Office), écriture en cours
+~$*.xlsx
+moderation/reponses_nouveau.xlsx

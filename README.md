@@ -82,7 +82,7 @@ DavidLisnard/
 ├── collecte/                        « python -m collecte »
 │   ├── __main__.py                  une source après l'autre, bilan, sauvegarde, notation des nouveaux, site,
 │   │                                Cloudflare R2, puis classement des nouveaux Facebook pour la modération
-│   ├── depot.py                     format des lignes, ajout sans doublon, état, Excel, bilan
+│   ├── depot.py                     format des lignes, ajout sans doublon, état, bilan
 │   ├── sources/                     youtube.py, bluesky.py, instagram.py, facebook.py, x.py
 │   ├── perimetre.py                 ajout et retrait de chaînes, comptes, groupes et Pages (trouver_bluesky, trouver_facebook, trouver_x)
 │   ├── planification.py             Planificateur de tâches de Windows
@@ -92,7 +92,7 @@ DavidLisnard/
 ├── analyse/                         « python -m analyse »
 │   ├── __init__.py                  modèle de langue de départ et mode hors ligne (voir « Modèles »)
 │   ├── __main__.py, notation.py     notes de tout le corpus par le modèle en service
-│   ├── corpus.py                    copie de travail des commentaires (auteurs pseudonymisés, doublons marqués)
+│   ├── corpus.py                    table centrale des commentaires (auteurs pseudonymisés, doublons, notes)
 │   ├── vecteurs.py                  vecteurs de sens (e5 multilingue)
 │   ├── annotation.py                lots à noter à la main, enregistrement vérifié des notes
 │   ├── modele.py                    modèle à vecteurs et briques communes
@@ -178,6 +178,12 @@ python -m moderation publier [--tout]      envoie ce qui a changé dans la table
 python -m moderation motdepasse           choisit le mot de passe du site de modération (ferme les sessions ouvertes)
 python -m moderation site deployer        met en ligne le site de modération (moderation/site/)
 python -m moderation site apercu          ouvre le site de modération en local (http://localhost:8001)
+python -m moderation reponses             synchronise les réponses préparées : moderation/reponses.xlsx ↔ Supabase
+python -m moderation themes etat          réponses préparées, commentaires rangés par thème, reste à ranger
+python -m moderation themes tirer [N]     lot à ranger par thème (100, les plus récents d'abord ; mode tout : aussi
+                                          ceux qui n'appellent pas de réponse)
+python -m moderation themes noter K f     enregistre la lecture (« 12: T31 T43 », « 12: - ») ; --par gemini
+                                          (moderation/PROMPT_GEMINI_THEMES.md)
 ```
 
 **Sauvegarde** (voir « Sauvegarde »)
@@ -341,8 +347,7 @@ comparables.
     refusée même après une nouvelle connexion : compte suspendu ?).
 
 **Fichiers.** `donnees/<source>/` contient :
-- un CSV par compte suivi, qui ne fait que grandir ;
-- `<source>_tout.xlsx`, qui les rassemble et est recréé à chaque lancement ;
+- un CSV par compte suivi, qui ne fait que grandir (le bouton « Dossier » de l'onglet l'ouvre) ;
 - `etat.json`, ce qui a déjà été lu ;
 - `likes.json`, les « j'aime » qui ont changé depuis la première collecte d'un commentaire (voir « Doublons et
   « j'aime » »).
@@ -395,8 +400,12 @@ Chaque commentaire a aussi :
 - une **fiabilité** : bonne, moyenne ou faible.
 
 **Comment c'est fait** (historique des versions dans [docs/HISTORIQUE.md](docs/HISTORIQUE.md)) :
-- **Copie de travail** : `donnees/analyse/corpus.csv`, avec les auteurs pseudonymisés. Les fichiers de collecte ne
-  sont jamais modifiés.
+- **Table centrale** : `donnees/analyse/corpus.csv`, une ligne par commentaire, avec les auteurs pseudonymisés, les
+  notes du modèle d'analyse (colonnes `note_version`, les cinq notes, `cible`, `p_autre`, `fiabilite`, `note_le`) et,
+  pour Facebook, le classement de la modération (colonnes `mod_…`). Les fichiers de collecte ne sont jamais modifiés.
+  Le corpus se recalcule (collecte + modèles) ; le travail fait à la main reste à part, dans de petits fichiers reliés
+  par la clé du commentaire et sans copie du texte. Chaque tâche n'écrit que ses colonnes, sous un verrou
+  (`donnees/analyse/CORPUS_VERROU`).
 - **Annotation** : les commentaires sont notés à la main par Claude, par lots de 100, selon la grille
   (`donnees/analyse/annotation/`).
   - Un jeu de test fixe de 500 commentaires tirés au hasard n'est jamais appris : il sert à mesurer.
@@ -422,8 +431,9 @@ Chaque commentaire a aussi :
   `donnees/<source>/likes.json`. Un commentaire dont la publication n'est plus relue garde ses « j'aime » d'alors.
 
 **Modèles** (`modeles/`).
-- On garde les deux dernières versions et le réseau affiné de chacune (`reseau` dans `modeles/vN/infos.json`).
-  Avant de supprimer un `affineN`, vérifier qu'aucune version gardée ne le cite.
+- On ne garde que la version en service et son réseau affiné (`reseau` dans `modeles/vN/infos.json`) : après un
+  réentraînement validé, l'ancienne `vN` et son `affineN` sont supprimés (leurs mesures restent dans
+  `docs/HISTORIQUE.md`).
 - **Hors ligne.** Le modèle de départ (e5) est sur le disque depuis son premier téléchargement. Tant que cette copie
   existe, `analyse/__init__.py` met `HF_HUB_OFFLINE=1` : plus de vérification en ligne à chaque chargement, donc plus
   de message « You are sending unauthenticated requests to the HF Hub », un chargement plus rapide, et tout marche
@@ -431,7 +441,8 @@ Chaque commentaire a aussi :
   téléchargé). Pour forcer une vérification en ligne : `$env:HF_HUB_OFFLINE = "0"` avant la commande.
 
 **Fichiers de l'analyse** (`donnees/analyse/`) :
-- `scores.csv` : les notes du modèle ;
+- `corpus.csv` : la table centrale (voir plus haut), notes du modèle comprises ;
+- `annotation/annotations.csv` : les notes de Claude ; `pertinence_origine` garde la pertinence d'avant un recalage ;
 - `corrections.csv` : les notes corrigées à la main dans l'interface. Elles priment, et servent au prochain
   entraînement ;
 - `exports/` : les exports Excel ;
@@ -560,8 +571,8 @@ Facebook collecté (groupes et Page suivis, sans les publications elles-mêmes) 
   réentraîner.
 - **Cible** : un insultant vise-t-il David Lisnard ou Nouvelle Énergie ? La lecture le dit (`L:` ou `I:`) ; à
   défaut, la cible L/A de l'analyse principale (colonnes `cible` et `annotation_cible` de la table `moderation`).
-- **Fichiers** : `donnees/moderation/` (`annotations.csv`, `notes.csv`, `lots/`, `journal.log`). Les annotations et
-  les lots sont dans la sauvegarde. L'onglet, qui montre les auteurs, reste local.
+- **Fichiers** : `donnees/moderation/` (`annotations.csv` sans copie du texte, `lots/`, `journal.log`) ; le
+  classement du modèle est dans les colonnes `mod_…` du corpus. Les annotations et les lots sont dans la sauvegarde. L'onglet, qui montre les auteurs, reste local.
 - **Supabase** : table **privée** `moderation` (`web/schema.sql`), une ligne par commentaire classé ou annoté, même
   clé que `commentaires` (source, code) : `p_insultant`, `p_question`, `p_autre`, `version`, `annotation`,
   `classe_le`, et des numéros vers `publications` et `utilisateurs` (table privée des auteurs). Le texte, l'auteur, la
@@ -574,7 +585,7 @@ Facebook collecté (groupes et Page suivis, sans les publications elles-mêmes) 
 - **Site de modération** (2026-11-13, https://moderation-lisnard.vercel.app, projet Vercel `moderation-lisnard`, pages dans `moderation/site/`, code dans
   `moderation/site.py`) : réservé aux modérateurs, à part du site public. On n'y entre qu'avec le mot de passe choisi
   par `python -m moderation motdepasse` (compte Supabase Auth partagé, rôle « moderateur » ; inscriptions fermées ;
-  changer le mot de passe coupe aussitôt les sessions ouvertes). Un seul groupe, « Soutien David Lisnard 2027 » :
+  changer le mot de passe coupe aussitôt les sessions ouvertes). Un seul groupe, « Cap 2027 avec David Lisnard » :
   la base ne rend rien d'autre aux modérateurs (`moderation_publications()`), les autres groupes ne servent qu'à
   l'entraînement. Compteurs « à traiter » (insultants, questions, mots surveillés),
   vue Commentaires (filtres catégorie, sujet Lisnard / NE ou autre, mots surveillés, certitude, suivi, période,
@@ -593,6 +604,22 @@ Facebook collecté (groupes et Page suivis, sans les publications elles-mêmes) 
   par « Actualiser » (jamais seules). Les marques des autres modérateurs, elles, sont redemandées toutes les 10 s
   page visible (1 requête par index, vide presque toujours) et changent les cartes sur place. Filtres, tris et comptages se
   font dans le navigateur (`js/donnees.js`, `js/app.js`), sans requête ; tout retélécharger au bout de 7 jours.
+- **Réponses préparées** (2026-11-19, `moderation/reponses.py`, `js/reponses.js`) : sur chaque commentaire, le bouton
+  « 💬 Réponses » ouvre un panneau avec les réponses toutes faites de ses thèmes, regroupées par objection (« C'est
+  un Macron bis »…) et repliées : on voit le style (chiffres, argumentée, courte, bienveillante, punchline) et le
+  titre ; dépliée, le texte, ses sources, un mot de GIF pour les punchlines, et les boutons « Copier » et « Copier
+  et ouvrir le commentaire » (Facebook ne laisse aucun site remplir sa zone de réponse : on clique sur « Répondre »
+  et on colle). Option « Commencer par le prénom de l'auteur ». Recherche dans toutes les réponses, choix d'un autre
+  thème, filtre « Thème » dans la liste. Les modérateurs ajoutent, modifient et retirent des réponses et ajoutent des
+  thèmes (identifiants M-…), signés de leur prénom. **Bibliothèque** : `moderation/reponses.xlsx` (feuilles
+  « Réponses », « Thèmes », « Lisez-moi »), tables `reponses` et `reponses_themes` (lues et écrites par le seul
+  compte des modérateurs, jamais supprimées : `actif`), synchronisées dans les deux sens par
+  `python -m moderation reponses` (ce qui n'a changé que d'un côté passe de l'autre ; conflit : le site l'emporte,
+  la version du fichier est montrée ; une ligne effacée du fichier est désactivée). **Thèmes des commentaires** :
+  ceux de la lecture de Claude pour l'analyse (critiques et doutes), sinon ceux des lots `themes tirer` / `noter`
+  (Gemini ou Claude ; `donnees/moderation/themes.csv`, `lots_themes/`), envoyés dans la colonne `themes` de la
+  table `moderation`. Chiffres des réponses : seulement des faits sourcés (`verification/`, corpus Nouvelle
+  Énergie) ; les vérifier avant de publier.
   Vues `moderation_lignes`, `moderation_pubs` et fonction `suivre()` dans `web/schema.sql` ; rien à faire à la
   publication. Après une modification des pages : `python -m moderation site deployer`.
 

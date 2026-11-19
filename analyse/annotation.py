@@ -39,7 +39,10 @@ from commun.textes import abreger, sans_accents
 DOSSIER = stockage.ANNOTATION
 LOTS = DOSSIER / "lots"
 ANNOTATIONS = DOSSIER / "annotations.csv"
-CHAMPS_NOTES = ["cle", "texte_cle", "lot", "jeu", "cible"] + CRITERES + ["remarque", "annotateur", "le"]
+# pertinence_origine : la pertinence donnée à la lecture, quand un recalage l'a changée depuis (vide sinon) :
+# analyse/recalage_pertinence.py et docs/HISTORIQUE.md.
+CHAMPS_NOTES = ["cle", "texte_cle", "lot", "jeu", "cible"] + CRITERES + ["pertinence_origine", "remarque", "annotateur",
+                                                                          "le"]
 TAILLE_LOT = 100
 LOTS_CONSTANCE = 900  # lots 900 et suivants : contrôle de constance (renotation à l'aveugle), hors apprentissage
 
@@ -199,7 +202,7 @@ def tirer_reponses(n: int):
     """Réponses à lire avec leur parent : la moitié avec des indices d'ironie, l'autre au hasard parmi les réponses
     dont le parent parle de Lisnard (selon le modèle actuel)."""
     corpus = lire()
-    scores = stockage.lire_scores()
+    scores = stockage.lire_scores(corpus)
     deja = deja_tires()
     reps = _representants(corpus)
     rnd = random.Random(len(deja) + 1)
@@ -223,7 +226,7 @@ def tirer_visibles(n: int):
     erreur inversée s'y voit tout de suite. Les plus argumentés d'abord. Le commentaire tiré est celui-là même (avec
     son parent), pas une autre copie du texte."""
     corpus = lire()
-    scores = stockage.lire_scores()
+    scores = stockage.lire_scores(corpus)
     deja = deja_tires() | {a["texte_cle"] for a in annotations()}
     cands = {}
     for l in corpus:
@@ -266,7 +269,7 @@ def tirer_suspects():
     donnée par le modèle : favorable mais avec plus de marques de critique que d'éloge, ou l'inverse. Les plus
     contradictoires d'abord."""
     corpus = lire()
-    scores = stockage.lire_scores()
+    scores = stockage.lire_scores(corpus)
     deja = deja_tires() | {a["texte_cle"] for a in annotations()}
     critique, eloge = re.compile(CRITIQUE), re.compile(ELOGE)
     cands = {}
@@ -302,7 +305,7 @@ def tirer_longs(n: int):
     sources (PART_SOURCES, le reste reporté sur les autres si une source manque) et, dans chaque source, en tournant
     entre les comptes pour ne pas tout prendre sous les mêmes vidéos."""
     corpus = lire()
-    scores = stockage.lire_scores()
+    scores = stockage.lire_scores(corpus)
     deja = deja_tires() | {a["texte_cle"] for a in annotations()}
     rnd = random.Random(len(deja) + 3)
     vus, cands = set(), defaultdict(lambda: defaultdict(list))
