@@ -20,7 +20,7 @@ Les notes viennent d'un modèle entraîné sur les commentaires notés à la mai
 
 | Document | Pour |
 |---|---|
-| [PROCESS.md](PROCESS.md) | **mettre à jour le projet** : toutes les étapes, dans l'ordre |
+| [docs/PROCESS.md](docs/PROCESS.md) | **mettre à jour le projet** : toutes les étapes, dans l'ordre |
 | ce README | se servir du projet : commandes, fichiers, réglages |
 | [docs/FONCTIONNEMENT.pdf](docs/FONCTIONNEMENT.pdf) | comprendre comment il marche (illustré, chiffres à jour) |
 | [docs/GRILLE.md](docs/GRILLE.md) | ce que veut dire chaque note (la référence de l'annotation) |
@@ -31,9 +31,9 @@ Les notes viennent d'un modèle entraîné sur les commentaires notés à la mai
 
 | Pour | Faire |
 |---|---|
-| Tout piloter (collecte, comptes suivis, analyse, synthèse, modération) | double-clic sur `Interface.bat` (ou `python -m interface`) |
-| Collecter sans l'interface | double-clic sur `Collecter.bat` (ou `python -m collecte`) |
-| Regarder un entraînement en cours (lot lu, perte, poids) | s'ouvre seule au lancement de l'affinage ; la fermer n'arrête pas l'entraînement ; rouvrir : `Suivi.bat` (ou `python -m suivi`) |
+| Tout piloter (collecte, comptes suivis, analyse, synthèse, modération) | double-clic sur `Interface.bat` (ou `python -m commun.interface`) |
+| Collecter sans l'interface | double-clic sur `Collecter.bat` (ou `python -m commun.collecte`) |
+| Regarder un entraînement en cours (lot lu, perte, poids) | s'ouvre seule au lancement de l'affinage ; la fermer n'arrête pas l'entraînement ; rouvrir : `Suivi.bat` (ou `python -m commun.suivi`) |
 | Installer les bibliothèques | `python -m pip install -r requirements.txt` |
 
 Toutes les commandes se lancent depuis le dossier du projet.
@@ -43,19 +43,19 @@ Ce qu'il faut faire une seule fois :
 - **YouTube** : la clé de l'API YouTube Data v3 est dans `config/cles.json` (modèle : `config/cles.exemple.json`).
   Sans clé, pas de collecte YouTube. Conseil : sur console.cloud.google.com → Identifiants, restreindre la clé à
   « YouTube Data API v3 ».
-- **Instagram** : la session du compte dédié est dans `sessions/cookies_web.json`. Pour la refaire :
-  `python -m collecte.connexion_instagram`, avec le compte décrit dans `config/compte.json` (modèle :
+- **Instagram** : la session du compte dédié est dans `donnees/sessions/cookies_web.json`. Pour la refaire :
+  `python -m commun.collecte.connexion_instagram`, avec le compte décrit dans `config/compte.json` (modèle :
   `config/compte.exemple.json`).
 - **Facebook** : le compte dédié (« Fande Lisnard ») est dans `config/facebook.env` (`FB_MAIL`, `FB_MDP` ; modèle :
-  `config/facebook.exemple.env`). `python -m collecte.connexion_facebook` ouvre Chrome une seule fois pour se
-  connecter et enregistre la session (`sessions/facebook_cookies.json`) ; `--verifier` dit si elle est encore valide.
+  `config/facebook.exemple.env`). `python -m commun.collecte.connexion_facebook` ouvre Chrome une seule fois pour se
+  connecter et enregistre la session (`donnees/sessions/facebook_cookies.json`) ; `--verifier` dit si elle est encore valide.
 - **X** : le compte dédié (`fandelisnard`) est dans `config/x.env` (`X_PSEUDO`, `X_MDP`, `X_MAIL` facultatif ;
-  modèle : `config/x.exemple.env`). La session (`sessions/x_cookies.json` : cookies `auth_token` et `ct0`) se fait
-  par `python -m collecte.connexion_x`, qui ouvre Chrome (profil `sessions/x_profil/`) et saisit pseudo et mot de
+  modèle : `config/x.exemple.env`). La session (`donnees/sessions/x_cookies.json` : cookies `auth_token` et `ct0`) se fait
+  par `python -m commun.collecte.connexion_x`, qui ouvre Chrome (profil `donnees/sessions/x_profil/`) et saisit pseudo et mot de
   passe ; X refuse le mot de passe envoyé par un script. Si X limite les connexions (« Nous avons temporairement
   limité votre connexion », arrivé le 2026-11-13 après plusieurs essais), attendre quelques heures, ou copier les
-  deux cookies depuis un navigateur connecté (F12 → Application → Cookies → x.com) dans `sessions/x_cookies.json`,
-  puis lancer `python -m collecte.connexion_x --profil`, qui les recopie dans le profil. Le profil garde ainsi la
+  deux cookies depuis un navigateur connecté (F12 → Application → Cookies → x.com) dans `donnees/sessions/x_cookies.json`,
+  puis lancer `python -m commun.collecte.connexion_x --profil`, qui les recopie dans le profil. Le profil garde ainsi la
   session : quand elle expire, la collecte la fait renouveler par X sans fenêtre ni mot de passe ; le mot de passe ne
   sert que si X a annulé la session. `--verifier` dit si la session marche. Ne jamais se déconnecter de ce compte : la déconnexion tue la session.
 
@@ -63,6 +63,8 @@ Ce qu'il faut faire une seule fois :
 
 ```
 DavidLisnard/
+├── README.md                        se servir du projet (ce fichier)
+├── CLAUDE.md                        règles de travail de Claude sur ce projet
 ├── Interface.bat, Collecter.bat, Suivi.bat   lanceurs (double-clic)
 ├── requirements.txt
 ├── config/                          réglages
@@ -71,74 +73,99 @@ DavidLisnard/
 │   ├── compte.json                  compte Instagram de collecte (privé)
 │   ├── facebook.env                 compte Facebook de collecte (privé ; modèle facebook.exemple.env)
 │   ├── x.env                        compte X de collecte (privé ; modèle x.exemple.env)
+│   ├── web.json, cloudflare.env     accès Supabase et Vercel, clés R2 (privés)
 │   └── planification.json           collecte automatique choisie dans l'interface
-├── commun/                          socle partagé
+│
+│   ── Un dossier par site web ──
+├── commentaires/                    le site public des commentaires, « python -m commentaires » (voir « Site public »)
+│   ├── export.py                    ce qui est publié : commentaires, publications, statistiques
+│   ├── publication.py               installer la base, publier les données, mettre les pages en ligne
+│   ├── supabase.py, vercel.py       les deux services (API, sans Node)
+│   ├── acces.py, comptes.py         jetons et clés (config/web.json, privé), comptes de connexion
+│   ├── schema.sql                   tables, recherche en français, filtres, droits de lecture (aussi pour la modération)
+│   └── site/                        les pages : index (le projet), commentaires, thèmes ; css/, js/
+├── moderation/                      le site de modération, « python -m moderation » (voir « Modération »)
+│   ├── __main__.py                  commandes (etat, classer, tirer, noter, entrainer…)
+│   ├── donnees.py                   commentaires Facebook, annotations, notes, lots
+│   ├── modele.py                    entraînement, mesures, classement
+│   ├── publication.py, reponses.py  envoi vers Supabase, réponses préparées
+│   ├── PROMPT_GEMINI*.md            consignes de lecture des commentaires
+│   └── site.py, site/               les pages du site de modération
+├── verification/                    le site de vérification des chiffres, « python -m verification »
+│   │                                (voir verification/README.md)
+│   ├── commun/, conclusions.py, …   corpus, téléchargements, contrôles, synthèse
+│   ├── themes/NN_nom/               les scripts de chaque thème (registre, téléchargement, calculs)
+│   └── site.py, site/               les pages du site de vérification
+├── proximite/                       la proximité des candidats, « python -m proximite » (voir « Proximité des candidats »)
+│   ├── collecte.py                  liste des candidats (candidats2027.org), programmes, texte de chaque document
+│   ├── axes.py                      les trois axes et leurs sous-thèmes (grille : docs/GRILLE_PROXIMITE.md)
+│   ├── mesures.py, positions.py     lecture, mesures notées ; positions sur les axes et distances
+│   └── site.py, site/               les pages du site « Proximité des candidats »
+│
+│   ── Code commun aux sites ──
+├── commun/
 │   ├── config.py                    emplacements, sources, lecture des réglages
 │   ├── fichiers.py                  JSON et CSV (écriture atomique)
 │   ├── sauvegarde.py                « python -m commun.sauvegarde » : la sauvegarde unique (voir « Sauvegarde »)
 │   ├── textes.py                    dates, accents, empreintes
 │   ├── taches.py                    une tâche à la fois (verrou), arrêt propre, lancement en arrière-plan
-│   └── journal.py                   journal à l'écran et dans donnees/journal.log
-├── collecte/                        « python -m collecte »
-│   ├── __main__.py                  une source après l'autre, bilan, sauvegarde, notation des nouveaux, site,
-│   │                                Cloudflare R2, puis classement des nouveaux Facebook pour la modération
-│   ├── depot.py                     format des lignes, ajout sans doublon, état, bilan
-│   ├── sources/                     youtube.py, bluesky.py, instagram.py, facebook.py, x.py
-│   ├── perimetre.py                 ajout et retrait de chaînes, comptes, groupes et Pages (trouver_bluesky, trouver_facebook, trouver_x)
-│   ├── planification.py             Planificateur de tâches de Windows
-│   ├── connexion_instagram.py       session du compte Instagram
-│   ├── connexion_facebook.py        session du compte Facebook (--verifier pour la contrôler)
-│   └── connexion_x.py               session du compte X (--verifier pour la contrôler)
-├── analyse/                         « python -m analyse »
-│   ├── __init__.py                  modèle de langue de départ et mode hors ligne (voir « Modèles »)
-│   ├── __main__.py, notation.py     notes de tout le corpus par le modèle en service
-│   ├── corpus.py                    table centrale des commentaires (auteurs pseudonymisés, doublons, notes)
-│   ├── vecteurs.py                  vecteurs de sens (e5 multilingue)
-│   ├── annotation.py                lots à noter à la main, enregistrement vérifié des notes
-│   ├── modele.py                    modèle à vecteurs et briques communes
-│   ├── affinage.py                  réseau e5 affiné (lit le commentaire avec son parent)
-│   ├── ensemble.py                  combinaison des deux : la version en service
-│   ├── mesures.py                   qualité sur le jeu de test, rapport
-│   ├── ton_inverse.py               part des critiques notées comme des éloges (ou l'inverse) sur le test
-│   ├── criteres.py, stockage.py, versions.py   définitions, fichiers, versions enregistrées
-│   └── recalage_pertinence.py       correction de la dérive d'annotation du 2026-11-09
-├── interface/                       « python -m interface »
-│   ├── application.py               fenêtre, en-tête, boucles de rafraîchissement
-│   ├── onglets_collecte.py          tableau de bord, YouTube, Bluesky, Instagram, Facebook, X, planification
-│   ├── onglet_analyse.py            onglet Analyse et ses sous-onglets :
-│   │   analyse_commentaires.py, analyse_synthese.py, analyse_modele.py
-│   ├── onglet_themes.py             onglet Thèmes (lecture par thèmes, voir « Thèmes »)
-│   ├── onglet_moderation.py         onglet Modération (groupes Facebook, voir « Modération »)
-│   └── theme.py                     thème Windows 11, couleurs, composants
-├── critiques/                       « python -m critiques » : thèmes des éloges et des critiques (voir « Thèmes »)
-│   ├── __main__.py                  commandes (tirer, voir, noter, a-resumer, synthèses…)
-│   └── donnees.py                   sélection, lots, rattachements, comptes par thème
-├── moderation/                      « python -m moderation » : modération Facebook, à part (voir « Modération »)
-│   ├── __main__.py                  commandes (etat, classer, tirer, noter, entrainer)
-│   ├── donnees.py                   commentaires Facebook, annotations, notes, lots
-│   └── modele.py                    entraînement, mesures, classement
-├── web/                             le site public, « python -m web » (voir « Site public »)
-│   ├── export.py                    ce qui est publié : commentaires, publications, statistiques
-│   ├── publication.py               installer la base, publier les données, mettre les pages en ligne
-│   ├── supabase.py, vercel.py       les deux services (API, sans Node)
-│   ├── acces.py                     jetons et clés (config/web.json, privé)
-│   ├── schema.sql                   tables, recherche en français, filtres, droits de lecture
-│   └── site/                        les pages : index (le projet), commentaires, thèmes ; css/, js/
-├── suivi/                          « python -m suivi » : fenêtre de suivi d'un affinage en cours (sonde injectée)
-├── cloudflare/                      « python -m cloudflare » : export vers le bucket R2 du groupe (voir « Cloudflare R2 »)
-│   └── export.py                    un Parquet par source, envoi vérifié, ancien fichier supprimé
-├── PROCESS.md                       la mise à jour du projet, étape par étape
-├── CLAUDE.md                        règles de travail de Claude sur ce projet
-├── docs/
-│   ├── FONCTIONNEMENT.html / .pdf   document illustré « comment marche le projet » (source / PDF, python -m docs)
+│   ├── journal.py                   journal à l'écran et dans donnees/journal.log
+│   ├── collecte/                    « python -m commun.collecte » (Collecter.bat)
+│   │   ├── __main__.py              une source après l'autre, bilan, sauvegarde, notation des nouveaux, site,
+│   │   │                            Cloudflare R2, puis classement des nouveaux Facebook pour la modération
+│   │   ├── depot.py                 format des lignes, ajout sans doublon, état, bilan
+│   │   ├── sources/                 youtube.py, bluesky.py, instagram.py, facebook.py, x.py
+│   │   ├── perimetre.py             ajout et retrait de chaînes, comptes, groupes et Pages
+│   │   ├── planification.py         Planificateur de tâches de Windows
+│   │   └── connexion_*.py           sessions des comptes de collecte Instagram, Facebook, X (--verifier)
+│   ├── analyse/                     « python -m commun.analyse »
+│   │   ├── __init__.py              modèle de langue de départ et mode hors ligne (voir « Modèles »)
+│   │   ├── __main__.py, notation.py notes de tout le corpus par le modèle en service
+│   │   ├── corpus.py                table centrale des commentaires (auteurs pseudonymisés, doublons, notes)
+│   │   ├── vecteurs.py              vecteurs de sens (e5 multilingue)
+│   │   ├── annotation.py            lots à noter à la main, enregistrement vérifié des notes
+│   │   ├── modele.py                modèle à vecteurs et briques communes
+│   │   ├── affinage.py              réseau e5 affiné (lit le commentaire avec son parent)
+│   │   ├── ensemble.py              combinaison des deux : la version en service
+│   │   ├── mesures.py               qualité sur le jeu de test, rapport
+│   │   ├── ton_inverse.py           part des critiques notées comme des éloges (ou l'inverse) sur le test
+│   │   ├── criteres.py, stockage.py, versions.py   définitions, fichiers, versions enregistrées
+│   │   └── recalage_pertinence.py   correction de la dérive d'annotation du 2026-11-09
+│   ├── critiques/                   « python -m commun.critiques » : thèmes des éloges et des critiques (voir « Thèmes »)
+│   ├── interface/                   « python -m commun.interface » (Interface.bat) : la fenêtre de pilotage
+│   │   ├── application.py           fenêtre, en-tête, boucles de rafraîchissement
+│   │   ├── onglets_collecte.py      tableau de bord, YouTube, Bluesky, Instagram, Facebook, X, planification
+│   │   ├── onglet_analyse.py        onglet Analyse et ses sous-onglets (analyse_commentaires, _synthese, _modele)
+│   │   ├── onglet_themes.py, onglet_moderation.py   onglets Thèmes et Modération
+│   │   └── theme.py                 thème Windows 11, couleurs, composants
+│   ├── suivi/                       « python -m commun.suivi » (Suivi.bat) : suivi d'un affinage en cours
+│   └── cloudflare/                  « python -m commun.cloudflare » : export vers le bucket R2 du groupe (voir « Cloudflare R2 »)
+│
+│   ── Documentation ──
+├── docs/                            « python -m docs » regénère FONCTIONNEMENT.pdf
+│   ├── PROCESS.md                   la mise à jour du projet, étape par étape
+│   ├── FONCTIONNEMENT.html / .pdf   document illustré « comment marche le projet » (source / PDF)
 │   ├── GRILLE.md                    ce que veut dire chaque note (la référence de l'annotation)
+│   ├── GRILLE_PROXIMITE.md          axes, sous-thèmes et notes de la proximité des candidats
 │   ├── CLOUDFLARE.md                règles du stockage R2 du groupe et ce que nous y déposons
 │   ├── HISTORIQUE.md                décisions, essais abandonnés, versions du modèle, ancienne organisation
-│   └── TRI_DES_CRITIQUES.pdf        méthode des 5 catégories de critiques et de doutes (choisie le 2026-11-12)
-├── donnees/                         tout ce qui est collecté et calculé (privé, voir plus bas)
-├── modeles/                         modèles entraînés : vN/ (versions), affineN/ (réseaux affinés) ; voir « Modèles » ;
-│                                    moderation/ (modèle de modération en service)
-└── sessions/                        sessions de navigateur et cookies (privé) : Instagram, facebook_profil/,
+│   ├── TRI_DES_CRITIQUES.pdf        méthode des 5 catégories de critiques et de doutes (choisie le 2026-11-12)
+│   └── Plan_… / Synthese_verification_Lisnard.pdf   plan et synthèse de la vérification des chiffres
+│
+│   ── Données (privé et hors git, sauf verification/ et la bibliothèque de la modération) ──
+└── donnees/                         toutes les données, celles de chaque site comprises (voir plus bas)
+    ├── youtube/, bluesky/, instagram/, facebook/, x/   commentaires collectés, source par source
+    ├── analyse/, critiques/, web/, cloudflare/   corpus, annotations, notes, états des publications
+    ├── moderation/                  annotations et notes de la modération ; reponses.xlsx (réponses préparées)
+    │                                et mots_surveilles.txt, suivis dans git
+    ├── proximite/                   candidats.json, documents.csv, textes/ et brut/ des programmes, notes/ (lecture),
+    │                                mesures/ (une ligne par mesure notée), positions.json (suivis dans git, sauf brut/)
+    ├── verification/                corpus du RAG, registre, SYNTHESE.md, et par thème : affirmations, sources,
+    │                                brut/, calculs/, analyse (publiques, suivies dans git)
+    ├── sauvegardes/                 la sauvegarde unique
+    ├── modeles/                     modèles entraînés : vN/ (versions), affineN/ (réseaux affinés), moderation/
+    │                                (voir « Modèles »)
+    └── sessions/                    sessions de navigateur et cookies : Instagram, facebook_profil/,
                                      facebook_cookies.json, x_profil/, x_cookies.json, x_twscrape.db
 ```
 
@@ -147,21 +174,21 @@ DavidLisnard/
 **Collecte**
 
 ```
-python -m collecte                          toutes les sources (YouTube, Bluesky, Instagram, Facebook, X), puis
+python -m commun.collecte                          toutes les sources (YouTube, Bluesky, Instagram, Facebook, X), puis
                                             notation, site, Cloudflare R2 et classement pour la modération
-python -m collecte youtube                  une seule source
-python -m collecte --reessayer instagram    relancer une source marquée abandonnée
+python -m commun.collecte youtube                  une seule source
+python -m commun.collecte --reessayer instagram    relancer une source marquée abandonnée
 ```
 
 **Thèmes** (lecture à la demande, voir « Thèmes »)
 
 ```
-python -m critiques etat                    où en est la lecture
-python -m critiques tirer | voir N | noter N fichier   lire le lot suivant
-python -m critiques proches | fusionner fichier   thèmes qui pourraient fusionner, et fusion
-python -m critiques a-resumer               les synthèses à écrire ou réécrire depuis la dernière fois
-python -m critiques syntheses fichier       enregistrer les synthèses par thème et par sens
-python -m critiques trier [N] | ranger K fichier   catégorie des critiques et doutes restés sans catégorie
+python -m commun.critiques etat                    où en est la lecture
+python -m commun.critiques tirer | voir N | noter N fichier   lire le lot suivant
+python -m commun.critiques proches | fusionner fichier   thèmes qui pourraient fusionner, et fusion
+python -m commun.critiques a-resumer               les synthèses à écrire ou réécrire depuis la dernière fois
+python -m commun.critiques syntheses fichier       enregistrer les synthèses par thème et par sens
+python -m commun.critiques trier [N] | ranger K fichier   catégorie des critiques et doutes restés sans catégorie
 ```
 
 **Modération Facebook** (à part, à la demande, voir « Modération »)
@@ -170,7 +197,7 @@ python -m critiques trier [N] | ranger K fichier   catégorie des critiques et d
 python -m moderation etat                  classés, annotés, mesures du modèle
 python -m moderation classer               classe les commentaires Facebook pas encore classés
 python -m moderation tirer 250 questions   lot à annoter (modes : hasard, questions, insultes, doutes)
-python -m moderation noter K fichier       enregistre la lecture du lot K (« L: … », « I: … », « Q: … ») ;
+python -m moderation noter K fichier       enregistre la lecture du lot K (« I: … », « Q: … ») ;
                                           --par gemini si Gemini l'a lue (moderation/PROMPT_GEMINI.md)
 python -m moderation relire K fichier      relecture par Claude d'un lot lu par Gemini
 python -m moderation entrainer             réentraîne (≈ 30 min) puis reclasse tout
@@ -178,9 +205,9 @@ python -m moderation publier [--tout]      envoie ce qui a changé dans la table
 python -m moderation motdepasse           choisit le mot de passe du site de modération (ferme les sessions ouvertes)
 python -m moderation site deployer        met en ligne le site de modération (moderation/site/)
 python -m moderation site apercu          ouvre le site de modération en local (http://localhost:8001)
-python -m moderation reponses             synchronise les réponses préparées : moderation/reponses.xlsx ↔ Supabase
+python -m moderation reponses             synchronise les réponses préparées : donnees/moderation/reponses.xlsx ↔ Supabase
 python -m moderation themes etat          réponses préparées, commentaires rangés par thème, reste à ranger
-python -m moderation themes tirer [N]     lot à ranger par thème (100, les plus récents d'abord ; mode tout : aussi
+python -m moderation themes tirer [N]     lot à ranger par thème (100, questions d'abord, des plus longues ; mode tout : aussi
                                           ceux qui n'appellent pas de réponse)
 python -m moderation themes noter K f     enregistre la lecture (« 12: T31 T43 », « 12: - ») ; --par gemini
                                           (moderation/PROMPT_GEMINI_THEMES.md)
@@ -196,9 +223,9 @@ python -m commun.sauvegarde --voir          ce que contient la sauvegarde actuel
 **Analyse**
 
 ```
-python -m analyse                           note ce qui ne l'est pas encore (aussi lancé après chaque collecte)
-python -m analyse --sources youtube --du 2026-01-01
-python -m analyse --refaire                 renote tout avec le modèle en service
+python -m commun.analyse                           note ce qui ne l'est pas encore (aussi lancé après chaque collecte)
+python -m commun.analyse --sources youtube --du 2026-01-01
+python -m commun.analyse --refaire                 renote tout avec le modèle en service
 ```
 
 **Document de fonctionnement**
@@ -210,29 +237,29 @@ python -m docs                              regénère docs/FONCTIONNEMENT.pdf d
 **Site public**
 
 ```
-python -m web tout                          installer la base, publier les données, mettre les pages en ligne
-python -m web publier                       envoyer ce qui a changé (aussi fait après chaque collecte)
-python -m web deployer                      remettre les pages en ligne après une modification de web/site/
-python -m web apercu                        les pages en local (http://localhost:8000), sur les données en ligne
-python -m web motdepasse                    choisir le mot de passe du site (ferme les sessions ouvertes)
+python -m commentaires tout                          installer la base, publier les données, mettre les pages en ligne
+python -m commentaires publier                       envoyer ce qui a changé (aussi fait après chaque collecte)
+python -m commentaires deployer                      remettre les pages en ligne après une modification de commentaires/site/
+python -m commentaires apercu                        les pages en local (http://localhost:8000), sur les données en ligne
+python -m commentaires motdepasse                    choisir le mot de passe du site (ferme les sessions ouvertes)
 ```
 
 **Annotation et entraînement**
 
 ```
-python -m analyse.annotation etat              où en est l'annotation
-python -m analyse.annotation tirer-actif 100   prochain lot : commentaires où le modèle hésite
-python -m analyse.annotation tirer-reponses 100   prochain lot : réponses, lues avec leur parent
-python -m analyse.annotation tirer-longs 4000  lots de commentaires longs (40 mots ou plus), répartis entre sources et comptes
-python -m analyse.annotation voir 143          afficher un lot
-python -m analyse.annotation noter 143 notes.txt   enregistrer ses notes (vérifiées)
-python -m analyse.ensemble tout                réentraînement complet : réseau affiné puis combinaison (environ 7 h)
-python -m analyse.ensemble construire affineN  combinaison seule à partir d'un réseau déjà affiné (25 min)
-python -m analyse.ton_inverse                  part de « ton inversé » sur le test, avec les notes du corpus
+python -m commun.analyse.annotation etat              où en est l'annotation
+python -m commun.analyse.annotation tirer-actif 100   prochain lot : commentaires où le modèle hésite
+python -m commun.analyse.annotation tirer-reponses 100   prochain lot : réponses, lues avec leur parent
+python -m commun.analyse.annotation tirer-longs 4000  lots de commentaires longs (40 mots ou plus), répartis entre sources et comptes
+python -m commun.analyse.annotation voir 143          afficher un lot
+python -m commun.analyse.annotation noter 143 notes.txt   enregistrer ses notes (vérifiées)
+python -m commun.analyse.ensemble tout                réentraînement complet : réseau affiné puis combinaison (environ 7 h)
+python -m commun.analyse.ensemble construire affineN  combinaison seule à partir d'un réseau déjà affiné (25 min)
+python -m commun.analyse.ton_inverse                  part de « ton inversé » sur le test, avec les notes du corpus
 ```
 
 Un réentraînement occupe tout le processeur : ne jamais en lancer deux à la fois. La nouvelle version
-(`modeles/vN/`) est utilisée dès l'analyse suivante.
+(`donnees/modeles/vN/`) est utilisée dès l'analyse suivante.
 
 ## Interface
 
@@ -267,7 +294,7 @@ Un réentraînement occupe tout le processeur : ne jamais en lancer deux à la f
 | YouTube | API officielle YouTube Data v3 : dates exactes, réponses rattachées à leur commentaire. Le quota gratuit est de 10 000 unités par jour (la première collecte complète en a pris environ 4 500). Si le quota est atteint, la suite reprend au lancement suivant. En plus des chaînes suivies, la recherche du mot-clé dans tout YouTube (`search.list`, 100 unités par page de 50 vidéos) ramène les vidéos des autres chaînes. |
 | Bluesky | API publique `api.bsky.app`, gratuite et sans compte. Recherche des messages qui citent le mot-clé, puis lecture des réponses de chaque fil. L'API refuse la pagination par curseur sans compte : on avance par dates. Les comptes suivis se lisent en entier (`getAuthorFeed`), curseur compris. |
 | Instagram | Chrome visible, connecté avec le compte dédié. Le script ouvre chaque post et fait défiler les commentaires. La source est abandonnée d'elle-même en cas de blocage, ou si 10 posts prennent plus de 30 minutes. |
-| Facebook | Sa Page officielle et des groupes publics de soutiens. Meta a fermé l'API des groupes en 2024 : la bibliothèque `facebook-gql-scraper` envoie, avec les cookies du compte dédié, les requêtes internes du site (aucun navigateur pendant la collecte ; trois corrections dans `collecte/sources/facebook.py`). Rythme humain : 1,5 à 3 s entre deux requêtes (environ 1 500 requêtes et 3 600 commentaires à l'heure), 120 min par lancement, 6 000 requêtes par jour. Au moindre freinage, arrêt et repos de 3 h. Chaque requête a 60 s au plus, avec deux nouveaux essais (après 30 s, puis 60 s) avant l'arrêt. |
+| Facebook | Sa Page officielle et des groupes publics de soutiens. Meta a fermé l'API des groupes en 2024 : la bibliothèque `facebook-gql-scraper` envoie, avec les cookies du compte dédié, les requêtes internes du site (aucun navigateur pendant la collecte ; trois corrections dans `commun/collecte/sources/facebook.py`). Rythme humain : 1,5 à 3 s entre deux requêtes (environ 1 500 requêtes et 3 600 commentaires à l'heure), 120 min par lancement, 6 000 requêtes par jour. Au moindre freinage, arrêt et repos de 3 h. Chaque requête a 60 s au plus, avec deux nouveaux essais (après 30 s, puis 60 s) avant l'arrêt. |
 | X | Ses comptes, des comptes de soutiens et les posts qui le citent. X n'a plus d'accès gratuit : la bibliothèque `twscrape` envoie, avec les cookies du compte dédié, les recherches internes du site (aucun navigateur pendant la collecte). Tout passe par la recherche, seule à rendre toutes les réponses d'un post (« conversation_id: »). X permet 50 recherches par quart d'heure : on en fait 40 au plus, avec 3 à 8 s entre deux requêtes (environ 3 200 posts à l'heure), 120 min par lancement, 3 000 requêtes par jour. Au moindre freinage, arrêt et repos de 3 h. |
 
 **Périmètre (`config/perimetre.json`).** On ne le change que volontairement, pour que les collectes restent
@@ -317,7 +344,7 @@ comparables.
     `etat.json` jusqu'à `depuis`. Suivre le nouveau demande environ 1 000 requêtes par jour ; l'arriéré
     (environ 50 000 requêtes) prend une dizaine de jours au quota ;
   - états possibles dans le bilan : ok, partiel (temps ou quota), partiel (freinage), en repos, impossible
-    (Facebook demande une vérification : refaire `python -m collecte.connexion_facebook`). Une session expirée se
+    (Facebook demande une vérification : refaire `python -m commun.collecte.connexion_facebook`). Une session expirée se
     refait seule, une fois. Un fil vide (groupe supprimé ou devenu privé) est sauté (« FIL VIDE » dans le journal)
     sans arrêter les autres.
 - **X** (`"x"`) :
@@ -413,7 +440,7 @@ Chaque commentaire a aussi :
 - **Ironie** :
   - comprise : notée selon son sens réel ;
   - indécidable : pertinence basse (0 à 3), pour pouvoir l'écarter.
-- **Modèle en service** (`modeles/vN/`, la version la plus récente). C'est la moyenne pondérée de deux modèles :
+- **Modèle en service** (`donnees/modeles/vN/`, la version la plus récente). C'est la moyenne pondérée de deux modèles :
   - un réseau e5 affiné, qui lit chaque commentaire (256 jetons au plus) avec son parent (128) et le titre de la
     publication (20) ;
   - un modèle à vecteurs, plus stable sur les reproches rares.
@@ -430,12 +457,12 @@ Chaque commentaire a aussi :
   Les « j'aime » sont ceux de la dernière lecture : quand une publication est relue, les nouveaux comptes vont dans
   `donnees/<source>/likes.json`. Un commentaire dont la publication n'est plus relue garde ses « j'aime » d'alors.
 
-**Modèles** (`modeles/`).
-- On ne garde que la version en service et son réseau affiné (`reseau` dans `modeles/vN/infos.json`) : après un
+**Modèles** (`donnees/modeles/`).
+- On ne garde que la version en service et son réseau affiné (`reseau` dans `donnees/modeles/vN/infos.json`) : après un
   réentraînement validé, l'ancienne `vN` et son `affineN` sont supprimés (leurs mesures restent dans
   `docs/HISTORIQUE.md`).
 - **Hors ligne.** Le modèle de départ (e5) est sur le disque depuis son premier téléchargement. Tant que cette copie
-  existe, `analyse/__init__.py` met `HF_HUB_OFFLINE=1` : plus de vérification en ligne à chaque chargement, donc plus
+  existe, `commun/analyse/__init__.py` met `HF_HUB_OFFLINE=1` : plus de vérification en ligne à chaque chargement, donc plus
   de message « You are sending unauthenticated requests to the HF Hub », un chargement plus rapide, et tout marche
   sans connexion. Le réglage se lève seul si l'on change de modèle de départ (`MODELE_LANGUE`, pas encore
   téléchargé). Pour forcer une vérification en ligne : `$env:HF_HUB_OFFLINE = "0"` avant la commande.
@@ -450,17 +477,17 @@ Chaque commentaire a aussi :
 
 ## Site public
 
-Le site montre le travail, **avec un mot de passe** (`python -m web motdepasse`, à communiquer) : explication du projet,
+Le site montre le travail, **avec un mot de passe** (`python -m commentaires motdepasse`, à communiquer) : explication du projet,
 commentaires filtrables (curseurs, puces) avec la vidéo d'origine, thèmes des éloges et des critiques. Adresse : `site_url` dans `config/web.json`.
 
-- **Pages** (`web/site/`, HTML + JavaScript sans bibliothèque ni étape de construction) hébergées par **Vercel**.
-- **Données** dans **Supabase** (PostgreSQL), modèle normalisé (`web/schema.sql`) : `sources`, `comptes` (et leur
+- **Pages** (`commentaires/site/`, HTML + JavaScript sans bibliothèque ni étape de construction) hébergées par **Vercel**.
+- **Données** dans **Supabase** (PostgreSQL), modèle normalisé (`commentaires/schema.sql`) : `sources`, `comptes` (et leur
   groupe), `publications`, `utilisateurs` (auteurs, **privée**), `commentaires` (le texte, les notes et des numéros
   vers les autres tables), `syntheses`, et `moderation` (privée). Chaque donnée n'est écrite qu'une fois ; les fichiers
   locaux gardent leur forme, la publication les traduit. Sans connexion, la base ne rend rien : le site se connecte
   au compte partagé des lecteurs (Supabase Auth, adresse fixe, on ne tape que le mot de passe, rôle `lecteur`,
   inscriptions fermées) et lit en lecture seule (règles RLS, `peut_lire()`) ; changer le mot de passe recrée le compte
-  et ferme les sessions ; seuls `python -m web publier` et `python -m moderation publier` écrivent, avec la clé secrète. Les filtres de
+  et ferme les sessions ; seuls `python -m commentaires publier` et `python -m moderation publier` écrivent, avec la clé secrète. Les filtres de
   la page Commentaires sont appliqués par la base (fonctions `selection` et `evolution`, qui prennent le filtre jsonb
   comme paramètre unique et sans nom ; `commentaire` lit un commentaire par sa clé « source:code ») ;
   la page Le projet et la frise de la page Commentaires lisent le « cube » (comptages par semaine et par compte).
@@ -470,21 +497,23 @@ commentaires filtrables (curseurs, puces) avec la vidéo d'origine, thèmes des 
   auteur ni doublon. Sur le site, la Page Facebook est rangée avec ses comptes officiels et les groupes avec les
   chaînes de soutiens (« Chaînes et groupes
   de soutien ») et chaque commentaire renvoie à son post (« Voir sur Facebook »). Après l'ajout de Facebook,
-  `web/site/` a changé : `python -m web deployer` est à relancer une fois.
+  `commentaires/site/` a changé : `python -m commentaires deployer` est à relancer une fois.
 - **Date et modèle** : chaque page affiche, sous son titre et en pied de page, la date de la dernière collecte et
   la version du modèle (avec sa date d'entraînement), lues dans la synthèse « meta ».
 - **Mise à jour** : après chaque collecte qui ramène du neuf, la publication suit la notation (seules les lignes
   nouvelles ou changées partent, grâce à `donnees/web/publie.json`). Bouton « Mettre à jour le site » dans l'onglet
   Analyse → Modèle.
 - **Mise en place** (une fois) : coller un jeton Vercel (vercel.com/account/settings/tokens) et un jeton Supabase
-  (supabase.com/dashboard/account/tokens) dans `config/web.json`, puis `python -m web tout`.
-- Un projet Supabase gratuit sans aucune visite pendant 7 jours est mis en pause : `python -m web installer` le relance.
+  (supabase.com/dashboard/account/tokens) dans `config/web.json`, puis `python -m commentaires tout`.
+- Un projet Supabase gratuit sans aucune visite pendant 7 jours est mis en pause : `python -m commentaires installer` le relance.
 
 ### Site de la vérification
 
-Un second site, sans mot de passe ni base de données : https://verification-lisnard.vercel.app. Il présente, thème
-par thème, ce que disent David Lisnard et Nouvelle Énergie, les chiffres publics, les calculs et une conclusion, à
-partir du paquet `verification/` (voir `verification/README.md`). Les données sont écrites en dur dans les pages :
+Un second site, sans mot de passe ni base de données : https://verification-politique.vercel.app (« Vérification
+politique », depuis le 21/11/2026 ; il remplace verification-lisnard.vercel.app, supprimé). On y choisit un politique
+(David Lisnard, Jean-Luc Mélenchon…) ; il présente, thème par thème, ce qu'il dit, les chiffres publics, les calculs et
+une conclusion, et l'accueil compare les politiques thème par thème. Il est généré à partir du paquet `verification/`
+(voir `verification/README.md`). Les données sont écrites en dur dans les pages :
 après un changement dans un thème, `python -m verification site deployer` (même jeton Vercel que ci-dessus) ;
 `python -m verification site apercu` pour le voir en local.
 
@@ -495,10 +524,10 @@ Les commentaires notés partent aussi vers le stockage du groupe RAG politique s
 [docs/CLOUDFLARE.md](docs/CLOUDFLARE.md).
 
 ```
-python -m cloudflare              refait le fichier de chaque source, envoie ceux qui ont changé
-python -m cloudflare preparer     seulement les Parquet, dans donnees/cloudflare/lots/
-python -m cloudflare envoyer      seulement l'envoi des fichiers préparés qui diffèrent du bucket
-python -m cloudflare etat         par source : fichier, commentaires, déposé ou en attente
+python -m commun.cloudflare              refait le fichier de chaque source, envoie ceux qui ont changé
+python -m commun.cloudflare preparer     seulement les Parquet, dans donnees/cloudflare/lots/
+python -m commun.cloudflare envoyer      seulement l'envoi des fichiers préparés qui diffèrent du bucket
+python -m commun.cloudflare etat         par source : fichier, commentaires, déposé ou en attente
 ```
 
 - Rangement : `data/commentaires/nouvelle-energie/<source>_<AAAA-MM-JJ>.parquet`, **un seul fichier par source**,
@@ -541,7 +570,7 @@ Ce qu'on lui reproche et ce qu'on salue, rangé par thème (onglet **Thèmes** d
   des virgules) ; un filtre actif écarte les éloges.
 - **Synthèses** : une par thème et par sens dès 3 commentaires. `a-resumer` ne signale que celles qui manquent ou
   ont reçu depuis au moins 5 commentaires et 25 % de plus (repère `synthese_le` dans `themes.json`).
-- **Mise à jour** : à la demande, pas à chaque collecte, et toujours par Claude ([PROCESS.md](PROCESS.md),
+- **Mise à jour** : à la demande, pas à chaque collecte, et toujours par Claude ([docs/PROCESS.md](docs/PROCESS.md),
   étapes 5 à 8). Seuls les commentaires nouveaux sont lus : ce qui a été lu ne l'est jamais deux fois. Le rangement
   automatique par vecteurs a été essayé puis retiré ([docs/HISTORIQUE.md](docs/HISTORIQUE.md)).
 - **Fichiers** : `donnees/critiques/` (`themes.json`, `rattachements.csv` avec sa colonne `categorie`, `lus.csv`, `lots/`, `tris/`, `notes/`).
@@ -558,7 +587,7 @@ Facebook collecté (groupes et Page suivis, sans les publications elles-mêmes) 
 - **autre** : tout le reste, commentaires positifs compris.
 
 - **Modèle** : multilingual-e5-base affiné en trois classes sur les annotations de Claude
-  (`modeles/moderation/`, version m1 le 2026-11-13 : 2 000 annotations, test de 573). Environ 0,1 s par commentaire.
+  (`donnees/modeles/moderation/`, version m1 le 2026-11-13 : 2 000 annotations, test de 573). Environ 0,1 s par commentaire.
   Les modèles déjà entraînés à la toxicité, le zero-shot et Qwen3-4B ont été essayés et écartés
   ([docs/HISTORIQUE.md](docs/HISTORIQUE.md)).
 - **Mesures** (test, ramenées à la population) : accord avec Claude ≈ 90 % ; à modérer : ≈ 57 % des alertes justes
@@ -566,14 +595,12 @@ Facebook collecté (groupes et Page suivis, sans les publications elles-mêmes) 
   trouvées, le point faible. Relire avant de supprimer ou de bannir.
 - **Classement automatique** à la fin de chaque collecte qui ramène du neuf sur Facebook (quelques secondes, puis
   envoi dans Supabase) ; aussi par le bouton « Classer les nouveaux ». Les commentaires au texte vide sont écartés.
-- **À la demande seulement** ([PROCESS.md](PROCESS.md), partie M) : annoter des lots (`tirer` / `noter`, par
+- **À la demande seulement** ([docs/PROCESS.md](docs/PROCESS.md), partie M) : annoter des lots (`tirer` / `noter`, par
   Claude, ou par Gemini avec le prompt de `moderation/PROMPT_GEMINI.md` puis relus par Claude avec `relire`),
   réentraîner.
-- **Cible** : un insultant vise-t-il David Lisnard ou Nouvelle Énergie ? La lecture le dit (`L:` ou `I:`) ; à
-  défaut, la cible L/A de l'analyse principale (colonnes `cible` et `annotation_cible` de la table `moderation`).
 - **Fichiers** : `donnees/moderation/` (`annotations.csv` sans copie du texte, `lots/`, `journal.log`) ; le
   classement du modèle est dans les colonnes `mod_…` du corpus. Les annotations et les lots sont dans la sauvegarde. L'onglet, qui montre les auteurs, reste local.
-- **Supabase** : table **privée** `moderation` (`web/schema.sql`), une ligne par commentaire classé ou annoté, même
+- **Supabase** : table **privée** `moderation` (`commentaires/schema.sql`), une ligne par commentaire classé ou annoté, même
   clé que `commentaires` (source, code) : `p_insultant`, `p_question`, `p_autre`, `version`, `annotation`,
   `classe_le`, et des numéros vers `publications` et `utilisateurs` (table privée des auteurs). Le texte, l'auteur, la
   date et la publication n'y sont écrits que si le commentaire n'est pas déjà dans `commentaires`. La vue privée
@@ -585,14 +612,14 @@ Facebook collecté (groupes et Page suivis, sans les publications elles-mêmes) 
 - **Site de modération** (2026-11-13, https://moderation-lisnard.vercel.app, projet Vercel `moderation-lisnard`, pages dans `moderation/site/`, code dans
   `moderation/site.py`) : réservé aux modérateurs, à part du site public. On n'y entre qu'avec le mot de passe choisi
   par `python -m moderation motdepasse` (compte Supabase Auth partagé, rôle « moderateur » ; inscriptions fermées ;
-  changer le mot de passe coupe aussitôt les sessions ouvertes). Un seul groupe, « Cap 2027 avec David Lisnard » :
-  la base ne rend rien d'autre aux modérateurs (`moderation_publications()`), les autres groupes ne servent qu'à
-  l'entraînement. Compteurs « à traiter » (insultants, questions, mots surveillés),
-  vue Commentaires (filtres catégorie, sujet Lisnard / NE ou autre, mots surveillés, certitude, suivi, période,
+  changer le mot de passe coupe aussitôt les sessions ouvertes). Tous les groupes Facebook de la base
+  (`moderation_publications()`), avec un filtre « Groupes » en haut de toutes les vues, « Cap 2027 avec David Lisnard »
+  coché par défaut ; seul ce groupe est rangé par thème pour les réponses préparées (le site le rappelle). Compteurs du haut calculés sur les filtres en cours (groupes, période, thème, recherches) ; compteurs « à traiter » (insultants, questions, mots surveillés),
+  vue Commentaires (filtres catégorie, mots surveillés, certitude, suivi, période,
   texte, auteur, publication ; tri par date, insulte, question, auteurs signalés), vues Auteurs et Publications,
   vue Statistiques (évolution des insultants, questions et mots surveillés par jour ou par semaine ; commentaires
   marqués « traité » par modérateur, et bilan par modérateur d'après le prénom donné à la connexion). Mots
-  surveillés : liste `moderation/mots_surveilles.txt` (provisoire, en attendant celle du gestionnaire), recopiée
+  surveillés : liste `donnees/moderation/mots_surveilles.txt` (provisoire, en attendant celle du gestionnaire), recopiée
   dans `js/mots.js` au déploiement ; simple filtre dans le navigateur (accents, majuscules, lettres répétées et
   chiffres déguisés ignorés ; mots surlignés), sans lien avec le modèle. Liens vers le commentaire sur Facebook, la publication,
   le profil de l'auteur et sa fiche de membre du groupe (où un administrateur peut le retirer ou le bloquer : l'API
@@ -611,7 +638,7 @@ Facebook collecté (groupes et Page suivis, sans les publications elles-mêmes) 
   et ouvrir le commentaire » (Facebook ne laisse aucun site remplir sa zone de réponse : on clique sur « Répondre »
   et on colle). Option « Commencer par le prénom de l'auteur ». Recherche dans toutes les réponses, choix d'un autre
   thème, filtre « Thème » dans la liste. Les modérateurs ajoutent, modifient et retirent des réponses et ajoutent des
-  thèmes (identifiants M-…), signés de leur prénom. **Bibliothèque** : `moderation/reponses.xlsx` (feuilles
+  thèmes (identifiants M-…), signés de leur prénom. **Bibliothèque** : `donnees/moderation/reponses.xlsx` (feuilles
   « Réponses », « Thèmes », « Lisez-moi »), tables `reponses` et `reponses_themes` (lues et écrites par le seul
   compte des modérateurs, jamais supprimées : `actif`), synchronisées dans les deux sens par
   `python -m moderation reponses` (ce qui n'a changé que d'un côté passe de l'autre ; conflit : le site l'emporte,
@@ -620,8 +647,44 @@ Facebook collecté (groupes et Page suivis, sans les publications elles-mêmes) 
   (Gemini ou Claude ; `donnees/moderation/themes.csv`, `lots_themes/`), envoyés dans la colonne `themes` de la
   table `moderation`. Chiffres des réponses : seulement des faits sourcés (`verification/`, corpus Nouvelle
   Énergie) ; les vérifier avant de publier.
-  Vues `moderation_lignes`, `moderation_pubs` et fonction `suivre()` dans `web/schema.sql` ; rien à faire à la
+  Vues `moderation_lignes`, `moderation_pubs` et fonction `suivre()` dans `commentaires/schema.sql` ; rien à faire à la
   publication. Après une modification des pages : `python -m moderation site deployer`.
+
+## Proximité des candidats
+
+À part du reste (paquet `proximite/`, données dans `donnees/proximite/`), à la demande seulement. Les programmes
+publiés pour la présidentielle 2027 sont lus mesure par mesure ; chaque mesure est rangée dans un sous-thème de l'un
+des trois axes (économie et social, ordre et immigration, souveraineté et monde) et notée de −3 à +3 selon
+[docs/GRILLE_PROXIMITE.md](docs/GRILLE_PROXIMITE.md). Les candidats sont ensuite placés sur les trois axes et
+comparés (distances).
+
+```
+python -m proximite collecter [candidat]    liste des candidats et programmes (export de candidats2027.org),
+                                            téléchargement, texte de chaque document ; signale le nouveau et le modifié
+python -m proximite etat                    documents à lire et mesures par candidat
+python -m proximite lire <candidat> [page]  texte complet des documents à lire, par pages de 30 000 caractères
+python -m proximite relire <candidat>       remet tous les documents du candidat « à lire » (relecture complète)
+python -m proximite noter <candidat> <fichier>       enregistre les mesures relevées (format : proximite/mesures.py)
+python -m proximite calculer                positions par sous-thème et par axe, distances → positions.json
+python -m proximite site [apercu|deployer]  régénère proximite/site/donnees.js ; aperçu local (port 8020) ou Vercel
+```
+
+- **Sources** : la liste vient de `https://candidats2027.org/api/export` (candidatures en lice, PDF ou page officielle
+  de chaque programme). Quand la page d'un programme renvoie à ses chapitres ou à ses PDF, la recette du candidat
+  (`RECETTES` dans `proximite/collecte.py`) dit quels liens suivre.
+- **Lecture** : faite par Claude, qui lit chaque document en entier ; le code ne trie ni ne présélectionne rien (il
+  télécharge, extrait le texte, retire les doublons entre documents et découpe en pages). Les mesures d'un candidat s'écrivent dans
+  `donnees/proximite/notes/<candidat>.txt` (une ligne `O1 +2 | texte de la mesure`, un `## document` par document lu),
+  puis `noter` les range dans `donnees/proximite/mesures/<candidat>.csv` et marque les documents lus. Un document lu
+  et inchangé n'est pas relu ; un document modifié l'est, et ses mesures remplacent les anciennes.
+- **Programmes de référence** : `REFERENCES` dans `proximite/collecte.py` ajoute d'anciens programmes, hors de
+  l'export, lus et notés selon la même grille (Emmanuel Macron 2017, 119 mesures) ; le site les montre à part,
+  « pour comparaison », avec l'année dans le nom.
+- **Premier essai (21/11/2026)** : 13 programmes, 2 357 mesures, tous lus en entier.
+- **Site** : statique, une seule page (`proximite/site/index.html`) : programmes, carte (une ligne par axe, puis un
+  plan à deux axes au choix ; SVG dessiné par `js/carte.js`), distances (tous les axes ou un seul au choix), notes par thème (un axe à la fois, avec sa
+  clé de lecture). Seul `donnees.js` est régénéré. Mise en ligne
+  sur Vercel (projet « proximite-candidats ») avec le jeton du site public (`config/web.json`).
 
 ## Sauvegarde
 
@@ -642,6 +705,7 @@ Facebook collecté (groupes et Page suivis, sans les publications elles-mêmes) 
 
 - Ces fichiers relient des personnes à des opinions politiques : ce sont des données sensibles au sens du RGPD.
 - Tout reste en local, sauf ce que publie le site : texte et notes des commentaires publics YouTube, Instagram, Bluesky et Facebook,
-  sans auteur ni identifiant d'auteur (`web/export.py`). `donnees/`, `sessions/`, `modeles/`, `config/cles.json`,
-  `config/compte.json` et `config/web.json` sont exclus du partage par `.gitignore`.
+  sans auteur ni identifiant d'auteur (`commentaires/export.py`). `donnees/` (avec `sessions/` et `modeles/`), `config/cles.json`,
+  `config/compte.json` et `config/web.json` sont exclus du partage par `.gitignore`, sauf `donnees/verification/`
+  (données publiques) et `donnees/moderation/reponses.xlsx` et `mots_surveilles.txt`.
 - Pseudonymiser les auteurs avant toute analyse partagée : la copie de travail de l'analyse l'est déjà.

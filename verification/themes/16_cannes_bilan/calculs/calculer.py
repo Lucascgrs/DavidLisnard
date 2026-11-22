@@ -9,8 +9,9 @@ import zipfile
 from pathlib import Path
 
 import pandas as pd
+from verification.commun.chemins import donnees_de
 
-ICI = Path(__file__).resolve().parent
+ICI = donnees_de(__file__)
 BRUT = ICI.parent / "brut"
 SORTIE = ICI / "resultats.csv"
 GRAPHIQUES = ICI / "graphiques"

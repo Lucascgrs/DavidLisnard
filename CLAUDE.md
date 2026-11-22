@@ -1,18 +1,28 @@
 # Règles du projet DavidLisnard
 
-## Mise à jour du projet (PROCESS.md)
+## Mise à jour du projet (docs/PROCESS.md)
 
 - Quand l'utilisateur demande de « mettre à jour le projet » (ou de collecter, annoter, ranger les thèmes…), suivre
-  `PROCESS.md` étape par étape, dans l'ordre, et finir par le compte rendu de l'étape 11.
+  `docs/PROCESS.md` étape par étape, dans l'ordre, et finir par le compte rendu de l'étape 11.
 - Ne jamais refaire ce qui est déjà fait : un commentaire lu pour les thèmes (`lus.csv`), une catégorie donnée, une
   annotation enregistrée ne se refont pas. Seul le nouveau est traité.
 - Tout changement d'enchaînement, de commande ou de critère (quand annoter, quand réentraîner…) se reporte dans
-  `PROCESS.md` dans la même tâche.
+  `docs/PROCESS.md` dans la même tâche.
+
+## Organisation des dossiers
+
+- Un dossier par site web : `commentaires/` (site public), `moderation/`, `verification/`, `proximite/` ; le code qui sert
+  à plusieurs d'entre eux dans `commun/` (collecte, analyse, critiques, interface, suivi, cloudflare) ;
+  la documentation dans `docs/`.
+- Toutes les données sont dans `donnees/`, y compris celles des sites (`donnees/moderation/`, `donnees/verification/`)
+  et `modeles/`, `sessions/` : jamais de fichier de données dans le dossier d'un site, qui ne garde que du code et
+  ses pages. `donnees/` est hors git, sauf `donnees/verification/`, `donnees/proximite/` (sans `brut/`) et la bibliothèque de la
+  modération (`.gitignore`).
 
 ## Documentation
 
-- `README.md` : se servir du projet. `PROCESS.md` : la mise à jour. `docs/FONCTIONNEMENT.html/.pdf` : comment ça
-  marche. `docs/GRILLE.md` : la notation. `docs/HISTORIQUE.md` : décisions, essais abandonnés, versions du modèle
+- `README.md` : se servir du projet. `docs/PROCESS.md` : la mise à jour. `docs/FONCTIONNEMENT.html/.pdf` : comment ça
+  marche. `docs/GRILLE.md` : la notation. `docs/GRILLE_PROXIMITE.md` : la notation des mesures des programmes. `docs/HISTORIQUE.md` : décisions, essais abandonnés, versions du modèle
   (y ajouter une ligne à chaque décision ou version, plutôt que de créer un nouveau document de conception).
 
 ## Document de fonctionnement (docs/FONCTIONNEMENT.pdf)
@@ -37,7 +47,7 @@ Le document illustré qui explique comment marche le projet est tenu à jour en 
   - un changement de ce qui est publié, de l'hébergement du site ou de ses pages ;
   - une nouvelle commande ou un nouvel enchaînement dans un lancement.
 - Un simple réentraînement (nouvelle version vN) ou une collecte ne demandent que `python -m docs` (la carte
-  « Ton inversé » se calcule elle aussi à la génération, par `analyse/ton_inverse.py`, sur les notes du corpus :
+  « Ton inversé » se calcule elle aussi à la génération, par `commun/analyse/ton_inverse.py`, sur les notes du corpus :
   la générer après la renotation complète).
 - Les erreurs du générateur (« Valeurs manquantes dans chiffres() ») signalent un `{{nom}}` sans valeur : ajouter
   la valeur dans `chiffres()`, ne pas retirer la vérification.

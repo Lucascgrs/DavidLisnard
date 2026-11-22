@@ -3,14 +3,17 @@
 Modèle : intfloat/multilingual-e5-base (le même modèle de départ que l'analyse), affiné en entier en trois classes
 (autre, insultant, question). Réglages retenus le 2026-11-13 après essais : préfixe « query: », 128 jetons au plus,
 4 époques, lots de 16, taux 3e-5 avec 10 % de montée puis décroissance linéaire, poids des classes rares adoucis
-(racine de l'inverse de la fréquence), graine 0. Une trentaine de minutes d'entraînement sur le processeur, puis
-environ 0,1 s par commentaire pour classer.
+(racine de l'inverse de la fréquence), graine 0. Depuis m4 (2026-11-20), le modèle lit aussi le contexte en second
+segment : le commentaire auquel il répond (300 caractères) ou « Commentaire direct. ». Essais du 2026-11-20 :
+contexte de réponse meilleur que rien, titre de la publication en plus sans gain, CamemBERTav2 et mmBERT moins bons,
+moyennes de modèles et seuils sans gain qui vaille. Environ 1 h 30 d'entraînement sur le processeur, puis
+environ 0,04 s par commentaire pour classer.
 """
 import random
 import shutil
 import time
 
-from analyse import corpus as cp
+from commun.analyse import corpus as cp
 from commun.fichiers import ecrire_json
 from commun.taches import verifier_arret, verrou
 from commun.textes import maintenant
@@ -19,6 +22,30 @@ from moderation import donnees as d
 MODELE_DEPART = "intfloat/multilingual-e5-base"
 PREFIXE = "query: "
 LONGUEUR, LOT, EPOQUES, TAUX = 128, 16, 4, 3e-5
+CONTEXTE = "parent"  # second segment : « parent » (commentaire auquel il répond) ou « pub » (et la publication)
+
+
+def _court(t: str | None, n: int) -> str:
+    t = " ".join((t or "").split())
+    return t if len(t) <= n else t[:n] + "…"
+
+
+def entree(c: dict) -> tuple[str, str]:
+    """Ce que lit le modèle : le commentaire (premier segment) et son contexte (second segment) — le commentaire
+    auquel il répond, ou « Commentaire direct. », plus le titre de la publication si CONTEXTE vaut « pub »."""
+    b = [f"En réponse à : {_court(c['parent_texte'], 300)}" if c.get("parent_texte") else "Commentaire direct."]
+    if CONTEXTE == "pub":
+        b.append("Publication : " + _court(c.get("publication_titre"), 200))
+    return PREFIXE + c["texte"], " ".join(b)
+
+
+def _encoder(tok, xs: list[tuple[str, str]]):
+    return tok([x[0] for x in xs], [x[1] for x in xs], truncation="longest_first", max_length=LONGUEUR,
+               padding=True, return_tensors="pt")
+
+
+def _taille(x: tuple[str, str]) -> int:
+    return len(x[0]) + len(x[1])
 
 
 def _torch():
@@ -35,19 +62,19 @@ def journal(texte: str) -> None:
         f.write(ligne + "\n")
 
 
-def predire(mod, tok, textes: list[str], arret: bool = True, avancement=None):
-    """Probabilités (autre, insultant, question) de chaque texte, par lots de longueurs voisines."""
+def predire(mod, tok, lignes: list[dict], arret: bool = True, avancement=None):
+    """Probabilités (autre, insultant, question) de chaque commentaire (lignes de d.commentaires()), par lots de
+    longueurs voisines."""
     torch = _torch()
-    ordre = sorted(range(len(textes)), key=lambda i: len(textes[i]))
-    P = [None] * len(textes)
+    xs = [entree(c) for c in lignes]
+    ordre = sorted(range(len(xs)), key=lambda i: _taille(xs[i]))
+    P = [None] * len(xs)
     with torch.inference_mode():
         for k in range(0, len(ordre), 32):
             if arret:
                 verifier_arret(d.TACHE)
             idx = ordre[k:k + 32]
-            enc = tok([PREFIXE + textes[i] for i in idx], truncation=True, max_length=LONGUEUR, padding=True,
-                      return_tensors="pt")
-            for i, p in zip(idx, torch.softmax(mod(**enc).logits, -1).tolist()):
+            for i, p in zip(idx, torch.softmax(mod(**_encoder(tok, [xs[i] for i in idx])).logits, -1).tolist()):
                 P[i] = p
             if avancement:
                 avancement(min(k + 32, len(ordre)), len(ordre))
@@ -77,8 +104,8 @@ def entrainer() -> None:
     torch = _torch()
     from transformers import AutoModelForSequenceClassification, AutoTokenizer
     with verrou(d.TACHE, sans_veille=True):
-        textes = d.textes()
-        ann = [{**a, "texte": textes[a["cle"]]} for a in d.lire_annotations().values() if a["cle"] in textes]
+        com = {c["cle"]: c for c in d.commentaires()}
+        ann = [{**com[a["cle"]], **a} for a in d.lire_annotations().values() if a["cle"] in com]
         app = [a for a in ann if a["jeu"] != "test"]
         test = [a for a in ann if a["jeu"] == "test"]
         journal(f"Réentraînement : {len(app)} annotations d'entraînement, {len(test)} de test.")
@@ -88,7 +115,7 @@ def entrainer() -> None:
         mod = AutoModelForSequenceClassification.from_pretrained(
             MODELE_DEPART, num_labels=3, id2label=dict(enumerate(d.CATEGORIES)),
             label2id={c: i for i, c in enumerate(d.CATEGORIES)})
-        X = [PREFIXE + a["texte"] for a in app]
+        X = [entree(a) for a in app]
         y = torch.tensor([d.CATEGORIES.index(a["categorie"]) for a in app])
         cnt = torch.bincount(y, minlength=3).float().clamp(min=1)
         lossf = torch.nn.CrossEntropyLoss(weight=(cnt.sum() / (3 * cnt)) ** 0.5)
@@ -99,13 +126,12 @@ def entrainer() -> None:
         t0, step = time.time(), 0
         for ep in range(EPOQUES):
             mod.train()
-            idx = sorted(range(len(X)), key=lambda i: len(X[i]) + random.random() * 40)
+            idx = sorted(range(len(X)), key=lambda i: _taille(X[i]) + random.random() * 40)
             lots = [idx[i:i + LOT] for i in range(0, len(idx), LOT)]
             random.shuffle(lots)
             for b in lots:
                 verifier_arret(d.TACHE)
-                enc = tok([X[i] for i in b], truncation=True, max_length=LONGUEUR, padding=True, return_tensors="pt")
-                lossf(mod(**enc).logits, y[b]).backward()
+                lossf(mod(**_encoder(tok, [X[i] for i in b])).logits, y[b]).backward()
                 torch.nn.utils.clip_grad_norm_(mod.parameters(), 1.0)
                 opt.step(), sched.step(), opt.zero_grad()
                 step += 1
@@ -113,12 +139,13 @@ def entrainer() -> None:
                     journal(f"  époque {ep + 1}/{EPOQUES}, étape {step}/{nstep} ({time.time() - t0:.0f} s)")
                     ecrire_json(d.AVANCEMENT, {"tache": "entraînement", "fait": step, "total": nstep})
         mod.eval()
-        mesures = mesurer(test, predire(mod, tok, [a["texte"] for a in test]))
+        mesures = mesurer(test, predire(mod, tok, test))
         ancien = d.infos_modele() or {}
         version = f"m{int(ancien.get('version', 'm0')[1:]) + 1}"
         infos = {"version": version, "le": maintenant(), "modele_depart": MODELE_DEPART, "annotations": len(app),
                  "test": len(test), "mesures": mesures,
-                 "reglages": {"longueur": LONGUEUR, "lot": LOT, "epoques": EPOQUES, "taux": TAUX},
+                 "reglages": {"longueur": LONGUEUR, "lot": LOT, "epoques": EPOQUES, "taux": TAUX,
+                              "contexte": CONTEXTE},
                  "historique": ancien.get("historique", []) + ([{k: ancien[k] for k in ("version", "le", "mesures")}]
                                                               if ancien else [])}
         tmp = d.MODELE.with_name("moderation_nouveau")
@@ -164,7 +191,7 @@ def _classer(tout: bool, mod=None, tok=None, version: str | None = None) -> None
     t0 = time.time()
     for debut in range(0, len(a_faire), 2000):  # enregistré par tranches : un arrêt garde ce qui est fait
         tranche = a_faire[debut:debut + 2000]
-        P = predire(mod, tok, [c["texte"] for c in tranche],
+        P = predire(mod, tok, tranche,
                     avancement=lambda f, t: ecrire_json(d.AVANCEMENT, {"tache": "classement", "fait": debut + f,
                                                                        "total": len(a_faire)}))
         le = maintenant()
@@ -197,6 +224,6 @@ def remesurer() -> dict:
     from transformers import AutoModelForSequenceClassification, AutoTokenizer
     tok = AutoTokenizer.from_pretrained(d.MODELE)
     mod = AutoModelForSequenceClassification.from_pretrained(d.MODELE).eval()
-    textes = d.textes()
-    test = [a for a in d.lire_annotations().values() if a["jeu"] == "test" and a["cle"] in textes]
-    return mesurer(test, predire(mod, tok, [textes[a["cle"]] for a in test], arret=False))
+    com = {c["cle"]: c for c in d.commentaires()}
+    test = [{**com[a["cle"]], **a} for a in d.lire_annotations().values() if a["jeu"] == "test" and a["cle"] in com]
+    return mesurer(test, predire(mod, tok, test, arret=False))

@@ -98,7 +98,7 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
 <section>
   <div class="titre"><span class="etiquette">Vue d'ensemble</span>
   <h2>Le circuit, en cinq étapes</h2></div>
-  <p>Chaque lancement de <code>python -m collecte</code> fait tourner tout le circuit pour ce qui est nouveau. Le modèle n'est réentraîné que sur demande, quand il y a beaucoup de nouvelles annotations. À part du circuit, les nouveaux commentaires Facebook sont aussi classés pour la modération à la fin du lancement (voir « Modérer les groupes Facebook »).</p>
+  <p>Chaque lancement de <code>python -m commun.collecte</code> fait tourner tout le circuit pour ce qui est nouveau. Le modèle n'est réentraîné que sur demande, quand il y a beaucoup de nouvelles annotations. À part du circuit, les nouveaux commentaires Facebook sont aussi classés pour la modération à la fin du lancement (voir « Modérer les groupes Facebook »).</p>
   <div class="schema">
     <svg viewBox="0 0 860 280">
       <defs>
@@ -150,10 +150,10 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
         <path d="M260 190 V235 H610 V192" marker-end="url(#fl)" style="stroke-dasharray:5 4"/>
       </g>
       <text x="435" y="258" text-anchor="middle" class="petit">tous les commentaires, annotés ou non, passent ensuite dans le modèle pour recevoir leurs notes</text>
-      <text x="85" y="24" text-anchor="middle" class="mono">python -m collecte</text>
+      <text x="85" y="24" text-anchor="middle" class="mono">python -m commun.collecte</text>
       <text x="435" y="24" text-anchor="middle" class="mono">docs/GRILLE.md</text>
-      <text x="610" y="24" text-anchor="middle" class="mono">python -m analyse</text>
-      <text x="780" y="24" text-anchor="middle" class="mono">python -m web</text>
+      <text x="610" y="24" text-anchor="middle" class="mono">python -m commun.analyse</text>
+      <text x="780" y="24" text-anchor="middle" class="mono">python -m commentaires</text>
     </svg>
   </div>
 </section>
@@ -238,7 +238,7 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
       <text x="335" y="230" style="font-family:var(--mono);font-size:13px;fill:var(--s-annot)">annotations, corrections</text>
       <text x="335" y="252" class="petit">le travail à la main, par clé</text>
       <rect x="320" y="285" width="230" height="64" rx="10" style="fill:var(--s-modele-bg);stroke:var(--s-modele)"/>
-      <text x="335" y="310" style="font-family:var(--mono);font-size:13px;fill:var(--s-modele)">modeles/{{version}}/</text>
+      <text x="335" y="310" style="font-family:var(--mono);font-size:13px;fill:var(--s-modele)">donnees/modeles/{{version}}/</text>
       <text x="335" y="332" class="petit">écrit ses notes dans le corpus</text>
       <g style="stroke:var(--muted);stroke-width:1.5;fill:none">
         <path d="M250 70 C285 70 290 90 318 92" marker-end="url(#fl2)"/>
@@ -279,6 +279,7 @@ th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.05em;text-transform:u
     <div class="carte"><span class="etiquette">« J'aime »</span><p>Un commentaire lu juste après sa publication en a peu. Quand une publication est relue, les nouveaux comptes vont dans <code>likes.json</code>, sans retoucher les CSV. Ils servent à la vue pondérée : chaque commentaire y pèse 1 + ses « j'aime ».</p></div>
     <div class="carte"><span class="etiquette">Sauvegarde</span><div class="chiffre">{{sauvegarde_mo}}</div><p><code>donnees/sauvegardes/donnees.zip</code>, refaite à la fin de chaque collecte : CSV bruts (Instagram d'abord), annotations, corrections, thèmes, modération, dans le format où le projet les lit. Le corpus, les vecteurs et les modèles se recalculent et n'y sont pas. Une seule copie : la nouvelle est écrite à part, relue, puis remplace l'ancienne. Refusée si un CSV a rétréci.</p></div>
   </div>
+  <p>Les dossiers du projet : un par site, <code>commentaires/</code> (site public), <code>moderation/</code>, <code>verification/</code>, <code>proximite/</code>. Le code qui sert à plusieurs (collecte, analyse, thèmes, interface) est dans <code>commun/</code>, la documentation dans <code>docs/</code>, et toutes les données, celles des sites comprises (modération, vérification, proximité), avec les modèles entraînés et les sessions, dans <code>donnees/</code> : les dossiers des sites ne gardent que leur code et leurs pages.</p>
 </section>
 
 <!-- ============ GRILLE ============ -->
@@ -384,9 +385,9 @@ cible L · ton 3 · forme 10 · système 10 · idées 3 · pertinence 8
     <li><span>On fige les couches basses, qui comprennent les mots et la grammaire, et on laisse les {{couches_ajustees}} couches hautes s'ajuster à nos critères. C'est plus rapide, et {{annotations}} exemples ne suffiraient pas à bien régler tout le réseau.</span></li>
     <li><span>Le réseau lit les {{apprentissage}} exemples par paquets de 16, compare ses notes à celles de Claude et corrige ses poids un peu à chaque paquet (taux d'apprentissage {{lr}} pour e5, 10⁻³ pour la couche de sortie). Il refait le tour complet {{epoques}} fois ({{epoques}} époques).</span></li>
     <li><span>Sur le processeur, cela prend environ {{duree}} ({{reseau}}, terminé le {{entraine_le}}).</span></li>
-    <li><span>On règle ensuite, sur les {{reglage}} exemples de réglage, le poids donné au réseau et aux vecteurs pour chaque critère. Le résultat est enregistré comme une nouvelle version (<code>modeles/{{version}}/</code>).</span></li>
+    <li><span>On règle ensuite, sur les {{reglage}} exemples de réglage, le poids donné au réseau et aux vecteurs pour chaque critère. Le résultat est enregistré comme une nouvelle version (<code>donnees/modeles/{{version}}/</code>).</span></li>
   </ol>
-  <p>Commande complète : <code>python -m analyse.ensemble tout</code>, aussi lancée par un bouton de l'interface. Puis <code>python -m analyse</code> renote tout le corpus, à 10 à 30 commentaires par seconde.</p>
+  <p>Commande complète : <code>python -m commun.analyse.ensemble tout</code>, aussi lancée par un bouton de l'interface. Puis <code>python -m commun.analyse</code> renote tout le corpus, à 10 à 30 commentaires par seconde.</p>
 </section>
 
 <!-- ============ RESULTATS ============ -->
@@ -457,7 +458,7 @@ cible L · ton 3 · forme 10 · système 10 · idées 3 · pertinence 8
       <text x="425" y="228" text-anchor="middle" class="petit">à la demande : les {{th_a_lire}} nouveaux commentaires retenus attendent la prochaine lecture (seuls les nouveaux sont lus)</text>
     </svg>
   </div>
-  <p class="legende">Commandes : <code>python -m critiques tirer</code>, <code>voir</code>, <code>noter</code>, puis <code>proches</code>, <code>a-resumer</code> (seules les synthèses qui ont reçu assez de nouveaux commentaires sont réécrites), <code>syntheses</code> et <code>python -m web publier</code>. Les comptes sont donnés en commentaires et en auteurs distincts. Ce n'est pas un sondage.</p>
+  <p class="legende">Commandes : <code>python -m commun.critiques tirer</code>, <code>voir</code>, <code>noter</code>, puis <code>proches</code>, <code>a-resumer</code> (seules les synthèses qui ont reçu assez de nouveaux commentaires sont réécrites), <code>syntheses</code> et <code>python -m commentaires publier</code>. Les comptes sont donnés en commentaires et en auteurs distincts. Ce n'est pas un sondage.</p>
   <h3>Cinq catégories pour les critiques et les doutes</h3>
   <p>Chaque critique ou doute rangé dans un thème porte aussi une catégorie : ce que le programme peut en faire. Les éloges n'en ont pas. Claude la pose en lisant, à la demande et seulement sur les commentaires déjà rangés par thème, jamais sur tout le corpus.</p>
   <div class="grille trois">
@@ -468,7 +469,7 @@ cible L · ton 3 · forme 10 · système 10 · idées 3 · pertinence 8
     <div class="carte"><span class="etiquette">5 · Suggestion</span><div class="chiffre">{{th_cat_5}}</div><p>apporte une idée ou un sujet absent du programme.</p></div>
     <div class="carte"><span class="etiquette">Sans catégorie</span><div class="chiffre">{{th_cat_0}}</div><p>critiques ou doutes qui attendent le prochain tri.</p></div>
   </div>
-  <p class="legende">Les nouveaux lots se notent <code>n | Thème | C3 | phrase</code> : chiffre obligatoire après C ou D, interdit après E. Pour l'existant : <code>python -m critiques trier</code> affiche le lot suivant sans catégorie, <code>python -m critiques ranger K fichier</code> l'enregistre (colonne <code>categorie</code> de <code>rattachements.csv</code>, lots dans <code>donnees/critiques/tris/</code>). L'onglet et la page Thèmes ont un filtre « Catégorie des critiques et des doutes » (Toutes, Tout sauf les oppositions de principe, ou une seule).</p>
+  <p class="legende">Les nouveaux lots se notent <code>n | Thème | C3 | phrase</code> : chiffre obligatoire après C ou D, interdit après E. Pour l'existant : <code>python -m commun.critiques trier</code> affiche le lot suivant sans catégorie, <code>python -m commun.critiques ranger K fichier</code> l'enregistre (colonne <code>categorie</code> de <code>rattachements.csv</code>, lots dans <code>donnees/critiques/tris/</code>). L'onglet et la page Thèmes ont un filtre « Catégorie des critiques et des doutes » (Toutes, Tout sauf les oppositions de principe, ou une seule).</p>
 </section>
 
 <!-- ============ MODÉRATION ============ -->
@@ -489,7 +490,7 @@ cible L · ton 3 · forme 10 · système 10 · idées 3 · pertinence 8
       <rect x="240" y="100" width="150" height="96" rx="10" style="fill:var(--s-modele-bg);stroke:var(--s-modele)"/>
       <text x="315" y="128" text-anchor="middle" style="font-weight:600;fill:var(--s-modele)">Modèle {{mod_version}}</text>
       <text x="315" y="152" text-anchor="middle" class="mono">e5 affiné</text>
-      <text x="315" y="176" text-anchor="middle" class="petit">0,1 s par commentaire</text>
+      <text x="315" y="176" text-anchor="middle" class="petit">lit aussi le message parent</text>
       <rect x="440" y="20" width="200" height="74" rx="10" style="fill:#fbe9e7;stroke:#c0392b"/>
       <text x="455" y="44" style="font-weight:600;fill:#c0392b">À modérer</text>
       <text x="625" y="46" text-anchor="end" style="font-family:var(--display);font-size:20px;font-weight:700;fill:#c0392b">{{mod_insultants}}</text>
@@ -550,7 +551,7 @@ cible L · ton 3 · forme 10 · système 10 · idées 3 · pertinence 8
     </svg>
   </div>
   <p>On repère sur le site, on agit sur Facebook, puis on marque le commentaire « traité » : les autres modérateurs le voient en quelques secondes. Pour ménager la base gratuite, chaque navigateur garde les données et ne demande ensuite que les nouveaux commentaires.</p>
-  <p>Le site ne montre que le groupe « Cap 2027 avec David Lisnard » ; les autres groupes servent seulement à entraîner le modèle. Chaque commentaire porte un <b>sujet</b> (David Lisnard ou Nouvelle Énergie, ou autre chose). Une liste de <b>mots surveillés</b> (<span class="mono">moderation/mots_surveilles.txt</span>) les surligne, et l'onglet <b>Statistiques</b> suit insultants, questions, mots surveillés et commentaires traités par modérateur.</p>
+  <p>Le site montre tous les groupes Facebook, avec un choix des groupes en haut de page (« Cap 2027 avec David Lisnard » par défaut) ; seul ce groupe est rangé par thème pour les réponses préparées. Une liste de <b>mots surveillés</b> (<span class="mono">donnees/moderation/mots_surveilles.txt</span>) les surligne, et l'onglet <b>Statistiques</b> suit insultants, questions, mots surveillés et commentaires traités par modérateur.</p>
   <h3>Les réponses préparées</h3>
   <div class="schema">
     <svg viewBox="0 0 860 190">
@@ -589,7 +590,8 @@ cible L · ton 3 · forme 10 · système 10 · idées 3 · pertinence 8
       <text x="430" y="178" text-anchor="middle" class="petit">chaque chiffre a sa source : ses propres textes ou un chiffre jugé exact par la vérification</text>
     </svg>
   </div>
-  <p>Pour répondre vite aux commentaires qui l'appellent (une question, ou une critique non insultante de Lisnard ou de Nouvelle Énergie), chacun est rangé dans un à trois <b>thèmes</b> par Gemini ou Claude. Le bouton <b>💬 Réponses</b> montre les réponses préparées de ces thèmes : on copie, on ouvre le commentaire et on colle sur Facebook, qui ne laisse aucun site remplir sa zone de réponse. Les modérateurs ajoutent et modifient réponses et thèmes depuis le site ; <code>python -m moderation reponses</code> les synchronise avec <span class="mono">moderation/reponses.xlsx</span> (en cas de conflit, le site l'emporte ; une réponse retirée est désactivée, jamais supprimée).</p>
+  <p>Pour répondre vite aux commentaires qui l'appellent (une question, ou une critique non insultante de Lisnard ou de Nouvelle Énergie), chacun est rangé dans un à trois <b>thèmes</b> par Gemini ou Claude. Le bouton <b>💬 Réponses</b> montre les réponses préparées de ces thèmes : on copie, on ouvre le commentaire et on colle sur Facebook, qui ne laisse aucun site remplir sa zone de réponse. Les modérateurs ajoutent et modifient réponses et thèmes depuis le site ; <code>python -m moderation reponses</code> les synchronise avec <span class="mono">donnees/moderation/reponses.xlsx</span> (en cas de conflit, le site l'emporte ; une réponse retirée est désactivée, jamais supprimée).</p>
+  <p>Le modèle lit chaque commentaire avec ce à quoi il répond : le commentaire parent (300 caractères au plus), ou « Commentaire direct. » s'il répond à la publication. Une réponse comme « Et Sarah Knafo ? » ou « Pourquoi ? » ne se comprend qu'ainsi. Essais du 20 novembre 2026 (sur 1 359 annotations mises de côté) : avec le parent, les insultes passent de 0,81 à 0,82 et les questions de 0,68 à 0,70 (mesure F, qui combine alertes justes et vraies trouvées) ; ajouter le titre de la publication, prendre CamemBERTa v2 ou mmBERT, moyenner deux modèles ou régler des seuils n'apporte rien qui vaille. Le gain le plus net est venu des annotations : les 5 417 du 13 et du 14 novembre ont été relues par Claude avec les règles actuelles (566 corrigées, surtout des questions et des insultes qui avaient été comptées « autre »).</p>
   <h3>S'améliorer : à la demande seulement</h3>
   <div class="schema">
     <svg viewBox="0 0 860 170">
@@ -600,7 +602,7 @@ cible L · ton 3 · forme 10 · système 10 · idées 3 · pertinence 8
       <text x="100" y="92" text-anchor="middle" class="petit">jamais annotés</text>
       <rect x="230" y="20" width="180" height="86" rx="10" style="fill:var(--s-annot-bg);stroke:var(--s-annot)"/>
       <text x="320" y="46" text-anchor="middle" style="font-weight:600;fill:var(--s-annot)">2 · Claude ou Gemini lit</text>
-      <text x="320" y="70" text-anchor="middle" class="mono">L: 3  I: 17  Q: 5, 9</text>
+      <text x="320" y="70" text-anchor="middle" class="mono">I: 3, 17  Q: 5, 9</text>
       <text x="320" y="92" text-anchor="middle" class="petit">Gemini relu par Claude</text>
       <rect x="450" y="20" width="180" height="86" rx="10" style="fill:var(--s-stock-bg);stroke:var(--s-stock)"/>
       <text x="540" y="46" text-anchor="middle" style="font-weight:600;fill:var(--s-stock)">3 · Annotations</text>
@@ -608,7 +610,7 @@ cible L · ton 3 · forme 10 · système 10 · idées 3 · pertinence 8
       <text x="540" y="94" text-anchor="middle" class="petit">dont {{mod_test}} gardées pour mesurer</text>
       <rect x="670" y="20" width="180" height="86" rx="10" style="fill:var(--s-modele-bg);stroke:var(--s-modele)"/>
       <text x="760" y="46" text-anchor="middle" style="font-weight:600;fill:var(--s-modele)">4 · Réentraîner</text>
-      <text x="760" y="70" text-anchor="middle" class="petit">≈ 30 min, version suivante</text>
+      <text x="760" y="70" text-anchor="middle" class="petit">≈ 1 h 30, version suivante</text>
       <text x="760" y="92" text-anchor="middle" class="petit">puis tout est reclassé</text>
       <g style="stroke:var(--muted);stroke-width:1.6;fill:none">
         <path d="M190,63 H226" marker-end="url(#flm2)"/>
@@ -686,19 +688,31 @@ cible L · ton 3 · forme 10 · système 10 · idées 3 · pertinence 8
       </div>
     </div>
   </div>
-  <p class="legende">Mesures ramenées à l'ensemble des commentaires ; essais du 13 novembre 2026. Commandes <code>python -m moderation</code> : <code>classer</code>, <code>tirer</code>, <code>noter</code>, <code>relire</code>, <code>entrainer</code>, <code>publier</code>, <code>motdepasse</code>, <code>site deployer</code>, <code>reponses</code>, <code>themes tirer</code>, <code>themes noter</code>. Fichiers : <span class="mono">donnees/moderation/</span>, colonnes <span class="mono">mod_…</span> du corpus, <span class="mono">modeles/moderation/</span>.</p>
+  <p class="legende">Mesures ramenées à l'ensemble des commentaires ; essais du 13 novembre 2026. Commandes <code>python -m moderation</code> : <code>classer</code>, <code>tirer</code>, <code>noter</code>, <code>relire</code>, <code>entrainer</code>, <code>publier</code>, <code>motdepasse</code>, <code>site deployer</code>, <code>reponses</code>, <code>themes tirer</code>, <code>themes noter</code>. Fichiers : <span class="mono">donnees/moderation/</span>, colonnes <span class="mono">mod_…</span> du corpus, <span class="mono">donnees/modeles/moderation/</span>.</p>
 </section>
 
 <!-- ============ VÉRIFICATION ============ -->
 <section>
   <div class="titre"><span class="etiquette" style="color:var(--s-annot)">À part · Vérification</span>
-  <h2>Vérifier les chiffres de David Lisnard</h2></div>
-  <p>Travail séparé, dans <code>verification/</code> : on recense ce que dit David Lisnard dans le corpus du RAG puis, thème par thème, on télécharge les données publiques, on refait les calculs et on rend un verdict.</p>
+  <h2>Vérifier les chiffres des candidats</h2></div>
+  <p>Travail séparé, dans <code>verification/</code> (ses données dans <code>donnees/verification/</code>) : on recense ce que dit un candidat dans le corpus du RAG puis, thème par thème, on télécharge les données publiques, on refait les calculs et on rend un verdict. Deux candidats : David Lisnard ({{verif_lisnard}}) et Jean-Luc Mélenchon ({{verif_melenchon}}), dans <code>verification/melenchon/</code> et <code>donnees/verification/melenchon/</code>.</p>
+  <p>Les thèmes ont le même numéro et le même dossier pour tous (<code>verification/commun/themes.py</code>), pour pouvoir comparer les candidats sujet par sujet ; trois thèmes ont été ajoutés avec Mélenchon (17 inégalités et pauvreté, 18 climat, 19 égalité et discriminations). Un fichier déjà téléchargé pour l'un est repris tel quel pour l'autre. Chez Mélenchon, seuls les passages de vidéo où il parle lui-même sont lus.</p>
   <p>Chaque thème a le même dossier : <code>affirmations.csv</code>, <code>position.md</code>, <code>brut/</code> et <code>sources.csv</code>, <code>calculs/</code> et <code>analyse.md</code> (verdicts). Échelle commune : exact, plutôt exact, trompeur, faux, invérifiable, opinion ou promesse.</p>
-  <p>Commandes <code>python -m verification</code> : <code>corpus</code>, <code>telecharger &lt;thème&gt;</code>, <code>calculer &lt;thème&gt;</code>, <code>verifier</code>, <code>synthese</code>. Publié dans le bucket R2 public par <code>python -m cloudflare verification</code>.</p>
-  <p>Site public à part : <span class="mono">verification-lisnard.vercel.app</span>, une page par thème en trois temps (ce qu'il dit, ce que disent les chiffres, la conclusion). Chaque affirmation porte une étiquette qui dit la nature de l'écart (superlatif, arrondi, chiffre grossi…) et se déplie sur la citation, un petit graphique, l'explication et les sources. Site statique, généré par <code>python -m verification site</code> (avec <code>verification/conclusions.py</code>, contrôlé contre <code>analyse.md</code>) ; <code>site deployer</code> le met en ligne.</p>
+  <p>Commandes <code>python -m verification [melenchon]</code> : <code>corpus</code>, <code>telecharger &lt;thème&gt;</code>, <code>calculer &lt;thème&gt;</code>, <code>verifier</code>, <code>synthese</code>, <code>site</code>, <code>themes</code>. Plus rien n'est envoyé sur R2 : les résultats déposés le 14 novembre restent dans le bucket public, sans les scripts.</p>
+  <p>Site public à part, commun à tous les politiques : <span class="mono">verification-politique.vercel.app</span>. On y choisit un politique (sélecteur dans l'en-tête) ; l'accueil compare les politiques thème par thème. Pour chacun, une page par thème en trois temps (ce qu'il dit, ce que disent les chiffres, la conclusion). Chaque affirmation porte une étiquette qui dit la nature de l'écart (superlatif, arrondi, chiffre grossi…) et se déplie sur la citation, un petit graphique, l'explication et les sources. Site statique, généré par <code>python -m verification site</code> (avec <code>verification/conclusions.py</code>, contrôlé contre <code>analyse.md</code>) ; <code>site deployer</code> le met en ligne. Chaque politique a sa propre couche de lecture (<code>verification/melenchon/conclusions.py</code> pour Mélenchon) ; les pages sont rangées dans un dossier par politique.</p>
+</section>
+
+<!-- ============ PROXIMITÉ DES CANDIDATS ============ -->
+<section>
+  <div class="titre"><span class="etiquette" style="color:var(--s-annot)">À part · Proximité des candidats</span>
+  <h2>Placer les candidats les uns par rapport aux autres</h2></div>
+  <p>Travail séparé, dans <code>proximite/</code> (ses données dans <code>donnees/proximite/</code>) : les programmes publiés pour la présidentielle 2027 ({{prox_programmes}} sur {{prox_en_lice}} candidatures en lice, d'après l'export ouvert de candidats2027.org du {{prox_export}}) sont téléchargés, puis lus en entier par Claude, qui en relève les mesures : {{prox_mesures}} mesures. Le code ne fait que télécharger, extraire le texte et le découper en pages ; il ne trie rien. Un ancien programme sert de repère ({{prox_references}}) : hors de l'export, il est lu et noté de la même façon, et le site le montre à part, « pour comparaison ».</p>
+  <p>Chaque mesure est rangée dans un sous-thème de l'un des trois axes et notée de −3 à +3 par Claude, selon <code>docs/GRILLE_PROXIMITE.md</code> : <b>économie et social</b> (intervention et redistribution ↔ libéralisme), <b>ordre et immigration</b> (libertés, prévention, accueil ↔ autorité, sanction, fermeture), <b>souveraineté et monde</b> (Europe et ouverture ↔ souveraineté nationale). Les institutions et les autres sujets sont relevés sans compter sur un axe. La note d'un sous-thème est la moyenne de ses mesures, la position sur un axe la moyenne de ses sous-thèmes ; la distance entre deux candidats est la distance entre leurs positions, ramenée sur 100.</p>
+  <p>Commandes <code>python -m proximite</code> : <code>collecter</code> (liste et programmes, texte de chaque document), <code>etat</code>, <code>lire</code> (texte complet, page par page), <code>relire</code>, <code>noter</code> (mesures relevées, un fichier par candidat dans <code>donnees/proximite/notes/</code>), <code>calculer</code>, <code>site</code>. Un document déjà lu et inchangé n'est pas relu : à la publication des derniers programmes, on relance <code>collecter</code> et on ne lit que les documents nouveaux ou modifiés.</p>
+  <p>Site à part, « Proximité des candidats », statique (<code>proximite/site/</code>, mis en ligne par <code>python -m proximite site deployer</code>) : un cartouche par programme avec son lien, la fiche de chaque candidat (notes par thème, mesures et leur note), une carte en deux vues (une ligne de −3 à +3 par axe, chaque candidat nommé dessus, puis un plan dont on choisit les deux axes, aux quatre quarts nommés), le tableau des distances (sur les trois axes, ou sur un seul au choix) et celui des notes par thème, un axe à la fois, chaque sous-thème avec le sens d'une note vers −3 ou vers +3 en un ou deux mots.</p>
   <p class="pied">Document généré le {{date}} par <code>python -m docs</code> depuis <code>docs/FONCTIONNEMENT.html</code>. Les chiffres viennent des données du projet à cette date.</p>
 </section>
+
 
 
 </div>

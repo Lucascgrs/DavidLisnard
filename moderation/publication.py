@@ -1,4 +1,4 @@
-"""Envoi des catégories de modération dans la table privée « moderation » de Supabase (web/schema.sql).
+"""Envoi des catégories de modération dans la table privée « moderation » de Supabase (commentaires/schema.sql).
 
 Incrémental, comme la publication du site : donnees/moderation/publie.json garde l'empreinte de chaque ligne déjà
 envoyée ; seules les lignes nouvelles ou changées partent. Rien n'est envoyé au site lui-même : la table n'a aucune
@@ -17,30 +17,14 @@ from commun.textes import empreinte
 from moderation import donnees as d
 
 ETAT = d.DOSSIER / "publie.json"
-MODELE = 4  # 2 : modèle normalisé (2026-11-13) ; 3 : + cible (2026-11-14) ; 4 : + themes (2026-11-19). Autre valeur : tout renvoyer
-
-
-def cibles() -> dict[str, str]:
-    """Cible retenue par l'analyse principale (L : parle de David Lisnard ou de Nouvelle Énergie, A : autre chose),
-    pour chaque commentaire Facebook : correction, sinon relecture de Claude, sinon modèle (analyse/stockage.py).
-    Un doublon (même auteur, même texte) prend celle du commentaire gardé."""
-    from analyse import stockage
-    from commun.fichiers import lire_csv
-    corpus = [l for l in lire_csv(stockage.CORPUS) if l["source"] == "facebook"]
-    notes = stockage.lire_notes(corpus)
-    sortie = {}
-    for l in corpus:
-        n = notes.get(l["cle"]) or notes.get(l.get("doublon_de") or "")
-        if n and n.get("cible") in ("L", "A"):
-            sortie[l["cle"]] = n["cible"]
-    return sortie
+MODELE = 5  # 2 : modèle normalisé (2026-11-13) ; 3 : + cible (2026-11-14) ; 4 : + themes (2026-11-19) ; 5 : cible retirée (2026-11-19). Autre valeur : tout renvoyer
 
 
 def _sur_le_site() -> dict[str, str | None]:
-    """Commentaires Facebook déjà dans la table commentaires (d'après l'état de « python -m web publier ») → leur
+    """Commentaires Facebook déjà dans la table commentaires (d'après l'état de « python -m commentaires publier ») → leur
     parent tel que publié (clé, ou None)."""
-    from web import export
-    from web import publication as web
+    from commentaires import export
+    from commentaires import publication as web
     etat = lire_json(web.ETAT, {}) or {}
     if etat.get("modele") != web.MODELE:
         return {}
@@ -52,7 +36,7 @@ def _sur_le_site() -> dict[str, str | None]:
 def lignes(num, sur_le_site: dict) -> list[dict]:
     """Une ligne par commentaire classé ou annoté, au format de la table moderation."""
     from moderation import reponses
-    notes, ann, cib, themes = d.lire_notes(), d.lire_annotations(), cibles(), reponses.themes_par_commentaire()
+    notes, ann, themes = d.lire_notes(), d.lire_annotations(), reponses.themes_par_commentaire()
     com = {c["cle"]: c for c in d.commentaires()}
     sortie = []
     for cle in sorted(set(notes) | set(ann)):
@@ -62,8 +46,7 @@ def lignes(num, sur_le_site: dict) -> list[dict]:
                  "p_insultant": f("p_insultant"), "p_question": f("p_question"), "p_autre": f("p_autre"),
                  "version": n["version"] if n else None, "annotation": a["categorie"] if a else None,
                  "classe_le": n["classe_le"] if n else None,
-                 "annotation_cible": (a.get("cible") or None) if a and a["categorie"] == "insultant" else None,
-                 "cible": None, "themes": themes.get(cle) or None,
+                 "themes": themes.get(cle) or None,
                  "publication": None, "utilisateur": None, "parent": None, "date": None, "texte": None}
         if c:
             parent = f"facebook:{c['parent_id']}" if c.get("parent_id") else None
@@ -77,14 +60,14 @@ def lignes(num, sur_le_site: dict) -> list[dict]:
                     if c.get("publication_id") and c.get("compte_source") else None,
                     "utilisateur": num.utilisateur("facebook", ident) if ident else None,
                     "parent": c.get("parent_id") or None, "date": (c.get("date") or "")[:19] or None,
-                    "texte": c.get("texte") or None, "cible": cib.get(cle)})
+                    "texte": c.get("texte") or None})
         sortie.append(ligne)
     return sortie
 
 
 def references(cles: set[str]) -> tuple[dict, dict, dict]:
-    """Comptes, publications et auteurs Facebook des commentaires `cles`, au format de web.publication.relier()."""
-    from analyse.corpus import GROUPE_PAR_DEFAUT, groupes
+    """Comptes, publications et auteurs Facebook des commentaires `cles`, au format de commentaires.publication.relier()."""
+    from commun.analyse.corpus import GROUPE_PAR_DEFAUT, groupes
     grp = groupes()
     comptes, publications, utilisateurs = {}, {}, {}
     for c in d.commentaires():
@@ -106,9 +89,9 @@ def references(cles: set[str]) -> tuple[dict, dict, dict]:
 
 def publier(tout: bool = False, journal=print) -> int:
     """Envoie ce qui a changé ; rend le nombre de lignes envoyées. Sans accès Supabase configuré, ne fait rien."""
-    from web import acces
-    from web.publication import relier
-    from web.supabase import Base
+    from commentaires import acces
+    from commentaires.publication import relier
+    from commentaires.supabase import Base
     if not acces.pret_a_publier():
         journal("Supabase n'est pas configuré (config/web.json) : rien n'est envoyé.")
         return 0

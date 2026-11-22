@@ -1,0 +1,473 @@
+DE LA COLONIE NUMérique aux souverainetés numériques
+
+Édito de François Ruffin
+
+Il y a plus de 2 000 ans, dans le Phèdre de Platon, Socrate racontait le mythe du dieu Theuth, inventeur de l’écriture. Déjà, il s’inquiétait de cette nouvelle « technologie » : allait-elle permettre à l’Humanité de mieux apprendre, de disposer de plus de savoir, ou au contraire nous rendre plus dépendants et, finalement, plus ignorants ? Sa conclusion : que la technologie devait passer par le filtre du politique.
+
+Bien plus tard, c’est l’arrivée des métiers à tisser. Dans le Capital , Marx, souvent présenté à tort comme un défenseur à tout crin du progrès technique, a retracé les révoltes des artisans allemands, anglais, italiens, hollandais, français. Et il conclut : « C’est comme puissance ennemie de l’ouvrier que le capital emploie la machine. »
+
+En 1971, ce sont les dockers de San Francisco qui se lèvent à leur tour, affirmant sur leurs tracts : « Le progrès technologique est un processus politique et non un processus automatique, inévitable et naturel. Mais si ce « progrès » n’est pas contrebalancé, le résultat sera que notre patron fera la queue à la banque pour toucher des profits encore plus mirobolants, tandis que nous ferons la queue aux guichets des agences pour l’emploi et des services sociaux. »
+
+C’est une même question qui se pose pour l’ordinateur, pour le téléphone portable, et maintenant pour l’intelligence artificielle : ces technologies entrent dans nos vies, dans la société, mais entre les mains du Capital. Sans passer par le filtre de la démocratie : quelles finalités devrait-on poursuivre avec l’IA ? Quels usages en sont pertinents, lesquels devrait-on prohiber ? Dans quelles professions veut-on ou non le déployer ? Ces questions ne sont pas posées que déjà l’IA s’impose.
+
+Le symbole de ce déploiement à marche forcée, ce sont les data centers : ils poussent partout en France, nous sommes la piste d’atterrissage en Europe des Gafam, grâce à une alliance entre l’Élysée et la Silicon Valley… et tout ça sous couvert de souveraineté numérique ! Alors que, sur les infrastructures, sur les services, nous sommes devenus une colonie numérique.
+
+Avec Internet, les réseaux sociaux, et désormais l’IA, notre rapport au savoir, au temps, au travail est bouleversé. Des métiers jusqu’alors peu exposés se retrouvent en première ligne : cadres financiers, commerciaux, informaticiens, journalistes, comptables, traducteurs, scénaristes, ingénieurs, etc. Et d’autres métiers, déjà pénibles, se sont intensifiés, avec une nouvelle vague de mal-travail, des bureaux jusqu’aux entrepôts.
+
+Pour retrouver du contrôle et du sens, nous posons un grand principe : la technologie en général, et l’IA en particulier, doivent passer par le filtre de la démocratie. À la fois dans la société, avec des conventions citoyennes sur l’IA et sur les data centers, avec des débats et des lois à l’Assemblée. Et dans les sociétés, dans les entreprises : la technologie ne doit pas s’imposer sans les salariés, sans un dialogue avec leurs représentants, sans une discussion sur les conditions et les contreparties. Pour que l’on se pose collectivement les questions auxquelles le Capital répond, aujourd’hui, tout seul, à son profit : quels usages permet-on, dans quels secteurs, pour quoi faire ?
+
+Même Larry Fink, le patron du fonds d’investissement BlackRock, s’en inquiète. « L’immense majorité des richesses s’est accumulée entre les mains de ceux qui détiennent le capital, et non de ceux qui gagnent la majeure partie de leurs revenus par le travail. L’intelligence artificielle menace désormais de reproduire ce schéma à une échelle encore plus vaste, en concentrant les richesses entre les mains des entreprises et des investisseurs les mieux placés pour les capter. »
+
+Nous savons que la technique peut nous servir ou nous asservir. À nous d’en décider.
+
+Nos constats : une dépendance, choisie sans nous
+
+1. La France, une colonie numérique
+
+Cette situation n’était pas une fatalité : elle a été choisie
+
+Notre dépendance résulte de choix politiques : l’abandon de toute politique industrielle dans le numérique, un État qui a renoncé à fixer un cap, et la croyance aveugle dans le marché, censé décider pour nous de la direction à prendre.
+
+La « start-up nation » fut le nom donné à cette démission.
+
+Le dossier des data centers montre l’ampleur de ce renoncement. Avec ChooseFrance, l’État s’est fait le démarcheur des géants du numérique : pour les convaincre de s’installer, il leur offre sur un plateau notre foncier, notre eau et notre électricité. En échange de quoi ? Le projet de Dugny, en Seine-Saint-Denis, annonce cent dix emplois permanents : un emploi pour vingt millions d’euros investis. Pas le meilleur retour sur investissement… Et l’essentiel du profit est capté par des entreprises américaines. Nous leur fournissons le terrain, l’eau et le courant, ils encaissent la marge. Et comme le Cloud Act autorise un juge américain à exiger des entreprises américaines de communiquer les données détenues, même si elles sont stockées en France, les données de nos entreprises stratégiques restent, jusque sur notre sol, à portée de main d’un gouvernement étranger.
+
+Comment appeler cela autrement que du colonialisme numérique ?
+
+Une dépendance économique qui nous coûte des milliards
+
+Nos ordinateurs et nos smartphones sont assemblés en Asie. Nos logiciels et nos services cloud viennent des États-Unis. Notre société s’est numérisée, et avec cette numérisation, notre dépendance s’est accrue : chaque année, environ 50 milliards d’euros vont à des fournisseurs américains. Nous payons cher pour leurs logiciels et leurs services cloud : une somme comparable à notre facture pétrolière !
+
+Face à ce phénomène, l’État a abdiqué. En mars 2025, le ministère de l’Éducation nationale a renouvelé son accord-cadre avec Microsoft pour quatre ans, avec un budget atteignant 152 millions d’euros. Cet argent ne disparaît pas dans la nature, il est capté par d’autres, ailleurs. Chaque euro que nous versons à un éditeur américain paie le salaire d’ingénieurs installés à San Francisco plutôt qu’à Lyon, contribue à un impôt sur les sociétés hors de notre territoire, et finance une recherche et développement dont nous devenons ensuite les clients captifs.
+
+Une dépendance qui dépasse la seule question financière
+
+Oui, nous payons une rente aux États-Unis mais le problème va bien au-delà : nous avons aussi perdu la maîtrise de ces outils, nous avons cédé notre pouvoir à ces entreprises privées.
+
+D’abord, l’État a perdu des compétences internes. Un raisonnement court-termiste, centré uniquement sur la compression des coûts, l’a conduit à externaliser beaucoup trop : il a cessé de former et de garder des ingénieurs et a perdu la main sur la conception de ses systèmes, désormais largement délégués à des cabinets de conseil privés.
+
+Les réorganisations n’ont pas aidé : la direction interministérielle du numérique y a été soumise plusieurs fois, sans qu’aucune vision politique, aucun cap clair, ne soit fixé. Avec deux conséquences. D’abord, un gaspillage considérable de ressources publiques. Par exemple, le programme Scribe de la police nationale, destiné à développer un logiciel de rédaction de procédures, a coûté 257 millions d’euros, pour un résultat inexistant. Ensuite, sans cap clair, les administrations se sont retrouvées plus vulnérables : des cyberattaques paralysent régulièrement hôpitaux et collectivités, et même les services des impôts, exposant les données personnelles de millions de Français.
+
+Nous avons aussi perdu la main sur des pans entiers de l’économie : les infrastructures numériques. Lorsque Microsoft a cessé le support de Windows 10 en octobre 2025, des millions d’ordinateurs en parfait état de marche se sont retrouvés obsolètes du jour au lendemain. Cela illustre la fragilité de notre modèle qui repose sur une dépendance totale.
+
+Cette dépendance est aussi un instrument politique. Quand Washington le décide, l’accès peut être simplement coupé. Et ces sanctions peuvent même viser un individu pour des raisons politiques. Le juge français Nicolas Guillou, magistrat à la Cour pénale internationale, s’est retrouvé privé de ses comptes Amazon et PayPal comme de ses cartes bancaires, sans doute pour avoir autorisé des mandats d’arrêt contre Benjamin Netanyahu.
+
+Nous sommes aussi soumis à des algorithmes de recommandation que nous ne maîtrisons pas. Ces algorithmes décident des contenus proposés à des millions de Français chaque jour, et ils sont sous le contrôle d’une poignée de milliardaires américains ! Or, plusieurs d’entre eux affichent désormais leur soutien à l’extrême droite.
+
+Les fondements sur lesquels repose de plus en plus notre débat public, les réseaux sociaux, dépendent donc d’infrastructures et de réseaux que nous ne contrôlons pas.
+
+Avec l’intelligence artificielle, le même scénario se rejoue, en plus grave
+
+La plupart des modèles d’IA les plus avancés sont américains ou chinois. L’Europe n’a encore aucun laboratoire qui atteigne ce niveau, et pourtant la stratégie française ne change pas : nous n’avons toujours aucune politique industrielle, aucune commande publique structurante, simplement des conditions fiscales avantageuses dans l’espoir qu’émergent des start-up. Le pire, c’est que lorsque celles-ci émergent parfois, elles sont alors rachetées par l’écosystème américain, dès qu’elles réussissent.
+
+Ce que nous avons vécu avec les logiciels et le cloud risque donc de se reproduire, si on ne change pas de cap politique, mais à une toute autre échelle.
+
+Demain, des modèles dont nous ne maîtrisons pas le fonctionnement et ne contrôlons pas les données sur lesquelles ils ont été entraînés influenceront les décisions et les votes.
+
+2. Choix technologiques et déni démocratique
+
+Le déploiement de l’IA se fait à marche forcée. Et personne ne nous a demandé notre avis. Quelles technologies adopter ? Pour quels usages ? À quel prix, écologique et social ? Ces questions n’ont jamais été posées, il n’y a eu aucun débat démocratique. La « main invisible du marché » a tranché à notre place : et derrière elle, bien souvent, se trouve en réalité celle de milliardaires américains.
+
+Notre électricité concédée à des data centers sous contrôle étranger ?
+
+Le numérique représente aujourd’hui 4,4% de l’empreinte carbone de la France. Sur notre sol, les data centers consomment déjà 10 TWh par an. Et RTE prévoit que cette consommation aura presque triplé en 2035 : ce sera alors l’équivalent de la production de quatre réacteurs nucléaires ! Cette électricité, il faudra la prendre quelque part. Alors que l’on demande aux Français de changer leur chaudière et de passer à la voiture électrique, on promet aux géants américains du cloud un accès prioritaire au réseau et des tarifs de faveur.
+
+Qui va arbitrer les futurs conflits d’usage ? Voulons-nous continuer sur la voie choisie par le Gouvernement, qui accorde aux projets de data center américains le statut « projet d’intérêt national majeur » permettant de contourner le pouvoir d’urbanisme des maires et d’alléger les obligations environnementales ?
+
+On a un vrai sentiment d’impuissance. Les habitants n’ont pas leur mot à dire. Ils ne sont bons qu’à supporter les nuisances, le bruit, l’impact visuel, les pollutions, le prélèvement des ressources.
+
+Après la présentation du projet par le président de Châteauroux Métropole, nous lui avons demandé deux fois si un référendum local majoritairement défavorable au data center serait entendu, il nous a répondu deux fois non !
+— Marie-Pierre Chabenat-Canals, ancienne adjointe au maire à Étrechet (Indre). Elle a présenté sa démission avec trois autres élus du conseil municipal face au passage en force de l’État pour installer un data center destiné à Google.
+
+Nos emplois, notre travail : personne n’a été consulté
+
+L’IA automatise les tâches cognitives. Ce qui est arrivé aux cols bleus risque d’arriver aux cols blancs : moins d’emplois et des emplois dégradés. Déjà, l’emploi des jeunes dans les métiers les plus exposés à l’automatisation par IA (comptabilité, service client, développement informatique) en souffre : l’embauche ralentit. Ce sont les portes d’entrée du marché du travail qui se referment. Et ce n’est peut-être qu’une première phase : progressivement, ce ne seront pas seulement les jeunes qui seront touchés.
+
+Si on laisse le marché décider seul, les gains de productivité seront captés par les actionnaires américains, au détriment des travailleurs ici, en France.
+
+Et alors, comment financerons-nous notre modèle social ?
+
+Dans le même temps, le numérique dégrade le travail de ceux qui restent. Dans la logistique, les automates fixent les cadences, chronomètrent les gestes, évaluent les salariés : c’est une machine qui commande, et plus personne à qui parler. Résultat : perte de sens, troubles musculo-squelettiques, burn-out. Une fois de plus, ce sont les travailleurs et les travailleuses qui pâtissent et la facture de la Sécurité sociale qui augmente.
+
+Le travail en France souffre. Et seul le capital, aux États-Unis, décide et en profite.
+
+Vers une société déshumanisée ?
+
+Cette déshumanisation ne s’arrête pas aux portes de l’entreprise. Les réseaux sociaux abîment la santé mentale et les capacités cognitives, de nos enfants en particulier. Le neuroscientifique Michel Desmurget le dit sans détour : « nous avons laissé tomber nos enfants pour le profit des multinationales que sont TikTok ou Meta. » Dans la Silicon Valley, les patrons de la tech interdisent ces écrans à leurs propres enfants et leur offrent, à prix d’or, des écoles sans technologie et du contact humain. Ils savent ce qu’ils vendent.
+
+Alors demandons-nous, à l’heure de l’IA, ce que nous voulons pour nos enfants : des amis ou des amoureux chatbots ? Pour nos aînés, des robots de compagnie à la place d’une aide à domicile ?
+
+Ce sont des choix de société. Ils ne peuvent être laissés à quelques entreprises étrangères. Nous devons les faire nous-mêmes.
+
+Depuis qu’ils ont installé la commande vocale, on est guidés par la technologie. On a un casque sur la tête, et l’ordinateur nous dit : « Vous déposez sur le quai 15 », on répond « OK », on dépose et on dit « Emplacement OK ». Ensuite, il nous annonce : « Palette quai 3 », on répond « OK »… Avant, on avait des papiers, on se faisait notre parcours, on réfléchissait un peu, on respirait. Là, toute la journée comme ça, « emplacement OK, emplacement OK », il nous envoie des colis dans la tête.
+
+C’est sûr qu’on va plus vite, on gagne du temps, on soulève des tonnages énormes, mais c’est une catastrophe. Quand je rentre chez moi, ça me rend nerveux avec mes enfants, avec ma femme. Je leur dis « Répétez. Répétez », comme si je causais à des machines. Et ma fiche de paie, elle est toujours à 1 207 €, après 21 ans d’ancienneté !
+— Arnaud, cariste
+
+3. France et Europe, même combat
+
+Notre situation n’est pas une exception française. Tous les pays européens ont les mêmes besoins, pour l’équipement de leurs administrations, leurs hôpitaux, leurs écoles, et tous ont mené les mêmes politiques libérales. Ils subissent donc les mêmes dépendances : chaque année, ce sont 260 milliards d’euros qui s’envolent vers les fournisseurs américains de logiciels et de services cloud.
+
+Sur l’IA, le décrochage est encore plus net. Les laboratoires qui conçoivent les modèles de pointe se comptent par dizaines aux États-Unis comme en Chine. L’Europe n’en dispose que d’un seul, le français Mistral. Et cette faiblesse technologique a un prix politique : réduite au rang de « plus grand marché de consommateurs au monde », l’Europe n’a plus voix au chapitre quand se discutent les règles internationales. Elle subit même des ingérences étrangères jusque dans ses élections.
+
+Les discours et les plans de Bruxelles sur la souveraineté numérique se multiplient. Mais ce ne seront que des paroles en l’air tant que l’Union restera guidée par un logiciel libéral, sans le courage de mener une politique industrielle coordonnée entre États membres. La preuve : trois semaines après avoir présenté en fanfare son « paquet de souveraineté technologique », Ursula von der Leyen a signé, le 25 juin 2026, la déclaration Pax Silica, une initiative lancée par l’administration Trump pour… arrimer ses alliés au capital technologique américain.
+
+Deux modèles s’affrontent, l’américain et le chinois. L’Europe n’en propose aucun, elle choisit d’accepter le modèle choisi par d’autres et de rester une colonie numérique.
+
+Quelques chiffres :
+
+• 50 milliards par an en logiciels et services cloud américains.
+
+• 47% : c’est la réduction de taxe sur le prix de l’électricité accordée aux gros data centers qui s’installent en France.
+
+• 4 réacteurs nucléaires seront nécessaires pour notre numérique en 2035 si aucune régulation.
+
+• Dans les métiers les plus exposés à l’IA générative, les embauches en CDI des 21-29 ans sont 28% en dessous des métiers les moins exposés.
+
+• 350 : c’est le nombre de data centers sur notre territoire, et les projections sont à 500 sites en 2030. Autant de projets qui utilisent notre eau et notre électricité sans (ou presque) de consultation des habitants.
+
+Notre projet : reprendre la main, par la démocratie
+
+Nous refusons de choisir entre le modèle américain et le modèle chinois.
+
+Nous pouvons construire ensemble un troisième chemin : celui d’un pays et d’une Europe où le peuple décide des technologies et de la façon de les déployer, pour les mettre au service du bien commun. Au service de toutes et tous. Au service du travail et des humains, pas du capital.
+
+1. Des choix technologiques sous contrôle démocratique
+
+L’IA sera soit le plus grand facteur d’égalité jamais inventé, soit la pire source d’injustice […]. Les choix que nous faisons aujourd’hui sont cruciaux. Chacun doit s’impliquer […] pour que ces choix soient démocratiquement valides.
+— Bill Gates, août 2026
+
+Le fondateur de Microsoft lui-même appelle au contrôle démocratique : il est temps d’écouter.
+
+Notre projet se résume par un principe simple : celles et ceux qui subissent une technologie doivent décider de son déploiement.
+
+Dans l’entreprise, les salariés et leurs syndicats prendront part aux décisions qui transforment leur travail. Dans les territoires, les élus locaux retrouveront le pouvoir de dire non à un data center. Et pour les choix qui engagent la société entière — la part de notre électricité consacrée à l’IA, son usage dans la santé, dans l’éducation, dans le maintien de l’ordre — nous réunirons des assemblées citoyennes tirées au sort.
+
+Ces choix nous appartiennent. Il est temps de créer des espaces où ils peuvent se faire.
+
+2. Une politique industrielle, plutôt que la désertion
+
+La start-up nation a échoué. Les quelques réussites françaises, Mistral notamment, ont prospéré malgré elle, et ne compensent ni la dépendance qui s’accentue ni ne réduisent la facture qui s’alourdit chaque année. Nous lui substituerons une véritable politique industrielle du numérique, bâtie sur une approche « open source » de la technologie et qui privilégie la mise en commun de ressources.
+
+Un commun numérique est une ressource partagée : un logiciel ou encore un modèle d’IA développé collectivement par ceux qui l’utilisent, ou encore des bases de données mises en commun par exemple.
+
+Le principe général sera de privilégier la coopération plutôt que la concurrence. Ce n’est pas une utopie : c’est déjà sur cette logique que fonctionnent certaines des fondations d’Internet, grâce par exemple au logiciel libre Linux.
+
+Bien sûr, l’objectif sera de rattraper notre retard en intelligence artificielle, et ne pas répéter les mêmes erreurs qu’avec le logiciel et Internet. La France financera un laboratoire public de recherche de pointe en IA. Au sortir de la Seconde Guerre mondiale, le CEA a permis à notre pays de rattraper son retard sur la maîtrise de l’atome. Nous ferons la même chose pour l’IA.
+
+Les data centers, eux, demandent des capitaux massifs. Ces investissements seront européens. La France cessera d’être la piste d’atterrissage des compagnies américaines : notre foncier, notre eau et notre électricité serviront un numérique souverain et nos propres capacités de calcul. Nous avons besoin de puissance de calcul et de data centers mais nous avons aussi besoin qu’ils soient souverains.
+
+3. Partager les gains de l’intelligence artificielle
+
+Nous proposons d’adapter la fiscalité pour se préparer à une possible automatisation du travail qui fragiliserait le financement de notre protection sociale. Nous serons alors prêts à cette éventualité, plutôt que de subir un choc fiscal sans la moindre préparation.
+
+Cette refonte de la fiscalité sera pensée pour compenser les prélèvements issus des emplois bien rémunérés menacés par l’IA.
+
+Pour partager les gains de l’IA, nous chercherons à développer ces technologies sur notre sol afin de pouvoir en redistribuer la rente technologique à l’ensemble de la société : l’IA ne doit pas bénéficier seulement à une poignée de milliardaires américains. Elle doit être développée sur notre territoire et ses fruits doivent être partagés avec toutes et tous.
+
+La refonte de la fiscalité que nous proposons permettra aussi de capter la rente d’automatisation, celle des entreprises utilisatrices qui remplaceront du travail par du capital. Nous redistribuerons les gains de l’IA vers le travail.
+
+Nous construirons cette nouvelle fiscalité ensemble.
+
+Nos propositions : maîtriser nos technologies numériques, décider de leurs usages !
+
+1. Assurer un contrôle démocratique de l’IA et du numérique
+
+Aucune technologie n’est neutre. Les effets que la technologie a sur notre travail, notre santé, nos enfants, notre environnement, relèvent de choix politiques. Les libéraux ont décidé de déléguer ces choix au marché. Nous reprendrons la main sur ces choix, selon un principe simple : la décision de déployer une technologie revient à celles et ceux qui en subiront les effets. De cette manière, nous pourrons veiller à ce que le progrès technologique profite au bien commun.
+
+Proposition 1 — Confier les choix technologiques structurants à des assemblées citoyennes
+
+Certaines décisions technologiques engagent la société tout entière et pour longtemps. Autoriser la reconnaissance faciale dans l’espace public, généraliser l’usage de l’IA à l’école, arbitrer entre nos usages de l’électricité : ce sont des choix de civilisation. Et pourtant, aujourd’hui ces choix se font dans des cabinets ministériels, sous la pression des industriels du secteur, et sans le moindre droit de regard des citoyens.
+
+Nous croyons à l’intelligence collective. La Convention citoyenne pour le climat l’a bien montré : cent cinquante citoyens tirés au sort, correctement informés, avec du temps pour réfléchir, ont produit des décisions plus courageuses et plus solides que celles des conseillers ministériels. Ce n’est pas un hasard, puisque ces citoyens n’ont ni carrière à faire prospérer, ni lobby à satisfaire.
+
+Nous Président, les décisions technologiques structurantes seront confiées à des assemblées citoyennes. Ces assemblées seront tirées au sort, elles seront dotées d’un budget propre, d’un accès aux experts de leur choix, et d’un temps de délibération suffisant. Leurs conclusions ne seront pas rangées dans un tiroir ou vidées de leur substance : elles seront soumises, sans filtre, au Parlement ou au référendum.
+
+Un exemple concret. Nous proposons de réserver au numérique un couloir énergétique : une fraction déterminée de notre production électrique qui pourra être consommée par des data centers. L’ampleur de ce couloir énergétique ne sera pas décidée en haut. C’est une assemblée citoyenne qui en décidera, parce qu’elle permettra d’arbitrer entre nos usages : combien pour l’IA, combien pour nos trains, nos pompes à chaleur, nos voitures, nos usines. Les citoyens sont les mieux placés pour orienter ces choix de société déterminants.
+
+D’autres questions seront soumises à ces assemblées citoyennes : quel usage de l’IA à l’école, quelle place pour les technologies de surveillance, quels rôles dans le secteur de la santé ?
+
+Nous refusons de laisser ces décisions au marché, ou à un gouvernement isolé et coupé du peuple. Elles appartiennent au pays et à ses citoyens.
+
+Proposition 2 — Démocratiser les choix technologiques dans l’entreprise
+
+Les technologies du numérique affectent directement nos conditions de travail : un logiciel de planification fixe vos horaires, un algorithme de logistique détermine votre cadence, un outil de notation mesure votre performance à la minute. Ces choix sont faits par les directions, les comités sociaux et économiques (CSE) n’ont qu’un avis consultatif. Trop souvent, des logiciels sont commandés par une direction, paramétrés par un prestataire, et découverts par les salariés le jour de leur mise en service.
+
+Nous Président, les salariés et leurs syndicats seront partie prenante des décisions technologiques qui transforment leur travail. Le déploiement d’un nouvel outil fera l’objet d’une négociation préalable et les représentants du personnel auront un véritable pouvoir de codécision.
+
+Cela n’a rien d’utopique, c’est déjà le cas en Allemagne. Sa loi de modernisation des comités d’entreprise, entrée en vigueur en juin 2021, a étendu le pouvoir de décision des salariés au déploiement d’outils à base d’intelligence artificielle. Et par exemple, si un outil permet de contrôler le comportement ou la performance des salariés, ils disposent d’un droit de codécision.
+
+On ne déploie pas un outil à l’encontre de ceux qui devront s’en servir.
+
+Proposition 3 — Redonner aux habitants le pouvoir de décider de l’installation d’un data center
+
+Un data center consomme les ressources d’un territoire : son foncier, son eau, son électricité. Ces ressources sont limitées, elles ne sont pas inépuisables. Il est donc logique et juste que ceux qui habitent un territoire aient, par l’intermédiaire de leurs élus locaux, leur mot à dire.
+
+C’est exactement l’inverse qui s’est produit. Le gouvernement a créé un statut de « projet d’intérêt national majeur » qui ouvre la possibilité à l’État d’imposer ces installations aux collectivités : procédures accélérées, consultations publiques allégées, dérogations aux règles d’urbanisme et aux normes environnementales. Ce statut, initialement conçu pour la réindustrialisation, a été étendu à l’installation de data centers. Des maires se retrouvent ainsi à découvrir dans la presse des projets décidés sans eux, et ils perdent en justice quand ils tentent de refuser le permis de construire.
+
+Ce qui est paradoxal ici, c’est qu’on prétend servir un intérêt national majeur, alors que la valeur ajoutée tirée de ces infrastructures est captée, pour l’essentiel, par des entreprises étrangères.
+
+Nous Président, nous mettrons fin à ce statut d’exception pour les data centers. Les maires et les conseils municipaux retrouveront l’intégralité de leur pouvoir d’urbanisme pour les projets qui engagent les ressources de leur territoire.
+
+Proposition 4 — Garantir un droit à l’humain dans les services publics
+
+Quand une technologie est déployée, les personnes touchées doivent avoir leur mot à dire. Dans le cas des services publics et du numérique, aucun débat n’a jamais eu lieu. Par exemple, personne n’a jamais voté la fermeture des guichets : il a été jugé qu’un formulaire en ligne coûtait moins cher qu’un agent, et l’affaire était entendue. Aujourd’hui, des millions de Français, les plus âgés, les plus modestes, les moins à l’aise avec l’écrit ou le numérique, se retrouvent devant une porte close. Avec l’IA, l’histoire pourrait se répéter.
+
+Nous voulons rendre ce choix aux citoyens. Nous refusons que ce soit une logique de coût qui oriente la façon dont les citoyennes et citoyens peuvent s’adresser à leur administration. Nous nous opposons aussi à ce que ce soit une machine ou un algorithme qui décide l’attribution de droits.
+
+Nous Président :
+
+1 / Nous garantirons un droit à l’humain. Pour toute démarche, chaque usager pourra effectivement choisir de s’adresser à un agent en chair et en os. L’IA pourra compléter l’accueil humain, jamais le remplacer.
+
+2 / Nous maintiendrons l’interdiction des algorithmes décisionnels dans l’attribution des droits ou dans le contrôle des allocataires. Une machine ne pourra pas décider seule de l’octroi d’une allocation, d’un logement ou d’une prestation sociale.
+
+Et c’est possible : Cédric Van Styvendael, maire de Villeurbanne, l’a mis en œuvre à l’échelle de sa commune. Nous l’étendrons à tout le pays.
+
+Avant, j’étais directeur d’un organisme de logement social. Et la tendance était de tout passer en numérique. Vous imaginez : si votre chauffage ne marche pas, faut aller voir sur un site en ligne… Mon idée, c’est que les outils numériques viennent en plus dans la relation avec les gens, mais surtout pas pour mettre les gens à distance.
+
+Quand je suis devenu maire, j’ai fait de même. On a multiplié la médiation numérique : les gens peuvent venir à l’hôtel de ville, et là, il y a deux personnes en permanence pour aider avec l’ordinateur. Vous ne savez pas remplir votre déclaration d’impôts ? On vous guide, ou on le fait pour vous. Et en parallèle, on a maintenu pour toutes les procédures un droit au non numérique : tout est faisable à la main, à l’ancienne. Et nous, après, on se débrouille avec ça. Ce n’est pas toujours simple mais on avait envie d’en faire un principe politique : le droit à ne pas passer par une interface numérique.
+— Cédric Van Styvendael, maire de Villeurbanne
+
+2. Pour un numérique des communs
+
+Chaque année l’État et les entreprises françaises dépensent environ 50 milliards en logiciels et services cloud américains, presque autant que nos dépenses en pétrole. Comment réduire une telle facture ?
+
+Nous suivrons un cap clair : plutôt qu’une compétition absurde, nous favoriserons une coopération intelligente entre acteurs publics et privés. Avec un cadre : les communs numériques. Nous mettrons en place les propositions du Conseil de l’intelligence artificielle et du numérique (CIANum), qui ont été formulées « au terme d’un cycle d’auditions complet, associant des parties prenantes issues du secteur public en France et en Europe, du secteur privé, de l’écosystème des communs numériques, du logiciel libre et de l’open source, des fédérations professionnelles et de la recherche ».
+
+Les communs, c’est bon pour notre balance commerciale : un euro investi dans un commun numérique, quatre euros de retombées économiques. C’est aussi une question de maîtrise de nos outils et d’indépendance. Quand Microsoft décide dans son coin d’arrêter le support de Windows 10, des millions de machines deviennent obsolètes. Avec un logiciel dont nous avons accès au code, cela n’arrive pas.
+
+Un commun numérique, c’est quoi ?
+
+Un commun numérique, c’est une ressource partagée que ses utilisateurs construisent et gèrent ensemble. Ça peut être un logiciel, une base de données, une encyclopédie… Nous en utilisons tous les jours. Wikipédia. OpenStreetMap, qui a permis le développement de milliers d’applications de cartographie. Ou Linux, grâce auquel fonctionne la majorité des serveurs de la planète.
+
+Quel rapport avec le logiciel libre ? Un logiciel libre est un programme que chacun peut utiliser, modifier et partager. Mais avoir un code ouvert ne suffit pas à créer un commun. Un logiciel peut être libre et à l’abandon, ou libre et en pratique contrôlé par une seule entreprise. Ce qui fait le commun, c’est une gouvernance collective.
+
+Idée reçue à écarter : un commun n’est pas forcément ouvert à tous. C’est la communauté qui élabore et fixe des règles d’accès : un accès ouvert pour un traitement de texte, fermé pour un système de défense.
+
+Proposition 1 — Des communs pour nos services publics
+
+D’après le rapport de la commission d’enquête de l’Assemblée nationale sur les dépendances numériques, l’État et les collectivités dépensent 1,5 milliard d’euros par an en logiciels vers des acteurs extra-européens. Pour réduire la dépendance et développer les communs, c’est l’État qui lancera la machine.
+
+Nous Président, nous créerons une Forge des communs numériques , qui travaillera de concert avec la Direction interministérielle du numérique. Sa mission sera triple : recenser, produire et faire produire, déployer les briques logicielles qui permettent d’assembler les logiciels dont nous avons besoin.
+
+1 / Recenser les briques. Avant de produire de nouveaux logiciels publics, le rôle de la Forge sera de cartographier ce qui existe, d’identifier nos dépendances critiques avec l’Observatoire de la souveraineté numérique, pour concentrer les financements sur des projets suffisamment mûrs pour être mutualisés.
+
+2 / Forger les briques. L’État devra participer à la production logicielle dans le cadre de communs, mais il ne développera pas tout lui-même : il sera en mesure de définir les exigences, de fixer des standards et d’élaborer des règles de gouvernance pour des communs entre acteurs publics et privés. De cette manière l’argent public cessera de payer des licences étrangères, mais permettra de financer des développeurs et des PME chez nous.
+
+3 / Déployer les briques. Ce n’est pas seulement pour l’administration centrale que les communs sont pertinents. Souvent, nos 34 875 communes achètent chacune dans leur coin des logiciels similaires, pour les mêmes besoins sans aucune mutualisation : c’est un gâchis immense. Les briques de la Forge pourront au contraire être déployées dans toutes les collectivités et tous les services publics afin de mettre en commun les efforts.
+
+Concession perpétuelle pour les logiciels de nos cimetières
+
+Alors que les morts reposent en paix, leurs logiciels de gestion, eux, continuent à facturer. D’une mairie à l’autre, on achète licences, maintenance et hébergement pour gérer les mêmes besoins. À Saint-Germain-sur-Ille, en Ille-et-Vilaine, le conseil municipal a comparé en 2022 cinq logiciels de gestion de cimetières : 1 700 euros à l’achat, environ 200 euros de maintenance annuelle. Jusqu’ici, pas de quoi réveiller les morts. Le plus intéressant commence quand on change d’échelle : à Saint-Malo, le marché de remplacement atteint 23 000 euros par an. Multipliez par 34 875 communes, et il y a de quoi se retourner dans sa tombe.
+
+Pourtant, une autre voie existe. Elle s’appelle openCimetière, un logiciel créé par la Ville d’Arles il y a vingt ans, autour duquel plusieurs collectivités travaillent collectivement : le commun numérique existait déjà ! En 2024, la Ville d’Albi a financé avec une entreprise de nouvelles fonctionnalités, mises ensuite gratuitement à disposition de toutes les autres collectivités. Les communs ne font pas disparaître les factures de maintenance et d’hébergement. Mais ils changent la nature de la concurrence : les entreprises se battent sur le service rendu, plus sur la vente de solutions propriétaires verrouillées. Et les cimetières ne sont qu’un exemple parmi des centaines. Il est grand temps d’enterrer le chacun pour soi !
+
+Ce projet demandera de ré-internaliser des compétences en informatique au sein de l’État. Des informaticiens rejoindront l’État, et nous orienterons la formation continue des 50 000 agents qui exercent des fonctions numériques au sein de l’État pour développer plus encore la culture des communs.
+
+Proposition 2 — Diffuser cette culture des communs à toute l’économie
+
+Les 1,5 milliard d’euros de l’État représentent peu par rapport aux dizaines de milliards consacrés chaque année par l’ensemble de l’économie française en logiciels et services cloud. C’est aussi là que se joue notre balance commerciale. Les entreprises ont pourtant intérêt à travailler dans le cadre de communs numériques. Dans ce cadre, les grands groupes peuvent mutualiser leur recherche et développement. Les ETI et les PME peuvent accéder à des briques logicielles qu’elles ne pourraient pas développer seules. Les coûts et les dépendances sont réduits : le pays gagne en souveraineté.
+
+Mais dans une entreprise, un basculement de logiciel ne se fait pas en un claquement de doigts. La puissance publique accompagnera et incitera à cette transition.
+
+1 / La Forge développera des communs utiles à tout le monde. À commencer par LaSuite, la suite bureautique que l’État a récemment développée, et dont nous poursuivrons le développement et l’adoption, y compris dans les entreprises. Elle permet de remplacer des outils utilisés quotidiennement par des millions de salariés français.
+
+2 / Nous conditionnerons le crédit d’impôt recherche. L’État verse chaque année près de 1,5 milliard d’euros aux entreprises de conseil et d’assistance en informatique, au titre du crédit d’impôt recherche et du crédit d’impôt innovation. L’accès à cet argent public sera désormais conditionné à une production dans le cadre de communs numériques.
+
+Notre méthode pour développer les communs numériques :
+
+• Appliquer le principe « argent public, code public et gouvernance partagée ». Avoir un code en source ouverte n’est pas une garantie de souveraineté. Un commun suppose une gouvernance permettant à l’État, aux collectivités, aux entreprises et autres acteurs de participer aux orientations du commun et d’empêcher son accaparement par l’un d’eux.
+
+• Créer des standards ouverts européens et faire de l’interopérabilité la règle afin que plusieurs acteurs puissent proposer des services autour d’une même architecture compatible. Cela permettra à toutes les entreprises, notamment nos PME, de proposer plus facilement leurs services tout en réduisant les coûts d’entrée et la dépendance à un fournisseur unique.
+
+• Donner un mandat plus fort à la Direction interministérielle du numérique et la doter de davantage de moyens. Cela renforcera la coordination entre ministères et agences, harmonisera les pratiques et favorisera le recours à des solutions mutualisées comme La Suite Numérique, permettant de réaliser des économies d’échelle.
+
+• Établir des critères clairs de financement au sein des communs co-gérés par la Forge pour éviter les acteurs qui profitent du commun sans participer techniquement et pérenniser les communs dans le temps.
+
+• Financer le cycle de vie des projets numériques, et non leur seul développement initial. Leur maintien en conditions opérationnelles et leurs évolutions doivent être anticipés dès leur conception, notamment en remplaçant les appels à projets courts par des financements pluriannuels adaptés aux besoins des mainteneurs.
+
+• Réinternaliser la compétence en généralisant la formation continue des agents publics , en particulier des quelque 50 000 agents exerçant des fonctions numériques au sein de l’État, en privilégiant la maîtrise des technologies et des standards plutôt que celle d’outils ou de marques spécifiques.
+
+• Accentuer l’effort de formation pour les métiers du numérique afin de répondre au déficit annuel de 60 000 ingénieurs et techniciens. Cet effort doit passer par des actions visant à susciter davantage de vocations chez les femmes, dans une filière où elles restent sous-représentées.
+
+Proposition 3 — Porter les communs à l’échelle européenne
+
+Les Vingt-Sept ont les mêmes besoins et les mêmes dépendances : chaque année, ce sont 260 milliards d’euros qui partent vers les États-Unis pour du logiciel et des services cloud. Pour réduire cette dépendance, développer vingt-sept fois la même chose serait absurde, nous voulons partager et mettre en commun notre effort.
+
+Le mouvement est amorcé. Depuis 2022, l’Allemagne finance des projets de communs numériques. Fin 2025, la France, l’Allemagne, les Pays-Bas et l’Italie ont mis sur pied l’EDIC Digital Commons, un consortium européen dédié aux communs numériques. C’est dans ce cadre que nous inscrirons notre action. Le consortium prépare notamment un projet de Sovereign Tech Fund européen pour financer des communs numériques. Si ces initiatives vont dans le bon sens, leurs moyens sont dérisoires : l’Allemagne consacre 20 millions d’euros par an aux communs, mais dépense soixante fois plus en logiciels propriétaires. Et le fonds européen a proposé un petit 50 millions par an, pour 450 millions d’habitants… Nous devons changer d’échelle !
+
+Nous Président, le gouvernement proposera de financer des projets du Sovereign Tech Fund européen, à hauteur de 150 millions d’euros par an , soit un dixième de nos dépenses en logiciel. Cet argent financera le travail de plusieurs milliers de développeuses et développeurs. Il permettra à l’ensemble des pays européens de gagner en souveraineté numérique.
+
+3. Nos data centers, nos règles
+
+Aujourd’hui notre souveraineté est mise à mal par notre dépendance aux logiciels et services cloud américains. Pour demain, notre dépendance s’organise autour de services faisant appel à l’intelligence artificielle, qui repose sur une infrastructure : les data centers. La France a attiré 69 milliards de dollars d’investissements étrangers dans les data centers en 2025. Notre électricité décarbonée, notre réseau robuste, notre position de carrefour des câbles sous-marins ont fait de nous l’eldorado du secteur. Mais derrière le cloud, le « nuage », il y a du béton et des serveurs : ces infrastructures consomment notre électricité, notre eau et nos terres.
+
+La France a besoin de puissance de calcul pour ses chercheurs, son administration et ses entreprises, mais elle n’a pas à en payer le prix écologique pour les dividendes des actionnaires étrangers des hyperscalers d’intelligence artificielle. Aujourd’hui, l’État déroule le tapis rouge sans rien demander en échange. Nous Président, la règle sera simple : notre énergie et nos terres sont précieuses, elles iront d’abord à nos besoins.
+
+Nous développerons des data centers car nous avons besoin de cette puissance de calcul : mais ils seront souverains et respecteront des conditions écologiques strictes.
+
+Proposition 1 — Maîtriser l’empreinte écologique des data centers
+
+En 2024, les data centers installés en France consommaient 10 TWh par an. Sans régulation, nous atteindrons 55 TWh en 2050, soit la production de près de neuf réacteurs nucléaires. Dans le même temps, nous devons électrifier nos transports, nos usines et le chauffage de nos logements. Le conflit d’usage est devant nous.
+
+1 / Nous créerons un couloir énergétique dédié au numérique. Reprenant la trajectoire plafond recommandée par le Shift Project et le modèle belge des « couloirs énergétiques » du gestionnaire de réseau Elia, nous réserverons au numérique une fraction déterminée de notre électricité, inscrite dans la Stratégie nationale bas carbone. Ni plus, ni moins.
+
+Cette fraction ne sera pas fixée dans un cabinet ministériel : une assemblée citoyenne tirée au sort et informée l’arbitrera, parce que c’est un choix entre nos usages, combien pour l’IA, combien pour nos trains, nos pompes à chaleur, nos usines. Nos industriels y gagneront la visibilité qui leur manque.
+
+2 / Nous rendrons obligatoire la valorisation de la chaleur des serveurs. La totalité de l’électricité consommée par un serveur est convertie en chaleur. Actuellement, alors que le potentiel récupérable en France représente la consommation électrique de plus de 500 000 personnes, presque rien n’est récupéré.
+
+Pourtant, la loi impose depuis janvier 2026 que les data centers de plus d’un mégawatt en réutilisent au moins 20%. Mais cette loi est souvent contournée, puisque sans réseau de chaleur à proximité, l’opérateur est exonéré et rien ne l’oblige à en financer un. À Wissous, dans l’Essonne, un arrêté préfectoral a bien enjoint CyrusOne à valoriser la chaleur de son site, mais l’opérateur a simplement refusé de cofinancer le réseau de chaleur urbain et a pu ignorer son obligation.
+
+Nous Président, les permis de construire délivrés seront assortis d’une obligation stricte de valorisation de chaleur. Les porteurs de projet financeront les équipements de récupération, le raccordement, et l’extension ou la création du réseau de chaleur lorsqu’il n’existe pas.
+
+3 / Nous préserverons les terres agricoles des data centers. À Fouju, en Seine-et-Marne, un data center artificialisera 70 hectares de terres agricoles. À Ozans, dans l’Indre, c’est Google, alias Tricolore Computing, qui achète des terres cultivées en céréales : 212 hectares, l’équivalent de 300 terrains de foot !
+
+Aucune terre agricole ou naturelle ne sera artificialisée pour un data center tant qu’une friche industrielle adaptée existe. Le porteur de projet devra démontrer l’absence de site alternatif, dans une analyse vérifiée par un tiers indépendant. Un inventaire public des friches raccordables sera tenu par territoire, et aucune terre expropriée restée inutilisée ne sera réaffectée sans un bilan public de ce qui avait été promis et de ce qui a été fait.
+
+4 / Nous rendrons l’effacement obligatoire aux heures de pointe. En cas de surcharge sur le réseau électrique, des dispositifs d’effacement sont mis en place, aujourd’hui de manière volontaire et rémunérée. Mais un data center n’est pas un hôpital. La loi imposera d’interrompre des tâches non critiques, par exemple l’entraînement de modèles d’IA, lorsqu’il y a des pics de consommation. Les citoyennes et les citoyens, les agriculteurs et agricultrices, les industries auront la primauté, pas les data centers.
+
+Proposition 2 — Des data centers souverains
+
+Notre eau, notre foncier et notre électricité décarbonée doivent servir notre économie, pas les dividendes d’actionnaires étrangers.
+
+1 / Nous mettrons fin au « premier arrivé, premier servi » sur le réseau électrique. Aujourd’hui pour se raccorder au réseau, celui qui demande en premier obtient la capacité, indépendamment de l’intérêt du projet pour le pays. C’est ainsi que les géants de la tech peuvent préempter notre réseau et bloquer des projets d’électrification essentiels, pour nos ports, nos usines ou nos transports. Et tout ça pour quel retour ? L’essentiel de la valeur créée par ces infrastructures rejoint les États-Unis, là où sont développés et vendus les services qui reposent sur ces machines. Nous fournissons le terrain, l’eau et le courant, ils encaissent la marge.
+
+Nous Président, le gestionnaire de réseau électrique mettra en place des files d’attente prioritaires, pour que l’accès à la très haute tension soit garanti à l’industrie française et européenne, plutôt qu’aux data centers non stratégiques.
+
+2 / Nous supprimerons la niche fiscale sur l’électricité. Alors qu’une PME paie aux alentours de 26 euros de taxe par mégawattheure, les exploitants de grands data centers bénéficient, comme tous les gros consommateurs, d’un tarif réduit de 10 euros par mégawattheure : plus de 60% de réduction. Nous y mettrons fin pour les projets de data centers non souverains.
+
+3 / Nous garantirons la souveraineté de nos données stratégiques. Après sept années de bataille, les données de santé de 67 millions de Français ont finalement quitté Microsoft pour rejoindre un hébergeur français. Sept ans pour découvrir que notre industrie existe. Ce que cet épisode démontre, c’est qu’une politique industrielle combinant réglementation et commande publique ciblée suffit à la faire émerger.
+
+La qualification de sécurité SecNumCloud sera rendue obligatoire pour l’hébergement des données de l’État et des secteurs stratégiques. Si cette qualification garantit le contrôle des données, elle ne permet pas de développer notre indépendance : la co-entreprise S3NS entre Thales et Google a obtenu la qualification malgré la présence de Google, alors que des acteurs français existent. Renforcer SecNumCloud, au niveau initialement envisagé, permettra d’orienter la commande publique vers l’industrie française et européenne.
+
+4 / Des fonds européens pour servir les besoins européens. Dans le cadre de son programme InvestAI, l’Union européenne a lancé en juillet 2026 un appel d’offres pour construire jusqu’à sept « gigafactories » d’IA. Elle y consacre jusqu’à 10 milliards d’euros d’argent public, et en attend au moins 20 milliards d’euros d’investissements privés. Si le principe d’infrastructures partagées entre plusieurs acteurs est le bon, rien n’est acquis. Les règles de gouvernance de ces « gigafactories » ne sont pas déterminées, et rien n’interdit à des acteurs privés étrangers d’en capter la capacité.
+
+Les projets installés en France le seront dans le cadre de notre politique industrielle. Et la France pèsera de tout son poids pour que ces règles de gouvernance produisent une souveraineté réelle, et non un guichet supplémentaire pour les géants de la tech.
+
+Notre capacité à développer une autonomie technologique en intelligence artificielle dépendra de la capacité de calcul disponible. En fonction des besoins qui auront été répertoriés, et validés par les citoyens, la France et l’Europe mobiliseront l’épargne des ménages et des capitaux européens pour financer les data centers dont notre industrie a besoin.
+
+4. Rattrapage technologique dans le secteur de l’IA
+
+L’intelligence artificielle constitue une technologie de rupture. Elle est amenée à transformer l’économie, le travail, la recherche, la défense. La France et l’Europe sont éloignées de la frontière technologique. On ne compte qu’un seul laboratoire de rang mondial en Europe, le français Mistral, alors que les États-Unis et la Chine en comptent plusieurs dizaines chacun.
+
+Pour notre souveraineté, nous ne devons pas passer à côté de cette nouvelle révolution industrielle.
+
+Proposition 1 — Un laboratoire public pour la recherche en IA de pointe
+
+L’IA n’est pas encore une technologie mature : il existe d’importantes marges de progrès architecturaux et méthodologiques. Dans un tel contexte, un budget resserré mais bien ciblé peut produire des résultats. Nous n’avons pas à affronter frontalement les géants de la tech dans une course à l’IA qui n’a aucun sens. Nous avons à construire un savoir-faire.
+
+C’est ce que la France a réussi à faire avec le Commissariat à l’énergie atomique. Il a doté le pays d’une filière nucléaire complète (dissuasion, indépendance énergétique, champions industriels) grâce à des financements publics pérennes et une liberté scientifique indépendante des logiques commerciales. Le rattrapage technologique ne s’est pas fait par le marché, mais par la puissance publique.
+
+Nous Président, nous proposerons la création d’un laboratoire public de recherche de pointe en intelligence artificielle. Un budget d’un milliard d’euros par an permettrait de faire travailler une équipe de 500 personnes et d’orienter le tissu industriel par la commande publique.
+
+Un tel projet est finançable. En effet l’IA est une technologie duale, civile et militaire, et ce laboratoire concevra les systèmes dont dépendront nos armées, notre défense. Son budget dépendra donc en partie des crédits affectés à la défense. Pour situer l’effort, un milliard d’euros représente 1,5% du budget annuel de la Défense.
+
+Ce laboratoire aura quatre missions :
+
+1 / La recherche fondamentale en IA. Par exemple pour l’efficacité énergétique des modèles d’IA, dont dépend leur soutenabilité écologique. Ou sur les modèles d’IA vérifiables, dont les décisions peuvent être expliquées et contrôlées.
+
+2 / Les systèmes d’IA pour la défense nationale , qui ne peuvent pas être confiés à des acteurs privés.
+
+3 / Un outil pour la recherche scientifique. L’IA a transformé la recherche en mathématiques, et est amenée à impacter tout autant la physique, la biologie, etc. Le progrès scientifique ne peut pas être piloté par deux entreprises américaines. Nos chercheuses, chercheurs et communautés de recherche doivent pouvoir disposer de ces outils sans dépendre du bon vouloir ni des tarifs d’entreprises étrangères.
+
+4 / Le développement industriel , pour permettre de décarboner l’industrie et gagner en indépendance. Le pilotage de notre réseau électrique, pour accélérer l’électrification des usages. L’industrie éolienne ou le pôle du médicament. Des problèmes industriels essentiels où l’IA peut faire gagner des années, et que le marché seul ne prendra pas en charge.
+
+Financer des data centers souverains
+
+Développer notre souveraineté technologique en intelligence artificielle nécessite aussi de disposer de puissance de calcul.
+
+À titre d’exemple, Mistral entraîne ses modèles avec une puissance de calcul qui est seulement 2% de celle à disposition d’OpenAI ou Anthropic. Pour des modèles plus performants, Mistral vise 1 GW de puissance de calcul d’ici à 2030, un investissement de plusieurs dizaines de milliards d’euros.
+
+Nous mobiliserons l’épargne nationale et européenne pour construire des data centers souverains. Aujourd’hui, plus de 600 milliards de l’épargne des Français financent l’économie américaine. Nous reverrons les contraintes réglementaires des banques et assurances pour rediriger cet argent vers des investissements européens.
+
+Proposition 2 — Faire de ce laboratoire le moteur de toute une filière
+
+1 / Une commande publique orientée vers nos industriels. Ce laboratoire ne concurrencera pas nos entreprises. Le CEA n’a jamais concurrencé EDF ni Framatome : il leur a fourni les technologies que le marché seul n’aurait jamais produites, et c’est ainsi qu’est née toute une filière du nucléaire civil, avec ses équipementiers, ses bureaux d’études et ses sous-traitants. Environ un tiers du budget de fonctionnement du laboratoire correspondra à de la commande publique vers les industriels français et européens, dans le cadre de communs numériques.
+
+L’État retrouvera son rôle moteur, en prenant les risques que personne ne prend, en partageant ses résultats avec des partenaires, et autour duquel pourra se développer l’industrie française et européenne de l’intelligence artificielle.
+
+2 / La formation d’une génération. Ce laboratoire permettra de développer un savoir-faire. Les chercheuses, chercheurs, ingénieures et ingénieurs formés irrigueront l’ensemble du tissu industriel français, et consolideront notre industrie d’intelligence artificielle sur le temps long. Aujourd’hui, nous formons des jeunes dans nos universités et nos grandes écoles, et nous en regardons une partie partir outre-Atlantique. Demain nous pourrons être en mesure de leur proposer des projets qui valent la peine de rester.
+
+De cette manière nous avons pu rattraper notre retard dans le nucléaire, ainsi nous pourrons rattraper notre retard en IA.
+
+5. L’IA au service du travail, pas du capital
+
+L’intelligence artificielle n’est pas un secteur industriel de plus, qu’il faudrait soutenir ou réguler comme on soutient l’automobile ou l’aéronautique. C’est une technologie transformative : elle s’insérera dans tous les métiers, dans toutes les entreprises, dans toutes les administrations. C’est l’infrastructure cognitive de l’économie de demain.
+
+Cette technologie a le potentiel de dégrader le travail ou de l’alléger, d’appauvrir notre modèle social ou de le financer, d’aller à rebours de nos objectifs climatiques ou bien de servir l’intérêt général. Rien de tout cela n’est écrit d’avance : ce sont des décisions politiques, et nous les prendrons. Nous refuserons le fatalisme technologique. Prendre le train de la nouvelle révolution industrielle, oui, mais pour le bien de toutes et tous.
+
+Proposition 1 — Repenser la fiscalité pour préserver notre modèle social
+
+Les effets sont déjà perceptibles en France. Dans les métiers les plus exposés à l’IA générative, les embauches en CDI des 21-29 ans ont reculé de 28%, un écart de 20 points avec les métiers les moins exposés. Tous contrats confondus, les embauches de jeunes baissent de 22% dans les métiers les plus exposés, contre une hausse de 1% pour les métiers les moins vulnérables à l’automatisation (étude Banque de France).
+
+On nous répondra « destruction créatrice » : les emplois détruits seraient compensés par ceux que la technologie fait naître. C’est oublier le coût humain dramatique des transitions. Ces réorganisations s’étalent historiquement sur plusieurs décennies. Entre les deux, il y a des vies entières de travailleurs bouleversées, et il y a nos comptes publics.
+
+Notre protection sociale repose sur les cotisations assises sur le travail humain. Chaque emploi remplacé par un algorithme, c’est une recette en moins pour notre système de retraites, notre assurance maladie, notre assurance chômage. Aujourd’hui, notre fiscalité encourage même cette substitution.
+
+Nous Président, nous mettrons en place une refonte de la fiscalité pour remplacer les pertes de recettes liées à l’automatisation par l’IA. Si une machine remplace massivement le travail humain, une contribution équivalente sera prélevée sur l’utilisation des algorithmes — abonnements logiciels, accès aux interfaces de programmation. Les gains de productivité de l’IA ne s’évaporeront pas en dividendes chez des actionnaires étrangers : ils financeront notre modèle social.
+
+Proposition 2 — Humaniser les algorithmes
+
+Les conditions de travail se dégradent. Près d’un tiers des salariés français sont aujourd’hui exposés à un risque d’épuisement professionnel, et le risque de burn-out sévère a doublé par rapport à l’avant-Covid.
+
+L’IA promet d’aggraver encore cette situation. Dans la logistique, le management algorithmique s’est déjà imposé : c’est un logiciel qui distribue les tâches, chronomètre les gestes, calcule les cadences et note les salariés. Plus de chef à qui parler, plus de règles à discuter, plus personne à convaincre. Le travailleur reçoit des instructions d’une machine dont il ignore les critères, et qui ne connaît de lui que sa productivité. C’est l’aliénation poussée à son paroxysme : recevoir des ordres automatisés d’un système aveugle que nul ne peut interpeller.
+
+Nous Président, les algorithmes de planification et de logistique devront intégrer la pénibilité et la santé comme contraintes légales , au même titre qu’ils intègrent aujourd’hui les délais et les coûts. Et leurs critères feront l’objet de négociations collectives : ce qui détermine le rythme de travail de milliers de salariés ne peut pas rester un secret industriel, un choix opaque.
+
+Proposition 3 — Sanctuariser certains métiers
+
+Nous Président, nous sanctuariserons une liste de métiers définie démocratiquement. Le déploiement de l’IA ne doit pas seulement obéir à une logique de profit : nous refusons, par exemple, que l’éducation de nos enfants soit prise en charge par des machines. Le métier de professeur demeurera humain.
+
+Et d’autres métiers seront de la même façon sanctuarisés : cela fera l’objet d’un débat démocratique.
+
+Proposition 4 — Créer un Volontariat national de l’IA
+
+L’IA est un outil puissant. Mais un outil pour quoi faire ? Aujourd’hui, des ingénieurs du pays travaillent à mieux cibler la publicité en ligne, à optimiser des transactions financières à la milliseconde ou à capter quelques minutes supplémentaires de notre attention.
+
+Cette absurdité, les élèves de nos écoles d’ingénieurs la vivent. Ils sont chaque année plus nombreux à interroger le sens de leur métier et à refuser le projet de société que leur propose le modèle libéral. Ils ne demandent pas moins de technologie : ils demandent qu’elle serve à quelque chose.
+
+Nous avons des chantiers pour eux. La refondation de nos infrastructures numériques. Le développement de notre industrie éolienne, de notre pôle public du médicament. Autant de domaines où l’IA peut faire gagner des années, et que le marché seul ne prendra pas en charge.
+
+Nous Président, nous créerons un Volontariat national de l’IA pour 5 000 jeunes ingénieurs. Inspiré des thèses CIFRE, il reposera sur des contrats de trois ans à l’interface entre le public et le privé, pour déployer l’intelligence artificielle sur des projets répondant à des besoins concrets de l’État et de nos industries stratégiques.
+
+Leur matière grise a été formée par la Nation. Nous leur proposerons de la mettre à son service.
+
+Mot de la fin de Sophie Taillé-Polian
+
+Les 6 et 7 novembre, des mobilisations contre la prolifération des centres de données ont eu lieu dans plusieurs pays d’Europe, à l’appel d’une coalition d’associations environnementales et de défense des droits numériques. Les manifestantes et manifestants réclament un moratoire sur l’implantation de nouveaux centres de données, et une concertation démocratique exigeante sur le sujet. À Étrechet dans l’Indre, au Bosquel dans la Somme, les citoyennes et citoyens revendiquent une chose simple : qu’on leur demande enfin leur avis.
+
+Les enjeux liés au déploiement de l’intelligence artificielle générative sont nombreux. Face aux modèles états-unien et chinois, la France et l’Union européenne sont confrontées à un enjeu de souveraineté. La colonie numérique dans laquelle nous vivons n’est pas une fatalité. Elle est la conséquence de la start-up nation qui prétend laisser le marché décider à la place des démocraties. Nous devons réorienter le déploiement de l’intelligence artificielle générative, et des centres de données qu’il nécessite, vers une technologie au service de l’être humain, qui réponde à nos besoins et non aux exigences de profit.
+
+L’enjeu démocratique est de taille, tant l’IA a des conséquences dévastatrices sur l’emploi, notamment des plus jeunes, dans les métiers les plus exposés. Il ne peut y avoir de déploiement de l’IA dans les entreprises sans co-construction, formation et appropriation par les salariés. Notre projet, c’est de remettre de la démocratie dans l’entreprise et dans la société. Pour que les habitants et les élus locaux ne soient plus dépossédés des projets d’installation de centres de données, nous mettrons en place des assemblées citoyennes. Sur le modèle de la convention citoyenne sur le climat, elles permettront une appropriation du sujet, pour une prise de conscience citoyenne en capacité de résister face au pouvoir des lobbies. L’installation des data centers doit s’inscrire dans une politique industrielle planifiée par l’État.
+
+L’enjeu écologique, enfin. Le débat public actuel sur le déploiement de l’usage de l’IA se heurte au mur de sa consommation énergétique. Nous ne devons pas laisser ce sujet de côté. C’est pourquoi nous organiserons la décision collective, sur le modèle belge, pour déterminer la part de notre production énergétique qui sera consacrée aux data centers.
+
+Pour une culture numérique commune, qui sorte de la dépendance au privé, nous bâtirons un commun numérique alimenté par une recherche publique forte.
+
+Enfin, nous partagerons les gains de productivité. Si l’IA libère l’être humain de tâches ingrates, tant mieux, mais la rente de l’automatisation doit bénéficier aux salariés. Et comment financera-t-on la protection sociale quand le travail humain aura été remplacé par des robots ? Nous proposons de réorienter les gains de l’IA vers le travail, par la décision collective.
+
+Remerciements
+
+Ce cahier a été réalisé sous la direction de Sophie Taillé-Polian, députée du Val-de-Marne, responsable du programme et porte-parole de François Ruffin.
+
+Merci à toutes celles et ceux qui ont permis à ce cahier de campagne de voir le jour :
+
+• Zélie Geneix et Maxime Dumargne, coordination de l’expertise.
+
+• Vincent Burnand, coordination des cahiers de campagne.
+
+• Alexis, capitaine du groupe de travail IA / Numérique.
+
+• Les experts du groupe de travail IA / Numérique, et plus particulièrement Bruno, Claire et Damien.
+
+• Aux intellectuels, chercheurs et chercheuses, aux associations et praticiens, pour leurs regards avisés.
+
+• Dimitri Bourrié, pour la mise en page de ce cahier.
+
+• Lucie, pour les dessins.
+
+Partagez le livret
+
+WhatsApp Messenger Facebook Telegram X Email
+
+Télécharger le livret

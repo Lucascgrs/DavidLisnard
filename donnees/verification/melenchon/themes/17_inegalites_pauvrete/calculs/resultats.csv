@@ -1,0 +1,13 @@
+affirmation,variante,grandeur,valeur,unite,annee,chiffre_annonce,sources,methode,note
+INEG-01,2017 → 2024,Hausse du nombre de personnes pauvres (seuil à 60 %),0.93,millions,2024,un million,INSEE-PAUVRETE-NOMBRE,M1,"8.89 millions en 2017, 9.82 millions en 2024"
+INEG-02,2024,Taux de pauvreté (seuil à 60 %),15.4,%,2024,plus de 15 %,INSEE-PAUVRETE-TAUX,M2,2023 : 15.4 %
+INEG-02,1996 → 2022,Taux de pauvreté le plus élevé avant 2023,15.3,%,1996,« un record jamais enregistré »,INSEE-PAUVRETE-TAUX,M2,série annuelle depuis 1996
+INEG-02,1975,"Taux de pauvreté (seuil à 60 %), série rétropolée",17.0,%,1975,« un record jamais enregistré »,INSEE-PAUVRETE-TAUX,M2,
+INEG-02,1979,"Taux de pauvreté (seuil à 60 %), série rétropolée",14.3,%,1979,« un record jamais enregistré »,INSEE-PAUVRETE-TAUX,M2,
+INEG-02,1984,"Taux de pauvreté (seuil à 60 %), série rétropolée",13.4,%,1984,« un record jamais enregistré »,INSEE-PAUVRETE-TAUX,M2,
+INEG-03,2024,Personnes pauvres (seuil à 60 %),9.82,millions,2024,plus de 10 millions ; 9 millions,INSEE-PAUVRETE-NOMBRE,M1,
+INEG-04,2021,"Bénéficiaires de l'aide alimentaire sur une année, France métropolitaine (haut de la fourchette)",4.0,millions,2021,8 millions,INSEE-AIDE-ALIMENTAIRE-2022,M3,fourchette de l'Insee : 2 à 4 millions
+INEG-05,2024,Personnes ne pouvant pas chauffer convenablement leur logement,8.1,millions,2024,4 millions,EUROSTAT-CHAUFFAGE; EUROSTAT-POPULATION,M4,11.8 % de la population
+INEG-05,2025,Personnes ne pouvant pas chauffer convenablement leur logement,7.9,millions,2025,4 millions,EUROSTAT-CHAUFFAGE; EUROSTAT-POPULATION,M4,11.5 % de la population
+INEG-06,"2024, temps plein",SMIC net mensuel (estimation) rapporté au seuil de pauvreté d'une personne seule,4.5,% au-dessus,2024,à peine plus que le seuil,EUROSTAT-SMIC-PAYS; INSEE-SEUILS-PAUVRETE,M5,"ESTIMATION, non fiable à 100 % : SMIC net estimé 1397 €, seuil 1 337 € ; hors prime d'activité"
+INEG-07,2024,Seuil de pauvreté à 60 % pour une personne seule,1337.0,€ par mois,2024,1 337 €,INSEE-SEUILS-PAUVRETE,M6,dernier seuil publié (juillet 2026)

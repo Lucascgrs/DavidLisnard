@@ -1,8 +1,14 @@
-"""Site public de la vérification : une page par thème, écrite en dur (python -m verification site).
+"""Site public de la vérification, commun à tous les politiques : « Vérification politique »
+(python -m verification site). Une page d'accueil où l'on choisit un politique, puis, pour chacun, son accueil et une
+page par thème, écrits en dur.
 
-    python -m verification site            régénère les pages dans verification/site/
-    python -m verification site apercu     régénère, puis ouvre les pages en local (http://localhost:8010)
-    python -m verification site deployer   régénère, puis met en ligne sur Vercel (projet « verification-lisnard »)
+    python -m verification site            régénère tout le site dans verification/site/
+    python -m verification site apercu     régénère, puis ouvre le site en local (http://localhost:8010)
+    python -m verification site deployer   régénère, puis met en ligne sur Vercel (projet « verification-politique »)
+
+Organisation du site : index.html (choix du politique et tableau des thèmes communs), puis un dossier par politique,
+du nom de sa clé (lisnard/, melenchon/…) : son accueil, ses pages de thème, ses graphiques. Ajouter un politique dans
+commun/personnes.py suffit à l'ajouter au site.
 
 Le site est entièrement statique : aucune base de données, aucun appel réseau. Toutes les données sont écrites dans
 les pages HTML au moment de la génération, à partir des fichiers de themes/<thème>/ :
@@ -20,10 +26,15 @@ Pages : index.html (les thèmes) et une page par thème. affirmations.html et me
 
 Écrits à la main dans site/ : css/style.css, js/site.js, favicon.svg, vercel.json, robots.txt. Tout le reste
 (*.html, graphiques/) est régénéré à chaque lancement : ne pas le modifier à la main.
+
+Chaque personne a sa couche de lecture (verification/conclusions.py pour David Lisnard,
+verification/<clé>/conclusions.py pour les autres : accroches, figures, conclusions) ; les types d'écart (ECARTS) sont
+communs. Le site Lisnard seul (projet Vercel « verification-lisnard ») a été remplacé par ce site commun le 21/11/2026.
 """
 import csv
 import functools
 import html
+import importlib
 import http.server
 import re
 import shutil
@@ -31,14 +42,33 @@ import webbrowser
 from collections import Counter
 from pathlib import Path
 
-from .commun.chemins import RACINE, THEMES
-from .conclusions import ACCROCHES, ECARTS, FIGURES, LECTURE
+from .commun.personnes import RACINE, Personne, personne
+from .conclusions import ECARTS
 from .controles import ECHELLE
 
-SITE = RACINE / "site"
+SITE_RACINE = RACINE / "site"  # le site commun ; css/, js/, favicon.svg, vercel.json, robots.txt écrits à la main
+PROJET_VERCEL = "verification-politique"
+TITRE_GENERAL = "Vérification politique"
+
+# Réglés par choisir() pour la personne dont on génère les pages.
+P: Personne = personne()
+SITE = SITE_RACINE / P.cle
 GRAPHIQUES = SITE / "graphiques"
-PROJET_VERCEL = "verification-lisnard"
-TITRE_SITE = "Lisnard à l'épreuve des chiffres"
+TITRE_SITE = P.titre_site
+ACCROCHES: dict = {}
+FIGURES: dict = {}
+LECTURE: dict = {}
+
+
+def choisir(cle: str | None) -> Personne:
+    """Règle le générateur sur une personne : dossiers, titre, projet Vercel et couche de lecture (conclusions)."""
+    global P, SITE, GRAPHIQUES, TITRE_SITE, ACCROCHES, FIGURES, LECTURE
+    P = personne(cle)
+    SITE, TITRE_SITE = SITE_RACINE / P.cle, P.titre_site
+    GRAPHIQUES = SITE / "graphiques"
+    c = importlib.import_module(P.module_conclusions)
+    ACCROCHES, FIGURES, LECTURE = c.ACCROCHES, c.FIGURES, c.LECTURE
+    return P
 
 ESP = "\u00a0"   # espace insécable
 FINE = "\u202f"  # espace fine insécable (milliers)
@@ -480,7 +510,9 @@ def image(theme: dict, fichier: str, legende: str) -> str:
 
 
 def tableau_resultats(res: list[dict]) -> str:
-    dits = list(dict.fromkeys(r["chiffre_lisnard"].strip() for r in res if r["chiffre_lisnard"].strip()))
+    # colonne « chiffre_annonce » (ce que dit la personne) ; « chiffre_lisnard » dans les thèmes de David Lisnard
+    dit = lambda r: (r.get("chiffre_annonce") or r.get("chiffre_lisnard") or "").strip()
+    dits = list(dict.fromkeys(dit(r) for r in res if dit(r)))
     out = []
     if dits:
         out.append(f'<p class="dit"><b>Ce qu\'il dit :</b> {echapper(typo(" · ".join(dits)))}</p>')
@@ -526,7 +558,7 @@ def carte_affirmation(theme: dict, a: dict, rendu: Rendu, numero: int) -> str:
     lien = (f' · <a href="{echapper(a["url"])}" rel="noopener noreferrer">voir la source</a>' if a["url"] else "")
     nature = "La mesure, mot pour mot" if a["type"] == "mesure" else "La phrase exacte"
     out.append(f'<figure class="citation"><figcaption>{nature}</figcaption><blockquote>«{ESP}'
-               f'{echapper(typo(a["citation"]))}{ESP}»</blockquote><p class="ou">David Lisnard, {echapper(typo(ou))}'
+               f'{echapper(typo(a["citation"]))}{ESP}»</blockquote><p class="ou">{echapper(P.nom)}, {echapper(typo(ou))}'
                f'{lien}</p></figure>')
 
     details = [f"<span>{FAMILLES[famille][0]}</span>"]
@@ -562,8 +594,23 @@ def carte_affirmation(theme: dict, a: dict, rendu: Rendu, numero: int) -> str:
 # Pages
 # ---------------------------------------------------------------------------------------------------------------
 
-def page(titre: str, description: str, corps: str) -> str:
-    complet = titre if titre == TITRE_SITE else f"{titre} · {TITRE_SITE}"
+def selecteur(prefixe: str, actif: str | None) -> str:
+    """Liens vers l'accueil de chaque politique, celui de la page en cours marqué."""
+    liens = []
+    for p in politiques():
+        courant = ' aria-current="page"' if p.cle == actif else ""
+        liens.append(f'<a href="{prefixe}{p.cle}/index.html"{courant}>{echapper(p.nom)}</a>')
+    return (f'<nav class="choix-politique" aria-label="Choisir un politique">'
+            f'<span>Politique</span>{"".join(liens)}</nav>')
+
+
+def page(titre: str, description: str, corps: str, prefixe: str = "../", actif: str | None = "*",
+         pied: str | None = None) -> str:
+    """prefixe : chemin vers la racine du site ("" pour l'accueil général, "../" dans le dossier d'un politique)."""
+    actif = P.cle if actif == "*" else actif
+    complet = titre if titre in (TITRE_SITE, TITRE_GENERAL) else f"{titre} · {TITRE_SITE}"
+    pied = pied or (f"Vérification des affirmations de {echapper(P.nom)} et de {echapper(P.parti)} à partir de données "
+                    "publiques.")
     return f"""<!doctype html>
 <!-- Page générée par « python -m verification site » : ne pas modifier à la main. -->
 <html lang="fr">
@@ -573,22 +620,23 @@ def page(titre: str, description: str, corps: str) -> str:
 <title>{echapper(complet)}</title>
 <meta name="description" content="{echapper(description)}">
 <meta name="robots" content="noindex, nofollow">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="{prefixe}favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="{prefixe}css/style.css">
 </head>
 <body>
 <a class="evitement" href="#contenu">Aller au contenu</a>
 <header class="entete"><div class="large">
-<a class="marque" href="index.html"><svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="currentColor"/><path d="M8 17l5 5 11-12" fill="none" stroke="var(--fond)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>{TITRE_SITE}</span></a>
+<a class="marque" href="{prefixe}index.html"><svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="currentColor"/><path d="M8 17l5 5 11-12" fill="none" stroke="var(--fond)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>{TITRE_GENERAL}</span></a>
+{selecteur(prefixe, actif)}
 </div></header>
 <main id="contenu">
 {corps}
 </main>
 <footer class="pied"><div class="large">
-<span>Vérification des affirmations de David Lisnard et de Nouvelle Énergie à partir de données publiques.</span>
+<span>{pied}</span>
 <span>Données figées au {DATE_DONNEES}</span>
 </div></footer>
-<script src="js/site.js" defer></script>
+<script src="{prefixe}js/site.js" defer></script>
 </body>
 </html>
 """
@@ -646,7 +694,7 @@ def page_theme(t: dict, themes: list[dict]) -> str:
                 + f" · {len(t['sources'])} source{'s' if len(t['sources']) > 1 else ''}")
     corps = f"""<div class="large">
 <section class="titre-page">
-<p class="surtitre"><a href="index.html">← Tous les thèmes</a> · {int(t["numero"])} sur {len(themes)}</p>
+<p class="surtitre"><a href="index.html">← Tous les thèmes</a> · {i + 1} sur {len(themes)}</p>
 <h1>{echapper(typo(t["nom"]))}</h1>
 <p class="accroche">{echapper(typo(ACCROCHES[t["numero"]]))}</p>
 {bande_familles(compte, grande=True)}
@@ -692,7 +740,8 @@ def page_accueil(themes: list[dict]) -> str:
         cartes.append(f'<a class="carte" href="{t["page"]}"><span class="numero">{int(t["numero"])}</span>'
                       f'<h3>{echapper(typo(t["nom"]))}</h3><p>{echapper(typo(ACCROCHES[t["numero"]]))}</p>'
                       f'{bande_familles(c).replace("<ul", "<ul hidden", 1)}'
-                      f'<span class="carte-pied">{len(t["affirmations"])} affirmations vérifiées</span></a>')
+                      f'<span class="carte-pied">{len(t["affirmations"])} affirmation{"s" if len(t["affirmations"]) > 1 else ""} '
+                      f'vérifiée{"s" if len(t["affirmations"]) > 1 else ""}</span></a>')
     phrases = [f"<b>{compte[f]}</b> {FAMILLES[f][0].lower()}{'s' if compte[f] > 1 and f in ('exact', 'proche', 'inexact') else ''}"
                for f in FAMILLES if compte.get(f) and f not in ("inverifiable", "promesse")]
     bilan = (", ".join(phrases[:-1]) + " et " + phrases[-1] if len(phrases) > 1 else phrases[0])
@@ -700,9 +749,9 @@ def page_accueil(themes: list[dict]) -> str:
               "opinions ou des promesses.")
     corps = f"""<div class="large">
 <section class="une">
-<p class="surtitre">Vérification factuelle · {len(themes)} thèmes</p>
-<h1>Ce que dit David Lisnard, à l'épreuve des chiffres</h1>
-<p class="accroche">{len(tous)} affirmations et mesures de David Lisnard et de Nouvelle Énergie, confrontées une à une aux données publiques : {n_sources} sources téléchargées, des calculs refaits, une conclusion expliquée.</p>
+<p class="surtitre"><a href="../index.html">← Tous les politiques</a> · {len(themes)} thèmes vérifiés</p>
+<h1>Ce que dit {echapper(P.nom)}, à l'épreuve des chiffres</h1>
+<p class="accroche">{len(tous)} affirmations et mesures de {echapper(P.nom)} et de {echapper(P.parti)}, confrontées une à une aux données publiques : {n_sources} sources téléchargées, des calculs refaits, une conclusion expliquée.</p>
 {bande_familles(compte, grande=True)}
 <p class="bilan">{bilan}</p>
 </section>
@@ -713,7 +762,7 @@ def page_accueil(themes: list[dict]) -> str:
 <div class="cartes">{"".join(cartes)}</div>
 </section>
 </div>"""
-    return page(TITRE_SITE, f"{len(tous)} affirmations de David Lisnard et de Nouvelle Énergie vérifiées avec des "
+    return page(TITRE_SITE, f"{len(tous)} affirmations de {P.nom} et de {P.parti} vérifiées avec des "
                             "données publiques, thème par thème.", corps)
 
 
@@ -724,18 +773,24 @@ def page_accueil(themes: list[dict]) -> str:
 DATE_DONNEES = ""
 
 
-def generer(journal=print) -> list[Path]:
-    """Réécrit toutes les pages et recopie les graphiques. Rend la liste des fichiers écrits."""
+def politiques() -> list[Personne]:
+    """Les personnes qui ont au moins un thème terminé (analyse.md), dans l'ordre de commun/personnes.py."""
+    from .commun.personnes import PERSONNES
+    return [p for p in PERSONNES.values()
+            if p.themes.exists() and any((d / "analyse.md").exists() for d in p.themes.iterdir() if d.is_dir())]
+
+
+def generer_personne(journal=print) -> tuple[list[Path], dict]:
+    """Pages de la personne choisie (choisir()) dans site/<clé>/ ; rend les fichiers écrits et un résumé pour
+    l'accueil général."""
     global DATE_DONNEES
-    themes = [lire_theme(d) for d in sorted(THEMES.iterdir()) if d.is_dir() and (d / "analyse.md").exists()]
+    themes = [lire_theme(d) for d in sorted(P.themes.iterdir()) if d.is_dir() and (d / "analyse.md").exists()]
     if not themes:
-        raise Erreur("aucun thème avec analyse.md")
+        raise Erreur(f"{P.nom} : aucun thème avec analyse.md")
     controler(themes)
     DATE_DONNEES = date_fr(max(t["telecharge"] for t in themes))
 
-    for ancien in SITE.glob("*.html"):
-        ancien.unlink()
-    shutil.rmtree(GRAPHIQUES, ignore_errors=True)
+    shutil.rmtree(SITE, ignore_errors=True)
     GRAPHIQUES.mkdir(parents=True)
     ecrits = []
 
@@ -753,41 +808,121 @@ def generer(journal=print) -> list[Path]:
         ecrire(t["page"], page_theme(t, themes))
     ecrire("index.html", page_accueil(themes))
     n = sum(len(t["affirmations"]) for t in themes)
-    journal(f"   {len(themes)} thèmes, {n} affirmations, {len(FIGURES)} graphiques → {SITE.relative_to(RACINE.parent)}"
-            f" ({len(ecrits)} fichiers)")
+    journal(f"   {P.nom} : {len(themes)} thèmes, {n} affirmations, {len(FIGURES)} graphiques → "
+            f"{SITE.relative_to(RACINE.parent)} ({len(ecrits)} fichiers)")
+    resume = {"personne": P, "date": DATE_DONNEES, "n": n,
+              "compte": Counter(etiquette(a)[0] for t in themes for a in t["affirmations"]),
+              "sources": sum(len(t["sources"]) for t in themes),
+              "themes": {t["numero"]: {"page": f"{P.cle}/{t['page']}", "accroche": ACCROCHES[t["numero"]],
+                                       "n": len(t["affirmations"]),
+                                       "compte": Counter(etiquette(a)[0] for a in t["affirmations"])}
+                         for t in themes}}
+    return ecrits, resume
+
+
+def page_racine(resumes: list[dict]) -> str:
+    """Accueil général : choisir un politique, puis comparer thème par thème."""
+    from .commun.themes import CATALOGUE
+    cartes = []
+    for r in resumes:
+        p = r["personne"]
+        cartes.append(f'<a class="carte carte-politique" href="{p.cle}/index.html">'
+                      f'<span class="numero">{echapper(p.parti)}</span><h3>{echapper(p.nom)}</h3>'
+                      f'<p>{len(r["themes"])} thèmes · {r["n"]} affirmations et mesures · {r["sources"]} sources</p>'
+                      f'{bande_familles(r["compte"])}'
+                      f'<span class="carte-pied">Voir ses vérifications →</span></a>')
+    tete = "".join(f"<th>{echapper(r['personne'].nom)}</th>" for r in resumes)
+    lignes = []
+    for num, (_, nom, _) in CATALOGUE.items():
+        cases = []
+        for r in resumes:
+            t = r["themes"].get(num)
+            if not t:
+                cases.append('<td class="vide">—</td>')
+                continue
+            cases.append(f'<td><a href="{t["page"]}" title="{echapper(typo(t["accroche"]))}">'
+                         f'{bande_familles(t["compte"]).replace("<ul", "<ul hidden", 1)}'
+                         f'<span>{t["n"]} affirmation{"s" if t["n"] > 1 else ""}</span></a></td>')
+        if any(r["themes"].get(num) for r in resumes):
+            lignes.append(f'<tr><th scope="row"><span class="num">{int(num)}</span>{echapper(nom)}</th>'
+                          f'{"".join(cases)}</tr>')
+    noms = " et ".join(echapper(r["personne"].nom) for r in resumes) if len(resumes) < 3 else \
+        ", ".join(echapper(r["personne"].nom) for r in resumes)
+    corps = f"""<div class="large">
+<section class="une">
+<p class="surtitre">Vérification factuelle · {len(resumes)} politiques</p>
+<h1>Les politiques à l'épreuve des chiffres</h1>
+<p class="accroche">Ce que disent {noms}, confronté une à une aux données publiques : des sources téléchargées, des calculs refaits, une conclusion expliquée. Choisissez un politique, ou comparez-les thème par thème.</p>
+</section>
+
+<section class="partie">
+<h2>Choisir un politique</h2>
+<div class="cartes">{"".join(cartes)}</div>
+</section>
+
+<section class="partie">
+<h2>Thème par thème</h2>
+<p class="chapo">Les thèmes portent le même numéro pour tous les politiques. Chaque case renvoie à la page du thème ; la barre résume ses affirmations, de « Exact » à « Opinion ou promesse ».</p>
+<div class="defile"><table class="comparaison"><thead><tr><th>Thème</th>{tete}</tr></thead><tbody>
+{"".join(lignes)}
+</tbody></table></div>
+</section>
+</div>"""
+    date = max((r["date"] for r in resumes), key=lambda d: d)
+    return page(TITRE_GENERAL, "Les affirmations des politiques vérifiées avec des données publiques, thème par thème.",
+                corps, prefixe="", actif=None,
+                pied=f"Vérification des affirmations de {noms} à partir de données publiques.")
+
+
+def generer(journal=print, cle: str | None = None) -> list[Path]:
+    """Réécrit tout le site : les pages de chaque politique, puis l'accueil général. (cle : ignoré, gardé pour la
+    ligne de commande ; le site contient toujours tous les politiques.)"""
+    for ancien in SITE_RACINE.glob("*.html"):
+        ancien.unlink()
+    shutil.rmtree(SITE_RACINE / "graphiques", ignore_errors=True)  # ancien site Lisnard seul
+    ecrits, resumes = [], []
+    for p in politiques():
+        choisir(p.cle)
+        e, r = generer_personne(journal)
+        ecrits += e
+        resumes.append(r)
+    racine = SITE_RACINE / "index.html"
+    racine.write_text(page_racine(resumes), encoding="utf-8", newline="\n")
+    ecrits.append(racine)
+    journal(f"   site commun : {len(resumes)} politiques → {SITE_RACINE.relative_to(RACINE.parent)}")
     return ecrits
 
 
-def apercu(port: int = 8010) -> None:
-    generer()
-    gestion = functools.partial(http.server.SimpleHTTPRequestHandler, directory=str(SITE))
+def apercu(port: int = 8010, cle: str | None = None) -> None:
+    generer(cle=cle)
+    gestion = functools.partial(http.server.SimpleHTTPRequestHandler, directory=str(SITE_RACINE))
     with http.server.ThreadingHTTPServer(("127.0.0.1", port), gestion) as serveur:
         print(f"Aperçu sur http://localhost:{port} (Ctrl+C pour arrêter)")
         webbrowser.open(f"http://localhost:{port}")
         serveur.serve_forever()
 
 
-def deployer(journal=print) -> str:
+def deployer(journal=print, cle: str | None = None) -> str:
     """Régénère puis met en ligne sur Vercel. Le jeton est celui du site public (config/web.json, vercel_jeton)."""
-    from web import acces
-    from web.vercel import Vercel
-    generer(journal)
+    from commentaires import acces
+    from commentaires.vercel import Vercel
+    generer(journal, cle)
     a = acces.exiger("vercel_jeton")
-    url = Vercel(a["vercel_jeton"]).deployer(SITE, journal, projet=PROJET_VERCEL)
+    url = Vercel(a["vercel_jeton"]).deployer(SITE_RACINE, journal, projet=PROJET_VERCEL)
     acces.sauver(verification_url=url)
     journal(f"   en ligne : {url}")
     return url
 
 
-def main(args: list[str]) -> None:
+def main(args: list[str], cle: str | None = None) -> None:
     action = args[0] if args else "generer"
     try:
         if action == "generer":
-            generer()
+            generer(cle=cle)
         elif action == "apercu":
-            apercu(int(args[1]) if len(args) > 1 else 8010)
+            apercu(int(args[1]) if len(args) > 1 else 8010, cle)
         elif action == "deployer":
-            deployer()
+            deployer(cle=cle)
         else:
             raise SystemExit(f"Action inconnue : {action}\n{__doc__}")
     except Erreur as e:

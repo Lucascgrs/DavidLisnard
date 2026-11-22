@@ -5,8 +5,9 @@ python -m verification calculer 14   → calculs/resultats.csv
 import csv
 import re
 from pathlib import Path
+from verification.commun.chemins import donnees_de
 
-ICI = Path(__file__).resolve().parent
+ICI = donnees_de(__file__)
 BRUT = ICI.parent / "brut"
 SORTIE = ICI / "resultats.csv"
 CP = "amf_cevipof/demissions_maires_communique.pdf"

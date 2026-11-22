@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proximité des candidats · Présidentielle 2027</title>
+<meta name="description" content="Les programmes publiés pour la présidentielle 2027, mesure par mesure, et la distance entre les candidats.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="entete">
+  <div class="largeur">
+    <h1>Proximité des candidats</h1>
+    <p class="sous-titre" id="resume">Présidentielle 2027</p>
+    <nav aria-label="Sections">
+      <a href="#programmes">Programmes</a>
+      <a href="#carte">Carte</a>
+      <a href="#distances">Distances</a>
+      <a href="#notes">Notes</a>
+    </nav>
+  </div>
+</header>
+
+<main class="largeur">
+  <section id="programmes">
+    <h2>Les programmes</h2>
+    <div class="cartouches" id="cartouches"></div>
+    <details class="attente">
+      <summary id="attente-titre">Sans programme publié</summary>
+      <ul id="attente"></ul>
+    </details>
+  </section>
+
+  <section id="carte">
+    <h2>Carte des candidats</h2>
+    <div class="legende" id="legende"></div>
+    <div class="carte-cadre" id="carte-cadre">
+      <h3 class="carte-titre">Axe par axe</h3>
+      <p class="aide">Chaque ligne va de −3 à +3. Plus un candidat est à gauche, plus ses mesures tirent vers le côté rouge ; à droite, vers le côté bleu.</p>
+      <div id="axes-ligne"></div>
+      <h3 class="carte-titre">Deux axes à la fois</h3>
+      <div class="vues" role="group" aria-label="Axes du plan" id="paires">
+        <button type="button" data-paire="EO" class="actif">Économie × Ordre</button>
+        <button type="button" data-paire="ES">Économie × Souveraineté</button>
+        <button type="button" data-paire="OS">Ordre × Souveraineté</button>
+      </div>
+      <div id="plan"></div>
+      <div class="bulle" id="bulle" hidden></div>
+    </div>
+    <p class="aide">Survoler un candidat pour ses positions · clic pour ses mesures</p>
+  </section>
+
+  <section id="distances">
+    <h2>Distances</h2>
+    <div class="vues" role="group" aria-label="Thème des distances" id="distances-axes"></div>
+    <div class="cle" id="cle-distances"></div>
+    <div class="tableau-defile"><table class="matrice" id="matrice"></table></div>
+  </section>
+
+  <section id="notes">
+    <h2>Notes par thème</h2>
+    <div class="vues" role="group" aria-label="Axe affiché" id="notes-axes"></div>
+    <div class="cle" id="cle-notes"></div>
+    <div class="tableau-defile"><table class="notes" id="tableau-notes"></table></div>
+  </section>
+
+</main>
+
+<dialog id="fiche" aria-labelledby="fiche-nom">
+  <div class="fiche-tete">
+    <div>
+      <h2 id="fiche-nom"></h2>
+      <p id="fiche-parti"></p>
+    </div>
+    <button type="button" class="fermer" id="fiche-fermer" aria-label="Fermer">×</button>
+  </div>
+  <div class="fiche-axes" id="fiche-axes"></div>
+  <div class="fiche-filtres">
+    <div class="vues" role="group" aria-label="Axe" id="fiche-onglets"></div>
+    <input type="search" id="fiche-recherche" placeholder="Chercher une mesure" aria-label="Chercher une mesure">
+  </div>
+  <div id="fiche-mesures"></div>
+</dialog>
+
+<footer class="pied largeur" id="pied"></footer>
+
+<script src="donnees.js"></script>
+<script src="js/carte.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>

@@ -9,6 +9,7 @@ import re
 from pathlib import Path
 
 from .corpus import charger
+from .personnes import personne_du_chemin
 
 COLONNES = ["id", "theme", "type", "citation", "date", "support", "id_corpus", "url_source", "autres_versions",
             "grandeur_testee", "verifiable", "priorite"]
@@ -19,11 +20,16 @@ def _support(l) -> str:
     m = re.match(r"(Entretien|Tribune|Discours|FAQ Nouvelle Énergie|Newsletter Nouvelle Énergie)\s*[—-]\s*([^—(]+)", titre)
     if m:
         return f"{m.group(1).lower()}, {m.group(2).strip()}"
+    if l.get("type_source") == "programmes":
+        return "programme" + (f" : {titre.strip(' -')}" if titre.strip(" -") else "")
+    if str(l.get("sous_type") or "").startswith(("youtube", "instagram")):
+        plateforme = "YouTube" if str(l["sous_type"]).startswith("youtube") else "Instagram"
+        return f"vidéo {plateforme} : {titre.strip()[:90]} (transcription automatique)"
     return f"{str(l.get('sous_type') or l.get('type_source')).lower()} : {titre[:90]}"
 
 
 def ecrire(chemin: Path, theme: str, affirmations: list[dict]) -> int:
-    df = charger().set_index("id")
+    df = charger(personne_du_chemin(chemin).cle).set_index("id")
     corpus_texte = {}
     with open(chemin, "w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=COLONNES)
@@ -35,7 +41,7 @@ def ecrire(chemin: Path, theme: str, affirmations: list[dict]) -> int:
             extrait = re.sub(r"\s+", " ", a["citation"]).split("[…]")[0].strip(" «»")[:60]
             if extrait and extrait not in texte:
                 raise ValueError(f"{a['id']} : citation introuvable dans {a['id_corpus']} : « {extrait} »")
-            url = l.get("url_source")
+            url = l.get("lien_horodate") if str(l.get("lien_horodate") or "nan") != "nan" else l.get("url_source")
             w.writerow({"id": a["id"], "theme": theme, "type": a.get("type", "affirmation"), "citation": a["citation"],
                         "date": a.get("date") or l.get("date") or "", "support": a.get("support") or _support(l),
                         "id_corpus": a["id_corpus"], "url_source": "" if url is None or str(url) == "nan" else url,

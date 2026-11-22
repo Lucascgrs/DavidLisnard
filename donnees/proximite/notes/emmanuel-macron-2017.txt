@@ -1,0 +1,120 @@
+## emmanuel-macron-2017/en-marche-fr-communication-programme-emmanuel-macron-pdf.txt
+E1 +1 | Réduire les cotisations payées par les salariés, les indépendants et les fonctionnaires, sans coût pour les employeurs
+E4 -1 | Prime d'activité augmentée : l'équivalent d'un 13e mois pour les smicards qui en bénéficient, 100 € nets par mois
+E1 +1 | Rétablir les exonérations de cotisations sociales sur les heures supplémentaires
+E3 -1 | Ouvrir les droits à l'assurance-chômage aux salariés qui démissionnent, une fois tous les cinq ans
+E3 +1 | Suspension des allocations chômage en cas d'efforts de recherche insuffisants ou de refus d'offres raisonnables
+E3 -1 | Effort national de formation : 1 million de jeunes et 1 million de demandeurs d'emploi peu qualifiés formés
+E5 -1 | 5 milliards du Plan d'investissement pour moderniser les exploitations agricoles
+E5 -1 | Soutenir les organisations de producteurs dans leurs négociations avec les industriels, faire évoluer le droit européen de la concurrence en ce sens
+E3 0 | Effort massif pour l'apprentissage : pré-apprentissage, alternance dans tous les lycées professionnels, licences professionnelles en alternance
+E5 +2 | Simplifier la vie des entrepreneurs : réduire leurs charges, supprimer le RSI
+E1 +1 | Doubler les plafonds du régime fiscal de la microentreprise, option annuelle pour artisans et commerçants
+E1 +2 | Baisser les cotisations employeurs de 6 points en remplacement du CICE, jusqu'à 10 points au niveau du SMIC
+E3 -1 | Bonus-malus sur l'assurance-chômage : plus de charges pour les employeurs abusant des contrats courts
+E3 +2 | Dialogue social redéfini : horaires et organisation du travail négociés dans l'entreprise, par accord majoritaire ou référendum d'entreprise
+E4 -1 | Assurance-chômage pour tous les travailleurs : artisans, commerçants, indépendants, professions libérales, agriculteurs
+E5 +1 | Un site Internet unique expliquant aux TPE et PME leurs obligations, réponses opposables à l'administration
+E2 -1 | Grand Plan d'investissement public de 50 milliards sur 5 ans (qualifications, transition écologique, numérique, services publics, rénovation urbaine)
+E1 +2 | Baisser l'impôt sur les sociétés de 33,3 % à 25 %
+E1 +2 | Transformer l'ISF en impôt sur la fortune immobilière
+E1 +2 | Prélèvement forfaitaire unique d'environ 30 % sur les revenus du capital
+E5 -1 | Fonds pour l'industrie et l'innovation de 10 milliards, issu des participations minoritaires de l'État
+E7 -1 | Placer la France en tête du combat contre les perturbateurs endocriniens et les pesticides
+E7 -1 | Rénover 1 million de logements mal isolés d'ici 2022, en priorité ceux des propriétaires modestes
+E7 0 | Faire de la France le leader mondial de la recherche sur la transition environnementale
+O3 -1 | Formalités d'accueil accélérées pour les spécialistes étrangers
+E7 -1 | 50 % de produits bio, écologiques ou en circuits courts dans les cantines scolaires et d'entreprise d'ici 2022
+E7 -1 | Diviser par deux le nombre de jours de pollution atmosphérique
+E7 -1 | Prime de 1 000 € pour remplacer un vieux véhicule polluant
+E5 +1 | Banque de données numériques : les administrations qui autorisent des activités ouvrent leurs données aux start-ups
+E4 0 | Système de retraite universel : mêmes règles de calcul, un euro cotisé donne le même droit pour tous
+E4 0 | Ne toucher ni à l'âge de départ à la retraite ni au niveau des pensions
+E3 -1 | Publier les noms des entreprises qui ne respectent pas l'égalité salariale ; contrôles massifs et aléatoires
+E1 -1 | Alourdir les sanctions contre la fraude fiscale
+E4 +1 | Amplifier la lutte contre la fraude aux prestations sociales : suspension de la prestation en cas de fraude grave
+E1 -2 | Imposer les grands groupes de l'Internet sur leur chiffre d'affaires réalisé en France ; lutte contre l'optimisation fiscale
+E6 0 | Attribution des logements sociaux par un système de points sur critères objectifs
+S1 +1 | Limiter à un an le séjour d'un travailleur détaché et redéfinir au niveau européen les règles du détachement
+H1 | Aucun candidat d'En Marche avec un casier judiciaire ; interdiction pour ses élus d'embaucher leur famille
+O1 +2 | Recruter 10 000 policiers et gendarmes supplémentaires, notamment pour le renseignement antiterroriste
+O1 0 | Créer une police de sécurité quotidienne, au plus près des habitants
+O1 +2 | Pouvoir donné aux policiers, sous contrôle du juge, d'interdire à un délinquant de fréquenter le quartier de ses délits
+O2 +2 | Incivilités (harcèlement des femmes, insultes, dégradations, crachats) punies d'amendes immédiates
+O2 +2 | Toute peine prononcée sera exécutée
+O2 +2 | Construire 15 000 nouvelles places de prison
+S2 0 | Cyberdéfense et cybersécurité, priorités de la sécurité nationale
+S2 +1 | Porter les moyens des armées à 2 % du PIB : ravitailleurs, blindés, flotte de surface
+O1 +1 | État-major permanent des opérations de sécurité intérieure, de renseignement et de lutte antiterroriste, rattaché au président
+S1 -2 | Une force de 5 000 garde-frontières européens aux frontières extérieures de l'Union
+O6 +1 | Priorité à l'école primaire : lire, écrire et compter en arrivant en 6e
+O6 +1 | Interdire les téléphones portables dans les écoles primaires et les collèges
+O6 +1 | Plus d'autonomie aux équipes éducatives, suivies et évaluées
+O6 -1 | Classes de CP et CE1 limitées à 12 élèves en zone prioritaire, prime de 3 000 € et enseignants plus expérimentés
+O6 +1 | Rétablir les parcours bi-langues, les parcours européens, le grec et le latin au collège
+O6 -1 | Accompagnement après la classe pour tous ; études dirigées au collège avec des bénévoles
+O6 0 | Baccalauréat modernisé : 4 matières à l'examen final, le reste en contrôle continu
+O6 +1 | Autonomie des universités : recrutement des enseignants et définition des formations ; 80 000 places en filières professionnalisantes
+O6 +1 | Chaque lycée professionnel et université publie ses résultats (débouchés, salaires) sur 3 ans
+E6 -1 | Construire 80 000 logements pour les jeunes
+H2 | Ouvrir les bibliothèques en soirée et le week-end
+H2 | Un « Pass Culture » de 500 € de dépenses culturelles pour chaque jeune de 18 ans
+H2 | Ne pas retirer un euro au budget du ministère de la Culture
+O4 +1 | Appliquer strictement la laïcité : formation universitaire des ministres du culte à la laïcité, aux valeurs de la République et au français
+O4 -1 | Enseignement spécifique du fait religieux à l'école
+O4 -1 | Ne pas étendre l'interdiction du voile à l'université
+O4 +2 | Dissoudre les associations qui s'attaquent à la République sous couvert de religion ; fermer les lieux de culte faisant l'apologie du terrorisme
+E3 -1 | Emplois francs : prime de 15 000 € sur 3 ans pour l'embauche en CDI d'un habitant des quartiers prioritaires
+O4 -2 | Lutte contre les discriminations, priorité nationale : contrôles aléatoires à grande échelle dans l'emploi et le logement
+O3 +1 | Faire de la maîtrise du français le principal critère d'obtention de la nationalité ; renforcer son apprentissage
+O3 +1 | Examiner les demandes d'asile en moins de 6 mois, recours compris ; reconduite sans délai des déboutés
+S1 -3 | Un budget de la zone euro voté par un Parlement de la zone euro et exécuté par un ministre des Finances de la zone euro
+S1 -1 | Lutter contre les arrangements fiscaux entre États et multinationales en Europe
+S3 +1 | Buy European Act : marchés publics européens réservés aux entreprises produisant au moins la moitié en Europe
+S1 -1 | Généraliser Erasmus et l'étendre aux apprentis : 200 000 départs par an
+S2 -2 | Europe de la défense avec l'Allemagne : Fonds européen de défense, équipements communs, quartier général européen permanent
+S3 +1 | Mécanisme européen de contrôle des investissements étrangers dans les secteurs stratégiques
+S1 -1 | Défendre l'intégrité du marché unique dans la négociation du Brexit
+S1 -2 | Marché unique du numérique en Europe et fonds de capital-risque européen pour les start-ups
+S1 -2 | Marché unique de l'énergie en Europe
+E7 -1 | Prix plancher du carbone dans les pays de l'Union
+S1 -2 | Conventions citoyennes dans toute l'Europe, projet adopté par les pays volontaires sans droit de blocage d'un État
+E4 -1 | Augmenter le minimum vieillesse de 100 € par mois
+E4 0 | Versement social unique : toutes les allocations le même jour, sur des revenus récents
+H2 | Un « accélérateur » d'associations pour déployer les plus utiles sur tout le territoire
+E4 -2 | Prise en charge à 100 % des lunettes et des prothèses auditives et dentaires d'ici 2022
+E4 -1 | 5 milliards du Plan d'investissement pour la médecine de ville et les hôpitaux
+E4 0 | Service sanitaire : 40 000 étudiants en santé consacrent 3 mois à la prévention
+E4 -1 | Droit à l'oubli renforcé pour les anciens malades : 5 ans après la rémission, étendu à d'autres maladies
+E4 -1 | Doubler le nombre de maisons de santé contre les déserts médicaux
+E4 -1 | Un auxiliaire de vie scolaire pour tous les enfants handicapés qui en ont besoin, avec emploi stable
+E4 -1 | Augmenter l'allocation adulte handicapé de 100 € par mois
+E2 +1 | Droit à l'erreur pour tous face à l'administration : conseil plutôt que sanction, hors pénal et sécurité
+E6 0 | Toutes les démarches de documents officiels en ligne ; services publics ouverts en soirée et le samedi
+H1 | Les préfets pourront adapter l'organisation des services de l'État à chaque région et département
+E5 +2 | Aucune norme nationale ajoutée aux normes européennes dans l'agriculture, la mer et la pêche
+E6 0 | Services publics tenus d'afficher leurs résultats de qualité (attente, satisfaction)
+O2 0 | Un tribunal de première instance par département, guichet unique d'accès au juge, sans fermer de site
+O2 0 | Litiges de moins de 4 000 € : procédure dématérialisée et décision rendue en ligne
+H1 | Interdire aux parlementaires les activités de conseil ; toutes leurs indemnités soumises à l'impôt
+H1 | Interdire à tout élu ou ministre d'embaucher un membre de sa famille
+H1 | Interdire le cumul de plus de trois mandats identiques successifs
+H1 | Interdire de se présenter à une élection avec un casier judiciaire (B2)
+H1 | Supprimer le régime spécial de retraite des parlementaires
+H1 | Bilan national et européen du président une fois par an devant le Congrès
+H1 | Réduire d'environ un tiers le nombre de députés et de sénateurs
+H1 | Parité obligatoire des candidatures, financement public réduit pour les partis déséquilibrés
+H1 | La procédure d'urgence devient la procédure par défaut d'examen des lois
+H1 | Moins de mois de législation, plus de temps pour l'évaluation et le contrôle du gouvernement
+H1 | Dispositifs d'évaluation du travail parlementaire (jurys citoyens, comptes rendus de mandat)
+H1 | Encourager les budgets participatifs dans les communes
+E1 +1 | Exonérer de taxe d'habitation 80 % des ménages, l'État compensant les communes à l'euro près
+E6 -1 | Très haut débit ou fibre sur tout le territoire d'ici la fin du quinquennat ; couverture mobile rurale doublée
+E2 +1 | Supprimer au moins un quart des départements, rapprochés des métropoles
+E6 +1 | Procédures accélérées de construction de logements dans les zones chères
+E6 0 | Politique des transports : moderniser les réseaux existants plutôt que construire de nouvelles autoroutes, aéroports et TGV
+E7 -1 | Plan de transition agricole de 5 milliards : montée en gamme, normes environnementales, bien-être animal
+H2 | Continuité territoriale : 200 000 billets d'avion à prix aidé par an pour les ultramarins ; Agence française pour la biodiversité en Outre-mer
+H1 | Les collectivités d'Outre-mer pourront adapter la réglementation de droit commun
+E2 +2 | 60 milliards d'économies sur la dépense publique
+E1 0 | Loi d'orientation fixant pour 5 ans l'évolution de la fiscalité ; pas plusieurs réformes d'un même impôt

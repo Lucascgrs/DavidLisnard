@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <title>Modération · Cap 2027 avec David Lisnard</title>
+  <title>Modération · groupes Facebook</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
   <script type="module" src="js/app.js"></script>
@@ -17,7 +17,7 @@
         <svg width="48" height="48" viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="currentColor"/><path d="M16 7l7 3v5c0 5-3 8.5-7 10-4-1.5-7-5-7-10v-5z" fill="none" stroke="#ffd23f" stroke-width="2.2" stroke-linejoin="round"/></svg>
       </div>
       <h1>Modération</h1>
-      <p class="doux">Commentaires du groupe Facebook. Accès réservé aux modérateurs.</p>
+      <p class="doux">Commentaires des groupes Facebook. Accès réservé aux modérateurs.</p>
       <label for="mdp">Mot de passe</label>
       <input id="mdp" type="password" autocomplete="current-password" required>
       <label for="prenom">Votre prénom <span class="pale">(affiché sur ce que vous marquez, et dans les statistiques)</span></label>
@@ -45,6 +45,13 @@
     </header>
 
     <main class="large">
+      <!-- Groupes montrés, pour toutes les vues ; « Cap 2027 avec David Lisnard » par défaut. -->
+      <section class="groupes carte" aria-label="Groupes Facebook">
+        <span class="titre-groupes">Groupes</span>
+        <div id="f-groupes" class="cases"></div>
+        <p id="note-groupes" class="pale" hidden>Seuls les commentaires du groupe « Cap 2027 avec David Lisnard » sont rangés par
+          thème : les réponses préparées et le filtre « Thème » ne servent que pour lui.</p>
+      </section>
       <section class="tuiles" id="tuiles" aria-label="À traiter"></section>
 
       <!-- Commentaires -->
@@ -58,14 +65,6 @@
                 <button type="button" data-v="insultant" class="s-insultant">Insultants</button>
                 <button type="button" data-v="question" class="s-question">Questions</button>
                 <button type="button" data-v="autre">Autres</button>
-              </div>
-            </fieldset>
-            <fieldset>
-              <legend>Sujet</legend>
-              <div class="segments" id="f-sujet">
-                <button type="button" data-v="">Tous</button>
-                <button type="button" data-v="L" class="s-lisnard" title="Commentaires qui parlent de David Lisnard ou de Nouvelle Énergie (pour un insultant : qui les visent)">Lisnard / Nouvelle Énergie</button>
-                <button type="button" data-v="A" title="Autres personnalités, autres partis, disputes entre commentateurs…">Autres sujets</button>
               </div>
             </fieldset>
             <fieldset>

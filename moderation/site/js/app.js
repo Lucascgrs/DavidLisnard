@@ -2,7 +2,8 @@
 // Les données sont gardées dans le navigateur (donnees.js) : filtres, tris et comptages se font ici, sans requête.
 // La base n'est interrogée que pour les nouveautés (au démarrage et au bouton « Actualiser »), pour les marques des
 // autres modérateurs (toutes les 10 s, page visible) et pour enregistrer une marque. Tout texte venu de Facebook est posé en textContent, jamais en HTML.
-// La base ne rend que les commentaires du groupe suivi par ce site (web/schema.sql, moderation_publications()).
+// La base rend les commentaires de tous les groupes Facebook ; le filtre « Groupes » (en haut, pour toutes les vues) choisit
+// ceux qui sont montrés, « Cap 2027 avec David Lisnard » par défaut. Seul ce groupe est rangé par thème (réponses préparées).
 import { NonConnecte, connecte, connecter, deconnecter, suivre } from "./api.js";
 import { actualiser, charger, effacerCache, etat, marquesRecentes, noterSuivi } from "./donnees.js";
 import { RUBRIQUES, surligner, trouver } from "./surveillance.js";
@@ -16,6 +17,8 @@ const VUES = ["commentaires", "auteurs", "publications", "stats"];
 const $ = (id) => document.getElementById(id);
 const CATEGORIES = { insultant: "Insultant", question: "Question", autre: "Autre" };
 const SUIVIS = { traite: "Traité", sans_suite: "Sans suite" };
+const GROUPE_DEFAUT = "Cap 2027 avec David Lisnard";  // groupe choisi par défaut, le seul rangé par thème (moderation/reponses.py)
+const SEP = "|";                    // séparateur des groupes choisis dans l'adresse
 
 // ── Petits outils ────────────────────────────────────────────────────────────────────────────────────────────
 function el(balise, attrs = {}, ...enfants) {
@@ -70,12 +73,19 @@ let auteurs = new Map();     // auteur_id → bilan
 let publications = new Map(); // id → bilan
 const suiviDe = (c) => etat.suivi.get(c.code)?.etat || "a_traiter";
 
+let parGroupe = [];          // [groupe, nombre de commentaires], du plus gros au plus petit (tous groupes)
+const groupesChoisis = () => new Set(f.groupes ? f.groupes.split(SEP) : []);
+
 function preparer() {
   auteurs = new Map();
   publications = new Map();
   commentaires = [];
+  const choisis = groupesChoisis();
+  const compte = new Map();
   for (const l of etat.lignes.values()) {
     const pub = etat.pubs.get(l.publication) || null;
+    if (pub?.groupe) compte.set(pub.groupe, (compte.get(pub.groupe) || 0) + 1);
+    if (pub?.groupe && !choisis.has(pub.groupe)) continue;
     const lien = facebook(pub?.lien)
       ? pub.lien + (l.parent ? `?comment_id=${l.parent}&reply_comment_id=${l.code}` : `?comment_id=${l.code}`) : null;
     const c = { ...l, cle: `facebook:${l.code}`, categorie: l.categorie || "autre", pub, lien, t: enDate(l.date)?.getTime() ?? 0,
@@ -84,13 +94,13 @@ function preparer() {
     if (l.verifie) Object.assign(c, { pi: 0, pq: 0, pa: 0, [{ insultant: "pi", question: "pq", autre: "pa" }[c.categorie]]: 1 });
     commentaires.push(c);
     if (l.auteur_id) {
-      const a = auteurs.get(l.auteur_id) || { auteur_id: l.auteur_id, auteur: l.auteur, n: 0, insultants: 0, questions: 0, mots: 0, dernier: 0, chemin: null, liste: [] };
+      const a = auteurs.get(l.auteur_id) || { auteur_id: l.auteur_id, auteur: l.auteur, n: 0, insultants: 0, questions: 0, mots: 0, dernier: 0, groupes: {}, liste: [] };
       a.n++; a.liste.push(c);
       if (c.categorie === "insultant") a.insultants++;
       if (c.categorie === "question") a.questions++;
       if (c.mots.length) a.mots++;
       if (c.t > a.dernier) a.dernier = c.t;
-      if (pub?.chemin) a.chemin = pub.chemin;
+      if (pub?.groupe) a.groupes[pub.groupe] = pub.chemin;
       auteurs.set(l.auteur_id, a);
     }
     if (pub) {
@@ -103,13 +113,14 @@ function preparer() {
     }
   }
   for (const c of commentaires) c.a = c.auteur_id ? auteurs.get(c.auteur_id) : null;
+  parGroupe = [...compte].sort((a, b) => b[1] - a[1]);
 }
 const aTraiter = (liste, cats) => liste.reduce((s, c) => s + (cats.includes(c.categorie) && suiviDe(c) === "a_traiter" ? 1 : 0), 0);
 
 // ── État des filtres (gardé dans l'adresse de la page, pour la partager) ─────────────────────────────────────
-const DEFAUT = { vue: "commentaires", categorie: "insultant", sujet: "", theme: "", mots: "", rubrique: "", certitude: "", suivi: "a_traiter",
+const DEFAUT = { vue: "commentaires", categorie: "insultant", theme: "", mots: "", rubrique: "", certitude: "", suivi: "a_traiter",
   periode: "", du: "", au: "", texte: "", auteur: "", publication: "", auteur_id: "", auteur_nom: "", publication_id: "",
-  publication_nom: "", tri: "date", s_periode: "91", s_sujet: "" };
+  publication_nom: "", tri: "date", s_periode: "91", groupes: GROUPE_DEFAUT };
 let f = { ...DEFAUT };
 
 function lireAdresse() {
@@ -217,29 +228,48 @@ document.addEventListener("visibilitychange", () => suivreLesAutres());
 function tuiles() {
   const tuile = (classe, chiffre, libelle, regler, icone) => el("button", {
     type: "button", class: `tuile ${classe}`,
-    onclick: () => { f = { ...DEFAUT, ...regler, vue: "commentaires" }; afficher(); },
+    // Un clic garde les autres filtres et ne change que ceux de la tuile.
+    onclick: () => { f = { ...f, categorie: "", certitude: "", suivi: "a_traiter", mots: "", rubrique: "", ...regler, vue: "commentaires" }; afficher(); },
   }, el("span", { class: "icone", "aria-hidden": "true" }, icone), el("span", { class: "chiffre" }, nombre(chiffre)), el("span", { class: "libelle" }, libelle));
-  const avecMots = commentaires.filter((c) => c.mots.length && suiviDe(c) === "a_traiter").length;
+  // Les chiffres suivent les filtres en cours (groupes, période, thème, recherches, auteur, publication).
+  const vus = filtrer({ pourTuiles: true });
+  const avecMots = vus.filter((c) => c.mots.length && suiviDe(c) === "a_traiter").length;
   $("tuiles").replaceChildren(
-    tuile("insultant", aTraiter(commentaires, ["insultant"]), "insultants à traiter", { categorie: "insultant" }, "!"),
-    tuile("question", aTraiter(commentaires, ["question"]), "questions à traiter", { categorie: "question" }, "?"),
-    tuile("mots", avecMots, "mots surveillés à traiter", { categorie: "", mots: "oui" }, "⚑"),
-    tuile("ok", commentaires.filter((c) => suiviDe(c) === "traite").length, "marqués « traité »", { categorie: "", suivi: "traite" }, "✓"),
+    tuile("insultant", aTraiter(vus, ["insultant"]), "insultants à traiter", { categorie: "insultant" }, "!"),
+    tuile("question", aTraiter(vus, ["question"]), "questions à traiter", { categorie: "question" }, "?"),
+    tuile("mots", avecMots, "mots surveillés à traiter", { mots: "oui" }, "⚑"),
+    tuile("ok", vus.filter((c) => suiviDe(c) === "traite").length, "marqués « traité »", { suivi: "traite" }, "✓"),
   );
 }
 
+// ── Filtre des groupes (pour toutes les vues) ────────────────────────────────────────────────────────────────
+function listeGroupes() {
+  const choisis = groupesChoisis();
+  $("f-groupes").replaceChildren(...parGroupe.map(([g, n]) => el("label", {},
+    el("input", { type: "checkbox", value: g, checked: choisis.has(g), onchange: (ev) => {
+      const s = groupesChoisis();
+      if (ev.target.checked) s.add(g); else s.delete(g);
+      f.groupes = [...s].join(SEP);
+      preparer();
+      afficher();
+    } }),
+    el("span", {}, g), el("span", { class: "n" }, nombre(n)))));
+  $("note-groupes").hidden = !parGroupe.length;
+}
+
 // ── Menu de l'auteur ─────────────────────────────────────────────────────────────────────────────────────────
-function menuAuteur(ancre, { nom, id, chemin }) {
+function menuAuteur(ancre, { nom, id, groupes }) {
   const m = $("menu");
   const lienMenu = (href, titre, detail) => href && el("a", { href, target: "_blank", rel: "noopener noreferrer", role: "menuitem" },
     titre, " ↗", detail && el("small", {}, detail));
   m.replaceChildren(
     el("div", { class: "entete-menu" }, nom || "Auteur inconnu"),
     lienMenu(profil(id), "Voir son profil Facebook"),
-    lienMenu(ficheGroupe(chemin, id), "Sa fiche dans le groupe", "Administrateurs : « … » → Retirer du groupe, Bloquer, Mettre en sourdine"),
+    ...Object.entries(groupes || {}).filter(([, ch]) => ch).map(([g, ch]) =>
+      lienMenu(ficheGroupe(ch, id), `Sa fiche dans « ${raccourci(g, 34)} »`, "Administrateurs : « … » → Retirer du groupe, Bloquer, Mettre en sourdine")),
     id && el("button", { type: "button", role: "menuitem", onclick: () => {
       fermerMenu();
-      f = { ...DEFAUT, vue: "commentaires", categorie: "", suivi: "", auteur_id: id, auteur_nom: nom || id };
+      f = { ...DEFAUT, groupes: f.groupes, vue: "commentaires", categorie: "", suivi: "", auteur_id: id, auteur_nom: nom || id };
       afficher();
     } }, "Tous ses commentaires ici"),
     nom && el("button", { type: "button", role: "menuitem", onclick: () => {
@@ -258,9 +288,9 @@ function fermerMenu() { $("menu").hidden = true; }
 document.addEventListener("click", (e) => { if (!e.target.closest("#menu, .auteur")) fermerMenu(); });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") fermerMenu(); });
 
-function boutonAuteur(nom, id, chemin) {
+function boutonAuteur(nom, id, groupes) {
   return el("button", { type: "button", class: "auteur", "aria-haspopup": "menu",
-    onclick: (ev) => { ev.stopPropagation(); menuAuteur(ev.currentTarget, { nom, id, chemin }); } }, nom || "Auteur inconnu");
+    onclick: (ev) => { ev.stopPropagation(); menuAuteur(ev.currentTarget, { nom, id, groupes }); } }, nom || "Auteur inconnu");
 }
 
 // Bouton « afficher la suite » commun aux trois vues : la liste est déjà calculée, on n'en montre qu'une partie.
@@ -277,21 +307,23 @@ function suite(zone, cible, liste, faire, libelle) {
 }
 
 // ── Vue Commentaires ─────────────────────────────────────────────────────────────────────────────────────────
-function filtrer() {
+// pourTuiles : les compteurs du haut suivent tous les filtres (groupes, période, thème, recherches, auteur,
+// publication) sauf ceux que fixe une tuile (catégorie, certitude, suivi, mots surveillés), sans quoi elles se
+// videraient l'une l'autre.
+function filtrer({ pourTuiles = false } = {}) {
   const du = f.du ? Date.parse(f.du + "T00:00:00Z") : f.periode ? Date.now() - Number(f.periode) * 864e5 : null;
   const au = f.au ? Date.parse(f.au + "T00:00:00Z") + 864e5 : null;
   const mt = mots(f.texte), ma = mots(f.auteur), mp = mots(f.publication);
-  const certitude = f.categorie && f.certitude ? Number(f.certitude) : null;
+  const certitude = !pourTuiles && f.categorie && f.certitude ? Number(f.certitude) : null;
   const cleP = { insultant: "pi", question: "pq", autre: "pa" }[f.categorie];
   const liste = commentaires.filter((c) => {
-    if (f.categorie && c.categorie !== f.categorie) return false;
-    if (f.sujet && c.cible !== f.sujet) return false;
+    if (!pourTuiles && f.categorie && c.categorie !== f.categorie) return false;
     if (f.theme === "avec" && !themesDu(c).length) return false;
     if (f.theme && f.theme !== "avec" && !themesDu(c).includes(f.theme)) return false;
-    if (f.mots && !c.mots.length) return false;
-    if (f.mots && f.rubrique && !c.mots.some((m) => m.rubrique === f.rubrique)) return false;
+    if (!pourTuiles && f.mots && !c.mots.length) return false;
+    if (!pourTuiles && f.mots && f.rubrique && !c.mots.some((m) => m.rubrique === f.rubrique)) return false;
     if (certitude != null && !((c[cleP] ?? 0) >= certitude)) return false;
-    if (f.suivi && suiviDe(c) !== f.suivi) return false;
+    if (!pourTuiles && f.suivi && suiviDe(c) !== f.suivi) return false;
     if (du != null && c.t < du) return false;
     if (au != null && c.t >= au) return false;
     if (f.auteur_id && c.auteur_id !== f.auteur_id) return false;
@@ -301,6 +333,7 @@ function filtrer() {
     if (mp.length && !contientTout(c.pub ? (c.pub.nt ??= normal(c.pub.titre)) : "", mp)) return false;
     return true;
   });
+  if (pourTuiles) return liste;
   const tris = {
     date: (a, b) => b.t - a.t,
     ancien: (a, b) => a.t - b.t,
@@ -316,18 +349,16 @@ function carteCommentaire(c) {
   const proba = c[{ insultant: "pi", question: "pq", autre: "pa" }[cat]];
   const badge = el("span", { class: `badge ${cat}`, title: c.verifie ? "Catégorie vérifiée à la lecture" : "Catégorie donnée par le modèle" },
     CATEGORIES[cat] || cat, proba != null ? ` · ${pourcent(proba)}` : "");
-  const sujet = c.cible === "L" && el("span", { class: "badge lisnard", title: cat === "insultant"
-    ? "L'insulte vise David Lisnard, Nouvelle Énergie ou leurs soutiens" : "Le commentaire parle de David Lisnard ou de Nouvelle Énergie" },
-  cat === "insultant" ? "vise Lisnard / NE" : "Lisnard / NE");
   const motsTrouves = [...new Map(c.mots.map((m) => [m.mot, m])).values()];
 
   const infoSuivi = el("span", { class: "suivi-info" });
   const bTraite = el("button", { type: "button", class: "bouton" }, "✓ Traité");
   const bSans = el("button", { type: "button", class: "bouton" }, "Sans suite");
   const carte = el("article", { class: `carte commentaire ${cat}`, "data-code": c.code },
-    el("div", { class: "tete" }, badge, sujet, boutonAuteur(c.auteur, c.auteur_id, c.pub?.chemin),
+    el("div", { class: "tete" }, badge, boutonAuteur(c.auteur, c.auteur_id, c.a?.groupes ?? (c.pub?.groupe ? { [c.pub.groupe]: c.pub.chemin } : {})),
       el("time", { datetime: c.date, title: dateLongue(c.date) }, quand(c.date)),
       c.parent && el("span", {}, "réponse à un commentaire"),
+      groupesChoisis().size > 1 && c.pub?.groupe && el("span", { class: "pale" }, raccourci(c.pub.groupe, 40)),
       themesDu(c).map((t) => el("span", { class: "badge theme", title: "Thème du commentaire (pour les réponses préparées)" }, nomTheme(t)))),
     el("p", { class: "texte" }, ...surligner(c.texte || "", c.mots)),
     motsTrouves.length > 0 && el("div", { class: "mots-trouves" }, el("span", { class: "pale" }, "Mots surveillés :"),
@@ -389,7 +420,7 @@ function puces() {
 }
 
 function majControles() {
-  for (const [id, cle] of [["f-categorie", "categorie"], ["f-sujet", "sujet"], ["f-mots", "mots"], ["f-suivi", "suivi"], ["f-periode", "periode"]]) {
+  for (const [id, cle] of [["f-categorie", "categorie"], ["f-mots", "mots"], ["f-suivi", "suivi"], ["f-periode", "periode"]]) {
     for (const b of $(id).querySelectorAll("button")) b.setAttribute("aria-pressed", b.dataset.v === f[cle] && !(cle === "periode" && f.du));
   }
   majFiltreTheme();
@@ -446,7 +477,7 @@ function vueAuteurs() {
   const corps = $("a-lignes");
   corps.replaceChildren();
   suite($("a-suite"), corps, liste, (a) => el("tr", {},
-    el("td", {}, boutonAuteur(a.auteur, a.auteur_id, a.chemin)),
+    el("td", {}, boutonAuteur(a.auteur, a.auteur_id, a.groupes)),
     el("td", { class: `n ${a.insultants ? "fort" : ""}` }, nombre(a.insultants)),
     el("td", { class: "n" }, nombre(a.a_traiter)),
     el("td", { class: `n ${a.mots ? "fort-mots" : ""}` }, nombre(a.mots)),
@@ -483,7 +514,7 @@ function vuePublications() {
     el("div", { class: "actions" },
       facebook(p.lien) && el("a", { class: "bouton", href: p.lien, target: "_blank", rel: "noopener noreferrer" }, "Ouvrir sur Facebook ↗"),
       el("button", { type: "button", class: "bouton", onclick: () => {
-        f = { ...DEFAUT, vue: "commentaires", categorie: "", suivi: "", publication_id: String(p.id),
+        f = { ...DEFAUT, groupes: f.groupes, vue: "commentaires", categorie: "", suivi: "", publication_id: String(p.id),
           publication_nom: raccourci(p.titre || "publication sans texte", 50) };
         afficher();
       } }, "Voir ses commentaires"))), "Afficher les suivantes");
@@ -492,7 +523,7 @@ function vuePublications() {
 // ── Vue Statistiques ─────────────────────────────────────────────────────────────────────────────────────────
 function vueStatistiques() {
   vueStats($("vue-stats"), {
-    commentaires, suivi: etat.suivi, reglages: { periode: f.s_periode, sujet: f.s_sujet },
+    commentaires, suivi: etat.suivi, reglages: { periode: f.s_periode },
     changer: (cle, v) => { f[`s_${cle}`] = v; afficher({ garderPosition: true }); },
   });
 }
@@ -502,6 +533,7 @@ function afficher({ garderPosition = false } = {}) {
   const y = window.scrollY;
   fermerMenu();
   ecrireAdresse();
+  listeGroupes();
   tuiles();
   $("tuiles").hidden = f.vue === "stats";
   for (const b of document.querySelectorAll(".onglets button")) {
@@ -518,7 +550,7 @@ function afficher({ garderPosition = false } = {}) {
 for (const b of document.querySelectorAll(".onglets button")) {
   b.addEventListener("click", () => { f.vue = b.dataset.vue; afficher(); window.scrollTo(0, 0); });
 }
-for (const [id, cle] of [["f-categorie", "categorie"], ["f-sujet", "sujet"], ["f-mots", "mots"], ["f-suivi", "suivi"], ["f-periode", "periode"]]) {
+for (const [id, cle] of [["f-categorie", "categorie"], ["f-mots", "mots"], ["f-suivi", "suivi"], ["f-periode", "periode"]]) {
   $(id).addEventListener("click", (e) => {
     const b = e.target.closest("button");
     if (!b) return;
@@ -539,7 +571,7 @@ for (const [id, cle] of [["f-texte", "texte"], ["f-auteur", "auteur"], ["f-publi
   $(id).addEventListener("input", attendre((e) => { f[cle] = e.target.value; afficher(); }));
 }
 $("tri").addEventListener("change", (e) => { f.tri = e.target.value; afficher(); });
-$("reinitialiser").addEventListener("click", () => { f = { ...DEFAUT, categorie: "", suivi: "" }; afficher(); });
+$("reinitialiser").addEventListener("click", () => { f = { ...DEFAUT, groupes: f.groupes, categorie: "", suivi: "" }; afficher(); });
 $("a-nom").addEventListener("input", attendre(vueAuteurs));
 $("a-tri").addEventListener("change", vueAuteurs);
 $("p-texte").addEventListener("input", attendre(vuePublications));

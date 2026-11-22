@@ -1,0 +1,17 @@
+affirmation,variante,grandeur,valeur,unite,annee,chiffre_annonce,sources,methode,note
+NRJ-01,mai 2017 → 2026-08,"Hausse des prix du gaz pour les ménages (IPCH, poste gaz)",144.4,%,2026,150 %,EUROSTAT-IPCH-ENERGIE,M1,août 2026 : dernier mois connu le jour du discours (12/09/2026)
+NRJ-01,mai 2017 → 2026-09,"Hausse des prix du gaz pour les ménages (IPCH, poste gaz)",152.6,%,2026,150 %,EUROSTAT-IPCH-ENERGIE,M1,ensemble des prix : 26.7 %
+NRJ-02,"gazole, octobre 2018 → mars 2019","Prix TTC le plus haut d'une semaine, France",1.533,€/l,2018,« on dépassait les 2 euros »,CE-BULLETIN-PETROLIER,M2,semaine du 15/10/2018
+NRJ-02,"essence SP95, octobre 2018 → mars 2019","Prix TTC le plus haut d'une semaine, France",1.574,€/l,2018,« on dépassait les 2 euros »,CE-BULLETIN-PETROLIER,M2,semaine du 15/10/2018
+NRJ-02,avant 2022,"Prix TTC le plus haut d'une semaine, France, gazole et essence",1.666,€/l,2005-2021,« on dépassait les 2 euros »,CE-BULLETIN-PETROLIER,M2,les 2 € ont été dépassés pour la première fois en 2022
+NRJ-03,2026-01 → 2026-08,Marge brute de raffinage sur Brent : rapport entre les deux mois,7.6,fois,2026,"7,5 fois",DGEC-MARGE-RAFFINAGE,M3,32 €/t → 246 €/t
+NRJ-03,2026-02 → 2026-08,Marge brute de raffinage sur Brent : rapport entre les deux mois,6.0,fois,2026,"7,5 fois",DGEC-MARGE-RAFFINAGE,M3,41 €/t → 246 €/t
+NRJ-03,2026-01 → 2026-09,Marge brute de raffinage sur Brent : rapport entre les deux mois,7.3,fois,2026,"7,5 fois",DGEC-MARGE-RAFFINAGE,M3,32 €/t → 235 €/t
+NRJ-03,2026-02 → 2026-09,Marge brute de raffinage sur Brent : rapport entre les deux mois,5.7,fois,2026,"7,5 fois",DGEC-MARGE-RAFFINAGE,M3,41 €/t → 235 €/t
+NRJ-03,moyenne 2025 → août 2026,Marge brute de raffinage : rapport à la moyenne de 2025,4.3,fois,2026,"7,5 fois",DGEC-MARGE-RAFFINAGE,M3,
+NRJ-04,"gazole, février 2026",Prix TTC moyen avant la hausse de mars 2026,1.672,€/l,2026,"1,70 €, « le prix d'avant la crise »",DGEC-PRIX-CARBURANTS,M4,
+NRJ-04,"gazole, septembre 2026",Prix TTC moyen au moment de la proposition,2.325,€/l,2026,"ramener à 1,70 €",DGEC-PRIX-CARBURANTS,M4,baisse demandée : -27 %
+NRJ-04,"SP95-E10, février 2026",Prix TTC moyen avant la hausse de mars 2026,1.686,€/l,2026,"1,70 €, « le prix d'avant la crise »",DGEC-PRIX-CARBURANTS,M4,
+NRJ-04,"SP95-E10, septembre 2026",Prix TTC moyen au moment de la proposition,2.122,€/l,2026,"ramener à 1,70 €",DGEC-PRIX-CARBURANTS,M4,baisse demandée : -20 %
+NRJ-05,"France, 2025",Part des renouvelables dans la consommation finale brute d'énergie,23.9,%,2025,100 % en 2060,EUROSTAT-PART-RENOUVELABLES,M5,UE : 26.2 %
+NRJ-05,"France, 2024",Part du nucléaire dans la production brute d'électricité,66.6,%,2024,fermeture des réacteurs à 60 ans,EUROSTAT-PRODUCTION-ELEC,M5,renouvelables : 27.3 %

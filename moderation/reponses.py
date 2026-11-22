@@ -5,7 +5,7 @@ réponse (« Macron bis », « le RN fera mieux »…) : le site de modération 
 réponses toutes faites, plusieurs par objection et dans des styles différents (chiffres, arguments, courte,
 bienveillante, punchline). Deux choses pour y arriver :
 
-1. La bibliothèque des réponses : moderation/reponses.xlsx (feuilles « Réponses » et « Thèmes »), écrite d'abord
+1. La bibliothèque des réponses : donnees/moderation/reponses.xlsx (feuilles « Réponses » et « Thèmes »), écrite d'abord
    par Claude à partir des synthèses des thèmes (donnees/critiques/themes.json) et des faits vérifiés
    (verification/ : seulement les chiffres jugés exacts ou plutôt exacts, et les mesures présentées comme des
    propositions). Elle est copiée dans les tables reponses et reponses_themes de Supabase, où les modérateurs
@@ -23,26 +23,24 @@ bienveillante, punchline). Deux choses pour y arriver :
    « numéro: T31 T43 » ou « numéro: - » par commentaire). Ce qui est rangé ne l'est jamais deux fois. Les thèmes
    partent dans la colonne themes de la table moderation (moderation/publication.py).
 
-Fichiers : moderation/reponses.xlsx (la bibliothèque, dans le dépôt), donnees/moderation/reponses_etat.json
+Fichiers : donnees/moderation/reponses.xlsx (la bibliothèque, dans le dépôt), donnees/moderation/reponses_etat.json
 (empreintes de la dernière synchronisation), donnees/moderation/themes.csv (cle, themes, lot, par, le) et
 donnees/moderation/lots_themes/ (lots tirés, lectures).
 """
 import random
 import re
 import secrets
-from pathlib import Path
 
 from commun.fichiers import ecrire_csv, ecrire_json, lire_csv, lire_json
 from commun.textes import empreinte, maintenant
 from moderation import donnees as d
 
-ICI = Path(__file__).resolve().parent
-FICHIER = ICI / "reponses.xlsx"
+FICHIER = d.DOSSIER / "reponses.xlsx"  # la bibliothèque (donnees/moderation/, suivie dans git)
 ETAT = d.DOSSIER / "reponses_etat.json"
 CLASSEMENT = d.DOSSIER / "themes.csv"
 LOTS = d.DOSSIER / "lots_themes"
 
-# Le groupe que montre le site de modération (même liste que moderation_publications() dans web/schema.sql).
+# Le seul groupe rangé par thème (le site montre tous les groupes, celui-ci choisi par défaut : GROUPE_DEFAUT de site/js/app.js).
 GROUPES = ("Cap 2027 avec David Lisnard",)
 STYLES = {"chiffres": "Avec des chiffres", "arguments": "Argumentée", "courte": "Courte",
           "bienveillante": "Bienveillante", "punchline": "Punchline"}
@@ -180,7 +178,7 @@ def ecrire_fichier(contenu: dict[str, dict[str, dict]]) -> None:
 
 def themes_analyse() -> dict[str, dict]:
     """Les thèmes de l'analyse (donnees/critiques/themes.json), au format de la feuille « Thèmes »."""
-    from critiques import donnees as cd
+    from commun.critiques import donnees as cd
     t = lire_json(cd.THEMES, {}) or {}
     return {i: _normal("themes", {"id": i, "nom": v["nom"], "famille": cd.FAMILLES.get(v.get("famille"), ""),
                                   "definition": v.get("definition", ""), "actif": True, "par": "analyse"})
@@ -190,10 +188,10 @@ def themes_analyse() -> dict[str, dict]:
 # ── Synchronisation avec Supabase ─────────────────────────────────────────────────────────────────────────────
 
 def _base():
-    from web import acces
-    from web.supabase import Base
+    from commentaires import acces
+    from commentaires.supabase import Base
     if not acces.pret_a_publier():
-        raise SystemExit("Supabase n'est pas configuré (config/web.json) : lancer d'abord « python -m web installer ».")
+        raise SystemExit("Supabase n'est pas configuré (config/web.json) : lancer d'abord « python -m commentaires installer ».")
     a = acces.lire()
     return Base(a["supabase_url"], a["supabase_cle_secrete"])
 
@@ -281,7 +279,7 @@ def lire_classement() -> dict[str, dict]:
 
 def themes_lus_par_claude() -> dict[str, list[str]]:
     """Thèmes des critiques et doutes rangés par Claude pour l'analyse (rattachements.csv), par commentaire."""
-    from critiques import donnees as cd
+    from commun.critiques import donnees as cd
     sortie: dict[str, list[str]] = {}
     for r in lire_csv(cd.RATTACHEMENTS):
         if r.get("sens") in ("C", "D") and r["theme"] not in sortie.setdefault(r["cle"], []):
@@ -309,11 +307,11 @@ def _tonalite(c: dict) -> float | None:
 
 
 def a_lire(mode: str = "reponses") -> list[dict]:
-    """Les commentaires du groupe à ranger, du plus récent au plus ancien. mode « reponses » : ceux qui appellent
-    une réponse (question, ou commentaire négatif sur Lisnard / Nouvelle Énergie, tonalité ≤ 8 sur 20), non
+    """Les commentaires du groupe à ranger : les questions d'abord, puis les autres, chaque fois du plus long au plus
+    court (demande de l'utilisateur, 2026-11-20). mode « reponses » : ceux qui appellent
+    une réponse (question, ou commentaire négatif, tonalité de l'analyse ≤ 8 sur 20), non
     insultants, d'au moins 5 mots ; mode « tout » : tous les non insultants d'au moins 5 mots."""
-    from moderation import publication
-    notes, ann, cib = d.lire_notes(), d.lire_annotations(), publication.cibles()
+    notes, ann = d.lire_notes(), d.lire_annotations()
     deja = set(lire_classement()) | set(themes_lus_par_claude())
     reserves = {cle for f in LOTS.glob("lot_*.json") if not (j := lire_json(f) or {}).get("lu_le")
                 for cle in j.get("commentaires", {}).values()}
@@ -325,10 +323,10 @@ def a_lire(mode: str = "reponses") -> list[dict]:
         if cat == "insultant" or len(c["texte"].split()) < 5:
             continue
         t = _tonalite(c)
-        if mode == "reponses" and not (cat == "question" or (cib.get(c["cle"]) == "L" and t is not None and t <= 8)):
+        if mode == "reponses" and not (cat == "question" or (t is not None and t <= 8)):
             continue
-        sortie.append(c)
-    return sorted(sortie, key=lambda c: c.get("date") or "", reverse=True)
+        sortie.append((cat != "question", -len(c["texte"]), c["cle"], c))
+    return [x[-1] for x in sorted(sortie, key=lambda x: x[:3])]
 
 
 def texte_du_lot(lot: list[dict], themes: dict[str, dict]) -> str:
@@ -340,7 +338,8 @@ def texte_du_lot(lot: list[dict], themes: dict[str, dict]) -> str:
 
 
 def tirer(n: int = TAILLE_LOT, mode: str = "reponses") -> int:
-    """Prépare le lot suivant (les plus récents d'abord) et l'écrit dans lots_themes/lot_K.txt."""
+    """Prépare le lot suivant (questions d'abord, puis du plus long au plus court) et l'écrit dans
+    lots_themes/lot_K.txt."""
     if mode not in ("reponses", "tout"):
         raise SystemExit("Mode inconnu (au choix : reponses, tout).")
     try:  # les thèmes ajoutés par les modérateurs depuis la dernière fois

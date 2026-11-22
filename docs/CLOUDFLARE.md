@@ -45,7 +45,7 @@ data/commentaires/nouvelle-energie/<source>_<AAAA-MM-JJ>.parquet
   regrouper ses commentaires, mais on ne peut pas remonter au compte, même en essayant des noms. Perdre la clé change
   tous les identifiants (les fichiers sont alors refaits), rien de plus. Les colonnes `compte` et `groupe` restent :
   ce sont les pages, chaînes et groupes publics suivis, pas des personnes.
-- Le site (Supabase, Vercel, `python -m web`) ne change pas et ne dépend pas de cet export.
+- Le site (Supabase, Vercel, `python -m commentaires`) ne change pas et ne dépend pas de cet export.
 
 Lire nos fichiers (Python, boto3 + pyarrow) :
 
@@ -60,13 +60,13 @@ table = pq.read_table(io.BytesIO(s3.get_object(Bucket="rag-politique-sources-pri
 ## Lancer l'export
 
 ```
-python -m cloudflare              refait le fichier de chaque source, envoie ceux qui ont changé
-python -m cloudflare preparer     seulement les Parquet, dans donnees/cloudflare/lots/
-python -m cloudflare envoyer      seulement l'envoi des fichiers préparés qui diffèrent du bucket
-python -m cloudflare etat         par source : fichier, commentaires, déposé ou en attente
+python -m commun.cloudflare              refait le fichier de chaque source, envoie ceux qui ont changé
+python -m commun.cloudflare preparer     seulement les Parquet, dans donnees/cloudflare/lots/
+python -m commun.cloudflare envoyer      seulement l'envoi des fichiers préparés qui diffèrent du bucket
+python -m commun.cloudflare etat         par source : fichier, commentaires, déposé ou en attente
 ```
 
-- Automatique : après chaque collecte qui ramène du neuf (`python -m collecte`, après la publication du site).
+- Automatique : après chaque collecte qui ramène du neuf (`python -m commun.collecte`, après la publication du site).
 - Depuis l'interface : bouton **Export Cloudflare** en haut de la fenêtre (le suivi s'affiche dans le journal).
 - Clés : `config/cloudflare.env` (privé, hors git ; modèle `config/cloudflare.exemple.env`) : `R2_ENDPOINT`,
   `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` pour R2, `CF_API_TOKEN` et `CF_ACCOUNT_ID` pour l'API Cloudflare, et
@@ -74,3 +74,12 @@ python -m cloudflare etat         par source : fichier, commentaires, déposé o
 - `donnees/cloudflare/lots/` garde le dernier fichier de chaque source ; `etat.json` retient, par source, le fichier
   préparé et le fichier déposé (empreinte du contenu, MD5). Si ce dossier est perdu, l'export suivant refait les
   fichiers et remplace ceux du bucket : toujours un seul fichier par source.
+
+## Vérification factuelle : plus aucun envoi (2026-11-20)
+
+Le projet n'envoie plus rien de la vérification sur R2 (décision de l'utilisateur) : le code de publication est
+retiré. Ce qui avait été déposé le 2026-11-14 dans le bucket public `rag-politique-sources` reste en place, sauf les
+scripts : sous `data/programmes/nouvelle-energie/verification/`, `SYNTHESE.md`, `registre_affirmations.csv` et, par
+thème, `resultats.csv`, `METHODE.md`, `candidats.csv`, `graphiques/` (55 fichiers). Les 16 `calculer.py` en ont été
+supprimés le 2026-11-20 (pas de code dans le bucket). Les originaux (`originaux/ne/verification/` : affirmations,
+sources, fichiers bruts) ont été retirés du bucket par un autre membre du groupe et ne sont plus republiés.

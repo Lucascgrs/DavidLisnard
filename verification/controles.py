@@ -11,7 +11,7 @@ import csv
 import re
 from pathlib import Path
 
-from .commun.chemins import THEMES
+from .commun.personnes import personne
 from .commun.sources import sha256
 
 ECHELLE = ["exact", "plutôt exact", "trompeur", "faux", "invérifiable", "opinion ou promesse"]
@@ -84,8 +84,8 @@ def verifier_theme(d: Path) -> list[str]:
     return err
 
 
-def verifier(theme: str | None = None) -> bool:
-    dossiers = [d for d in sorted(THEMES.iterdir()) if d.is_dir()]
+def verifier(theme: str | None = None, cle: str | None = None) -> bool:
+    dossiers = [d for d in sorted(personne(cle).themes.iterdir()) if d.is_dir()]
     if theme:
         dossiers = [d for d in dossiers if d.name == theme or d.name.split("_")[0] == theme.zfill(2)]
     erreurs = []

@@ -1,0 +1,21 @@
+## clara-egger/pdf-clara-egger-pdf.txt
+H1 | Référendum sur la révision de l'article 89 : RIC constituant (700 000 signatures en 18 mois) et référendum obligatoire sur toute révision constitutionnelle
+H1 | Le président refuse les ordonnances qui priveraient le Parlement d'un débat et s'oppose au 49.3
+H1 | Ne dissoudre l'Assemblée que si elle ne peut soutenir un gouvernement ou si les citoyens le demandent
+O2 -1 | Soumettre à référendum toute loi touchant au fonctionnement de la justice, pour garantir son indépendance
+H1 | Nommer les membres du Conseil constitutionnel avec l'approbation des trois cinquièmes des commissions
+H1 | Référendum obligatoire sur les budgets et référendum veto sur les lois et les traités
+E2 +1 | Aucun déficit sans le consentement des électeurs : la loi de finances soumise chaque année à référendum
+E5 +1 | Protéger ceux qui travaillent, entreprennent ou investissent contre les revirements de la législation et les excès de bureaucratie
+S1 +1 | Aucun traité durable ratifié sans le consentement des citoyens ; vote obligatoire sur les traités à portée constitutionnelle
+S2 0 | Rendre transparentes les décisions de défense ; les interventions armées pourront être remises en cause par un vote populaire
+H1 | Réunir les maires pour élaborer les réformes territoriales
+E4 0 | Enquête publique sur les régimes spéciaux de retraite (hauts fonctionnaires, responsables politiques) ; grandes réformes soumises à référendum
+E7 0 | Bilan des politiques environnementales et principales décisions écologiques soumises à référendum
+E7 0 | Référendum sur la place du nucléaire, puis commission d'experts sur l'approvisionnement énergétique à 50 ans
+O3 0 | Bilan public des politiques migratoires depuis trente ans ; décisions majeures soumises à référendum sur demande
+O6 0 | Évaluer l'efficacité des politiques éducatives et créer une commission de spécialistes
+O5 -1 | Ne recourir à l'article 16 qu'en cas de menace grave ; mesures d'urgence validées par le Parlement et les citoyens
+S1 0 | Négocier des clauses de retrait des engagements européens ; respecter un éventuel vote de sortie de l'UE
+S1 +1 | Défendre une Europe où les peuples décident eux-mêmes de la coopération qu'ils veulent
+E4 0 | Bilans publics réguliers du système de santé ; grands investissements de santé soumis à référendum

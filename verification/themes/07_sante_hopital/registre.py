@@ -2,6 +2,7 @@
 from pathlib import Path
 
 from verification.commun.registre import ecrire
+from verification.commun.chemins import donnees_de
 
 THEME = "Santé et hôpital"
 PS = "24b9759cb8fd9a3e"  # page programme Santé (site Nouvelle Énergie, version de septembre 2026)
@@ -31,4 +32,4 @@ A = [
 ]
 
 if __name__ == "__main__":
-    print(ecrire(Path(__file__).resolve().parent / "affirmations.csv", THEME, A), "affirmations")
+    print(ecrire(donnees_de(__file__) / "affirmations.csv", THEME, A), "affirmations")

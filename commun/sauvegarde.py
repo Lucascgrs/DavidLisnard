@@ -13,7 +13,7 @@ Ce qui est copié, dans cet ordre (le plus irremplaçable d'abord) :
 Pour chaque source : les CSV bruts, etat.json (ce qui a déjà été lu) et likes.json. Les fichiers sont copiés tels
 quels, dans le format où le projet les lit : une sauvegarde se restaure en dézippant dans donnees/. Le corpus
 (donnees/analyse/corpus.csv, avec les notes des deux modèles), les vecteurs et les modèles ne sont pas copiés : tout
-cela se recalcule depuis les fichiers ci-dessus (python -m analyse, python -m moderation classer --tout).
+cela se recalcule depuis les fichiers ci-dessus (python -m commun.analyse, python -m moderation classer --tout).
 
 Une seule sauvegarde est gardée. La nouvelle est d'abord écrite dans un fichier temporaire, relue en entier, et ne
 remplace l'ancienne qu'ensuite : on ne se retrouve jamais sans sauvegarde, même si l'écriture est coupée.
@@ -22,7 +22,7 @@ Garde-fou : les CSV de collecte ne font que grandir. Si l'un d'eux a disparu ou 
 c'est le signe d'un accident (fichier écrasé ou tronqué) : l'ancienne sauvegarde est gardée, la nouvelle est mise de
 côté dans donnees_a_verifier.zip, et le journal le dit. --forcer passe outre.
 
-La sauvegarde se fait seule à la fin de chaque collecte (collecte/__main__.py).
+La sauvegarde se fait seule à la fin de chaque collecte (commun/collecte/__main__.py).
 """
 import json
 import sys

@@ -1,0 +1,5 @@
+affirmation,variante,grandeur,valeur,unite,annee,chiffre_annonce,sources,methode,note
+LOG-01,"fin 2024, ministère",Ménages demandeurs d'un logement social,2.76,millions,2024,"2,8 millions de personnes ; près de 3 millions de ménages",BDT-LOGEMENTS-SOCIAUX-2024,M1,"des ménages, pas des personnes"
+LOG-01,"début 2026, Fondation pour le logement",Ménages en attente d'un logement social,2.9,millions,2025,"2,8 millions",FPL-ETRE-HUMAIN-130,M1,
+LOG-02,"début 2026, Fondation pour le logement",Personnes sans domicile,350000.0,personnes,2025,350 000 « à la rue »,FPL-ETRE-HUMAIN-130; INSEE-DEF-SANS-DOMICILE,M2,au sens de l'Insee : hébergées par un service d'hébergement ou dormant dans un lieu non prévu pour l'habitation
+LOG-03,2024,Logements sociaux financés par l'État,98682.0,logements,2024,200 000 logements publics par an,BDT-LOGEMENTS-SOCIAUX-2024,M3,dont 13301 reconstitués en rénovation urbaine ; 200 000 = 2.0 fois le niveau de 2024

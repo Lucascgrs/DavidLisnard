@@ -5,20 +5,20 @@
     python -m moderation classer --tout           reclasse tout avec le modèle en service
     python -m moderation tirer [N] [mode]         prépare un lot à annoter (250 par défaut) ; modes : hasard,
                                                   questions, insultes, doutes
-    python -m moderation noter K lecture.txt      enregistre la lecture du lot K (« L: 3 » insultes visant Lisnard
-                                                  ou Nouvelle Énergie, « I: 17 » autres insultes, « Q: 5, 9 »
-                                                  questions ; le reste est « autre ») ; --test pour le jeu de
+    python -m moderation noter K lecture.txt      enregistre la lecture du lot K (« I: 3, 17 » insultes,
+                                                  « Q: 5, 9 » questions ; le reste est « autre ») ; --test pour le jeu de
                                                   test ; --par gemini si c'est Gemini qui a lu (PROMPT_GEMINI.md)
     python -m moderation relire K lecture.txt     relecture par Claude d'un lot lu par Gemini : remplace ses
                                                   annotations et donne le taux d'accord
     python -m moderation entrainer                réentraîne (≈ 30 min), mesure, puis reclasse tout (≈ 30 min)
     python -m moderation publier [--tout]         envoie ce qui a changé dans la table privée « moderation » de
                                                   Supabase (aussi fait seul après classer, noter et entrainer)
-    python -m moderation reponses                 synchronise les réponses préparées : moderation/reponses.xlsx ↔
+    python -m moderation reponses                 synchronise les réponses préparées : donnees/moderation/reponses.xlsx ↔
                                                   Supabase (ce que les modérateurs écrivent sur le site est gardé)
     python -m moderation themes etat              réponses préparées, commentaires rangés par thème, reste à ranger
-    python -m moderation themes tirer [N] [mode]  prépare un lot à ranger par thème (100 par défaut, les plus récents
-                                                  d'abord) ; modes : reponses (ceux qui appellent une réponse), tout
+    python -m moderation themes tirer [N] [mode]  prépare un lot à ranger par thème (100 par défaut, les questions
+                                                  d'abord, du plus long au plus court) ; modes : reponses (ceux qui
+                                                  appellent une réponse), tout
     python -m moderation themes noter K fichier   enregistre la lecture du lot K (« 12: T31 T43 » ou « 12: - ») ;
                                                   --par gemini si c'est Gemini qui a lu (PROMPT_GEMINI_THEMES.md)
     python -m moderation motdepasse               choisit le mot de passe du site de modération (le demande deux

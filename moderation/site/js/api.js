@@ -1,6 +1,6 @@
 // Connexion (Supabase Auth, compte partagé des modérateurs) et lecture de la base avec la session ouverte.
 // Sans session, aucune requête n'est faite ; avec une session sans le rôle « moderateur », la base ne rend rien
-// (règles de web/schema.sql).
+// (règles de commentaires/schema.sql).
 import { SUPABASE_URL, SUPABASE_CLE, EMAIL } from "./config.js";
 
 const STOCK = "moderation:session";

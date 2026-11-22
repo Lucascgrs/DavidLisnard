@@ -1,0 +1,17 @@
+affirmation,variante,grandeur,valeur,unite,annee,chiffre_annonce,sources,methode,note
+CLIM-01,2015,Écart de température mondiale à la moyenne 1991-2020,0.257,°C,2015,"records en 2016, 2020, 2023, 2024 et 2025",C3S-ERA5-TEMPERATURE,M1,nouveau record
+CLIM-01,2016,Écart de température mondiale à la moyenne 1991-2020,0.438,°C,2016,"records en 2016, 2020, 2023, 2024 et 2025",C3S-ERA5-TEMPERATURE,M1,nouveau record
+CLIM-01,2017,Écart de température mondiale à la moyenne 1991-2020,0.343,°C,2017,"records en 2016, 2020, 2023, 2024 et 2025",C3S-ERA5-TEMPERATURE,M1,pas de record : 2e année la plus chaude à cette date
+CLIM-01,2018,Écart de température mondiale à la moyenne 1991-2020,0.264,°C,2018,"records en 2016, 2020, 2023, 2024 et 2025",C3S-ERA5-TEMPERATURE,M1,pas de record : 3e année la plus chaude à cette date
+CLIM-01,2019,Écart de température mondiale à la moyenne 1991-2020,0.4,°C,2019,"records en 2016, 2020, 2023, 2024 et 2025",C3S-ERA5-TEMPERATURE,M1,pas de record : 2e année la plus chaude à cette date
+CLIM-01,2020,Écart de température mondiale à la moyenne 1991-2020,0.43,°C,2020,"records en 2016, 2020, 2023, 2024 et 2025",C3S-ERA5-TEMPERATURE,M1,pas de record : 2e année la plus chaude à cette date
+CLIM-01,2021,Écart de température mondiale à la moyenne 1991-2020,0.276,°C,2021,"records en 2016, 2020, 2023, 2024 et 2025",C3S-ERA5-TEMPERATURE,M1,pas de record : 5e année la plus chaude à cette date
+CLIM-01,2022,Écart de température mondiale à la moyenne 1991-2020,0.302,°C,2022,"records en 2016, 2020, 2023, 2024 et 2025",C3S-ERA5-TEMPERATURE,M1,pas de record : 5e année la plus chaude à cette date
+CLIM-01,2023,Écart de température mondiale à la moyenne 1991-2020,0.603,°C,2023,"records en 2016, 2020, 2023, 2024 et 2025",C3S-ERA5-TEMPERATURE,M1,nouveau record
+CLIM-01,2024,Écart de température mondiale à la moyenne 1991-2020,0.719,°C,2024,"records en 2016, 2020, 2023, 2024 et 2025",C3S-ERA5-TEMPERATURE,M1,nouveau record
+CLIM-01,2025,Écart de température mondiale à la moyenne 1991-2020,0.592,°C,2025,"records en 2016, 2020, 2023, 2024 et 2025",C3S-ERA5-TEMPERATURE,M1,pas de record : 3e année la plus chaude à cette date
+CLIM-02,1990 → 2024,Baisse des émissions de gaz à effet de serre (hors puits de carbone),32.9,%,2024,-65 % d'ici 2033,EUROSTAT-GES,M2,547 Mt → 367 Mt ; cible : 191 Mt
+CLIM-02,2014 → 2024,Rythme annuel de baisse observé,-2.2,% par an,2024,-65 % d'ici 2033,EUROSTAT-GES,M2,
+CLIM-02,2024 → 2033,Rythme annuel de baisse nécessaire,-7.0,% par an,2033,-65 % d'ici 2033,EUROSTAT-GES,M2,"ESTIMATION, non fiable à 100 % : baisse supposée régulière, base 1990, hors puits de carbone"
+CLIM-03,France hexagonale et Corse,Taux de boisement,32.0,%,2024,un tiers du territoire,IGN-MEMENTO-2025,M3,"17,6 millions d'hectares"
+CLIM-03,dernière période par rapport à la décennie précédente,Hausse de la mortalité des arbres,125.0,%,2024,+125 % en dix ans,IGN-MEMENTO-2025,M3,

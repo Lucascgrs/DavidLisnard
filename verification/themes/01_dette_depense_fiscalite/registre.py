@@ -1,6 +1,7 @@
 """Affirmations du thème 1 (citations relevées dans le corpus) → affirmations.csv.  python -m verification registre 1"""
 import csv
 from pathlib import Path
+from verification.commun.chemins import donnees_de
 T = "Dette, dépense publique et fiscalité"
 U = {
  "dd1d": ("2024-08-30", "discours, 80e anniversaire de la Libération de Cannes", "dd1d4c2e0c663e11", "https://www.unenouvelleenergie.fr/discours-de-david-lisnard-pour-le-80e-anniversaire-de-la-liberation-de-cannes"),
@@ -93,7 +94,7 @@ R = [
   "« IS ramené à 20%, la taxation du capital plafonnée à 22%, et la suppression des impôts de production (C3S et CVAE) » (29/05/2026)",
   "Écart en euros entre le taux de prélèvements français et la moyenne de la zone euro", "oui", 2),
 ]
-w = csv.writer(open(Path(__file__).resolve().parent / "affirmations.csv", "w", encoding="utf-8", newline=""))
+w = csv.writer(open(donnees_de(__file__) / "affirmations.csv", "w", encoding="utf-8", newline=""))
 w.writerow(["id", "theme", "type", "citation", "date", "support", "id_corpus", "url_source", "autres_versions",
             "grandeur_testee", "verifiable", "priorite"])
 for i, t, k, c, av, g, v, p in R:

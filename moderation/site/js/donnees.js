@@ -7,7 +7,7 @@
 // Filtres, tris et comptages se font ici, sur l'ordinateur du modérateur. Tout est effacé à la déconnexion.
 import { rest } from "./api.js";
 
-const VERSION = 3;          // changer quand la forme des données change : tout est retéléchargé (2 : cible, un seul groupe ; 3 : thèmes, réponses)
+const VERSION = 5;          // changer quand la forme des données change : tout est retéléchargé (2 : cible, un seul groupe ; 3 : thèmes, réponses ; 4 : cible retirée ; 5 : tous les groupes)
 const PAGE = 1000;          // lignes par requête (plafond de l'API Supabase)
 const RECHARGER_JOURS = 7;  // filet de sécurité : tout retélécharger au-delà
 

@@ -1,0 +1,5 @@
+affirmation,variante,grandeur,valeur,unite,annee,chiffre_annonce,sources,methode,note
+ECOLE-01,session 2025,"Bacheliers technologiques et professionnels, en % d'une génération",36.9,%,2025,50 %,DEPP-NI-26-05-BAC,M1,"technologique 15.9 %, professionnel 21.0 %"
+ECOLE-01,session 2025,Part d'une génération sans baccalauréat général,56.7,%,2025,50 %,DEPP-NI-26-05-BAC,M1,dont 19.9 % sans baccalauréat
+ECOLE-02,"2011, 18-65 ans",Adultes en situation d'illettrisme,2.5,millions,2011,près de 4 millions,INSEE-IP1426-ECRIT,M2,dernière enquête nationale de l'Insee
+ECOLE-02,"2011, 18-65 ans","Part des femmes parmi les adultes en difficulté à l'écrit (estimation, à effectifs égaux d'hommes et de femmes)",47.0,%,2011,six sur dix sont des femmes,INSEE-IP1426-ECRIT,M2,"ESTIMATION, non fiable à 100 % : 17 % des hommes et 15 % des femmes en difficulté"

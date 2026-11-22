@@ -1,0 +1,8 @@
+affirmation,variante,grandeur,valeur,unite,annee,chiffre_annonce,sources,methode,note
+EUR-01,"France, 2025",Part dans le PIB de l'UE,15.8,%,2025,18 %,EUROSTAT-PIB-PAYS-2025,M1,
+EUR-01,"France, 2025",Part dans le PIB de la zone euro,18.8,%,2025,18 %,EUROSTAT-PIB-PAYS-2025,M1,
+EUR-01,"Grèce, 2025",Part dans le PIB de l'UE,1.3,%,2025,2 %,EUROSTAT-PIB-PAYS-2025,M1,
+EUR-01,"Grèce, 2025",Part dans le PIB de la zone euro,1.6,%,2025,2 %,EUROSTAT-PIB-PAYS-2025,M1,
+EUR-02,au 2026-09-16,Dette fédérale totale des États-Unis,40.09,milliers de Md$,2026,40 000 milliards de dollars,TRESOR-US-DETTE,M2,"dernier jour publié avant la déclaration (dette fédérale, sans les États ni les collectivités)"
+EUR-02,au 2026-10-09,Dette fédérale totale des États-Unis,40.3,milliers de Md$,2026,40 000 milliards de dollars,TRESOR-US-DETTE,M2,"dernier jour publié avant la déclaration (dette fédérale, sans les États ni les collectivités)"
+EUR-03,"France, estimation 2025",Dépenses de défense (définition OTAN),2.05,% du PIB,2025,refuser les 5 %,OTAN-DEPENSES-2025,M3,"ESTIMATION, non fiable à 100 % : passer à 5 % représenterait environ 88 Md€ de plus par an au PIB de 2025"

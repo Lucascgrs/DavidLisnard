@@ -10,8 +10,8 @@ from commun.fichiers import lire_json
 RACINE = Path(__file__).resolve().parent.parent
 CONFIG = RACINE / "config"
 DONNEES = RACINE / "donnees"
-MODELES = RACINE / "modeles"
-SESSIONS = RACINE / "sessions"
+MODELES = DONNEES / "modeles"
+SESSIONS = DONNEES / "sessions"
 DOCS = RACINE / "docs"
 
 FICHIER_PERIMETRE = CONFIG / "perimetre.json"

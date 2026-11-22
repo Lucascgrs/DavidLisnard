@@ -2,6 +2,7 @@
 from pathlib import Path
 
 from verification.commun.registre import ecrire
+from verification.commun.chemins import donnees_de
 
 THEME = "Europe et international"
 A = [
@@ -30,4 +31,4 @@ A = [
 ]
 
 if __name__ == "__main__":
-    print(ecrire(Path(__file__).resolve().parent / "affirmations.csv", THEME, A), "affirmations")
+    print(ecrire(donnees_de(__file__) / "affirmations.csv", THEME, A), "affirmations")

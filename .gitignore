@@ -1,6 +1,14 @@
 # Données personnelles et secrets : ne jamais les partager (RGPD)
-donnees/
-sessions/
+# (y compris donnees/sessions/ : sessions de navigateur et cookies). Exceptions, suivies dans git : les données
+# publiques de la vérification et la bibliothèque de la modération (réponses préparées, mots surveillés).
+donnees/*
+!donnees/verification/
+!donnees/proximite/
+donnees/proximite/brut/
+!donnees/moderation/
+donnees/moderation/*
+!donnees/moderation/reponses.xlsx
+!donnees/moderation/mots_surveilles.txt
 config/cles.json
 config/compte.json
 config/facebook.env
@@ -9,8 +17,7 @@ config/*.env
 config/planification.json
 config/*.bak
 
-# Modèles entraînés (plusieurs Go)
-modeles/
+# Modèles entraînés (plusieurs Go) : dans donnees/modeles/, déjà exclus avec donnees/
 
 __pycache__/
 *.tmp
@@ -19,4 +26,4 @@ docs/FONCTIONNEMENT_rendu.html
 
 # Fichier Excel ouvert (verrou de Microsoft Office), écriture en cours
 ~$*.xlsx
-moderation/reponses_nouveau.xlsx
+donnees/moderation/reponses_nouveau.xlsx

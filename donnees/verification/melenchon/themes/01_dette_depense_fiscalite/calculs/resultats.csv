@@ -1,0 +1,19 @@
+affirmation,variante,grandeur,valeur,unite,annee,chiffre_annonce,sources,methode,note
+DETTE-01,"estimation large, 2023",Aides publiques aux entreprises (commission d'enquête du Sénat),211.0,Md€,2023,210 milliards,HCSP-AIDES-2025,M1,"comprend 41 Md€ d'interventions financières de Bpifrance (prêts, garanties) et 75 Md€ d'allégements de cotisations"
+DETTE-01,"estimation restreinte, 2023",Aides publiques aux entreprises (commission d'enquête du Sénat),108.0,Md€,2023,120 milliards,HCSP-AIDES-2025,M1,sans Bpifrance et sans 62 Md€ de dépenses fiscales déclassées ou liées à la TVA
+DETTE-02,"État, 2024",Déficit public (comptabilité nationale),152.5,Md€,2024,150 milliards,EUROSTAT-DEFICITS,M2,5.2 % du PIB
+DETTE-02,"Ensemble des administrations publiques, 2024",Déficit public (comptabilité nationale),169.1,Md€,2024,150 milliards,EUROSTAT-DEFICITS,M2,5.8 % du PIB
+DETTE-02,"État, 2025",Déficit public (comptabilité nationale),130.3,Md€,2025,150 milliards,EUROSTAT-DEFICITS,M2,4.4 % du PIB
+DETTE-02,"Ensemble des administrations publiques, 2025",Déficit public (comptabilité nationale),151.6,Md€,2025,150 milliards,EUROSTAT-DEFICITS,M2,5.1 % du PIB
+DETTE-03,"Ensemble des administrations publiques, fin 2025",Patrimoine net (actifs non financiers et financiers moins passifs),811.0,Md€,2025,patrimoine supérieur à la dette,EUROSTAT-PATRIMOINE-NF; EUROSTAT-PATRIMOINE-FIN,M3,"actifs 4728 Md€, passifs 3917 Md€"
+DETTE-03,"Ensemble des administrations publiques, fin 2025",Patrimoine net par habitant,11729.0,€,2025,plus de 10 000 €,EUROSTAT-PATRIMOINE-NF; EUROSTAT-PATRIMOINE-FIN; EUROSTAT-POPULATION,M3,population 69.1 millions
+DETTE-04,2025,Pays de l'UE dont la dette dépasse 100 % du PIB,5.0,pays,2025,5 pays,EUROSTAT-DETTE-PAYS,M4,"EL 145.4 %, IT 136.7 %, FR 115.7 %, BE 108.1 %, ES 100.5 %"
+DETTE-04,2025,Poids de ces pays dans le PIB de l'UE,41.5,%,2025,50 %,EUROSTAT-DETTE-PAYS; EUROSTAT-PIB-PAYS-2025,M4,
+DETTE-04,2025,Poids de ces pays dans le PIB de la zone euro,49.4,%,2025,50 %,EUROSTAT-DETTE-PAYS; EUROSTAT-PIB-PAYS-2025,M4,
+DETTE-05,"Grèce, 2008",Dette publique,110.9,% du PIB,2008,« déficit égal à 110 % du PIB » ; « plus de 130 % » aujourd'hui,EUROSTAT-DETTE-PAYS,M5,déficit : 10.3 % du PIB
+DETTE-05,"Grèce, 2009",Dette publique,128.5,% du PIB,2009,« déficit égal à 110 % du PIB » ; « plus de 130 % » aujourd'hui,EUROSTAT-DETTE-PAYS,M5,déficit : 15.4 % du PIB
+DETTE-05,"Grèce, 2010",Dette publique,147.8,% du PIB,2010,« déficit égal à 110 % du PIB » ; « plus de 130 % » aujourd'hui,EUROSTAT-DETTE-PAYS,M5,déficit : 11.4 % du PIB
+DETTE-05,"Grèce, 2025",Dette publique,145.4,% du PIB,2025,« déficit égal à 110 % du PIB » ; « plus de 130 % » aujourd'hui,EUROSTAT-DETTE-PAYS,M5,excédent : 2.0 % du PIB
+DETTE-06,2026,Taux normal de l'impôt sur les sociétés,25.0,%,2026,25 %,SP-IMPOT-SOCIETES,M6,taux réduit de 15 % jusqu'à 42 500 € de bénéfice pour les PME
+DETTE-06,plus de 3 Md€ de chiffre d'affaires,Contribution exceptionnelle (en % de l'impôt dû),41.2,%,2025,25 %,BOFIP-CONTRIBUTION-EXCEPTIONNELLE,M6,taux facial d'environ 35.3 % pour ces entreprises
+DETTE-07,revenus 2025,Tranches du barème de l'impôt sur le revenu,5.0,tranches,2026,5 tranches aujourd'hui,SP-BAREME-IR,M7,"0 %, 11 %, 30 %, 41 %, 45 %"

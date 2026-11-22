@@ -1,0 +1,28 @@
+## francis-lalanne/programme.txt
+S1 +3 | Frexit organisé : sortie de l'Union européenne
+S2 +3 | Sortie de l'OTAN
+S1 +3 | Retour au franc et reprise en main de la Banque de France
+S2 +2 | Retrait des troupes françaises intervenant à l'étranger sur des territoires en guerre
+S2 +2 | Fin des subventions allouées à des pays en guerre
+O5 -3 | Liberté d'expression totale : abrogation des lois « liberticides »
+O5 -2 | Refus du contrôle social (facturation électronique, obligations médicales, surveillance des citoyens)
+O6 -1 | Limiter l'État à l'instruction des enfants, l'éducation revenant aux familles
+O5 -2 | Fin du pass et des obligations médicales ; interdiction constitutionnelle des discriminations selon le statut médical
+H1 | Inscrire le RIC en toutes matières dans la Constitution
+H1 | Créer une assemblée constituante
+H1 | Filmer les réunions du Conseil des ministres
+H1 | Bloquer les lobbys et les intérêts étrangers et des multinationales
+E1 +3 | Baisse radicale des impôts, surtout des taxes sur les carburants
+E6 -2 | Gratuité des transports publics
+E1 +2 | Baisse drastique des charges des TPE, PME et artisans
+E5 -3 | Nationalisation des entreprises à vocation sociale et rentables pour l'État
+E6 -2 | Restauration du service public et récupération du patrimoine national cédé au privé
+E2 +1 | Aligner le salaire des élus sur le salaire moyen et réduire celui des hauts fonctionnaires
+H1 | Refonte de la justice sur le principe de l'indépendance et de la séparation des pouvoirs
+O1 +1 | Plus d'effectifs contre la pédocriminalité et les trafics
+O5 -1 | Caméras consultables par huissier dans les salles d'audience et sur les policiers en intervention
+E5 -1 | Refonte de la politique agricole selon les revendications des petits exploitants
+S3 +2 | Souveraineté alimentaire : produire en France de quoi nourrir le pays
+E5 +1 | Liberté de cultiver et d'élever pour se nourrir
+S2 +2 | Rapprochement avec la Russie et les BRICS, relance de la francophonie
+S2 0 | Politique partenariale et fraternelle avec l'Afrique

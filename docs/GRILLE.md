@@ -94,13 +94,13 @@ Ce que le commentaire apprend sur la façon dont Lisnard est perçu.
 | 20 | argumentation détaillée et riche sur lui, ses idées ou sa façon de faire | |
 
 **Garde-fou contre la dérive.** Au fil des lots 18 à 142, la pertinence a glissé vers le bas : des « Bravo » notés 0,
-des avis argumentés notés 3. Elle a été recalée le 2026-11-09 (analyse/recalage_pertinence.py, bilan dans
+des avis argumentés notés 3. Elle a été recalée le 2026-11-09 (commun/analyse/recalage_pertinence.py, bilan dans
 donnees/analyse/annotation/recalage/bilan.json). Repères à vérifier régulièrement :
 - un éloge sans argument vaut 8, pas 0 ;
 - la moyenne des commentaires visant Lisnard doit rester autour de 8 à 9 ;
 - 0 est réservé au spam et aux attaques entre commentateurs.
 
-`python -m analyse.annotation etat` ne contrôle pas cela. Un contrôle rapide consiste à comparer la moyenne d'un lot
+`python -m commun.analyse.annotation etat` ne contrôle pas cela. Un contrôle rapide consiste à comparer la moyenne d'un lot
 récent avec celle des lots 1 à 17.
 
 ## Cas difficiles

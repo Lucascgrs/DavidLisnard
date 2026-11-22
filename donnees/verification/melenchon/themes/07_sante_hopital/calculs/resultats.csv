@@ -1,0 +1,9 @@
+affirmation,variante,grandeur,valeur,unite,annee,chiffre_annonce,sources,methode,note
+SANTE-01,1999 → 2024,Lits supprimés dans les hôpitaux publics,98198.0,lits,2024,80 000 lits en vingt-cinq ans,EUROSTAT-LITS-PROPRIETAIRE,M1,322255 → 224057 lits
+SANTE-01,"1999 → 2024, tous statuts",Lits de soins de longue durée supprimés (public et privé),54965.0,lits,2024,,EUROSTAT-LITS-TYPE,M1,83928 → 28963 lits ; lits de soins aigus : 251941 → 186273
+SANTE-02,"APL 2024, moins de 2,5 consultations par an et par habitant (zone sous-dense, seuil DREES)",Part de la population concernée,18.2,%,2024,plus d'un tiers de la population,DREES-APL-GENERALISTES,M2,part des communes : 38.1 %
+SANTE-02,"APL 2024, moins de 3 consultations par an et par habitant",Part de la population concernée,31.7,%,2024,plus d'un tiers de la population,DREES-APL-GENERALISTES,M2,part des communes : 55.4 %
+SANTE-02,"APL 2024, moins de 4 consultations par an et par habitant (seuil large)",Part de la population concernée,61.1,%,2024,plus d'un tiers de la population,DREES-APL-GENERALISTES,M2,part des communes : 82.6 %
+SANTE-03,"2015, adultes de 30 ans et plus","Cancers évitables, tous facteurs de risque étudiés",41.0,%,2015,40 %,CIRC-CANCERS-EVITABLES-2018,M3,"tabac, alcool, alimentation, surpoids en tête"
+SANTE-03,"pollution de l'air, substances chimiques, radon",Cancers attribuables à l'environnement au sens strict,1.7,%,2015,40 % « en agissant sur l'environnement »,CIRC-CANCERS-EVITABLES-2018,M3,
+SANTE-03,avec les infections et les expositions professionnelles,Cancers attribuables à l'environnement au sens large,9.3,%,2015,40 % « en agissant sur l'environnement »,CIRC-CANCERS-EVITABLES-2018,M3,sans les rayonnements ultraviolets ni les facteurs liés au mode de vie

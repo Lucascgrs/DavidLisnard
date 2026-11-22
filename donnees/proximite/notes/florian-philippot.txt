@@ -1,0 +1,80 @@
+## florian-philippot/pdf-florian-philippot-pdf.txt
+H1 | Inéligibilité à vie des élus condamnés définitivement pour corruption
+H1 | RIC sur tout sujet inscrit dans la Constitution ; révision constitutionnelle uniquement par référendum
+S1 +3 | Frexit : quitter l'UE, l'euro et Schengen
+S2 +3 | Quitter l'OTAN
+S1 +3 | Quitter la CEDH
+S2 +2 | Quitter l'OMS et dénoncer le traité mondial sur les pandémies
+S1 +2 | Quitter le marché européen de l'électricité
+E5 -3 | Rétablir le monopole public national d'EDF
+E7 -1 | Investir massivement dans le nucléaire et l'hydroélectricité
+E7 +2 | Moratoire total sur les éoliennes et démantèlement des éoliennes installées
+E5 -1 | Empêcher l'ouverture à la concurrence des barrages
+E7 +2 | Préserver la voiture thermique au-delà de 2035
+S1 +3 | Sortie de l'euro, retour au franc et reprise en main de la Banque de France
+S3 +3 | Protectionnisme « intelligent » et planification économique souveraine
+E1 +2 | Politique sociale et fiscale très avantageuse et simplification drastique pour artisans, TPE et PME
+S3 +3 | Mettre fin aux accords de libre-échange
+S3 +3 | Quotas et barrières tarifaires possibles contre les pays européens
+E5 -2 | Rétablir des prix planchers pour les agriculteurs
+S1 +3 | Supprimer la PAC et la remplacer par une politique agricole française
+S3 +2 | Patriotisme économique favorisant les produits français, planification des productions agricoles
+O4 +1 | Bannir les insectes de l'alimentation
+E2 -2 | Mettre fin aux plans d'austérité
+E4 -2 | Baisser l'âge de départ à la retraite
+E6 -3 | Rétablir les monopoles publics dans le rail et l'énergie
+E5 -3 | Renationaliser les autoroutes
+E4 -2 | Revenir sur les baisses d'indemnités chômage, les fermetures de lits et les déremboursements
+O2 +2 | Alourdir les peines des pédocriminels, castration chimique automatique en cas de récidive
+E6 -1 | Refonder l'Aide sociale à l'enfance, reprise par l'État ; accompagnement des jeunes sortants à 18 ans
+O1 +1 | Contrôle systématique des antécédents judiciaires des adultes travaillant avec des enfants
+E4 0 | Supprimer les ARS et réduire la bureaucratie hospitalière
+E4 -1 | Investir massivement dans des centres de santé de proximité
+O5 -2 | Secret médical strict, données de santé décentralisées, refus du fichage
+E4 0 | Supprimer le Conseil de l'ordre des médecins
+O5 -2 | Liberté vaccinale pour tous, soignants compris
+E4 -1 | Mieux rémunérer les métiers de l'accompagnement (AESH, médico-social)
+E4 -1 | Places de crèche adaptées au handicap et unités pour personnes handicapées vieillissantes
+O4 +1 | Refuser toute incitation à l'euthanasie des personnes handicapées
+E7 -1 | Plan national de protection de la faune et de la flore, sanctuarisation des espaces naturels
+E5 -1 | Accompagner la transition vers la permaculture et l'agriculture biologique
+O4 +1 | Interdire l'abattage rituel sans étourdissement
+S3 +2 | Reprendre le contrôle des données de l'État : sortie des GAFAM en 3 ans, données sensibles sur serveurs publics
+S3 +2 | Grande loi pour la souveraineté numérique et Commissariat à la souveraineté numérique
+E5 -1 | Soutien massif de l'État à la recherche et aux entreprises françaises de l'IA
+O6 +1 | École sans IA
+O6 +2 | Recentrer le primaire sur les fondamentaux, la moitié du temps sur le français
+O6 +2 | En finir avec le collège unique, parcours différenciés dès 14 ans
+O6 +2 | Restaurer l'autorité des professeurs et revaloriser leur carrière
+O6 +2 | Laïcité, universalisme et assimilation comme piliers de l'école ; éducation civique exigeante
+O6 -1 | Revenir sur les restrictions à l'instruction en famille
+S2 +2 | Couper les financements de la guerre en Ukraine
+E2 +1 | Réduire le train de vie de l'État (ministères non régaliens, régimes spéciaux des élus) sans hausse d'impôts
+E5 -2 | Emprunter directement auprès de la Banque de France ; Caisse nationale pour l'équipement et la réindustrialisation
+E1 -1 | Lutter contre l'optimisation fiscale des grands groupes
+E1 +1 | Moindre taxation des petits héritages, allègement pour indépendants et petites entreprises
+S2 +2 | Initiative pour la paix en Ukraine et au Moyen-Orient par la diplomatie
+S2 +3 | Rejeter toute armée européenne et tout partage de la dissuasion nucléaire
+O3 +3 | Mettre fin à l'immigration massive : flux « extrêmement limités », assimilation ou départ
+O3 +2 | Dissoudre Frontex et échapper au Pacte migratoire européen
+O3 +2 | Renvoyer les clandestins et appliquer les OQTF immédiatement
+O3 +3 | Mettre fin à l'immigration de travail et à la directive des travailleurs détachés
+O1 +1 | Recréer une police de proximité dans les quartiers sensibles
+O2 +2 | Fin de l'excuse automatique de minorité : qui tue comme un adulte est jugé comme un adulte
+O2 +2 | Rétablir les peines planchers, sanction dès la première infraction, fin des réductions automatiques de peine
+O2 +2 | Suspendre les prestations sociales des parents de mineurs récidivistes
+O2 +2 | Construire des dizaines de milliers de places de prison
+O3 +2 | Expulser les prisonniers étrangers
+E6 -1 | Lutte contre la vie chère outre-mer : encadrement des prix des produits de première nécessité
+E6 -1 | Plan d'investissement dans les infrastructures et services publics d'outre-mer
+H1 | Proposer la départementalisation aux territoires d'outre-mer qui le souhaitent
+O4 +2 | Recentrer l'école et les médias sur la transmission de la culture française
+O3 +2 | Nationalité et droits civiques conditionnés à la maîtrise du français et à l'adhésion aux valeurs
+H2 | Priorité à la restauration du patrimoine, mécénat simplifié
+O5 -3 | Supprimer les lois restreignant la liberté d'expression, refuser le DSA
+O5 -2 | Refuser l'identité numérique européenne
+O5 -2 | Garantir l'argent liquide, interdire l'euro numérique
+O5 -2 | Ne plus jamais reproduire le pass sanitaire
+S1 +2 | Refuser tout transfert de souveraineté européenne en matière de santé
+O3 +2 | Lois nationales pour limiter le « gouvernement des juges » et inverser les flux migratoires
+S1 +2 | Faire quitter la France au Parlement européen et aux institutions européennes

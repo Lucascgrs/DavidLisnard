@@ -1,0 +1,17 @@
+## emmanuel-dubuisson/pdf-emmanuel-dubuisson-pdf.txt
+E2 +1 | Réorganiser l'État en « État système » : guichet unique, registres communs, indicateurs publics, audits
+H1 | Open data obligatoire : chaque contrat, dépense et achat public significatif rendu traçable
+S3 +1 | Plateforme internationale d'affaires au service de l'export, appuyée sur le réseau diplomatique
+O1 +1 | Département public de conformité bancaire contre le blanchiment et la fraude
+E6 0 | Service national Automobile, Navigation et Transports, cadre unifié d'immatriculation et d'assurance
+E4 -1 | Caisse unique de santé et rail national reliant prescription, acte et remboursement
+E5 +1 | Refonte du droit des entreprises autour de la SA et de la SAS, parcours simplifié pour les indépendants
+E7 -1 | Programme énergétique public de 46,64 GW (32 Md€) en métropole et outre-mer
+S3 +1 | Hubs de datacenters souverains, dont une partie outre-mer
+E6 -1 | Réseau national de ferroutage et de hubs multimodaux
+S2 +1 | Augmenter les capacités de défense industrielle (drones, munitions, missiles, cyber)
+E7 -1 | Urbanisme bioclimatique pour adapter les villes à la chaleur
+E3 0 | Faire correspondre la formation et l'alternance aux besoins industriels et souverains
+E5 +1 | Zone d'expérimentation pour investisseurs : lisibilité fiscale, conformité, offre premium
+H2 | Les outre-mer comme points d'appui : énergie, logistique, numérique, santé dans chaque territoire
+E2 +1 | Discipline financière : comité national de suivi des grands chantiers, évaluation à 24 et 48 mois

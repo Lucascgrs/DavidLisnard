@@ -1,0 +1,65 @@
+# Cazeneuve : lettre de 86 pages lue en entier ; ses 30 propositions finales et ce que le corps de la lettre y ajoute.
+## bernard-cazeneuve/pdf-bernard-cazeneuve-pdf.txt
+O1 +1 | Petite enfance : nul au contact d'enfants sans compétences vérifiées ; inspection régulière des établissements ; signalement avec réponse obligatoire
+E6 -1 | Personnels de la petite enfance en nombre suffisant et mieux rémunérés
+O2 0 | Aucune plainte pour violences faites à un enfant sans réponse ; rappel des magistrats retraités volontaires
+O4 -1 | Le féminisme comme inspiration des politiques publiques : violences, féminicides, plafonds de verre
+E3 -1 | Résorber les écarts de salaire entre femmes et hommes ; corriger les retraites des carrières interrompues
+E4 -1 | Santé mentale grande cause nationale ; reconnaissance des soignants dans tous les territoires
+E4 -1 | Prise en charge du grand âge, de la dépendance et des aidants, garantie aux familles modestes
+O1 -1 | Police de proximité et investissement dans la prévention (école, seconde chance)
+O1 +1 | Contre les trafics : unités spécialisées, peines exécutées, gel des avoirs, traque des financements
+S1 -1 | Coopération européenne renforcée et Parquet européen aux compétences élargies contre la criminalité
+H2 | Outre-mer : mêmes investissements et même exigence que sur tout le territoire
+E6 -1 | Grand plan de constructions et de rénovations, social et écologique, avec aide à l'accession
+E4 0 | Simplifier, unifier et automatiser les aides fondamentales
+E4 -1 | Retraites : la durée de cotisation plutôt qu'un recul de l'âge légal
+E4 -2 | Rétablir les critères de pénibilité ouvrant droit au départ anticipé
+E3 -1 | Emploi des seniors : sanctions contre les discriminations, retraites progressives, liberté de travailler plus longtemps
+E4 -2 | Règle d'or sociale : toute exonération de cotisations compensée à l'euro près à la Sécurité sociale, rétroactivement depuis 2019
+E2 0 | Équilibre des comptes sociaux sur cinq ans, loi annuelle d'approbation distincte du budget
+H1 | Rétablir le septennat ; Premier ministre engageant sa responsabilité devant le Parlement
+H1 | Discipline sur le 49.3 et les ordonnances ; dose de proportionnelle aux législatives
+O2 -1 | Sortir du « tout-comparution immédiate » et de la prison par défaut ; magistrats protégés
+O5 -1 | Limiter par la loi la concentration capitalistique des médias
+E2 0 | Haute fonction publique : passerelles régulées avec le privé, les collectivités et la recherche
+H1 | Refonder la décentralisation, clarifier qui fait quoi
+E5 +1 | Revue des normes : deux normes supprimées pour une créée
+E1 -2 | Fiscalité atteignant réellement les très grandes fortunes, les hauts revenus du capital et les rentes
+E1 -1 | Rééquilibrer la taxation entre travail et capital, moins de niches fiscales
+E1 +1 | Baisser les impôts de production, financée par moins d'aides fiscales
+E2 +1 | Vérité budgétaire et maîtrise de la dette
+E5 -1 | Plan de réindustrialisation sur dix ans, filières stratégiques sécurisées par l'État, incitations ciblées
+E7 -1 | Filière électronucléaire assumée, renouvellement du parc planifié, électrification, sortie des fossiles
+E3 0 | Écoles de métiers, recherche appliquée, zones d'activité décarbonées ; apprentissage filière d'excellence
+S3 +1 | Souveraineté alimentaire et prix dignes pour les producteurs
+E5 -1 | Préserver le foncier agricole et en garantir l'accès ; accompagner les exploitations vers plus de sobriété
+E7 -2 | Écologie planifiée : rénovation massive des logements, transports collectifs, commande publique durable
+E7 -2 | Plan École-Climat-Solidarité sur dix ans : écoles rénovées, filière du bâtiment écologique
+E7 -1 | DATAR du climat rattachée au Premier ministre
+O6 -1 | Enseignants mieux formés et payés ; esprit critique, philosophie dès la seconde, humanités et sciences
+O6 -1 | Lutter contre la ségrégation scolaire et l'évitement organisé
+O6 0 | Service public de l'IA éducative, formation des enseignants au numérique
+E4 -2 | Au moins 2 000 € d'aide en plus pour chaque étudiant boursier ; avance jeunesse de 3 000 € pour les 18-24 ans sans diplôme ni emploi
+E3 -1 | Sécuriser les transitions professionnelles à la scandinave, formation tout au long de la vie
+E3 -2 | Encadrer les stages abusifs ; CDI redevenu la norme pour les jeunes
+E4 -1 | Politique familiale refondée, prise en charge ambitieuse de la petite enfance
+S2 +1 | Réarmement à proportion de la menace, moyens rendus aux forces
+S2 -1 | Industrie de défense : coopérations européennes, préférence aux productions nationales et européennes
+S2 -1 | Rester dans l'OTAN et bâtir l'Europe de la défense ; réfléchir à une dissuasion partagée avec le Royaume-Uni
+O4 +1 | Réserve citoyenne plus ambitieuse
+S2 -2 | Défense de l'ordre international fondé sur le droit, réforme du Conseil de sécurité, partenariat avec le Sud
+S1 -2 | Europe : réforme budgétaire et politique industrielle commune, défense crédible
+S3 +1 | Doctrine de concurrence moins dogmatique, approche commerciale moins naïve
+S1 -3 | Fin de l'unanimité au profit des décisions à la majorité
+S1 -2 | Politique migratoire pensée à l'échelle européenne
+O3 -1 | Le droit d'asile, engagement de civilisation
+O3 +1 | Intégration : apprendre le français, respecter les lois et l'égalité femmes-hommes
+O3 +1 | Fermeté contre l'immigration irrégulière, démantèlement des filières
+S1 -1 | Épargne européenne vers la puissance de calcul, données des Français stockées en Europe
+O5 -2 | Droit de recours à un humain : aucun refus d'aide, de place ou de titre par une machine sans examen par un agent
+O5 -1 | INESIA transformée en autorité contraignante évaluant les IA puissantes avant déploiement
+E6 -1 | Pouvoir d'achat : services publics qui allègent les dépenses contraintes, loyers et énergie maîtrisés
+E4 -1 | Rendre sa cohérence au dispositif des carrières longues : partir avant ceux qui ont étudié longtemps
+E3 -1 | Déploiement de l'IA dans l'entreprise soumis à une délibération collective
+E3 0 | Généraliser l'apprentissage dès le premier cycle universitaire

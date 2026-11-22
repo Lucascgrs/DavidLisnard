@@ -41,12 +41,11 @@ POUR CHAQUE LOT
    La commande affiche le numéro K du lot et crée donnees/moderation/lots/lot_K.txt.
 2. Lis lot_K.txt EN ENTIER, du #1 au dernier numéro (environ 250), sans en sauter. Si le fichier est trop long
    pour une seule lecture, lis-le en plusieurs morceaux jusqu'à la fin.
-3. Écris donnees/moderation/lots/gemini_K.txt avec exactement ces trois lignes :
-     L: numéros séparés par des virgules
+3. Écris donnees/moderation/lots/gemini_K.txt avec exactement ces deux lignes :
      I: numéros séparés par des virgules
      Q: numéros séparés par des virgules
    Les numéros sont ceux des « #N » du lot. Les numéros absents sont « autre ». Une ligne vide s'écrit
-   « L: aucun ». Un numéro ne figure qu'une fois.
+   « I: aucun ». Un numéro ne figure qu'une fois.
 4. Lance : python -m moderation noter K donnees/moderation/lots/gemini_K.txt --par gemini
    Vérifie que la commande affiche « Lot K : 250 annotations enregistrées ». Si elle affiche « Envoi à Supabase
    impossible », ce n'est pas grave : note-le pour ton compte rendu et continue.
@@ -55,7 +54,7 @@ CHOIX DU MODE
 Lance d'abord « python -m moderation etat ». Puis, sur l'ensemble des lots :
 - un lot sur quatre en mode « hasard » (pour que les annotations restent représentatives) ;
 - sinon surtout « questions » : c'est le point faible du modèle (il trouve mal les questions) ;
-- un lot « insultes » de temps en temps, pour apprendre à distinguer les insultes qui visent Lisnard ;
+- un lot « insultes » de temps en temps, pour affiner ce qui est une insulte et ce qui ne l'est pas ;
 - « doutes » quand les autres modes n'ont plus rien à tirer (la commande affiche alors « Rien à tirer »).
 Avec 4 lots : questions, insultes, questions, hasard.
 
@@ -66,20 +65,15 @@ publication et « En réponse à » ne servent qu'à comprendre de qui ou de quo
 
 Chaque commentaire reçoit UNE seule catégorie :
 
-L = INSULTANT, et l'insulte vise David Lisnard, Nouvelle Énergie, leurs représentants ou leurs soutiens en tant
-    que tels (« Lisnard macron la même merde », « Nouvelle merde », « encore une merde pro-Lisnard »,
-    « c'est un Macron 2 abruti » quand il s'agit de Lisnard). Sous une publication qui parle de Lisnard, « il »,
-    « ce type », « ce candidat » le désignent souvent : vérifie avec le contexte.
-I = INSULTANT, et l'insulte vise autre chose ou quelqu'un d'autre : une autre personnalité ou un autre parti
-    (Mélenchon, LFI, Macron, RN, Attal…), un groupe de personnes, un journaliste, ou un autre commentateur. Un
-    soutien de Lisnard qui insulte ses adversaires, c'est I. En cas de doute sur la cible, I.
+I = INSULTANT, quelle que soit la personne ou le groupe visé : David Lisnard, Nouvelle Énergie, une autre
+    personnalité ou un autre parti, un groupe de personnes, un journaliste, un autre commentateur.
 Q = QUESTION qui appelle une réponse de l'équipe : vraie question sur le candidat, son programme, ses positions,
     le mouvement, l'adhésion, un événement ; doute sincère (« est-ce qu'il compte vraiment… ? ») ; demande
     d'aide ou d'information ; affirmation FAUSSE sur Lisnard ou Nouvelle Énergie qu'il faudrait rectifier.
 (rien) = AUTRE : tout le reste, y compris les soutiens, les éloges, les « Bravo », les critiques polies, les
     avis, les blagues sans insulte, les émojis seuls.
 
-Ce qui est INSULTANT (L ou I) : injure ou grossièreté qui vise une personne ou un groupe (con, connard, abruti,
+Ce qui est INSULTANT (I) : injure ou grossièreté qui vise une personne ou un groupe (con, connard, abruti,
 débile, ordure, pourriture, merde, « pauvre type », « faux cul »…), menace ou appel à la violence (« une balle »,
 « je lui mets une gifle », « il faut l'enfermer »), propos haineux, raciste, homophobe ou déshumanisant
 (« vermine », « nuisibles », « parasites » pour des personnes), attaque personnelle méprisante sur le physique,
@@ -91,9 +85,9 @@ mépris ajouté → AUTRE ; une moquerie légère sans injure → AUTRE.
 
 Ce qui N'EST PAS une question : une question rhétorique ou ironique (« Qui peut encore voter pour lui ? »,
 « Et ça vous étonne ? »), une question adressée à un autre commentateur pour se disputer, une question
-insultante (alors L ou I).
+insultante (alors I).
 
-Si un commentaire est à la fois insultant et une question, l'insulte l'emporte (L ou I).
+Si un commentaire est à la fois insultant et une question, l'insulte l'emporte (I).
 
 ERREURS DÉJÀ VUES DANS TES LOTS PRÉCÉDENTS (relus par un autre lecteur) : évite-les.
 1. Trop de Q. Une Q doit pouvoir recevoir une réponse UTILE de l'équipe de campagne. Ce ne sont PAS des Q :
@@ -122,10 +116,9 @@ ERREURS DÉJÀ VUES DANS TES LOTS PRÉCÉDENTS (relus par un autre lecteur) : é
    En revanche, le mépris sur la santé mentale, le physique, l'intelligence ou le genre reste insultant : « il est
    fou », « bipolaire », « votre QI », « blague d'analphabète », « la caniche de LFI », « La Fiente Insoumise »,
    « nazillons », « 25 nazis » (traiter des personnes de nazis), « bientôt l'AVC ».
-4. Trop de L. L exige une INJURE qui vise Lisnard, Nouvelle Énergie ou ses soutiens. Une critique dure de Lisnard
-   sans injure est AUTRE, même violente : « attention à ce Lisnard, c'est une taupe macronienne », « cet homme
-   prétentieux, à virer », « foutage de gueule », « Casse-toi » seul, ou un long réquisitoire sur ses propos sans
-   injure. Mais une injure lancée à un soutien PARCE QU'il soutient Lisnard est bien L : « Tu as aussi fait
+4. Une critique dure de Lisnard sans injure est AUTRE, même violente : « attention à ce Lisnard, c'est une taupe
+   macronienne », « cet homme prétentieux, à virer », « foutage de gueule », « Casse-toi » seul, ou un long
+   réquisitoire sur ses propos sans injure. Une injure lancée à un soutien est bien I : « Tu as aussi fait
    confiance à Macron, pauvre cloche ! » sous « Je choisis David Lisnard ».
 5. Lots 9 à 12 : tu es devenu trop prudent. Tes Q et tes I sont presque tous justes, mais tu en oublies.
    - Q oubliées : un soutien qui demande où est Lisnard ou pourquoi il n'est pas invité (« Où est David Lisnard ? »,
@@ -139,15 +132,26 @@ ERREURS DÉJÀ VUES DANS TES LOTS PRÉCÉDENTS (relus par un autre lecteur) : é
      intelligence », « vous manquez d'intelligence ? », « la débilité humaine », « ces guignols incompétents », « un
      bébé inculte », « ce mec c'est la gestapo », « que des peignes-cul », « être un blaireau, c'est bien », des
      moqueries sur le corps de la femme d'un commentateur.
-   - L oubliés : « charlot », « clown », « guignol » ou « faux cul » lancés à Lisnard sont des injures, donc L
+   - I oubliées aussi : « charlot », « clown », « guignol » ou « faux cul » lancés à Lisnard sont des injures, donc I
      (« C'est un charlot comme les autres », « Un nouveau clown pour un nouveau cirque » sous un sondage sur lui).
      Une simple moquerie sans mot injurieux reste AUTRE (« Lisnard l'enfumeur », « Lisnard le renard »).
+6. Lots 13 à 16 : encore des oublis, surtout dans le mode « insultes ».
+   - I oubliées : « gauchiasse » (et « fauchiasse ») est toujours I ; le message collé partout « il faut que nous
+     coupions l'herbe sous les pieds des enfoirés qui nous gouvernent » est I à chaque fois (« enfoirés »), même s'il
+     soutient Lisnard ; aussi « débiles », « décérébrés », « suceurs de babouches », « QI de courge », « bécasse »,
+     « une tête de c… », « retourne dans ton pays », « fou furieux », « Goebbels » lancé à un commentateur.
+   - Q oubliées : les reproches sur les retraités (gel au-dessus de 2 200 €, abattement de 10 %, « il veut taper
+     sur les retraités ») sont Q même sans point d'interrogation ; « Attal de droite ? » ou « Que fait Attal dans
+     cette primaire ? » ; « primaire entre macronistes » ; « il a voté Macron », « il a parrainé Mélenchon » ;
+     « il a voté pour Mélenchon » (faux : un parrainage, pas une voix).
+   - Q en trop : une question posée à un autre commentateur pour se disputer (« Quelle est votre position ? »
+     lancé à celui qui critique) reste AUTRE.
 
 Garde le même niveau d'exigence du premier au dernier lot : ne deviens ni plus sévère ni plus indulgent avec
 la fatigue.
 
 COMPTE RENDU FINAL
 Quand tous les lots sont faits, donne-moi en quelques lignes : les numéros des lots faits et leur mode, et pour
-chacun le nombre de L, I et Q. Ajoute les éventuels messages d'erreur, et les commentaires qui t'ont fait
+chacun le nombre de I et de Q. Ajoute les éventuels messages d'erreur, et les commentaires qui t'ont fait
 hésiter (numéro de lot et #N) avec la raison en une phrase.
 ```

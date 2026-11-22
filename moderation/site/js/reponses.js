@@ -4,7 +4,7 @@
 // en ouvrant le commentaire sur Facebook (Facebook ne laisse aucun site remplir sa zone de réponse : il reste à
 // cliquer sur « Répondre » et coller). Les modérateurs modifient, ajoutent et retirent (jamais de suppression : une
 // réponse retirée passe à actif = false) ; tout part dans la base (tables reponses, reponses_themes) et revient dans
-// moderation/reponses.xlsx à la prochaine synchronisation (« python -m moderation reponses »).
+// donnees/moderation/reponses.xlsx à la prochaine synchronisation (« python -m moderation reponses »).
 import { NonConnecte } from "./api.js";
 import { enregistrerReponse, enregistrerTheme, etat } from "./donnees.js";
 

@@ -1,0 +1,132 @@
+## david-lisnard/notre-programme.txt
+O6 +2 | Suppression de la carte scolaire, libre choix de l'école par les parents
+E4 +2 | Liberté de se constituer un capital pour sa retraite (capitalisation)
+O3 +2 | Maîtriser la politique migratoire indépendamment des cours européennes, par référendum
+E2 +3 | Réduction drastique des dépenses publiques et choc massif de dérégulation
+## david-lisnard/notre-programme-pole-de-travail-et-didees.txt
+## david-lisnard/notre-programme-agriculture.txt
+E5 +2 | En finir avec les surtranspositions françaises des normes agricoles
+S3 +1 | Clauses miroirs obligatoires pour les produits agricoles importés
+S1 +1 | Réorienter la PAC vers la production, la souveraineté alimentaire et l'export
+E5 +2 | Autoriser les nouvelles techniques génomiques et l'usage raisonné des phytosanitaires ; moins d'aides conditionnées à des critères « idéologiques »
+E1 +1 | Transférer une part des charges agricoles vers la valeur ajoutée ; rémunérer les services environnementaux des agriculteurs
+E5 -1 | Politique industrielle de transformation agricole et forestière, filière française d'engrais azotés décarbonés
+S2 0 | Diplomatie du blé et souveraineté logistique agricole
+E5 +2 | Statut unique et simplifié de l'exploitation agricole, débureaucratisation massive, remise à plat des normes viticoles
+E7 +1 | Bassines autorisées quand elles sont justifiées et décidées localement ; agriculture de précision et IA
+## david-lisnard/notre-programme-education.txt
+O6 +2 | Chèque-éducation : même financement public pour l'école publique ou privée
+O6 +2 | Autonomie des chefs d'établissement : recrutement des équipes, budget, refus des élèves perturbateurs ; évaluation publique des résultats
+O6 +2 | Certificat de fin de primaire conditionnant l'entrée au collège
+O6 +1 | Programmes recentrés sur les disciplines structurantes, latin, grec et philosophie dès le primaire
+O6 +2 | Rétablir l'autorité du professeur et le primat du cours contre le « pédagogisme »
+E3 0 | Hausse de 20 % des salaires des enseignants en cinq ans, contre plus de présence et une évaluation régulière
+E2 +2 | Corps unique d'enseignants contractuels recrutés sur concours national
+H1 | Éveil des 1-6 ans confié aux communes, l'Éducation nationale recentrée sur les 6-16 ans
+E3 +1 | Lycées professionnels et CFA liés aux entreprises, formations ouvertes ou fermées selon les débouchés locaux
+O6 +1 | Classes d'excellence en mathématiques et sciences dans chaque académie ; internats et externats d'excellence
+## david-lisnard/notre-programme-etre-maitre-de-notre-destin.txt
+E2 +2 | Réduire la dépense publique de 8 points de PIB en 10 ans, sous les 50 %
+E2 +2 | Règle d'or de limitation des déficits de fonctionnement
+E2 0 | Rééquilibrer le budget vers l'État régalien (police, justice, défense, diplomatie)
+E2 +2 | Plan de réduction des déficits et de la dette, contre les gaspillages et doublons
+H1 | Recentrer la loi sur les principes ; pouvoir d'application transféré au gouvernement et aux collectivités ; codes simplifiés
+H1 | Droit d'initiative réservé au Parlement et renforcement de son contrôle
+H1 | Président recentré sur les grandes décisions, les crises et le lien avec la Nation
+E2 +2 | Tout ce qui peut être délégué au secteur privé doit l'être (externalisation, subsidiarité)
+E2 +2 | Faire passer 450 000 fonctionnaires des bureaux au terrain et réduire la masse salariale publique
+E5 +2 | Diviser par deux les contraintes administratives des entreprises et des citoyens
+E2 +2 | Systématiser le contrat dans les fonctions publiques non régaliennes ; directeurs recrutés sur contrats d'objectifs
+E2 +1 | Évaluation des politiques publiques par des experts indépendants ; réduction du stock de normes
+E2 0 | « Cité gouvernementale » regroupant ministres et directions centrales
+S1 -1 | Faire de l'Europe un levier de puissance, ni fédéralisme ni repli national
+S1 +1 | Traité de démocratisation de l'Europe : plus de pouvoir au Conseil européen et au Parlement
+S1 +2 | Référendum en cas de blocage par des règles supranationales, révision partielle de la hiérarchie des normes
+S1 -1 | Maintenir la politique de cohésion européenne sous conditions d'État de droit
+S1 -2 | Renforcer la coopération européenne de projets (spatial, données, énergie, recherche médicale)
+S1 +1 | Redéfinir et réduire les compétences européennes au profit des États
+## david-lisnard/notre-programme-generer-un-renouveau-civique.txt
+O6 +2 | Liberté de recrutement des enseignants par les chefs d'établissement, liberté pour les enseignants de choisir leur établissement
+O6 +1 | Programmes recentrés sur un tronc commun, liberté pédagogique, examens nationaux et transparence des résultats
+O4 +1 | Rétablir la littérature française, les langues anciennes et l'histoire ; répertoire national des grandes œuvres
+E4 -1 | Développer les bourses sociales et au mérite
+E3 +1 | Développement massif de l'apprentissage
+H1 | Trois niveaux : État, une quarantaine de Provinces remplaçant départements et régions, bloc communal ; validé par référendum
+H1 | Transfert massif de compétences et pouvoir réglementaire aux collectivités
+E2 +2 | Supprimer les services déconcentrés de l'État (DREAL, ARS…) et réduire ses effectifs
+H1 | Autonomie financière des collectivités par partage de recettes fiscales nationales
+E7 +1 | Retirer le principe de précaution et la préservation de l'environnement de la Constitution
+E7 -1 | Taxer la pollution (prix du carbone), à prélèvements constants et avec réciprocité internationale
+E7 +1 | Fin des dérogations pour les énergies renouvelables, sommes réinvesties dans le nucléaire
+E7 -1 | Nouveau nucléaire : EPR, petits réacteurs, prolongation des réacteurs à 60 ans, recherche sur les déchets
+E7 0 | Programme international de fixation du carbone ; action contre les « super-pollueurs » mondiaux
+E5 -1 | Filières industrielles d'excellence : captage de CO2, hydrogène, piles à combustible
+## david-lisnard/notre-programme-immigration.txt
+O3 +2 | Revenir sur l'accord franco-algérien de 1968
+O3 +2 | Rétorsions contre les pays non coopératifs (visas, transferts d'argent, aide au développement)
+S1 +2 | Bras de fer avec la CEDH, sortie en dernier recours
+O3 +2 | Traiter les demandes d'asile dans les consulats à l'étranger
+O3 +3 | Diviser par huit la délivrance de titres de séjour
+O3 +2 | Quotas de main-d'œuvre qualifiée ; regroupement familial conditionné aux ressources et à des tests d'intégration
+O3 +2 | Fin de l'automaticité du droit du sol
+O3 +2 | Plus de centres de rétention, rétention allongée à 24 mois
+S1 +2 | Primauté du droit national en matière migratoire dans la Constitution, contre la CJUE et la CEDH
+O3 +2 | Supprimer l'AME et la remplacer par une aide d'urgence
+O3 +2 | Rétablir le délit de séjour irrégulier
+O3 +2 | Expulser les étrangers condamnés pour délits graves et les fichés S étrangers
+O3 +2 | Prestations non contributives réservées aux étrangers résidant régulièrement depuis cinq ans
+## david-lisnard/notre-programme-reussir-une-nouvelle-ambition-francaise.txt
+E3 +2 | Assouplir le Code du travail
+E1 +2 | Supprimer la C3S et la CVAE : diviser par deux les impôts de production
+E1 +1 | Réformer les droits de succession sur les entreprises
+E1 +1 | Favoriser l'investissement en capital et l'innovation
+E4 +1 | Compte-épargne aléas climatiques et économiques pour les agriculteurs
+E3 +2 | Contrat de travail unique fusionnant CDI et CDD, indemnités de licenciement progressives
+E1 +1 | Supprimer les charges des employeurs à domicile au niveau du SMIC
+E3 +1 | Charges patronales négatives pour l'embauche de personnes au RSA depuis plus de deux ans
+E7 +1 | Remplacer le principe constitutionnel de précaution par un principe de responsabilité
+E5 0 | Clusters de filières d'avenir (robotique, énergie, cybersécurité, IA)
+E6 -1 | Plan d'investissement routier, ferroviaire et numérique contre l'enclavement
+E6 +2 | Supprimer l'article 55 de la loi SRU (quota de logements sociaux) et libérer le marché du logement
+E4 +2 | Retraite à 65 ans
+E4 +3 | Retraite : socle minimal par répartition dès 65 ans, tous les autres régimes en capitalisation
+E4 -1 | Minimum vieillesse à 1 000 € par mois
+E4 0 | Agence centrale publique de retraite remplaçant tous les organismes
+E4 +1 | Réforme globale de la santé : de l'offre à la demande, fin de l'étatisme centralisé
+E1 +1 | Relancer la politique familiale : déplafonner le quotient familial
+E6 -1 | Investir dans les structures d'accueil de la petite enfance et le logement familial
+O1 +1 | Plan massif de remise à niveau de la police nationale sur 10 ans
+O1 +1 | Secrétariat d'État à la sécurité intérieure et police territoriale décentralisée
+O1 +2 | Police territoriale avec qualité d'officier de police judiciaire, compétences de police accrues pour les collectivités
+O2 +1 | Budget de la justice au niveau de la moyenne européenne, doubler les procureurs
+O2 +1 | Diversifier le recrutement des magistrats, échevinage, passerelles pour les avocats
+O2 +1 | Objectifs de délais fixés aux juges ; responsabilité des magistrats pour leurs erreurs
+O5 +1 | Délit de recel de violation du secret de l'instruction
+O2 0 | Conseil supérieur de la justice ouvert à d'autres professions
+O3 +2 | Aucune régularisation possible après une entrée clandestine
+O3 +1 | Contrôle systématique de la régularité du séjour par toutes les administrations
+O3 +2 | Quotas d'immigration selon les besoins des secteurs en tension ; titres « vie privée et familiale » strictement limités
+O3 +1 | Asile réservé aux situations le justifiant, retour des déboutés par accords avec les pays d'origine
+O3 +2 | Se libérer des contraintes des traités sur l'immigration par révision constitutionnelle et référendum
+O3 +1 | Politique d'assimilation par l'éducation, la loi, l'emploi et le logement
+## david-lisnard/notre-programme-sante.txt
+E4 0 | Conventionnement différencié : meilleur remboursement dans les zones sous-dotées
+E4 0 | Maisons de santé dans chaque canton, accès direct aux infirmiers, kinés, pharmaciens
+E4 +1 | Supprimer les ARS, maires présidents des conseils d'administration des hôpitaux
+E4 +1 | Revalorisation des soignants selon les responsabilités, recrutements contractuels et passerelles public-privé
+O6 +1 | Doubler les étudiants en médecine d'ici 2030, supprimer Parcoursup
+S1 -2 | Consortium pharmaceutique européen sur le modèle d'Airbus
+E5 -1 | Réinvestir dans la recherche publique en santé, clusters de biotechnologie
+E5 +1 | Réglementation agile pour l'innovation médicale
+## david-lisnard/notre-programme-securite.txt
+O1 +1 | Préfets avec de vraies marges d'action, 50 % de présence policière sur le terrain, audit public annuel
+O1 +1 | Vidéoprotection, IA de prévention
+O1 +2 | Polices municipales armées pour les communes volontaires, accès aux fichiers, amendes forfaitaires délictuelles
+O1 +2 | Cellules anti-stups locales, confiscations, infiltration numérique des réseaux
+O4 +3 | Interdiction des Frères musulmans, expulsion des prêcheurs radicaux, contrôle des écoles hors contrat
+O4 +2 | Interdiction du voile à l'université
+O2 +2 | Supprimer les réductions de peine automatiques et les aménagements dès l'audience
+O2 +2 | Rétablir les peines planchers pour les récidivistes ; sanction dès la première infraction
+O2 +1 | Doubler les effectifs des juridictions correctionnelles, dématérialiser la justice
+O2 +3 | Majorité pénale à 16 ans, excuse de minorité inversée dès 13 ans
+O2 +2 | Internats disciplinaires fermés, comparution immédiate dès 13 ans, TIG dès le premier délit

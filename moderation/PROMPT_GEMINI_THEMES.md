@@ -10,9 +10,12 @@ dans le projet, comme agent d'Antigravity. Toi, tu n'as qu'à :
 3. Rien d'autre : chaque lot enregistré part seul dans Supabase, et le site montre les thèmes à la prochaine
    actualisation.
 
-Où on en est : `python -m moderation themes etat` (« À ranger : N »). Ce qui est rangé ne l'est jamais deux fois ;
-les commentaires les plus récents passent en premier. Après chaque collecte, il en arrive de nouveaux : relancer le
-même prompt de temps en temps.
+Où on en est : `python -m moderation themes etat` (« À ranger : N »). Ce qui est rangé ne l'est jamais deux fois.
+Seul le groupe « Cap 2027 avec David Lisnard » est tiré. Ordre (demande de l'utilisateur, 2026-11-20) : **les
+questions d'abord, puis les autres commentaires qui appellent une réponse, chaque fois du plus long au plus court**,
+c'est la commande « tirer » qui s'en charge. Les commentaires longs prennent de la place : si un lot de 100 est trop
+long à lire d'un coup, le lire en plusieurs morceaux (ou tirer des lots de 50). Après chaque collecte, il en arrive
+de nouveaux : relancer le même prompt de temps en temps.
 
 ---
 
@@ -45,7 +48,8 @@ montre-moi le message d'erreur, sans essayer de contourner. Seule exception : si
 POUR CHAQUE LOT
 1. Lance : python -m moderation themes tirer 100
    La commande affiche le numéro K du lot et crée donnees/moderation/lots_themes/lot_K.txt. Si elle affiche
-   « Rien à tirer », arrête-toi : tout est rangé.
+   « Rien à tirer », arrête-toi : tout est rangé. Elle tire seule les commentaires du groupe « Cap 2027 avec David
+   Lisnard », les questions d'abord, puis les autres, du plus long au plus court : ne choisis pas toi-même.
 2. Lis lot_K.txt EN ENTIER. Il commence par la liste des THÈMES (identifiant — nom : définition), puis les
    COMMENTAIRES numérotés #1, #2… Chaque commentaire est précédé de la publication sous laquelle il est écrit et,
    pour une réponse, du commentaire auquel il répond : ce contexte sert à comprendre de quoi il parle, mais tu ne
@@ -86,6 +90,10 @@ RÈGLES POUR CHOISIR LES THÈMES
   · Bolloré, CNews, milliardaires, qui le finance → T36 ; médias qui l'ignorent ou le caricaturent → T55.
   Pour tout le reste, lis les définitions de la liste.
 - Une question sincère se range comme une critique : par son sujet (« Et les retraités ? » → T9).
+- Les premiers lots sont surtout des questions longues : elles abordent souvent plusieurs sujets. Garde le thème
+  de la question principale d'abord, puis au plus deux autres vraiment discutés (pas un mot cité en passant).
+- Une question pratique sur le mouvement (adhérer, groupe local, direct, rediffusion, programme, équipe) se range
+  dans le thème de la liste qui en parle s'il existe ; sinon « - ».
 - Un message de soutien sans objection (« Bravo », « Allez David ! ») → « - », sauf s'il défend une idée précise
   contre une critique (« Ce n'est pas un Macron bis, il a demandé sa démission » → T31).
 

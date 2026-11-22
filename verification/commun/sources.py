@@ -1,6 +1,8 @@
 """Téléchargements tracés : chaque fichier brut est enregistré tel quel dans brut/<organisme>/ et inscrit dans le
 catalogue sources.csv du thème (organisme, titre, niveau, adresse, requête, dates, empreinte, licence, affirmations).
 
+Une source déjà téléchargée pour une autre personne est reprise telle quelle (reprendre()).
+
 Niveaux : A statistique publique · B contrôle et évaluation · C recherche · D think tank ou partie prenante ·
 E presse ou fact-checker.
 """
@@ -104,3 +106,52 @@ def inscrire_manuel(id_source: str, organisme: str, titre: str, niveau: str, url
                     affirmations: list[str], brut: Path, catalogue: Path, **autres) -> None:
     """Pour un fichier déjà posé dans brut/ (téléchargé à la main ou par navigateur)."""
     inscrire(Source(id_source, organisme, titre, niveau, url, fichier, affirmations, **autres), brut, catalogue)
+
+
+def reprendre(id_source: str, theme_origine: str, affirmations: list[str], brut: Path, catalogue: Path,
+              personne_origine: str = "lisnard") -> None:
+    """Reprend un fichier déjà téléchargé pour une autre personne (mêmes chiffres) : il est recopié tel quel dans
+    brut/, avec sa ligne de catalogue (adresse, date de téléchargement d'origine, empreinte) et une note d'origine.
+    Rien n'est retéléchargé, et l'empreinte prouve que c'est le même fichier."""
+    import shutil
+    from .personnes import personne
+    p = personne(personne_origine)
+    dossier = p.themes / theme_origine
+    ligne = lire_catalogue(dossier / "sources.csv").get(id_source)
+    if not ligne:
+        raise RuntimeError(f"{id_source} absent de {dossier / 'sources.csv'}")
+    rel = ligne["fichier"].removeprefix("brut/")
+    cible = brut / rel
+    if not cible.exists():
+        cible.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(dossier / ligne["fichier"], cible)
+    origine = f"repris du dossier {p.nom}, thème {theme_origine}"
+    note = ligne["note"] if origine in ligne["note"] else "; ".join(x for x in (ligne["note"], origine) if x)
+    inscrire(Source(id_source, ligne["organisme"], ligne["titre"], ligne["niveau"], ligne["url"], rel, affirmations,
+                    date_publication=ligne["date_publication"], licence=ligne["licence"],
+                    requete_api=ligne["requete_api"], note=note),
+             brut, catalogue, date_telechargement=ligne["date_telechargement"])
+
+
+def executer(sources: list[Source], brut: Path, catalogue: Path, forcer: bool = False,
+             reprises: list[tuple] = ()) -> None:
+    """Le main() d'un telecharger.py : télécharge chaque source et l'inscrit ; `reprises` = [(id_source,
+    thème d'origine, affirmations)] repris d'une autre personne (Lisnard par défaut, ou 4e élément : sa clé)."""
+    echecs = []
+    for r in reprises:
+        try:
+            reprendre(r[0], r[1], r[2], brut, catalogue, *(r[3:4] or ["lisnard"]))
+            print(f"  ok  {r[0]:28} repris de {r[1]}")
+        except Exception as e:
+            echecs.append(r[0])
+            print(f"  ÉCHEC {r[0]}: {e}")
+    for s in sources:
+        try:
+            telecharger(s, brut, forcer=forcer)
+            inscrire(s, brut, catalogue)
+            print(f"  ok  {s.id_source:28} {s.fichier}")
+        except Exception as e:
+            echecs.append(s.id_source)
+            print(f"  ÉCHEC {s.id_source}: {e}")
+    n = len(sources) + len(reprises)
+    print(f"{n - len(echecs)}/{n} sources présentes" + (f" ; échecs : {echecs}" if echecs else ""))

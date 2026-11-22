@@ -9,8 +9,9 @@ from pathlib import Path
 import pandas as pd
 
 from verification.commun import lecture as L
+from verification.commun.chemins import donnees_de
 
-ICI = Path(__file__).resolve().parent
+ICI = donnees_de(__file__)
 BRUT = ICI.parent / "brut"
 SORTIE, GRAPH = ICI / "resultats.csv", ICI / "graphiques"
 UE27 = ["AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "EL", "HU", "IE", "IT", "LV", "LT", "LU", "MT",

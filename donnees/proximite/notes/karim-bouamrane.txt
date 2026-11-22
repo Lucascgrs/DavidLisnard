@@ -1,0 +1,14 @@
+## karim-bouamrane/pdf-karim-bouamrane-pdf.txt
+O1 +1 | Combattre le narcotrafic avec détermination et faire respecter l'autorité de la République partout
+E6 -1 | Construire et rénover des logements, accompagner les plus fragiles
+E4 -1 | Lutter contre les déserts médicaux
+E7 -1 | Une transition écologique juste : rénover les logements des familles modestes
+S3 +1 | Ne pas imposer aux agriculteurs des règles qu'on n'exige pas des produits importés
+O4 -2 | Protéger les personnes LGBT+, combattre le racisme, l'antisémitisme et l'islamophobie ; une laïcité « fraternelle »
+O3 -1 | Rester une terre d'asile, accueillir dignement ceux qui ont le droit de rester
+O3 +1 | Reconduire ceux qui se maintiennent irrégulièrement sur le territoire
+E2 +1 | Simplifier l'action publique, réduire les doublons administratifs
+E5 +1 | Alléger les normes qui paralysent l'initiative
+S2 +1 | Augmenter l'effort de défense
+S1 -2 | Construire une Europe qui protège, « notre bien commun le plus précieux »
+O2 0 | Grande cause nationale : protection des enfants et des femmes contre les violences

@@ -1,0 +1,238 @@
+# Philippe : chaque page du programme lue en entier, « propositions phares » et questions-réponses.
+## edouard-philippe/programme.txt
+## edouard-philippe/programme-adaptation-climatique.txt
+E7 -1 | Fonds d'adaptation au changement climatique de 2 milliards d'euros par an
+E7 0 | Stocker davantage l'eau et mieux la réutiliser
+E5 +2 | Zéro surtransposition normative pour l'agriculture
+## edouard-philippe/programme-comptes-publics.txt
+E2 +2 | Règle d'or budgétaire inscrite dans la Constitution par référendum
+E2 +2 | Déficit sous 2,5 % du PIB en fin de quinquennat : près de 150 milliards d'économies
+E1 +1 | Aucun nouvel impôt pendant cinq ans
+E2 +2 | Regrouper ou privatiser les agences de l'État qui font doublon
+E2 +3 | Supprimer 250 000 postes de fonctionnaires sur le quinquennat
+## edouard-philippe/programme-defense.txt
+S2 +1 | Loi de massification des armées : soldats, réservistes, munitions, drones
+O4 +1 | Service national obligatoire, militaire ou civil, et 250 000 réservistes
+S2 -2 | Armements « made in Europe » : 1 % du PIB des pays de l'UE en équipements européens, préférence européenne
+S2 -2 | Soutenir pleinement l'Ukraine, qui a vocation à intégrer l'OTAN
+S2 +1 | Moderniser la dissuasion nucléaire
+## edouard-philippe/programme-ecole.txt
+E3 0 | Hausse moyenne de 20 % du salaire des enseignants pendant le quinquennat
+O6 +1 | Statut d'école publique autonome (méthodes, horaires, classes)
+O6 -1 | Soutien scolaire universel ouvert à tous les élèves
+O6 -1 | Diminuer la taille des classes en maternelle et en primaire
+O6 +1 | Apprendre à lire dès la maternelle, primaire concentré sur lire, écrire, compter
+O6 +1 | Recréer des écoles normales exigeantes sur les savoirs fondamentaux
+## edouard-philippe/programme-energie.txt
+E7 -1 | Relancer le nucléaire et développer les renouvelables là où elles sont efficaces
+E7 -1 | Électrifier massivement les usages pour sortir du pétrole et du gaz
+S3 +1 | Renforcer le prix du carbone aux frontières européennes
+E7 -1 | Plan Messmer des énergies de la Terre (géothermie, biométhane)
+E6 -1 | Grand plan fret ferroviaire : 20 % de part modale en fin de quinquennat
+S1 -2 | Faire de l'Europe une puissance énergétique, financée par la BEI
+## edouard-philippe/programme-entreprises.txt
+E1 +3 | Pacte fiscal : 50 milliards d'impôts de production en moins contre 50 milliards d'aides aux entreprises en moins
+E5 +2 | Supprimer des normes ; aucune nouvelle norme ni nouvel impôt pendant le quinquennat
+E5 +1 | « Livret capital France » et fonds de capitalisation pour diriger l'épargne vers les entreprises
+S1 -2 | Achever le marché unique européen
+E3 +2 | Liberté des entreprises de fixer leur temps de travail
+S3 +1 | Protéger le marché européen de la concurrence déloyale chinoise
+E1 +1 | « Super Dutreil agricole » pour transmettre les exploitations
+## edouard-philippe/programme-famille.txt
+E4 -2 | Allocation familiale de 350 € par mois dès le premier enfant
+E1 +1 | Supprimer l'impôt sur le revenu des classes moyennes les trois premières années de l'enfant
+E6 -1 | Plan Marshall pour la garde d'enfants
+E6 -1 | Prêt à taux zéro à chaque naissance
+E4 -1 | Temps partiel parental : 80 % payés 100 % pendant deux mois
+## edouard-philippe/programme-handicap.txt
+E4 -1 | Solution d'accompagnement pour chaque enfant et adulte handicapé, loi sur l'école inclusive
+E4 -1 | 15 jours de répit par an pour les aidants les plus mobilisés
+E4 0 | Cumul intégral de l'AAH et des revenus du travail pendant un an
+E6 0 | Réponse de la MDPH sous deux mois
+E6 -1 | 100 000 places en habitat partagé et inclusif ; centres-villes accessibles
+## edouard-philippe/programme-immigration.txt
+O3 +2 | Diviser l'immigration légale par deux
+O3 +1 | Quotas pour l'immigration de travail
+O3 +2 | Moratoire sur le regroupement familial
+O3 +2 | « Centres de retour » à l'étranger
+O3 +2 | Dénoncer l'accord franco-algérien de 1968
+O3 +2 | Retour de la double peine pour les étrangers délinquants
+O3 +1 | Fin de toute acquisition automatique de la nationalité
+## edouard-philippe/programme-intelligence-artificielle.txt
+S3 0 | Pacte européen de puissance numérique, priorité européenne dans l'achat technologique
+E5 +1 | Zones d'accélération de l'IA pour les data centers
+E2 +1 | Transformer les services publics par l'IA
+E3 -1 | Droit à la reconversion pour les métiers menacés
+O6 0 | Former 100 000 ingénieurs par an
+E5 -1 | Plan Horizon 2050 : un euro public pour un euro privé
+O5 +1 | Bouclier Cyber et protection du débat démocratique
+## edouard-philippe/programme-justice.txt
+O2 +2 | Rétablir les peines planchers
+O2 +2 | Peines de prison courtes dès la première infraction
+O2 +2 | Supprimer le juge d'application des peines : peine prononcée, peine exécutée
+O2 +2 | 30 000 places de prison pour les peines courtes
+O2 0 | Retour des juges de paix pour une justice civile proche
+O2 +1 | Interdire aux magistrats de se syndiquer
+O2 +1 | Simplifier massivement la procédure pénale, IA pour l'instruction
+## edouard-philippe/programme-logement.txt
+E1 +1 | Supprimer les frais de notaire pour le premier achat des moins de 35 ans
+E6 -1 | Prêt à taux zéro famille après une naissance
+E6 +2 | Moratoire de cinq ans sur les normes de construction
+H1 | Affecter aux maires la TVA des logements neufs construits dans leur commune
+E1 +2 | Prélèvement forfaitaire unique sur les revenus de la location longue durée
+E1 +1 | Défiscaliser les donations aux enfants pour un premier achat
+## edouard-philippe/programme-outre-mer.txt
+E5 +1 | Moderniser l'octroi de mer, plus de concurrence dans les transports contre la vie chère
+E6 -1 | Nouvelle piste d'aéroport en Grande-Terre, deuxième hôpital à Mayotte
+O3 +3 | Moratoire total sur l'immigration à Mayotte, y compris familiale
+O3 +3 | Suspendre les nouvelles demandes d'asile à Mayotte et en Guyane
+O3 +3 | Suspendre totalement le droit du sol à Mayotte
+O3 +2 | Centre de retour en Afrique de l'Est pour les irréguliers de Mayotte
+O1 +1 | Lutte contre le narcotrafic aux Antilles, présence en mer renforcée
+## edouard-philippe/programme-protection-de-l-enfance.txt
+O1 +1 | « Droit de savoir » : les parents peuvent vérifier le passé des adultes proches de leur enfant
+O2 +2 | Crimes sur mineurs imprescriptibles
+O2 +1 | Éloignement immédiat de l'adulte mis en cause par une plainte concernant un enfant
+E6 0 | Inspection nationale de l'enfance contrôlant tous les lieux d'accueil
+O1 +1 | Vérification des antécédents de tous ceux qui encadrent des enfants
+O5 +1 | Responsabilité des plateformes face aux contenus illicites
+O5 +1 | Interdire les réseaux sociaux aux moins de 15 ans
+## edouard-philippe/programme-retraites.txt
+E4 +2 | Âge de départ à 65 ans et 45 ans de cotisation en moins de dix ans
+E4 -1 | Départ avant 65 ans pour un Français sur trois, âge inchangé pour les personnes en mauvaise santé
+E4 +2 | Capitalisation collective pour tous les salariés, plan d'épargne retraite pour chacun
+E4 0 | Gestion des retraites confiée aux partenaires sociaux une fois l'équilibre revenu
+## edouard-philippe/programme-securite.txt
+O1 +2 | « État d'urgence narco » dans les zones les plus touchées
+O5 +2 | Vidéoprotection avec intelligence artificielle pour identifier casseurs et criminels
+O1 +2 | Saisie de l'argent des trafiquants, amendes plus fortes pour les consommateurs
+O1 +1 | Pouvoir de sanction des maires contre les incivilités
+O2 +2 | Prélèvement des amendes impayées sur les aides sociales
+O2 +2 | Suspendre automatiquement le RSA des délinquants condamnés
+O5 +2 | Contre les casseurs, les mêmes mesures de prévention que contre le terrorisme
+## edouard-philippe/programme-travail.txt
+E4 +1 | Hausse du salaire net financée par des économies sur les retraites, l'assurance chômage et les arrêts maladie
+E3 +2 | Laisser les entreprises organiser leur temps de travail
+E4 +2 | Indemnisation chômage limitée à 12 mois pour les moins de 50 ans
+E4 +2 | Trois jours de carence pour tous, privé comme public
+E3 +1 | Développer l'apprentissage
+## edouard-philippe/programme-adaptation-climatique.txt
+E7 -1 | Climatiser massivement les lieux accueillant des personnes fragiles ; fonds chaleur étendu aux réseaux de froid pour les EHPAD et logements sociaux
+E7 0 | Planter des arbres en ville et lever les règles d'urbanisme qui freinent l'adaptation à la chaleur
+E6 -1 | Plan baignade : rivières baignables, piscines rénovées, apprentissage de la nage
+E2 +1 | Opérateur public unique de l'adaptation fusionnant quatre agences ; fonds réunissant le fonds Barnier et le Fonds vert
+E4 -1 | Revoir l'assurance des risques climatiques (maisons fissurées par la sécheresse, érosion du littoral)
+E7 -1 | Réutiliser 10 % des eaux usées traitées
+E7 +1 | Accélérer le stockage de l'eau agricole (bassines) : « la protection avant la procédure »
+S3 +1 | Construire en France nos propres Canadairs
+O1 0 | Réserves communales de citoyens volontaires, journée nationale d'alerte, formation de tous aux premiers secours
+O4 0 | Volet environnemental du service national (débroussaillage, entretien des forêts)
+E7 -1 | Même aide à l'achat d'une voiture électrique d'occasion que neuve
+E7 +2 | Inscrire le développement agricole dans la Charte de l'environnement
+S3 +1 | 100 territoires de souveraineté alimentaire
+## edouard-philippe/programme-comptes-publics.txt
+E2 +2 | Effort de redressement : moitié sur les dépenses sociales, un quart sur l'État et les collectivités, un quart par la croissance
+E2 +2 | Privatiser France Travail et supprimer le CESE parmi une trentaine d'agences fusionnées, supprimées ou privatisées
+E4 +2 | Réduire de 30 % le nombre d'allocataires du RSA par un suivi intensifié et la lutte contre les abus
+E2 +1 | Réorganiser l'État et simplifier les procédures grâce à l'IA
+## edouard-philippe/programme-defense.txt
+S2 +1 | Drones tactiques produits et achetés massivement, plan munitions vers 700 000 obus par an
+O1 +1 | Doubler les navires aux Antilles contre le narcotrafic
+## edouard-philippe/programme-ecole.txt
+O6 +1 | Interdire strictement le portable à l'école, au collège et au lycée, confisqué et rendu aux parents
+O6 +1 | Chefs d'établissement libres d'imposer l'uniforme, d'organiser des rites républicains, de fixer la discipline et de participer au recrutement des professeurs
+O6 +1 | Notes de juin comptant pour l'année suivante ; rentrée avancée pour les élèves en difficulté
+O6 +1 | 2 500 mots maîtrisés à l'entrée au CP, tests de décodage
+O6 0 | Zéro IA avant le collège ; IA encouragée pour les professeurs
+O6 +1 | Publier les évaluations de performance de chaque établissement
+O6 +2 | « Amende de responsabilisation scolaire » donnée par le maire aux parents d'enfants harceleurs, perturbateurs ou absentéistes, et aux parents violents
+O6 0 | Service public de l'orientation avec tutorat dès le collège
+O6 +2 | Sélection à l'université décidée par chaque établissement, fermeture des formations à faible insertion
+E4 -1 | Santé mentale à l'école : tiers de confiance et meilleure détection
+E6 -1 | Professionnels du handicap à l'école, métier d'AESH reconnu
+## edouard-philippe/programme-ecole.txt
+O6 0 | Natation dès la maternelle ; de 40 000 à 100 000 ingénieurs formés par an en cinq ans
+## edouard-philippe/programme-energie.txt
+E7 -1 | Huit EPR supplémentaires en plus des six prévus (14 nouveaux réacteurs)
+E7 -1 | Investir massivement dans la capture de carbone ; décarboner en priorité l'industrie lourde, le fret et la rénovation
+E7 +1 | Une écologie par l'innovation plutôt que par les contraintes et les normes
+E5 +1 | Accès préférentiel des acteurs nationaux et européens de l'IA à l'électricité décarbonée (zones de croissance de l'IA)
+## edouard-philippe/programme-entreprises.txt
+E3 +2 | Fin des 35 heures : temps de travail fixé par accord d'entreprise
+E1 +2 | Heures au-delà de 35 heures sans impôt ni cotisations salariales ; plus de cotisations patronales au-delà de la 37e heure
+E5 +2 | Supprimer le code des marchés publics au profit du règlement européen ; loi annuelle de suppression de normes ; déclaration au lieu d'autorisation ; délais des projets divisés par deux ; suppression de la CNDP
+E4 +1 | Mobiliser la retraite par capitalisation pour financer l'innovation
+E1 +1 | Maintenir le pacte Dutreil pour la transmission des entreprises familiales
+E1 +2 | Doubler les plafonds de donation aux enfants et petits-enfants pendant trois ans
+E5 +1 | Supprimer l'obligation de négociations commerciales annuelles au profit d'accords-cadres pluriannuels de partage de la valeur agricole
+S3 +2 | Face à la Chine, imposer transferts de technologie, quotas de production et coentreprises dans les secteurs stratégiques ; préférence européenne massive dans l'industrie
+S1 -2 | Achever l'Union des marchés de capitaux et supprimer les spécifications nationales qui freinent le marché unique
+## edouard-philippe/programme-famille.txt
+E4 -1 | Allocation familiale unique (fusion des aides), dégressive avec le revenu
+E1 +1 | Réduction d'impôt de 3 000 € par an pendant trois ans pour les familles aisées qui travaillent
+## edouard-philippe/programme-handicap.txt
+E4 -1 | Solution d'accompagnement proposée pendant l'attente, offre médico-sociale transformée et coordonnée
+E6 -1 | Plan d'accessibilité dans chaque bassin de vie (cheminements, transports, commerces, services) ; 100 000 logements adaptés d'ici 2035
+## edouard-philippe/programme-immigration.txt
+O3 +2 | Un étranger qui commet un délit est expulsé immédiatement et perd ses aides sociales
+O3 +1 | Régime européen de sanctions contre les passeurs (gel des avoirs, interdiction de territoire)
+S1 -1 | « Verrou Schengen » : aucune régularisation massive par un État sans l'accord de ses partenaires européens
+O3 +2 | Liste des pays sûrs votée chaque année par le Parlement ; fin de l'asile à vie ; régime européen d'urgence suspendant les demandes en cas de chantage migratoire
+O3 +2 | Aides sociales des étrangers alignées sur la moyenne européenne
+O3 +1 | Étudiants étrangers : vérification de leurs moyens et hausse effective des droits d'inscription hors UE
+O3 +1 | Intégration exigeante : langue, travail, laïcité et égalité femmes-hommes
+O4 +2 | Éradiquer les Frères musulmans et les organisations affiliées
+## edouard-philippe/programme-intelligence-artificielle.txt
+S3 +1 | « Buy European Tech Act » et achats technologiques groupés entre États membres ; infrastructure d'IA européenne souveraine (soutien à Mistral)
+E5 +1 | Simplifier le cadre juridique européen de l'IA ; zones d'accélération avec raccordements facilités, permis accélérés et normes supprimées
+O5 +1 | Responsabilité pénale renforcée des plateformes pour les contenus pédopornographiques générés par l'IA, amendes accrues pour défaut de modération
+E5 -1 | Horizon 2050 : argent public concentré sur les fonds propres des acteurs technologiques critiques ; épargne mobilisée pour les centres de calcul
+## edouard-philippe/programme-justice.txt
+O2 +2 | Exécution des peines des grands trafiquants alignée sur le régime des terroristes
+O2 +2 | Excuse de minorité levée et comparution immédiate des mineurs pour le narcotrafic ; établissements de réinsertion et de soin pour mineurs condamnés
+O2 +1 | Saisine directe du CSM par les justiciables, pouvoir disciplinaire des chefs de juridiction
+O2 +1 | Instructions individuelles du garde des Sceaux aux procureurs, abrogation de la loi de 2013
+O2 0 | Magistrats recrutés plus largement parmi les avocats et autres juristes
+O2 +1 | Pouvoir de sanction pénale des maires contre les incivilités
+O2 +1 | Comité chargé de refondre le code de procédure pénale en 100 jours
+## edouard-philippe/programme-logement.txt
+E6 0 | Construire 4 millions de logements en dix ans
+E4 +1 | Inciter les seniors à vendre la nue-propriété de leur logement
+E1 +2 | Supprimer l'IFI sur les logements loués en longue durée, fiscalité locative alignée sur celle du capital
+E6 +2 | Réduire drastiquement les procédures d'impayés, sanctionner plus durement les mauvais payeurs
+E7 +2 | Moratoire sur les paliers de la RE2020 et sur l'interdiction de louer les passoires thermiques
+E6 +1 | Zones d'accélération du logement : normes simplifiées et fiscalité allégée près des grands sites industriels, des RER métropolitains et des zones touristiques
+H1 | Maires responsables de l'encadrement des loyers, de l'attribution des logements sociaux et des aides à la rénovation
+E6 0 | Bailleurs sociaux regroupés en foncières de 100 000 logements avec objectifs de production
+E6 -1 | Supprimer la réduction de loyer de solidarité contre des objectifs de production élevés
+E6 +1 | Faciliter la vente des logements sociaux à leurs occupants
+E6 +1 | Réexamen annuel des locataires du parc social, surloyers systématiques au-delà des plafonds
+E1 +1 | Incitations fiscales au logement privé dans les communes de plus de 40 % de logements sociaux
+O1 +2 | Expulsion du logement social d'un occupant condamné pour troubles graves à l'ordre public
+## edouard-philippe/programme-outre-mer.txt
+E1 0 | Moderniser l'octroi de mer sans le supprimer ; surrémunération des fonctionnaires outre-mer inchangée
+E3 -1 | Converger jusqu'à l'égalité le SMIC et les retraites de Mayotte avec l'Hexagone
+E6 -1 | Financements de l'eau garantis à Mayotte jusqu'en 2032 ; retenues collinaires à La Réunion ; trains à La Réunion et en Guyane
+S2 +1 | Tous les leviers (aide au développement, visas, transferts de fonds) contre un État qui ferait de Mayotte un moyen de pression
+E5 -1 | Loi de programmation économique pour les outre-mer ; adaptation agricole ; hubs régionaux
+E7 -1 | Protection des mangroves et des coraux, conférence sur les sargasses, renouvelables
+## edouard-philippe/programme-protection-de-l-enfance.txt
+O1 +1 | Certificats d'honorabilité partout, responsable formé à la protection de l'enfance à chaque temps périscolaire, parcours des éducateurs publiés
+O2 +1 | Inspection nationale de l'enfance pouvant fermer les établissements qui ne protègent pas les enfants
+O5 +1 | Fermer les sites qui laissent prospérer le proxénétisme en ligne
+## edouard-philippe/programme-retraites.txt
+E4 -1 | Âges de départ actuels maintenus pour les personnes handicapées (55 ans), en incapacité (60 ans) ou invalides (62 ans) ; carrières longues maintenues ; pénibilité négociée avec les partenaires sociaux
+E4 0 | Ni hausse des cotisations ni baisse des pensions
+E4 +1 | Un plan d'épargne retraite pour chaque Français, avec 500 € versés par l'État dès le premier emploi
+E3 +1 | Développer le cumul emploi-retraite et la retraite progressive ; former et recruter les plus de 50 ans
+## edouard-philippe/programme-securite.txt
+O5 +2 | État d'urgence narco : interpellations de nuit, assignations à résidence, gardes à vue étendues, reconnaissance faciale ciblée
+O1 +2 | DGSI mobilisée contre les trafiquants, « fiche S financière », saisie des biens ; liste noire européenne des pays qui ne coopèrent pas
+O1 +2 | Opérations « place nette » dans les boîtes de nuit et festivals ; agent public poursuivi pour usage de stupéfiants signalé à son employeur
+O2 +2 | Peines planchers pour les atteintes aux personnes dépositaires de l'autorité publique
+O1 +1 | Criblage systématique des fonctions sensibles contre la corruption des trafiquants
+O5 +2 | Contre les casseurs : fichier sur le modèle du FSPRT, visites domiciliaires, contrôle administratif, assignation à résidence lors des manifestations à risque
+## edouard-philippe/programme-travail.txt
+E3 +1 | Le travail doit toujours rapporter plus que l'inactivité ; revoir les exonérations de charges qui enferment au niveau du SMIC
+E3 +1 | Délai de 3 à 6 mois entre un arrêt maladie et une rupture conventionnelle
+E3 0 | Durée du travail fixée par le dialogue social dans l'entreprise

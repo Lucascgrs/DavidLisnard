@@ -6,8 +6,9 @@ import sys
 from pathlib import Path
 
 from verification.commun.sources import Source, inscrire, telecharger
+from verification.commun.chemins import donnees_de
 
-ICI = Path(__file__).resolve().parent
+ICI = donnees_de(__file__)
 BRUT, CATALOGUE = ICI / "brut", ICI / "sources.csv"
 LO, CCBY = "Licence ouverte Etalab 2.0", "CC BY 4.0"
 DG = "https://static.data.gouv.fr/resources/"

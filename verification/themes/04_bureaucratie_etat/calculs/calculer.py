@@ -8,8 +8,9 @@ import re
 from pathlib import Path
 
 import pandas as pd
+from verification.commun.chemins import donnees_de
 
-ICI = Path(__file__).resolve().parent
+ICI = donnees_de(__file__)
 BRUT = ICI.parent / "brut"
 SORTIE = ICI / "resultats.csv"
 TOME1 = "senat/r24-807-1_tome1_agences.pdf"

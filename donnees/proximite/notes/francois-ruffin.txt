@@ -1,0 +1,284 @@
+# Ruffin : la page « Notre programme » et chaque cahier de campagne et plan d'action, lus en entier.
+## francois-ruffin/notre-programme.txt
+E3 -2 | Statut des travailleurs essentiels (ménage, AVS, caristes, agriculteurs…) : salaires, carrières, horaires, retraite avancée
+E6 -1 | Ambition de 67 millions de vacanciers français : droit aux vacances pour tous
+## francois-ruffin/de-la-colonie-numerique-aux-souverainetes-numeriques.txt
+H1 | Choix technologiques structurants (reconnaissance faciale, IA à l'école, usages de l'électricité) confiés à des assemblées citoyennes tirées au sort, conclusions soumises au Parlement ou au référendum
+E7 -2 | Couloir énergétique : part de l'électricité réservée aux data centers, fixée par une assemblée citoyenne
+E3 -2 | Codécision des représentants du personnel sur le déploiement des outils numériques et d'IA, négociation préalable obligatoire
+E5 -1 | Fin du statut de projet d'intérêt national majeur pour les data centers ; pouvoir d'urbanisme rendu aux maires
+E6 -1 | Droit à l'humain : pour toute démarche, pouvoir s'adresser à un agent
+O5 -2 | Maintenir l'interdiction des algorithmes décisionnels pour l'attribution des droits et le contrôle des allocataires
+S3 +2 | Data centers souverains financés par des capitaux européens, plutôt que piste d'atterrissage des compagnies américaines
+S3 +2 | Forge des communs numériques avec la DINUM : recenser, produire et déployer des logiciels communs dans tous les services publics et collectivités
+E2 -1 | Réinternaliser les compétences informatiques de l'État, former ses 50 000 agents du numérique
+S3 +2 | Développer et diffuser LaSuite, la suite bureautique de l'État, y compris dans les entreprises
+E1 -1 | Crédit d'impôt recherche et innovation conditionné à une production dans des communs numériques
+S3 +1 | Principe « argent public, code public » ; standards ouverts européens et interopérabilité obligatoire
+O6 0 | Former 60 000 ingénieurs et techniciens du numérique de plus, susciter les vocations féminines
+S1 -1 | Financer le Sovereign Tech Fund européen à hauteur de 150 millions par an
+E7 -2 | Valorisation obligatoire de la chaleur des serveurs, financée par les porteurs de projets
+E7 -2 | Aucune terre agricole artificialisée pour un data center tant qu'une friche adaptée existe
+E7 -1 | Effacement obligatoire des data centers aux heures de pointe
+E5 -1 | Fin du « premier arrivé, premier servi » sur le réseau : très haute tension garantie d'abord à l'industrie française et européenne
+E1 -1 | Supprimer la réduction de taxe sur l'électricité des data centers non souverains
+S3 +2 | Qualification SecNumCloud renforcée et obligatoire pour les données de l'État et des secteurs stratégiques
+S1 -1 | Peser sur la gouvernance des « gigafactories » européennes d'IA pour une souveraineté réelle
+E5 -1 | Laboratoire public de recherche en IA d'un milliard d'euros par an (500 personnes), financé en partie par la défense, un tiers en commande publique
+E5 -1 | Revoir les règles des banques et assurances pour orienter l'épargne vers des data centers souverains européens
+E1 -2 | Contribution sur l'utilisation des algorithmes (abonnements, interfaces) pour compenser les emplois remplacés par l'IA
+E3 -2 | Algorithmes de planification intégrant légalement la pénibilité et la santé, critères négociés collectivement
+E3 -1 | Liste de métiers sanctuarisés face à l'IA (dont professeur), définie démocratiquement
+O6 0 | Volontariat national de l'IA : 5 000 jeunes ingénieurs en contrats de trois ans sur des projets publics et stratégiques
+## francois-ruffin/education-une-ecole-de-tous-les-savoirs.txt
+O6 -1 | Apprentissages pratiques (cuisiner, jardiner, réparer) au collège pour tous ; éducation polytechnique sur le modèle finlandais
+O6 -1 | Orientation tout au long du collège avec des conseillers ; en seconde, droit d'essayer les filières professionnelles et passerelles
+O6 -1 | Moins de notes, évaluations alternatives et pédagogies coopératives
+O6 -2 | Mixité sociale à l'école, jusqu'à la fusion des voies du lycée
+E2 -2 | Maintenir le budget de l'école malgré la baisse du nombre d'élèves, le porter au moins à son niveau des années 2000
+O6 -1 | Conseil de pilotage éducatif (praticiens élus ou tirés au sort, parents, chercheurs) ; États généraux de l'Éducation dès 2027
+O6 0 | Réformes expérimentées à petite échelle, déployées au moins deux ans après leur promulgation ; droit d'initiative législative du Conseil de pilotage éducatif
+O6 -1 | Enseignement disciplinaire des « savoirs techniques et pratiques » au collège (artisanat, cuisine, couture), jusqu'à deux demi-journées par semaine
+O6 -1 | EVARS intégrée aux SVT ; éducation civique par le vote, le débat et la délibération ; usage critique de l'IA
+O6 -1 | CAP en trois ans et bac professionnel en quatre ans
+O6 -1 | Lycées professionnels : fin des enseignants contractuels, plus d'infirmiers, psychologues et assistants sociaux ; jumelages entre lycées pro
+E6 -1 | Ouvrir des places en BTS et adapter leurs programmes aux bacheliers pro ; Bachelor professionnel expérimental
+O6 0 | Carte des formations professionnelles refaite selon les souhaits des jeunes et les secteurs prioritaires, renforcée en zone rurale
+E4 -1 | Places en internat, permis de conduire et transports financés pour les jeunes de la voie professionnelle
+E3 -1 | Droit universel au retour aux études : un congé rémunéré une fois dans la carrière pour une formation diplômante
+O6 -2 | Lycée unique de culture commune rapprochant voies générale et professionnelle (à dix ans)
+O6 -1 | Remplacer Parcoursup : méthodes de sélection publiques, lycée d'origine supprimé des dossiers, priorité au classement des vœux des élèves, commissions d'appel, droit opposable à un conseiller
+E6 -1 | Créer des places dans le supérieur selon les préférences, les débouchés et les besoins
+O6 -2 | Établissements privés sous contrat soumis à des objectifs de mixité sociale, financement public retiré s'ils refusent
+O6 -1 | Formation des enseignants : au moins 50 % consacrés à la pédagogie ; formation continue obligatoire par les pairs
+O6 -1 | Réduire progressivement les notes sur 20 au profit d'évaluations par compétences ; tutorat par les pairs
+E6 -1 | Un infirmier et un psychologue par établissement du second degré, RASED complets ; sécurité émotionnelle des élèves
+E6 -2 | Activités périscolaires quasi gratuites selon le revenu ; rythmes scolaires recalés (fondamentaux le matin)
+E3 -1 | Animateurs périscolaires : contrats stables jusqu'à 33 heures, un animateur pour 10 enfants
+E6 -1 | Projets éducatifs territoriaux renforcés, stages de soutien gratuits pendant les vacances
+O6 -2 | Objectif national de mixité scolaire fixé par la loi ; diagnostic mixité obligatoire avant toute révision de la carte scolaire
+O6 -2 | Dotations des écoles privées sous contrat modulées selon leur mixité sociale, transparence totale des admissions
+E1 -1 | Supprimer la réduction d'impôt pour les cours particuliers
+E2 -2 | Pas un euro retiré du budget de l'Éducation nationale ; aucune école fermée sans concertation
+E3 -2 | Revalorisation des salaires des enseignants sans contrepartie, hausse de la grille indiciaire ; plus de postes aux concours, bourses dès la licence
+E6 -1 | Logements conventionnés réservés et aides à l'installation pour les néotitulaires en zone tendue
+E2 -1 | Recruter des personnels administratifs dans les écoles, alléger les tâches administratives des enseignants
+E2 -2 | Statut de fonctionnaire pour les AESH, temps plein reconnu
+E4 -1 | Service unifié de santé scolaire par rectorat, visites médicales annuelles pour élèves et enseignants ; continuité entre école et médico-social
+## francois-ruffin/face-a-la-crise-du-logement-faire-sauter-le-verrou.txt
+E6 -3 | Plafonnement des loyers partout ; régulation du marché plutôt que profusion d'aides
+E6 -3 | Encadrement des loyers généralisé à tout le territoire, compléments de loyer encadrés (dérogation seulement pour les logements performants et protégés de la chaleur)
+E6 -1 | Doubler le prêt à taux zéro (de 60 000 à 120 000 €), y compris pour les bénéficiaires en cours
+E6 -2 | Prêt public à taux réduit en « second ressort » pour les ménages exclus du crédit à cause d'un contrat précaire
+E1 -2 | Supprimer l'abattement progressif sur les plus-values immobilières hors résidence principale (au moins 3 milliards par an)
+E6 -1 | Bail réel solidaire réservé aux modestes et classes moyennes, exonération de taxe foncière des offices fonciers solidaires ; établissements publics fonciers renforcés partout
+E6 -2 | Quotas locaux de résidences principales : au-delà, tout logement vendu doit devenir résidence principale
+E1 -2 | Meublés touristiques imposés au moins deux fois plus, locations pérennes abordables moins imposées ; fin des abattements et amortissements des multipropriétaires
+E1 -1 | Taxe d'habitation sur les résidences secondaires progressive selon les revenus
+E6 -2 | Police intercommunale du logement : moyens « socles » financés à 75 % par l'État ; sanctions au moins deux fois supérieures aux gains illégaux ; registre des destinations et des loyers
+E6 -2 | Travaux d'office élargis aux risques de chaleur (volets) quand les propriétaires ne les font pas
+E6 -3 | Abroger la loi Kasbarian-Bergé contre les expulsions, revenir à la prévention
+E6 -2 | 8 000 places d'hébergement d'urgence de plus par an en zone tendue ; logement d'abord ; relance du logement très social avec quota d'attribution aux sans-abri
+E6 -2 | Produire 200 000 logements publics à loyer réglementé par an, dont 40 000 pour étudiants et jeunes actifs
+E6 -2 | 200 000 places de logement pour étudiants et jeunes actifs d'ici 2032 (8 à 12 milliards), sur le foncier public et les friches
+E6 -1 | Rééquilibrer l'offre de formations supérieures et d'emplois publics vers les villes moyennes (démétropolisation)
+E4 -1 | 25 000 places par an en résidences autonomie et habitat partagé pour les seniors, gérées par l'économie sociale ; plus de places d'EHPAD en zone tendue ; adaptation des domiciles
+E6 -2 | Doubler les aides aux bailleurs sociaux (+2 à 3 milliards par an), y compris outre-mer ; un million de logements à loyer réduit en cinq ans
+E6 0 | Définir et financer l'habitat partagé
+E7 -2 | Urbanisme circulaire : densifier, construire sur les friches, limiter les opérations très peu denses ; dotation « transition écologique » pour les collectivités
+E7 -1 | Mieux encadrer l'implantation des zones commerciales et logistiques ; remettre en question certains grands projets d'infrastructures
+E7 -2 | Transformer les CEE en contribution des énergéticiens à l'Anah : une seule aide, accompagnement gratuit
+E7 -2 | 15 milliards par an pour 600 000 rénovations d'ampleur et 400 000 gestes par an ; éco-PTZ public garanti, avances de subventions élargies
+E3 0 | Label RGE simplifié pour tous les salariés, formation courte prise en charge
+E7 -1 | Protections solaires, brasseurs d'air et climatiseurs installés gratuitement pour les plus vulnérables ; réseaux de chaleur et de froid
+E6 -1 | Sanctuaires de fraîcheur publics climatisés ; chantiers participatifs d'ombrage et de végétalisation
+E6 -2 | 60 000 à 80 000 réhabilitations de logements vacants dégradés par an ; expropriation facilitée des logements vacants dégradés depuis plus de deux ans
+E7 -2 | Fin des passoires thermiques d'ici 2032
+## francois-ruffin/plan-data-centers.txt
+E6 -1 | Raccordement électrique par ordre de priorité : hôpitaux, logements, écoles, électrification et industrie avant les data centers non stratégiques
+E5 -1 | Avis conforme ou veto suspensif de la commune d'implantation sur les très grands data centers ; l'État doit motiver toute décision contraire
+E7 -1 | Débat public obligatoire dès le premier acte engageant le territoire, actes irréversibles gelés ; contre-expertise financée par le porteur ; évaluation environnementale unique des projets liés
+E7 -1 | Un seul dossier ICPE par site pour empêcher le découpage sous les seuils Seveso
+H1 | Consultation obligatoire des habitants des communes concernées, un résultat défavorable déclenchant le veto suspensif
+S3 +2 | Moratoire de cinq ans sur les data centers non souverains
+## francois-ruffin/plan-de-redressement.txt
+H1 | États généraux de la fiscalité pour débattre des priorités budgétaires et de la répartition des efforts
+E2 +1 | Budget 2027 : 48 à 62 Md€ dégagés (22 Md€ d'économies, 26 à 44,5 Md€ de recettes) sans réduire les crédits ministériels
+E5 -1 | Crédit d'impôt recherche recentré sur les TPE, PME et ETI et conditionné à ce que les découvertes ne profitent pas à des entreprises hors UE (3 Md€)
+E5 -1 | Rationaliser les aides aux grandes entreprises (10 Md€) : déclasser des niches, cibler les secteurs exposés et les aides efficaces
+E1 -1 | Réductions de cotisations patronales lissées autour du SMIC et gelées à leur niveau de 2026 (5 Md€)
+E5 -2 | Aides publiques redirigées vers les ETI et PME manufacturières en fonds propres patients, l'État actionnaire au conseil d'administration
+E5 -1 | Avantages fiscaux de l'épargne conditionnés au financement des entreprises industrielles non cotées, en partie via un fonds d'épargne public
+S1 -1 | Faire appliquer au niveau européen les règles qui obligent les pays en excédent à relancer leur demande intérieure
+E3 -1 | Aides à l'apprentissage recentrées sur le secondaire et les BTS, réduction ciblée de 30 % des contrats du supérieur (6 Md€)
+E4 -1 | Baisse des prix des produits de santé, renégociation des médicaments innovants, génériques, révision des remboursements de dispositifs
+E4 0 | Prévention : réduire d'un tiers les événements indésirables à l'hôpital, prévenir les chutes des personnes âgées
+E4 -1 | Ajuster les tarifs des secteurs de santé très rentables (2 Md€), sans économies sur l'hôpital public
+E1 -3 | Taxe Zucman : 2 % par an sur les patrimoines de plus de 100 M€ (18,5 Md€)
+E1 -2 | Impôt sur les grandes successions : abattement porté à 200 000 €, dons reçus au cours de la vie intégrés, avantages assurance-vie, démembrement et pacte Dutreil réduits, taux marginal de 50 % au-delà de 6 M€
+E1 -2 | Plus-values latentes taxées au moment de la transmission pour le 1 % des plus grandes successions, avec report jusqu'à la vente
+E1 -2 | Dividende climatique : contribution de 4 % des dividendes au-delà de 10 M€ (2 % en dessous) pour la transition écologique
+E1 -2 | Dividende climatique de 2 % pour toutes les entreprises dès 2026 (plus de 6 Md€)
+E1 -2 | Contribution exceptionnelle sur les surprofits du pétrole et du raffinage, au périmètre élargi au stockage et à la commercialisation
+E2 -1 | Renforcer les moyens humains du contrôle fiscal et social pour rattraper les pays comparables ; mettre fin aux montages « CumCum »
+E7 -1 | Accompagnement indépendant et gratuit étendu aux ménages aux revenus intermédiaires ; aides à la climatisation, aux volets et brasseurs d'air dans les bouilloires thermiques, règles patrimoniales assouplies
+E6 -2 | Travaux d'urgence financés par l'État contre la chaleur dans les écoles, hôpitaux et Ehpad les plus exposés (600 M€ par an en 2027 et 2028)
+E6 -1 | Dotation globale de reconstruction écologique pour les collectivités à la place des appels d'offres du Fonds vert ; +3 Md€ par an d'ici 2030 pour les bâtiments publics
+E6 -1 | Un bâtiment public climatisé « sanctuaire » dans chaque commune pour les canicules ; espaces verts ombragés dans les quartiers qui en manquent
+O1 -1 | Sécurité civile : 21 000 sapeurs-pompiers professionnels de plus (1 Md€ par an), cagoules filtrantes généralisées
+O1 -1 | Flotte portée à 16 Canadair ; au moins 5 000 camions-citernes feux de forêts et renouvellement du parc vétuste
+E7 -2 | Forêts privées peu gérées confiées à des régies publiques, propriétaires négligents sanctionnés ; 3 millions d'hectares en gestion publique, ONF renforcé
+E5 -2 | Acquisition publique d'environ 25 % des forêts privées les moins entretenues (4 à 5 Md€), préemption étendue et expropriation indemnisée simplifiée
+E5 -1 | Paiements pour services environnementaux pour le retour de l'élevage extensif dans les zones à risque d'incendie
+E7 -2 | Leasing social public : 3 millions de voitures électriques en 5 ans, 100 à 200 € par mois sur 7 à 11 ans, véhicules neufs fabriqués en France
+S3 +1 | Score environnemental plus exigeant pour réserver les aides aux véhicules produits en Europe à électricité décarbonée ; recyclage et raffinage européen des matériaux des batteries
+E1 -1 | Taxe flottante sur les carburants pour un prix prévisible et légèrement croissant (environ 2 € le litre en 2027, 2,2 € en 2032)
+E1 -1 | Avantages fiscaux des véhicules de fonction et frais kilométriques remis à plat, remplacés par un crédit d'impôt uniforme de 30 % des trajets domicile-travail
+## francois-ruffin/plan-urgence-climat.txt
+O1 -1 | Une trentaine de Canadair ou équivalents fabriqués en France, drones de détection, détecteurs de monoxyde pour chaque pompier
+E3 -1 | Salaires des pompiers professionnels +10 %, indemnité des volontaires +15 %, pompiers rattachés au statut de travailleurs essentiels
+E4 -1 | Incendies extrêmes reconnus comme catastrophes naturelles et indemnisés comme tels
+E4 -1 | Douze séances de psychologue remboursées à 100 % en accès direct pour les habitants des zones sinistrées
+E5 -2 | Sécheresse : indemnité de solidarité nationale dès 30 % de pertes dans toutes les filières, même taux pour assurés et non assurés, 5 000 € par paysan touché, avance des aides PAC
+E7 -1 | Fonds Barnier porté de 300 M€ à 1 Md€ en 2027, travaux de réduction de vulnérabilité pris en charge à 100 % pour les ménages modestes ; dispositif « Mieux reconstruire après inondation » généralisé
+E7 -1 | Péréquation amont-aval de la GEMAPI ; agences de l'eau renforcées pour renaturer les cours d'eau, restaurer les zones humides et réhydrater les territoires
+E4 -2 | Sécurité climatique : nouvelle branche de la Sécurité sociale réunissant CatNat, Fonds Barnier, calamités agricoles, retrait des argiles et érosion littorale
+## francois-ruffin/pour-proteger-notre-industrie-relocaliser-100-produits-strategiques.txt
+S3 +3 | Plan des 100 produits stratégiques (aliments, médicaments, armement, acier, technologies vertes, numérique) protégés par droits de douane, taxes aux frontières et quotas d'importation
+E5 -2 | Feuille de route par produit établie avec salariés, industriels et syndicats : commandes sécurisées, aides conditionnées, commande publique orientée
+E5 -1 | Aides publiques conditionnées au maintien des emplois, à l'investissement et à la formation, sinon remboursées
+S3 +3 | Fin des négociations de libre-échange (Malaisie, Thaïlande, Émirats, Philippines), refus de ratifier le CETA, clauses de sauvegarde du Mercosur déclenchées
+S3 +2 | Contrôles sanitaires renforcés sur les importations, accords suspendus dès que la santé est menacée ; importations ne respectant pas les normes sanitaires françaises interdites
+E5 -2 | Aides d'État ciblées pour l'acier, l'aluminium et le médicament face au dumping, conditionnées à 10 ans d'emplois et à la décarbonation, majorées dans les régions désindustrialisées
+S3 +1 | Mécanisme d'ajustement carbone aux frontières étendu au photovoltaïque et à la chimie, contrôles renforcés
+S1 +2 | Rapport de force avec Bruxelles : suspendre de nouvelles interconnexions et limiter les exportations d'électricité bon marché
+S3 +2 | « Buy French Act » : 80 % de commande publique localisée en France, aides à la transition conditionnées à une empreinte écologique, étiquetage d'origine sur tous les produits de grande consommation
+E5 -2 | Participations publiques dans les PME-ETI plutôt qu'aides sans condition ; contrôle public des entreprises les plus stratégiques, pôle public du médicament
+E7 -2 | Sortir l'électricité du marché pour en réguler les prix ; électricité des industries lourdes subventionnée au moins autant que chez les concurrents
+E3 -1 | Revaloriser salaires, horaires et carrières industriels ; recentrer formations supérieures, alternance et formation continue sur l'industrie
+E2 -1 | Effectifs de la DGCCRF ramenés au moins au niveau de 2007 et douanes renforcées ; sanctions dissuasives et interdictions d'importer contre les produits non conformes
+S3 +2 | Défense commerciale renforcée contre le dumping chinois, droits relevés quand une filière est menacée (lysine, textile d'ultra-fast fashion)
+S3 +2 | Commande publique de défense proche de 100 % fabriquée en France ; flottes publiques de véhicules fabriqués en France ; conditions de fabrication locale dans les appels d'offres d'énergies renouvelables
+E5 -1 | Cantines : aller vers 80 % de produits de l'agriculture durable, pour l'essentiel français
+E5 -1 | Étiquetage Origin'Info rendu obligatoire, origine des ingrédients par ordre décroissant ; « Made in France » réservé à au moins 50 % de valeur ajoutée française
+E6 -1 | Maisons de la réparation et du réemploi dans chaque quartier et canton (environ 50 000 emplois)
+E5 -1 | Aides publiques aux PME-ETI conditionnées à leur effet sur l'emploi national et territorial, notamment dans les bassins en difficulté
+E5 -1 | L'État prend en charge 100 % des surcoûts de remise en état des friches pour les nouvelles usines (environ 1 Md€ par an)
+E5 -3 | Production publique et participations majoritaires dans la santé, la défense et le numérique : pôle public du médicament à gouvernance mixte produisant les médicaments essentiels
+E5 -2 | Participations publiques dans les entreprises de défense bénéficiaires des commandes ; Chips Act européen avec commandes garanties et participations ciblées
+S3 +2 | Interdire la vente à des fonds étrangers des industries subventionnées ou stratégiques
+E5 -2 | Assurance-vie : avantages fiscaux conditionnés à au moins 5 % de fonds propres dans les industries non cotées (70 Md€), en partie via Bpifrance
+E7 -2 | Contrats de long terme gérés par un acheteur unique public : électricité jamais facturée au-dessus du coût de production national, tarifs réseau minimaux pour toute l'industrie
+E7 -1 | Data centers réservés en priorité aux groupes français dont l'État est actionnaire
+E5 -1 | Subventions indirectes ciblées aux industries électro-intensives en réponse aux aides allemandes et chinoises
+E3 -1 | Plus de places de BTS dans les villes petites et moyennes ; deux fois plus de reconversions financées par l'État, sans passer par le chômage ni dépendre de l'employeur
+## francois-ruffin/pour-une-democratie-en-continu-vive-les-etats-generaux.txt
+H1 | Référendum d'initiative citoyenne instauré dès l'arrivée au pouvoir
+H1 | États généraux tirés au sort sur le modèle des conventions citoyennes, sur tous les grands sujets (fiscalité, éducation, logement), leurs propositions suivies
+E3 -2 | Un tiers de salariés dans les conseils d'administration ; une demi-journée par mois pour discuter de l'organisation du travail sans la hiérarchie
+H1 | RIC législatif, abrogatif et constitutionnel dès 1 million de signatures, après contrôle du Conseil constitutionnel, question rédigée par le CESE avec des citoyens tirés au sort
+H1 | États généraux de 250 membres (150 citoyens tirés au sort à participation obligatoire, 50 de la société civile, 50 élus) pouvant saisir le référendum ou le Parlement, inscrits dans la Constitution
+E3 -1 | Congé citoyen à salaire maintenu, remboursé par l'État à l'employeur, pour siéger aux États généraux
+H1 | Premiers États généraux sur la fiscalité, puis sur l'organisation du pouvoir, quitte à changer de République
+## francois-ruffin/pour-une-exception-agriculturelle-francaise.txt
+S3 +3 | Exception agriculturelle : protections aux frontières, quotas d'importation et barrières douanières, rupture avec le libre-échange agricole (CETA, Nouvelle-Zélande, Mercosur)
+E5 -2 | Régulations intérieures : prix planchers, coefficient multiplicateur et quotas de production
+E5 -2 | Aides de la PAC versées selon le travail réellement présent et les premiers hectares plutôt qu'à la surface, plafonnées pour les plus grandes exploitations
+E7 -1 | Transition vers l'agriculture paysanne et biologique, sortie progressive des intrants de synthèse ; élevage herbager contre le hors-sol
+E5 -1 | Bio dans les cantines et hôpitaux : 20 % respecté partout, puis 30 % en 2030 et 50 % en 2035, avec un accompagnement
+E4 -1 | Expérimentations de sécurité sociale de l'alimentation soutenues dans tous les territoires
+E5 -1 | Installer plus de paysans qu'il n'en part : accès à la terre pour ceux qui la travaillent, formes collectives, statut avec retraites et congés dignes, formation agricole publique renforcée
+E5 -3 | Prix minimums garantis imposés aux acheteurs, fondés sur les coûts de production, la rémunération du travail et l'amortissement, fixés par les interprofessions ou à défaut par l'État
+E5 -2 | Transparence voire encadrement des marges, contractualisation sur le modèle du commerce équitable
+S3 +3 | Interdire toute importation agricole à un prix inférieur aux prix planchers nationaux ; clauses de sauvegarde sanitaires contre les aliments traités aux substances interdites
+E7 -1 | Paiements pour services environnementaux généralisés (haies, couverts, rotations, prairies, protection des captages d'eau)
+E5 -1 | Fonds de garantie pour l'agriculture biologique : aide au maintien rétablie, Agence Bio renforcée pour structurer la transformation et la restauration collective
+S3 +2 | Sortir des traités de libre-échange signés avec des pays qui ne respectent pas nos exigences sociales et environnementales
+## francois-ruffin/redonner-aux-jeunes-les-clefs-de-leur-avenir.txt
+E3 -2 | Garantie d'emploi civique pour tout jeune qui le demande, payé au moins au SMIC avec cotisations retraite, dans les associations (enfance, personnes âgées, réparation, bio, rénovation)
+E4 -2 | Bourses refondues : plafonds relevés et patrimoine des parents pris en compte, jusqu'à 1 100 € par mois (socle + complément logement), versées sur 12 mois, indexées sur l'inflation, sans effets de seuil
+E4 -2 | Garantie jeune universelle et sans quotas pour les jeunes ni en emploi ni en formation : revenu mensuel et accompagnement intensif, solution proposée sous quatre mois
+O6 -1 | Mentorat développé dans les territoires périurbains et ruraux ; service public de l'orientation avec un interlocuteur formé dans chaque lycée
+E3 -1 | Stages rémunérés et cotisés comme l'apprentissage
+E3 -1 | Abroger le décret de 2015 sur les travaux dangereux des jeunes, contrôles renforcés et plus d'inspecteurs du travail
+O6 -1 | Droit réel à la poursuite d'études avec plus de places en BTS et BUT ; formations supérieures rééquilibrées vers les villes moyennes
+O3 -1 | Fin des droits d'inscription différenciés pour les étudiants étrangers
+O6 -1 | Distinction nette entre supérieur public et privé ; plus de représentants d'intérêts privés dans les conseils d'administration des universités
+E4 -1 | Fonds national d'aide au permis de conduire et au BSR pour les jeunes des quartiers prioritaires et des territoires ruraux
+E6 -2 | Plus de lignes de bus rurales tôt le matin, tard le soir et le week-end ; abonnement régional unique bus + TER + scolaire à tarif réduit pour les moins de 26 ans
+O6 -1 | Un ordinateur portable, si possible reconditionné, pour chaque élève entrant au lycée ; module d'accès aux droits et de recherche d'emploi en SNT
+H1 | Assemblée des jeunesses de 577 jeunes de 16 à 25 ans tirés au sort, consultée sur les lois qui les concernent
+O6 -1 | Démocratie lycéenne et étudiante renforcée : plus d'élus élèves dans les conseils, conseil de la vie lycéenne doté d'un budget et d'un pouvoir de décision
+H1 | Droit de vote à 16 ans pour toutes les élections
+E6 -1 | Un lieu d'accès aux droits à moins de 20 km, ouvert jusqu'à 20 h ; réponse sous trois semaines avec trois interlocuteurs au plus
+E3 -1 | Pénaliser les entreprises qui abusent de l'intérim
+## francois-ruffin/separation-argent-etat.txt
+H1 | Salaires du président et des ministres alignés sur l'échelle des salaires ; 20 M€ d'économies sur l'Élysée ; rentes à vie des anciens présidents et Premiers ministres supprimées
+H1 | Candidats à la présidence et ministres sans délit financier, à jour de leurs impôts, actifs gérés par un tiers indépendant ; un ministre mis en examen quitte le gouvernement
+O2 +1 | Fin de l'inviolabilité pénale et civile du président et suppression de la Cour de justice de la République : la justice ordinaire pour tous
+O2 +1 | Casier judiciaire vierge exigé des candidats à toute élection pour les crimes, délits sexuels et manquements à la probité, fraude fiscale et électorale comprises
+H1 | Fin du cumul des fonctions ministérielles et des mandats exécutifs locaux ; stages d'immersion des ministres dans les métiers de leur ministère
+H1 | Haute Autorité à la probité fusionnant HATVP, Commission des comptes de campagne et Agence anticorruption, avec pouvoir d'enquête et de sanction
+H1 | Dix ans de « refroidissement » pour les ministres, conseillers et hauts fonctionnaires sortants : ni lobbying ni conseil auprès des acteurs qu'ils ont suivis
+H1 | Pantouflage strictement encadré, rétro-pantouflage interdit ; emplois supérieurs à nouveau réservés aux fonctionnaires de carrière
+E2 -1 | Cabinets de conseil seulement en dernier recours, après les compétences internes et la recherche publique ; missions publiées ; plan de réinternalisation des compétences
+H1 | Lobbying : empreinte de décision publique sur chaque texte, cadeaux interdits, registre des visiteurs, plafond de dépenses des lobbies, contacts interdits dans la santé, la défense, l'énergie et les données
+O2 -1 | Indépendance du parquet : le gouvernement ne nomme plus les magistrats du parquet
+O2 -1 | Convention judiciaire d'intérêt public limitée à la corruption à l'étranger, la justice ordinaire pour le reste
+H1 | Nominations présidentielles bloquées par une majorité simple des parlementaires ; dirigeants d'établissements publics nommés par des collèges
+E5 -1 | Privatisations encadrées et sommes versées aux banques et cabinets publiées, y compris pour les privatisations passées
+S3 +2 | Étude stratégique publiée pour chaque rachat étranger d'entreprise stratégique, nationalisation possible ; décision du ministre de l'Économie soumise à la commission des affaires économiques
+## francois-ruffin/statut-travailleurs-essentiels.txt
+E3 -2 | Principe « broyeur-payeur » : cotisations relevées pour les employeurs qui imposent des conditions de travail dégradées
+E3 -3 | Indexation des salaires sur l'inflation, comme jusqu'en 1982
+E3 -2 | Grilles de classification des branches remises au-dessus du SMIC et revalorisées pour permettre une progression
+E3 -2 | Heures avant 8 h et après 18 h payées double, nouvelle catégorie d'horaires atypiques dans le code du travail
+E3 -2 | Coupures de plus de 2 h rémunérées, durée de service minimale, trajets entre deux interventions comptés comme temps de travail
+E3 -2 | Fin des dérogations de branche au temps partiel minimum de 24 h, rappels de salaire pour les entreprises en infraction
+E4 -2 | Un trimestre de retraite en plus pour quatre trimestres travaillés dans un métier pénible, automatiquement
+E3 -1 | Plan national de formation, droit opposable à atteindre le niveau bac à salaire maintenu après 5 ans, fonds des OPCO orientés vers les travailleurs essentiels
+E3 -2 | Sous-traitants alignés sur les droits de l'entreprise donneuse d'ordre (régime le plus favorable)
+E6 -1 | Surcotisation au 1 % logement pour les employeurs de travailleurs essentiels à horaires atypiques ; accès au 1 % sans seuil de 10 salariés et priorité aux travailleurs essentiels
+E3 -2 | SMIC à 1 600 € dans la continuité du Nouveau Front populaire
+E4 -2 | Retraite à 60 ans dans la continuité du Nouveau Front populaire
+## francois-ruffin/temps-loisirs.txt
+E3 -1 | Statut du bénévole : protection sociale partielle, formation, trimestres de retraite, responsabilité des dirigeants bénévoles plafonnée ; congé bénévole sans perte de salaire
+E6 -2 | Plan « Salles des fêtes et maisons du peuple » : 1 Md€ par an pendant cinq ans pour rénover, ouvrir les écoles hors temps scolaire et équiper les territoires dépourvus
+E2 -1 | 60 000 contrats aidés pour les associations, postes FONJEP doublés et aidés à 15 000 € ; guichet unique des subventions dans chaque canton
+E2 -1 | La subvention pluriannuelle devient la règle pour les associations d'intérêt général, l'appel à projets l'exception
+E4 -1 | Moitié du coût des licences sportives prise en charge pour les familles modestes au-delà du Pass'Sport ; animateurs embauchés pour les accueils de loisirs
+E4 -1 | Loi pour les vacances : un séjour collectif gratuit et automatique pour chaque enfant, aides fusionnées en un guichet à notification automatique, BAFA gratuit, animateurs itinérants vers les adolescents
+E6 -1 | Billet TER illimité à 29 € en juillet-août ; prix des billets d'avion vers l'outre-mer plafonnés
+E5 -2 | Fin des concessions autoroutières, tarification publique des péages
+E6 -1 | Tourisme social sanctuarisé : plan de rénovation des auberges de jeunesse, campings municipaux et villages de vacances par l'État et la Caisse des dépôts ; aides au tourisme conditionnées à la modération des prix
+E6 -1 | Grandes institutions culturelles nationales tenues de consacrer 25 % de leur programmation itinérante aux régions ; route nationale des métiers d'art
+E6 -1 | Pass Culture refondu : part collective scolaire rétablie et augmentée, ouvert aux adultes précaires, plateforme publique pour les pratiques amateurs
+E6 -1 | Prêt gratuit de matériel de loisirs généralisé dans les médiathèques ; ateliers de pratiques manuelles et de réparation financés
+O6 -1 | Pratique artistique à l'école ouverte aux associations et intervenants ; conservatoires et MJC réunis en maisons des pratiques culturelles centrées sur la pratique
+## francois-ruffin/travaillisme-ecologique.txt
+E7 -2 | Loi de programmation de la reconstruction écologique, planification démocratique avec les territoires
+E3 -2 | « Territoires zéro chômeur de longue durée » généralisés partout, CDI à temps choisi dans les métiers de la reconstruction écologique
+E3 -1 | Comités régionaux de l'emploi tripartites gérant le budget de la formation professionnelle ; référent transition écologique dans chaque agence France Travail ; aides à l'apprentissage réorientées vers ces métiers
+E3 -2 | Loi d'adaptation du travail aux chaleurs : canicule motif de chômage technique dans plus de métiers, seuils de température imposant l'arrêt du travail
+E3 -2 | CHSCT rétablis, salariés nombreux aux conseils d'administration, commission environnement dans chaque CSE, lanceurs d'alerte mieux protégés, négociation écologique de branche tous les 3 ans
+E2 -1 | Commissariat général à la planification fusionnant le Secrétariat à la planification écologique et le Haut-commissariat au plan
+E7 -1 | Commissions locales de l'eau renforcées avec des citoyens tirés au sort ; assises de la qualité de l'air dans les métropoles, ZFE décidées localement
+E7 -2 | Référendum sur l'interdiction de la publicité pour les produits les plus polluants (voitures thermiques, billets d'avion)
+E7 -2 | Référendum sur l'interdiction des vols intérieurs quand le train fait le trajet en moins de 4 heures
+E7 -1 | Programme de solidarité climatique : volets, stores et brasseurs d'air installés gratuitement chez les plus vulnérables ; climatisation des écoles, hôpitaux et Ehpad
+O2 -2 | Présomption de connaissance pour les dirigeants de groupes responsables de pollutions majeures, délit de faute systémique, délégation de pouvoir encadrée, délit pénal pour manquement au devoir de vigilance
+E7 -1 | Chaleur excessive intégrée à la précarité énergétique ; certification RGE des artisans simplifiée et prise en charge
+E7 -1 | Rétrofit soutenu ; autopartage électrique dans les territoires ruraux et périurbains ; cars, transport à la demande et covoiturage du quotidien
+E6 -2 | Plus de trains du quotidien sur le réseau existant, trains fabriqués en France ; fret ferroviaire triplé, trains de nuit, trafic aérien réduit de moitié
+E7 -1 | Plafond de consommation d'électricité des data centers fixé démocratiquement, chaleur récupérée pour les bâtiments voisins
+E7 -3 | Sortie progressive du marché de l'électricité : fin de la concurrence sur la vente, prix fondés sur les coûts, retour à une production 100 % publique par EDF et les régies locales
+E7 +1 | Prolonger les centrales nucléaires tant que l'autorité de sûreté le valide, construire six EPR2, huit de plus selon le devis d'EDF ; annuler la fusion ASN-IRSN, limiter la sous-traitance de maintenance
+E7 -1 | Barrages renforcés pour le stockage, éolien développé, rôle accru des collectivités et retombées locales ; usine d'éoliennes relocalisée en France
+E5 -2 | Éco-organismes réformés : fin de la concurrence entre eux, gouvernance avec l'État, les collectivités et les associations, fonds réparation retirés à leur gestion, bonus réparation relevé
+E1 -1 | Taxe « balai » sur les produits hors filières de responsabilité élargie, pour financer les maisons de la réparation et la gestion des déchets
+E7 -1 | Investissements dans les usines de recyclage, produits recyclés dans la commande publique, nouvelle loi sur l'éco-conception
+E7 -2 | Retour de la consigne du verre, réduction du plastique, électrification des fours verriers
+E5 +1 | Catégorie comptable « matières premières pérennes », non amortissable, pour valoriser la récupération des métaux
+E4 -1 | Régime CatNat révisé tous les 3 à 5 ans ; l'État garantit la présence des assureurs dans les territoires sinistrés sans surprimes ni franchises insoutenables
+E2 -1 | Nouveaux financements des SDIS pour les collectivités ; formation des pompiers volontaires aux incendies
+E7 -1 | Réseaux de chaleur et de froid urbains ; infrastructures adaptées ; végétalisation et ombrage des espaces publics par chantiers participatifs

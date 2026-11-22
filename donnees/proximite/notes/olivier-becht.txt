@@ -1,0 +1,178 @@
+# Becht : livre « Refonder ou périr » en onze parties, lu en entier.
+## olivier-becht/projet-france-le-livre.txt
+## olivier-becht/wp-content-uploads-livre-olivier-becht-projet-france-partie-1-0d37b44fd60e9388-pdf.txt
+## olivier-becht/wp-content-uploads-livre-olivier-becht-projet-france-partie-10-35f1f9c6d62b4e2a-pdf.txt
+E1 0 | Ni hausse ni baisse du taux des impôts pendant le mandat : des règles fiscales stables
+E2 +2 | Rabot de 3 % sur toutes les dépenses publiques : environ 50 milliards d'économies immédiates
+E5 +2 | Supprimer la moitié des 400 000 normes françaises
+H1 | Supprimer une strate de l'organisation territoriale
+E1 -1 | Récupérer 25 milliards de fraude fiscale et sociale par une nouvelle organisation contre la criminalité économique et le blanchiment
+S1 -2 | Défense européenne et sécurité des frontières mutualisées et financées par une Confédération européenne
+## olivier-becht/wp-content-uploads-livre-olivier-becht-projet-france-partie-11-fbba888e20535914-pdf.txt
+## olivier-becht/wp-content-uploads-livre-olivier-becht-projet-france-partie-2-522c7f44c2f5db04-pdf.txt
+## olivier-becht/wp-content-uploads-livre-olivier-becht-projet-france-partie-3-50fc448ee1dcf36f-pdf.txt
+E2 0 | Programmation sur vingt ans plutôt que sur un quinquennat
+S3 +1 | Autonomie dans cinq domaines vitaux : se nourrir, se soigner, se défendre, se déplacer, se loger
+E3 +1 | Formation professionnelle confiée à l'entreprise
+H1 | Organisation totalement décentralisée autour de Provinces autonomes pour normer, financer et mettre en œuvre leurs compétences
+S1 -1 | Refonder l'Europe autour d'un noyau dur bâti comme une confédération, en réduisant l'Europe technocratique de Bruxelles
+## olivier-becht/wp-content-uploads-livre-olivier-becht-projet-france-partie-4-d23eb5f5d21db80b-pdf.txt
+E7 -1 | Révolution des carburants de synthèse : 150 milliards sur vingt ans, production électrique nucléaire et renouvelable massifiée, neutralité carbone en 2045
+S3 +1 | Diplomatie des métaux et réouverture du sous-sol (lithium), société nationale chargée des stocks stratégiques
+E5 +1 | Délai d'ouverture d'une mine ramené à deux ans
+E5 +1 | Fixer des résultats aux entreprises en leur laissant la liberté des moyens ; fin des surtranspositions
+S3 +2 | Mesures miroirs dans chaque loi : tout produit importé respecte les normes imposées aux producteurs français ; contrôles aux frontières massivement renforcés
+S3 +1 | Relocaliser le tissage du lin et penser l'alimentation comme une filière entière
+E5 -1 | Réformer l'indemnisation des aléas climatiques, accompagner les filières agricoles en surproduction, généraliser l'étiquetage de l'origine
+E7 -1 | Agriculture régénératrice : entretien des sols, haies et bois rémunéré par des contrats locaux
+E7 +1 | Déroger au zéro artificialisation nette pour installer de nouvelles activités ; terrains non agricoles libérés pour les usines par dérogation
+S3 +1 | Acier et aluminium verts produits en France face aux importations chinoises et américaines
+E5 -1 | Trois grands projets industriels outre-mer (Caraïbe, océan Indien, Pacifique)
+S3 +2 | Interdire le rachat des entreprises stratégiques par des puissances étrangères ; renforcer l'intelligence économique
+E5 -1 | Trois grands défis : vaincre le cancer en dix ans, IA et ordinateur quantique (« Airbus du numérique »), vaisseau spatial vers d'autres étoiles
+E5 -1 | DEF-I-TECH : recherche concentrée sur les grandes priorités, effort de recherche porté à 3 % du PIB
+E5 +1 | Statut de chercheur-entrepreneur
+E3 0 | Salariés actionnaires de leur entreprise (voix au conseil d'administration), intéressement et participation renforcés, fin du blocage de cinq ans, plutôt que plus d'impôt sur l'investissement
+E1 +1 | Primes de partage de la valeur fusionnées, avantage fiscal et social relevé jusqu'à plusieurs milliers d'euros par an
+E1 +1 | « Bouclier travail » : 60 % de toute hausse de revenu en net pour le salarié
+O6 +1 | Refonder l'école sur la culture de l'effort, objectif top 10 PISA ; mixité dans le public et le privé
+O6 0 | Service public numérique de l'éducation du CP à l'université ; IA outil quotidien de l'élève et du professeur
+O6 +1 | Autonomie des établissements pour recruter les enseignants selon leur projet pédagogique
+O6 0 | Écoles normales recréées dès la première année d'université ; gestion des enseignants décentralisée
+E3 -1 | Salaire des enseignants porté à 1,8 SMIC (professeur des écoles) et 2,3 SMIC (agrégé) en début de carrière
+O6 +2 | Brevet primaire obligatoire pour entrer au collège, classe passerelle après le CM2
+O6 +1 | Plan « mathématiques et sciences », examen de sciences en fin de collège ; savoir-être et canalisation de la violence
+O6 -1 | Classes Prépa-Talents dans les quartiers prioritaires ; concours de la fonction publique ouverts sans condition de diplôme
+O6 +2 | Supprimer Parcoursup : épreuve complémentaire au bac par spécialité conditionnant l'entrée dans le supérieur, places ajustées aux besoins de l'emploi
+O6 0 | Classes préparatoires reconnues comme année universitaire
+E2 +1 | Autonomie réelle des universités et organismes de recherche (masse salariale, recrutements, salaires des chercheurs)
+O6 0 | Plan Ingénieurs : de 45 000 à 90 000 diplômés par an en sept ans
+E3 0 | Plan Techniciens : 1,5 million de personnes formées par l'apprentissage en entreprise
+E2 -1 | Doctorants salariés comme attachés de recherche, bourses post-doctorales
+E5 -1 | Fonds souverain « Fonds Marianne » : un cinquième de l'épargne (1 200 milliards) investi en France, capital garanti par l'État
+E1 +2 | Placements du Fonds Marianne exonérés de droits de succession s'ils y restent sept ans ; transmettre un petit patrimoine sans être écrasé par les droits de succession
+## olivier-becht/wp-content-uploads-livre-olivier-becht-projet-france-partie-5-fcaa35990f220f19-pdf.txt
+E4 +1 | Principe de réciprocité : protection contre tous les risques de la vie en contrepartie d'une contribution (impôts, cotisations ou bénévolat) ; plus de protection sans contribution
+E4 -1 | Allocations familiales dès le premier enfant, plafonnées au-delà du cinquième
+E1 0 | Avantage fiscal pour les foyers recomposés élevant des enfants ou soignant un proche ; assouplir l'adoption
+E6 -2 | Nouveau maillage de crèches et relais d'assistantes maternelles ; périscolaire quasi gratuit animé par des bénévoles
+E6 0 | Maisons de Vie dans chaque commune, animées par des bénévoles, à moyens constants
+E4 -1 | Statut du bénévole avec assurance et points de retraite
+O1 -1 | Maisons des Mentors dans les quartiers, animées parfois par d'anciens délinquants rangés
+E4 -2 | Aide sociale à l'enfance prolongée jusqu'à 25 ans ; prise en charge du handicap des jeunes prolongée
+E6 -1 | Places d'hébergement d'urgence au niveau des besoins réels, dont pour les femmes victimes de violences ; réseaux de logements vides des communes
+E6 +1 | Logement : procédures facilitées, largement avec le privé (friches, bureaux reconvertis, division des maisons, habitat participatif)
+E7 -1 | Tout logement neuf conçu pour résister aux fortes chaleurs, vents violents et pluies diluviennes
+E6 +1 | Logement social en petites unités disséminées, assouplir les délais de la loi SRU ; priorité aux soignants et pompiers de nuit
+E6 -1 | Tout lieu accueillant du public accessible (obligation de résultat) ; transports pleinement accessibles en sept ans ; MDPH renforcées
+O6 0 | École inclusive réformée : accompagnants au statut revalorisé, plus de classes spécialisées, réouverture de places en IME
+E4 +1 | Prêt étudiant garanti par l'État pour tous (environ 50 000 € sur cinq ans, remboursable selon les revenus) ; examens d'entrée à l'université
+E4 +2 | CDI universel garanti par l'État, jamais sous le SMIC, remplaçant l'assurance chômage, le RSA et les aides au logement ; sans poste, formation ou 25 heures par semaine au service d'une collectivité
+E4 +1 | Retraite par points : chacun choisit son âge de départ, pension liée au rapport actifs/retraités ; épargne de capitalisation en complément ; réforme soumise à référendum
+E3 -1 | 12 mois sabbatiques rémunérés au cours de la vie
+E4 -2 | Aucune retraite sous 1 200 € par mois pour une carrière complète
+E4 -2 | Cinquième branche dépendance : maintien à domicile, revalorisation des auxiliaires de vie, guichet unique, dotation de plusieurs dizaines de milliards
+## olivier-becht/wp-content-uploads-livre-olivier-becht-projet-france-partie-6-4d6eceb640fa0fad-pdf.txt
+E4 0 | Secrétariat d'État à la santé publique fusionnant les cinq grandes agences, gérant les stocks stratégiques ; loi de programmation santé tous les cinq ans
+E4 +1 | Supprimer les ARS, missions confiées aux préfets avec les élus
+E4 -1 | Prévention aussi bien rémunérée que le curatif ; cours d'hygiène et de santé, un infirmier dans chaque établissement secondaire ; sport reconnu comme thérapeutique
+E4 -1 | Politique du bien-être psychologique : sophrologie à l'école, groupes de parole et gestion du stress au travail, stages financés contre l'épuisement
+E4 -1 | Garanties d'accès : médecin traitant à 30 minutes sous 48 heures, spécialiste à une heure sous trois mois, IRM en moins d'un mois
+E4 0 | Téléconsultation depuis les maisons de santé ; médecins retraités pouvant exercer sans cotiser à fonds perdus
+E4 -1 | Augmenter de 20 % les quotas d'étudiants en santé ; une faculté de médecine dans presque chaque département ; médecine générale en huit ans
+E4 -1 | Consultation de médecine générale portée à 40 € ; généraliste coordinateur d'une équipe de bassin de vie
+E4 +1 | Dossier médical partagé intégré à la carte d'identité numérique contre les fausses cartes Vitale ; meilleur contrôle des CMU, arrêts maladie et accidents du travail
+E4 0 | Pharmacien traitant rémunéré au forfait, médicaments délivrés à la dose ; nomenclature des infirmiers réformée, infirmiers en pratique avancée renforcés
+E4 +1 | Harmonisation entre hôpital public et privé non lucratif, pouvoir de gestion rendu aux médecins
+E4 -1 | Fin de la tarification à l'activité au profit d'un financement par parcours de soins
+E4 0 | Moins de spécialités médicales ; coopération entre grands hôpitaux et hôpitaux ruraux ; drones pour les traitements d'urgence en zone rurale
+E4 +1 | Faire payer la consultation aux urgences à qui s'y présente sans motif alors qu'une maison de santé est proche
+S3 +1 | Politique industrielle du médicament : 20 milliards de recherche en santé sur sept ans, préférence européenne dans la commande publique
+## olivier-becht/wp-content-uploads-livre-olivier-becht-projet-france-partie-7-a99af3a0434069da-pdf.txt
+O1 +2 | Plan « 100 % sécurité » : faire de la France le pays le plus sûr d'Europe en sept ans
+O2 +1 | Écoles de la dernière chance pour les mineurs les plus difficiles (peine commuée en obligation de scolarité) ; écoles des parents
+O1 -1 | Des Mentors pour encadrer les adolescents en l'absence des parents ; normes des activités de jeunesse simplifiées
+O1 +1 | Policiers et gendarmes 70 % du temps sur le terrain ; polices municipales aux pouvoirs renforcés
+O1 +2 | Poursuite systématique des agressions, squats, rodéos, installations illégales, bandes et black blocs
+O1 +1 | Police intercommunale des transports armée, cofinancée par l'État ; 10 000 policiers municipaux de plus ; police judiciaire renforcée
+O2 +1 | Justice résolutive et travaux d'intérêt général pour les petits délits ; plus d'amendes forfaitaires délictuelles
+O2 +2 | Peines de prison courtes de trois jours, petites prisons modulaires, comparution immédiate et exécution immédiate
+O2 +2 | Centres de redressement encadrés par des militaires pour les délinquants les plus durs
+O2 +2 | Plus de places de haute sécurité ; réforme des remises de peine pour qu'aucun détenu dangereux ne ressorte, perpétuité réelle si besoin
+O2 +1 | Avoirs criminels confisqués attribués aux services enquêteurs ; saisies civiles automatiques
+O1 +2 | Concours automatique de la force publique pour expulser les squatteurs
+O2 +2 | Obligation de soins sous surveillance pour les malades psychiatriques dangereux et les délinquants sexuels, hospitalisation d'office en cas de refus
+O2 +2 | Confiscation et vente des véhicules des gens du voyage en stationnement illégal, des organisateurs de rave-parties et des auteurs de rodéos
+O2 0 | Toute affaire jugée en 18 mois au plus par niveau ; un assistant pour chaque magistrat
+O2 +2 | Plus de remise en liberté d'un individu dangereux pour un simple vice de procédure ; formation des magistrats axée sur la défense de la société
+E6 -1 | Audiences délocalisées et tribunaux flottants ; frais d'avocats pris en charge outre-mer, aide juridictionnelle revalorisée
+O2 0 | Chambre dédiée aux litiges du commerce électronique
+O1 +2 | Légitime défense des policiers protégée par la loi ; toute agression d'enseignant systématiquement poursuivie
+O3 +1 | Refonte du code de l'entrée et du séjour : cinq catégories de titres ; contingent annuel d'étudiants fixé par le Parlement
+O3 0 | Titres de travail selon les besoins du marché, du stagiaire à l'investisseur ; nationalité possible au bout de dix ans
+O3 +2 | Regroupement familial limité hors Union européenne ; titre touristique de trois mois au plus selon les revenus
+O3 +2 | Asile temporaire, nombre annuel d'éligibles fixé par le Parlement ; demandes déposées dans des centres à l'étranger ; à la frontière, instruction en centres fermés en 12 semaines
+O3 +2 | Tous les titres conditionnés à une intégration vérifiée, retirés en cas d'échec ; titre étranger malade supprimé ; révision de la Constitution et du droit européen
+O3 +2 | 10 000 policiers aux frontières, 10 centres de rétention, 10 garde-côtes, 2 avions de reconduite, barrière de surveillance en Méditerranée et autour de Mayotte
+O3 +1 | Reconduites appuyées sur des accords liés à l'aide au développement
+O3 -1 | Pas de peine pénale pour le séjour irrégulier : reconduite plutôt que prison
+O3 0 | Agence recherchant les talents, nationalité au bout de cinq ans sans condamnation
+O3 +1 | Secrétariat d'État à l'intégration : apprentissage obligatoire de la langue et de la culture ; primauté des lois et valeurs de la République sur les religions et coutumes
+O3 -1 | Droit de travailler quelques mois après l'arrivée pour ceux qui s'intègrent
+O3 +2 | Reconduite immédiate de ceux qui refusent les règles ou veulent faire de la France une terre de conquête religieuse
+O4 +2 | Tenues religieuses dans l'espace public compatibles avec les « valeurs et coutumes de la République » ; sanctions des collectivités cédant aux demandes communautaires ; pas de menus religieux dans les cantines
+O4 +1 | Ministres du culte formés dans un établissement public ou sous contrat, agrément retirable ; financement étranger des cultes interdit
+O4 -1 | Enseignement de l'histoire des religions à l'école
+O2 +2 | Délit de radicalisation religieuse lié à une entreprise terroriste (jusqu'à trois ans) ; police spécialisée sur internet
+O1 +2 | Guerre au narcotrafic : coordination du renseignement, juridictions spécialisées dans chaque cour d'appel, unités équipées de véhicules blindés
+O1 -1 | Programmes de justice résolutive pour les consommateurs de drogue
+O1 +1 | Amende pour jet de détritus portée de 35 à 350 € ; sanctions-réparation pour tags et dégradations
+S2 +2 | Armée de terre à 150 000 hommes, 300 chars, 300 avions de combat, deuxième porte-avions, présence renforcée dans l'Indo-Pacifique, en partie dans un cadre européen
+S2 +1 | Titan, SCAF, hypersonique, espace, cyber, dissuasion ; 100 000 drones en cinq ans ; filière nationale de munitions
+E2 -1 | Secrétariat d'État à la résilience nationale : générateurs, stocks des foyers, exercices ; 50 000 pompiers volontaires de plus
+O4 +1 | Engagement citoyen : chaque Français consacre dix mois de sa vie active à la protection de la Nation
+## olivier-becht/wp-content-uploads-livre-olivier-becht-projet-france-partie-8-51a3e2d478b8f0ba-pdf.txt
+E6 -2 | Reconquête de tous les territoires en services publics d'ici 2032
+H1 | Pacte des Territoires : sur la base du volontariat, départements fusionnés en Provinces aux pouvoirs d'un État fédéré, une strate supprimée
+H1 | Plus de 4 milliards pour les communes : dotations sécurité, vie locale et investissement par habitant, fin progressive des appels à projets
+E6 -1 | Plan d'aménagement de 10 milliards sur cinq ans (100 millions par département)
+E6 -2 | Garantie de 15 services de proximité pour chacun (école à 20 minutes, médecin et pharmacie à 30 minutes, maternité à 50 minutes…)
+E6 -1 | Plan ferroviaire de 10 milliards, 95 % des trains à l'heure en sept ans
+E2 +1 | Services publics débarrassés des normes absurdes : un agent au bout du fil, démarches en 15 minutes, « dites-le-nous une fois », réponse sous 15 jours
+E6 -1 | Outre-mer : protection contre les risques naturels, indépendance énergétique en vingt ans, plus personne sans eau potable d'ici cinq ans
+H2 | Outre-mer comme hubs vers l'étranger : ressources locales, aquaculture, hôtellerie haut de gamme, projet France Bleu Océan
+E7 -1 | Plan national de 30 milliards d'adaptation au changement climatique (digues, bassins, rafraîchissement, climatisation des hôpitaux et écoles), public et privé
+H1 | Liste des engagements distribuée à chaque foyer ; récapitulatif annuel des prélèvements et prestations ; factures publiques en ligne
+H1 | Commission nationale de contrôle de la gestion publique avec 50 citoyens tirés au sort
+E2 0 | Hauts fonctionnaires cinq ans sur le terrain avant les grands corps ; moins de décrets ; pas de décision contre une collectivité ou une entreprise sans visite sur le terrain
+H1 | RIC sur tout sujet de l'article 34 avec 2 % du corps électoral ; débat organisé par des citoyens tirés au sort
+H1 | Vote blanc reconnu : élection rejouée s'il atteint la moitié des votants ; consultations numériques sur chaque grande réforme
+H1 | Parlement renforcé : dissolution limitée, initiative des lois rendue aux parlementaires
+O5 +1 | Agence indépendante de vérification de l'information, financée par un euro par abonné ; l'ARCOM pourra demander aux médias plus de bonnes nouvelles
+O5 -1 | Haute Autorité constitutionnelle de la transparence et de la vie privée (fusion CNIL, HATVP, CADA)
+O3 -1 | Pacte d'inclusion : la jeunesse issue de l'immigration comme atout, « Incubateurs des Cités » pour créer des entreprises
+E3 -2 | Égalité salariale obligatoire à fonction égale (modèle islandais) ; bonus des dirigeants conditionnés à la parité
+E6 -1 | Appartements et familles refuges pour les femmes victimes de violences dans chaque commune ; aide aux familles monoparentales
+O4 -2 | Constitution : égalité sans distinction d'orientation sexuelle, d'identité de genre, d'état de santé ou de handicap
+H2 | Ordre national de l'Engagement civil ; plus de décorations pour les anciens combattants
+O4 -1 | Bien-être animal : interdiction de détenir un animal après maltraitance, vente en ligne encadrée, chasse à la glu interdite, chasse interdite les jours fériés dans les zones de promenade
+E7 -2 | Plan « Ambition Phyto Zéro » : se passer des pesticides en dix ans, sous conditions de production et de prix
+## olivier-becht/wp-content-uploads-livre-olivier-becht-projet-france-partie-9-30da48dec2db74af-pdf.txt
+H2 | Culture : résidences d'artistes, achats publics d'œuvres, musées rénovés, Louvre et Orsay itinérants, fête nationale des arts de la scène
+H2 | Soutenir le jeu vidéo et l'animation ; plateforme francophone de streaming de l'audiovisuel public
+E5 -1 | Obliger les plateformes à rémunérer les contenus (droit d'auteur, y compris face à l'IA) ; prévenir les concentrations de presse ; prix unique du livre étendu au numérique
+H2 | CAPES d'histoire de l'art, bourses pour conservatoires et écoles d'art
+O4 +1 | Faire maîtriser le français à toute personne vivant en France, tout en maintenant les langues régionales ; enseignement renforcé de l'orthographe
+S2 -1 | Programme « Victor Hugo » d'échanges pour étudiants francophones
+H2 | Sport : 200 millions par an aux clubs (conditionnés à la laïcité), 500 millions par an pour les équipements ; drapeau dans chaque club
+O6 0 | Semaine de cinq jours avec le mercredi matin, classe finissant à 15 heures, sport en clubs scolaires quatre après-midis
+E4 -1 | Accès permanent à la sécurité sociale pour les Français de l'étranger ; consulats sans rendez-vous, bourses scolaires renforcées
+H2 | Ville nouvelle en dix ans (bibliothèque numérique, musée d'histoire de France) ; Cité de la Vie
+S2 -1 | « Routes du Succès » : hubs outre-mer, pacte Europe-Afrique, stratégie indo-pacifique
+S1 -2 | Europe des trois cercles : un noyau dur de puissance, l'Union à 27, la grande Europe du Conseil de l'Europe
+S1 -3 | Confédération européenne de 6 à 10 États (capitale Strasbourg-Kehl) : défense, IA, énergie, financement, diplomatie ; Parlement et Président confédéraux, budget propre par une taxe data
+S2 -2 | Armées nationales souveraines mais intégrées jusqu'à la brigade dans un commandement confédéral
+S2 -2 | Dissuasion : souveraine pour le territoire national ; pour les intérêts vitaux de la Confédération, double clé avec son Président et financement confédéral
+S1 -2 | Confédération : diplomatie commune, FBI européen contre les mafias, police des frontières commune, harmonisation de l'impôt de production, convergence des minima sociaux
+S3 +1 | Taxe environnementale et sociale aux frontières de la Confédération (bonus-malus)
+S2 -2 | « Souverainabilité » : remplacer le modèle onusien par une organisation mondiale plus représentative, à la justice contraignante

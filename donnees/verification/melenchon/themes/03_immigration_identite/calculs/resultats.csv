@@ -1,0 +1,4 @@
+affirmation,variante,grandeur,valeur,unite,annee,chiffre_annonce,sources,methode,note
+IMMI-01,de plein droit,Âge d'acquisition automatique de la nationalité,18.0,ans,2026,18 ans,SP-NATIONALITE-NE-EN-FRANCE,M1,si résidence en France d'au moins 5 ans depuis 11 ans
+IMMI-01,par déclaration de l'enfant,Âge minimal d'une demande par l'enfant,16.0,ans,2026,16 ans,SP-NATIONALITE-NE-EN-FRANCE,M1,
+IMMI-01,par déclaration des parents,Âge minimal d'une demande faite par les parents,13.0,ans,2026,,SP-NATIONALITE-NE-EN-FRANCE,M1,résidence d'au moins 5 ans depuis 8 ans

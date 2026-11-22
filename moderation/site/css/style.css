@@ -1,5 +1,5 @@
 /* Site de modération. Couleurs : bleu et jaune de Nouvelle Énergie pour l'habillage ; sens propre à la modération
-   (rouge = insultant, ambre = question, violet = mot surveillé, vert = traité, bleu = vise Lisnard / NE).
+   (rouge = insultant, ambre = question, violet = mot surveillé, vert = traité).
    Graphiques : couleurs de séries dans l'ordre fixe de la palette de référence (bleu, orange, turquoise, jaune,
    rose, vert, violet), chacune avec son pas pour le mode sombre. */
 
@@ -144,6 +144,14 @@ input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible
 .qui .lien { color: #fff; }
 
 /* Tuiles */
+/* Groupes montrés (cases à cocher, en haut de toutes les vues) */
+.groupes { margin: 22px 0 0; padding: 12px 16px; display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; }
+.titre-groupes { font-weight: 600; }
+.cases { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; }
+.cases label { display: flex; gap: 6px; align-items: baseline; cursor: pointer; }
+.cases .n { color: var(--pale); font-variant-numeric: tabular-nums; font-size: 12px; }
+.groupes .pale { flex-basis: 100%; margin: 0; font-size: 13px; }
+
 .tuiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin: 22px 0; }
 .tuile {
   --c: var(--bleu); --c-pale: var(--bleu-pale); --c-texte: var(--bleu-texte);
@@ -207,7 +215,6 @@ legend { font-weight: 700; font-size: 12px; color: var(--bleu-texte); text-trans
 .badge { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; background: var(--carte-2); color: var(--doux); }
 .badge.insultant { background: var(--insultant); color: #fff; }
 .badge.question { background: var(--question); color: #2b1d00; }
-.badge.lisnard { background: var(--bleu-pale); color: var(--bleu-texte); border: 1px solid var(--bleu); }
 .auteur { font-weight: 700; color: var(--texte); background: none; border: 0; padding: 0; cursor: pointer; font-size: 14px; }
 .auteur:hover { text-decoration: underline; color: var(--accent-texte); }
 .auteur::after { content: " ▾"; color: var(--pale); font-size: 11px; }

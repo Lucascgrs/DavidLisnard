@@ -1,4 +1,4 @@
-// Mots surveillés (liste de moderation/mots_surveilles.txt, écrite dans mots.js au déploiement) : un simple filtre,
+// Mots surveillés (liste de donnees/moderation/mots_surveilles.txt, écrite dans mots.js au déploiement) : un simple filtre,
 // sans lien avec le modèle. Chaque commentaire est découpé en mots ; un mot de la liste est trouvé quand ses mots se
 // suivent dans le commentaire. La comparaison ignore majuscules, accents, lettres répétées (« connnard ») et les
 // chiffres ou signes qui déguisent une lettre (« c0nnard », « s@lope »). « mot* » : tout mot qui commence ainsi.

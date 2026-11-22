@@ -1,0 +1,1470 @@
+{
+ "calcule_le": "2026-11-22 17:40:57",
+ "distance_max": 10.39,
+ "candidats": [
+  {
+   "slug": "benoit-mathieu",
+   "nom": "Benoît Mathieu",
+   "reference": false,
+   "parti": "Sans étiquette",
+   "parti_court": "SE",
+   "famille": "autres",
+   "mesures": 4,
+   "axes": {
+    "E": {
+     "position": 0.0,
+     "connu": false,
+     "sous_themes": 0,
+     "mesures": 0
+    },
+    "O": {
+     "position": 0.0,
+     "connu": false,
+     "sous_themes": 0,
+     "mesures": 0
+    },
+    "S": {
+     "position": 0.0,
+     "connu": false,
+     "sous_themes": 0,
+     "mesures": 0
+    }
+   },
+   "sous_themes": {
+    "H1": {
+     "note": null,
+     "mesures": 4
+    }
+   }
+  },
+  {
+   "slug": "bernard-cazeneuve",
+   "nom": "Bernard Cazeneuve",
+   "reference": false,
+   "parti": "La Convention",
+   "parti_court": "LC",
+   "famille": "gauche",
+   "mesures": 63,
+   "axes": {
+    "E": {
+     "position": -0.75,
+     "connu": true,
+     "sous_themes": 7,
+     "mesures": 32
+    },
+    "O": {
+     "position": -0.31,
+     "connu": true,
+     "sous_themes": 6,
+     "mesures": 16
+    },
+    "S": {
+     "position": -0.52,
+     "connu": true,
+     "sous_themes": 3,
+     "mesures": 11
+    }
+   },
+   "sous_themes": {
+    "O1": {
+     "note": 0.33,
+     "mesures": 3
+    },
+    "E6": {
+     "note": -1.0,
+     "mesures": 3
+    },
+    "O2": {
+     "note": -0.5,
+     "mesures": 2
+    },
+    "O4": {
+     "note": 0.0,
+     "mesures": 2
+    },
+    "E3": {
+     "note": -0.86,
+     "mesures": 7
+    },
+    "E4": {
+     "note": -1.22,
+     "mesures": 9
+    },
+    "S1": {
+     "note": -1.8,
+     "mesures": 5
+    },
+    "E2": {
+     "note": 0.33,
+     "mesures": 3
+    },
+    "O5": {
+     "note": -1.33,
+     "mesures": 3
+    },
+    "E5": {
+     "note": -0.33,
+     "mesures": 3
+    },
+    "E1": {
+     "note": -0.67,
+     "mesures": 3
+    },
+    "E7": {
+     "note": -1.5,
+     "mesures": 4
+    },
+    "S3": {
+     "note": 1.0,
+     "mesures": 2
+    },
+    "O6": {
+     "note": -0.67,
+     "mesures": 3
+    },
+    "S2": {
+     "note": -0.75,
+     "mesures": 4
+    },
+    "O3": {
+     "note": 0.33,
+     "mesures": 3
+    },
+    "H2": {
+     "note": null,
+     "mesures": 1
+    },
+    "H1": {
+     "note": null,
+     "mesures": 3
+    }
+   }
+  },
+  {
+   "slug": "clara-egger",
+   "nom": "Clara Egger",
+   "reference": false,
+   "parti": "Solution démocratique",
+   "parti_court": "Solution démocratique",
+   "famille": "autres",
+   "mesures": 20,
+   "axes": {
+    "E": {
+     "position": 0.5,
+     "connu": true,
+     "sous_themes": 4,
+     "mesures": 6
+    },
+    "O": {
+     "position": -0.5,
+     "connu": true,
+     "sous_themes": 4,
+     "mesures": 4
+    },
+    "S": {
+     "position": 0.34,
+     "connu": true,
+     "sous_themes": 2,
+     "mesures": 4
+    }
+   },
+   "sous_themes": {
+    "O2": {
+     "note": -1.0,
+     "mesures": 1
+    },
+    "E2": {
+     "note": 1.0,
+     "mesures": 1
+    },
+    "E5": {
+     "note": 1.0,
+     "mesures": 1
+    },
+    "S1": {
+     "note": 0.67,
+     "mesures": 3
+    },
+    "S2": {
+     "note": 0.0,
+     "mesures": 1
+    },
+    "E4": {
+     "note": 0.0,
+     "mesures": 2
+    },
+    "E7": {
+     "note": 0.0,
+     "mesures": 2
+    },
+    "O3": {
+     "note": 0.0,
+     "mesures": 1
+    },
+    "O6": {
+     "note": 0.0,
+     "mesures": 1
+    },
+    "O5": {
+     "note": -1.0,
+     "mesures": 1
+    },
+    "H1": {
+     "note": null,
+     "mesures": 6
+    }
+   }
+  },
+  {
+   "slug": "david-lisnard",
+   "nom": "David Lisnard",
+   "reference": false,
+   "parti": "Nouvelle Énergie",
+   "parti_court": "NE",
+   "famille": "droite",
+   "mesures": 122,
+   "axes": {
+    "E": {
+     "position": 0.82,
+     "connu": true,
+     "sous_themes": 7,
+     "mesures": 55
+    },
+    "O": {
+     "position": 1.56,
+     "connu": true,
+     "sous_themes": 6,
+     "mesures": 48
+    },
+    "S": {
+     "position": 0.43,
+     "connu": true,
+     "sous_themes": 3,
+     "mesures": 12
+    }
+   },
+   "sous_themes": {
+    "O6": {
+     "note": 1.6,
+     "mesures": 10
+    },
+    "E4": {
+     "note": 0.75,
+     "mesures": 12
+    },
+    "O3": {
+     "note": 1.89,
+     "mesures": 18
+    },
+    "E2": {
+     "note": 1.67,
+     "mesures": 12
+    },
+    "E5": {
+     "note": 0.67,
+     "mesures": 9
+    },
+    "S3": {
+     "note": 1.0,
+     "mesures": 1
+    },
+    "S1": {
+     "note": 0.3,
+     "mesures": 10
+    },
+    "E1": {
+     "note": 1.17,
+     "mesures": 6
+    },
+    "S2": {
+     "note": 0.0,
+     "mesures": 1
+    },
+    "E7": {
+     "note": 0.29,
+     "mesures": 7
+    },
+    "E3": {
+     "note": 1.17,
+     "mesures": 6
+    },
+    "O4": {
+     "note": 2.0,
+     "mesures": 3
+    },
+    "E6": {
+     "note": 0.0,
+     "mesures": 3
+    },
+    "O1": {
+     "note": 1.43,
+     "mesures": 7
+    },
+    "O2": {
+     "note": 1.44,
+     "mesures": 9
+    },
+    "O5": {
+     "note": 1.0,
+     "mesures": 1
+    },
+    "H1": {
+     "note": null,
+     "mesures": 7
+    }
+   }
+  },
+  {
+   "slug": "edouard-philippe",
+   "nom": "Édouard Philippe",
+   "reference": false,
+   "parti": "Horizons",
+   "parti_court": "HOR",
+   "famille": "centre",
+   "mesures": 201,
+   "axes": {
+    "E": {
+     "position": 0.62,
+     "connu": true,
+     "sous_themes": 7,
+     "mesures": 104
+    },
+    "O": {
+     "position": 1.27,
+     "connu": true,
+     "sous_themes": 6,
+     "mesures": 78
+    },
+    "S": {
+     "position": -0.25,
+     "connu": true,
+     "sous_themes": 3,
+     "mesures": 17
+    }
+   },
+   "sous_themes": {
+    "E7": {
+     "note": -0.25,
+     "mesures": 16
+    },
+    "E5": {
+     "note": 0.75,
+     "mesures": 12
+    },
+    "E2": {
+     "note": 1.78,
+     "mesures": 9
+    },
+    "E1": {
+     "note": 1.36,
+     "mesures": 14
+    },
+    "S2": {
+     "note": 0.0,
+     "mesures": 6
+    },
+    "O4": {
+     "note": 1.0,
+     "mesures": 3
+    },
+    "E3": {
+     "note": 0.73,
+     "mesures": 11
+    },
+    "O6": {
+     "note": 0.62,
+     "mesures": 16
+    },
+    "S3": {
+     "note": 1.0,
+     "mesures": 7
+    },
+    "E6": {
+     "note": -0.2,
+     "mesures": 20
+    },
+    "S1": {
+     "note": -1.75,
+     "mesures": 4
+    },
+    "E4": {
+     "note": 0.14,
+     "mesures": 22
+    },
+    "O3": {
+     "note": 1.88,
+     "mesures": 17
+    },
+    "O5": {
+     "note": 1.44,
+     "mesures": 9
+    },
+    "O2": {
+     "note": 1.4,
+     "mesures": 20
+    },
+    "O1": {
+     "note": 1.31,
+     "mesures": 13
+    },
+    "H1": {
+     "note": null,
+     "mesures": 2
+    }
+   }
+  },
+  {
+   "slug": "emmanuel-dubuisson",
+   "nom": "Emmanuel Dubuisson",
+   "reference": false,
+   "parti": "Sans étiquette",
+   "parti_court": "SE",
+   "famille": "autres",
+   "mesures": 16,
+   "axes": {
+    "E": {
+     "position": -0.08,
+     "connu": true,
+     "sous_themes": 6,
+     "mesures": 10
+    },
+    "O": {
+     "position": 1.0,
+     "connu": true,
+     "sous_themes": 1,
+     "mesures": 1
+    },
+    "S": {
+     "position": 1.0,
+     "connu": true,
+     "sous_themes": 2,
+     "mesures": 3
+    }
+   },
+   "sous_themes": {
+    "E2": {
+     "note": 1.0,
+     "mesures": 2
+    },
+    "S3": {
+     "note": 1.0,
+     "mesures": 2
+    },
+    "O1": {
+     "note": 1.0,
+     "mesures": 1
+    },
+    "E6": {
+     "note": -0.5,
+     "mesures": 2
+    },
+    "E4": {
+     "note": -1.0,
+     "mesures": 1
+    },
+    "E5": {
+     "note": 1.0,
+     "mesures": 2
+    },
+    "E7": {
+     "note": -1.0,
+     "mesures": 2
+    },
+    "S2": {
+     "note": 1.0,
+     "mesures": 1
+    },
+    "E3": {
+     "note": 0.0,
+     "mesures": 1
+    },
+    "H1": {
+     "note": null,
+     "mesures": 1
+    },
+    "H2": {
+     "note": null,
+     "mesures": 1
+    }
+   }
+  },
+  {
+   "slug": "emmanuel-macron-2017",
+   "nom": "Emmanuel Macron (2017)",
+   "reference": true,
+   "parti": "En marche !",
+   "parti_court": "EM",
+   "famille": "centre",
+   "mesures": 119,
+   "axes": {
+    "E": {
+     "position": 0.01,
+     "connu": true,
+     "sous_themes": 7,
+     "mesures": 59
+    },
+    "O": {
+     "position": 0.6,
+     "connu": true,
+     "sous_themes": 5,
+     "mesures": 26
+    },
+    "S": {
+     "position": -0.26,
+     "connu": true,
+     "sous_themes": 3,
+     "mesures": 14
+    }
+   },
+   "sous_themes": {
+    "E1": {
+     "note": 0.82,
+     "mesures": 11
+    },
+    "E4": {
+     "note": -0.64,
+     "mesures": 14
+    },
+    "E3": {
+     "note": -0.25,
+     "mesures": 8
+    },
+    "E5": {
+     "note": 0.43,
+     "mesures": 7
+    },
+    "E2": {
+     "note": 0.75,
+     "mesures": 4
+    },
+    "E7": {
+     "note": -0.88,
+     "mesures": 8
+    },
+    "O3": {
+     "note": 0.33,
+     "mesures": 3
+    },
+    "E6": {
+     "note": -0.14,
+     "mesures": 7
+    },
+    "S1": {
+     "note": -1.44,
+     "mesures": 9
+    },
+    "O1": {
+     "note": 1.25,
+     "mesures": 4
+    },
+    "O2": {
+     "note": 1.2,
+     "mesures": 5
+    },
+    "S2": {
+     "note": -0.33,
+     "mesures": 3
+    },
+    "O6": {
+     "note": 0.44,
+     "mesures": 9
+    },
+    "O4": {
+     "note": -0.2,
+     "mesures": 5
+    },
+    "S3": {
+     "note": 1.0,
+     "mesures": 2
+    },
+    "H1": {
+     "note": null,
+     "mesures": 15
+    },
+    "H2": {
+     "note": null,
+     "mesures": 5
+    }
+   }
+  },
+  {
+   "slug": "florian-philippot",
+   "nom": "Florian Philippot",
+   "reference": false,
+   "parti": "Les Patriotes",
+   "parti_court": "LP",
+   "famille": "extreme-droite",
+   "mesures": 79,
+   "axes": {
+    "E": {
+     "position": -0.61,
+     "connu": true,
+     "sous_themes": 6,
+     "mesures": 27
+    },
+    "O": {
+     "position": 0.95,
+     "connu": true,
+     "sous_themes": 6,
+     "mesures": 30
+    },
+    "S": {
+     "position": 2.49,
+     "connu": true,
+     "sous_themes": 3,
+     "mesures": 18
+    }
+   },
+   "sous_themes": {
+    "S1": {
+     "note": 2.57,
+     "mesures": 7
+    },
+    "S2": {
+     "note": 2.4,
+     "mesures": 5
+    },
+    "E5": {
+     "note": -1.86,
+     "mesures": 7
+    },
+    "E7": {
+     "note": 0.5,
+     "mesures": 4
+    },
+    "S3": {
+     "note": 2.5,
+     "mesures": 6
+    },
+    "E1": {
+     "note": 0.67,
+     "mesures": 3
+    },
+    "O4": {
+     "note": 1.25,
+     "mesures": 4
+    },
+    "E2": {
+     "note": -0.5,
+     "mesures": 2
+    },
+    "E4": {
+     "note": -1.0,
+     "mesures": 7
+    },
+    "E6": {
+     "note": -1.5,
+     "mesures": 4
+    },
+    "O2": {
+     "note": 2.0,
+     "mesures": 5
+    },
+    "O1": {
+     "note": 1.0,
+     "mesures": 2
+    },
+    "O5": {
+     "note": -2.17,
+     "mesures": 6
+    },
+    "O6": {
+     "note": 1.33,
+     "mesures": 6
+    },
+    "O3": {
+     "note": 2.29,
+     "mesures": 7
+    },
+    "H1": {
+     "note": null,
+     "mesures": 3
+    },
+    "H2": {
+     "note": null,
+     "mesures": 1
+    }
+   }
+  },
+  {
+   "slug": "francis-lalanne",
+   "nom": "Francis Lalanne",
+   "reference": false,
+   "parti": "France Libre",
+   "parti_court": "FL",
+   "famille": "autres",
+   "mesures": 27,
+   "axes": {
+    "E": {
+     "position": 0.12,
+     "connu": true,
+     "sous_themes": 4,
+     "mesures": 8
+    },
+    "O": {
+     "position": -0.67,
+     "connu": true,
+     "sous_themes": 3,
+     "mesures": 6
+    },
+    "S": {
+     "position": 2.27,
+     "connu": true,
+     "sous_themes": 3,
+     "mesures": 8
+    }
+   },
+   "sous_themes": {
+    "S1": {
+     "note": 3.0,
+     "mesures": 2
+    },
+    "S2": {
+     "note": 1.8,
+     "mesures": 5
+    },
+    "O5": {
+     "note": -2.0,
+     "mesures": 4
+    },
+    "O6": {
+     "note": -1.0,
+     "mesures": 1
+    },
+    "E1": {
+     "note": 2.5,
+     "mesures": 2
+    },
+    "E6": {
+     "note": -2.0,
+     "mesures": 2
+    },
+    "E5": {
+     "note": -1.0,
+     "mesures": 3
+    },
+    "E2": {
+     "note": 1.0,
+     "mesures": 1
+    },
+    "O1": {
+     "note": 1.0,
+     "mesures": 1
+    },
+    "S3": {
+     "note": 2.0,
+     "mesures": 1
+    },
+    "H1": {
+     "note": null,
+     "mesures": 5
+    }
+   }
+  },
+  {
+   "slug": "francois-ruffin",
+   "nom": "François Ruffin",
+   "reference": false,
+   "parti": "Debout !",
+   "parti_court": "Debout !",
+   "famille": "gauche",
+   "mesures": 268,
+   "axes": {
+    "E": {
+     "position": -1.39,
+     "connu": true,
+     "sous_themes": 7,
+     "mesures": 191
+    },
+    "O": {
+     "position": -1.09,
+     "connu": true,
+     "sous_themes": 5,
+     "mesures": 36
+    },
+    "S": {
+     "position": 0.9,
+     "connu": true,
+     "sous_themes": 2,
+     "mesures": 23
+    }
+   },
+   "sous_themes": {
+    "E3": {
+     "note": -1.53,
+     "mesures": 32
+    },
+    "E6": {
+     "note": -1.48,
+     "mesures": 40
+    },
+    "E7": {
+     "note": -1.42,
+     "mesures": 36
+    },
+    "E5": {
+     "note": -1.43,
+     "mesures": 35
+    },
+    "O5": {
+     "note": -2.0,
+     "mesures": 1
+    },
+    "S3": {
+     "note": 2.05,
+     "mesures": 19
+    },
+    "E2": {
+     "note": -1.08,
+     "mesures": 13
+    },
+    "E1": {
+     "note": -1.59,
+     "mesures": 17
+    },
+    "O6": {
+     "note": -1.04,
+     "mesures": 26
+    },
+    "S1": {
+     "note": -0.25,
+     "mesures": 4
+    },
+    "E4": {
+     "note": -1.22,
+     "mesures": 18
+    },
+    "O1": {
+     "note": -1.0,
+     "mesures": 3
+    },
+    "O3": {
+     "note": -1.0,
+     "mesures": 1
+    },
+    "O2": {
+     "note": -0.4,
+     "mesures": 5
+    },
+    "H1": {
+     "note": null,
+     "mesures": 18
+    }
+   }
+  },
+  {
+   "slug": "jean-luc-melenchon",
+   "nom": "Jean-Luc Mélenchon",
+   "reference": false,
+   "parti": "La France insoumise",
+   "parti_court": "LFI",
+   "famille": "gauche",
+   "mesures": 1055,
+   "axes": {
+    "E": {
+     "position": -1.67,
+     "connu": true,
+     "sous_themes": 7,
+     "mesures": 601
+    },
+    "O": {
+     "position": -1.29,
+     "connu": true,
+     "sous_themes": 6,
+     "mesures": 226
+    },
+    "S": {
+     "position": 0.7,
+     "connu": true,
+     "sous_themes": 3,
+     "mesures": 178
+    }
+   },
+   "sous_themes": {
+    "O2": {
+     "note": -0.73,
+     "mesures": 22
+    },
+    "E2": {
+     "note": -1.24,
+     "mesures": 37
+    },
+    "E1": {
+     "note": -1.6,
+     "mesures": 35
+    },
+    "O4": {
+     "note": -1.52,
+     "mesures": 66
+    },
+    "O6": {
+     "note": -0.96,
+     "mesures": 56
+    },
+    "E5": {
+     "note": -1.96,
+     "mesures": 136
+    },
+    "O5": {
+     "note": -1.41,
+     "mesures": 27
+    },
+    "E6": {
+     "note": -1.75,
+     "mesures": 100
+    },
+    "O1": {
+     "note": -0.91,
+     "mesures": 35
+    },
+    "E7": {
+     "note": -1.69,
+     "mesures": 119
+    },
+    "O3": {
+     "note": -2.2,
+     "mesures": 20
+    },
+    "S1": {
+     "note": 0.58,
+     "mesures": 31
+    },
+    "E4": {
+     "note": -1.67,
+     "mesures": 95
+    },
+    "E3": {
+     "note": -1.8,
+     "mesures": 79
+    },
+    "S3": {
+     "note": 2.0,
+     "mesures": 37
+    },
+    "S2": {
+     "note": -0.49,
+     "mesures": 110
+    },
+    "H1": {
+     "note": null,
+     "mesures": 41
+    },
+    "H2": {
+     "note": null,
+     "mesures": 9
+    }
+   }
+  },
+  {
+   "slug": "juan-branco",
+   "nom": "Juan Branco",
+   "reference": false,
+   "parti": "Sans étiquette",
+   "parti_court": "SE",
+   "famille": "autres",
+   "mesures": 324,
+   "axes": {
+    "E": {
+     "position": -0.97,
+     "connu": true,
+     "sous_themes": 7,
+     "mesures": 174
+    },
+    "O": {
+     "position": -0.16,
+     "connu": true,
+     "sous_themes": 6,
+     "mesures": 78
+    },
+    "S": {
+     "position": 1.86,
+     "connu": true,
+     "sous_themes": 3,
+     "mesures": 43
+    }
+   },
+   "sous_themes": {
+    "E6": {
+     "note": -1.67,
+     "mesures": 18
+    },
+    "E4": {
+     "note": -0.91,
+     "mesures": 32
+    },
+    "E2": {
+     "note": 0.0,
+     "mesures": 15
+    },
+    "E5": {
+     "note": -1.84,
+     "mesures": 49
+    },
+    "S1": {
+     "note": 1.86,
+     "mesures": 7
+    },
+    "S3": {
+     "note": 2.04,
+     "mesures": 23
+    },
+    "S2": {
+     "note": 1.69,
+     "mesures": 13
+    },
+    "O2": {
+     "note": -0.18,
+     "mesures": 22
+    },
+    "O4": {
+     "note": 0.38,
+     "mesures": 8
+    },
+    "O1": {
+     "note": -0.08,
+     "mesures": 13
+    },
+    "O5": {
+     "note": -0.82,
+     "mesures": 11
+    },
+    "O3": {
+     "note": -0.33,
+     "mesures": 6
+    },
+    "E1": {
+     "note": -0.74,
+     "mesures": 27
+    },
+    "E3": {
+     "note": -0.62,
+     "mesures": 13
+    },
+    "O6": {
+     "note": 0.06,
+     "mesures": 18
+    },
+    "E7": {
+     "note": -1.0,
+     "mesures": 20
+    },
+    "H1": {
+     "note": null,
+     "mesures": 24
+    },
+    "H2": {
+     "note": null,
+     "mesures": 5
+    }
+   }
+  },
+  {
+   "slug": "karim-bouamrane",
+   "nom": "Karim Bouamrane",
+   "reference": false,
+   "parti": "Parti socialiste",
+   "parti_court": "PS",
+   "famille": "gauche",
+   "mesures": 13,
+   "axes": {
+    "E": {
+     "position": -0.2,
+     "connu": true,
+     "sous_themes": 5,
+     "mesures": 5
+    },
+    "O": {
+     "position": -0.25,
+     "connu": true,
+     "sous_themes": 4,
+     "mesures": 5
+    },
+    "S": {
+     "position": 0.0,
+     "connu": true,
+     "sous_themes": 3,
+     "mesures": 3
+    }
+   },
+   "sous_themes": {
+    "O1": {
+     "note": 1.0,
+     "mesures": 1
+    },
+    "E6": {
+     "note": -1.0,
+     "mesures": 1
+    },
+    "E4": {
+     "note": -1.0,
+     "mesures": 1
+    },
+    "E7": {
+     "note": -1.0,
+     "mesures": 1
+    },
+    "S3": {
+     "note": 1.0,
+     "mesures": 1
+    },
+    "O4": {
+     "note": -2.0,
+     "mesures": 1
+    },
+    "O3": {
+     "note": 0.0,
+     "mesures": 2
+    },
+    "E2": {
+     "note": 1.0,
+     "mesures": 1
+    },
+    "E5": {
+     "note": 1.0,
+     "mesures": 1
+    },
+    "S2": {
+     "note": 1.0,
+     "mesures": 1
+    },
+    "S1": {
+     "note": -2.0,
+     "mesures": 1
+    },
+    "O2": {
+     "note": 0.0,
+     "mesures": 1
+    }
+   }
+  },
+  {
+   "slug": "olivier-becht",
+   "nom": "Olivier Becht",
+   "reference": false,
+   "parti": "Sans étiquette",
+   "parti_court": "SE",
+   "famille": "centre",
+   "mesures": 165,
+   "axes": {
+    "E": {
+     "position": -0.25,
+     "connu": true,
+     "sous_themes": 7,
+     "mesures": 72
+    },
+    "O": {
+     "position": 0.62,
+     "connu": true,
+     "sous_themes": 6,
+     "mesures": 57
+    },
+    "S": {
+     "position": -0.49,
+     "connu": true,
+     "sous_themes": 3,
+     "mesures": 20
+    }
+   },
+   "sous_themes": {
+    "E1": {
+     "note": 0.5,
+     "mesures": 6
+    },
+    "E2": {
+     "note": 0.29,
+     "mesures": 7
+    },
+    "E5": {
+     "note": -0.1,
+     "mesures": 10
+    },
+    "S1": {
+     "note": -2.0,
+     "mesures": 5
+    },
+    "S3": {
+     "note": 1.25,
+     "mesures": 8
+    },
+    "E3": {
+     "note": -0.5,
+     "mesures": 6
+    },
+    "E7": {
+     "note": -0.83,
+     "mesures": 6
+    },
+    "O6": {
+     "note": 0.5,
+     "mesures": 12
+    },
+    "E4": {
+     "note": -0.25,
+     "mesures": 24
+    },
+    "E6": {
+     "note": -0.85,
+     "mesures": 13
+    },
+    "O1": {
+     "note": 0.91,
+     "mesures": 11
+    },
+    "O2": {
+     "note": 1.42,
+     "mesures": 12
+    },
+    "O3": {
+     "note": 0.77,
+     "mesures": 13
+    },
+    "O4": {
+     "note": 0.14,
+     "mesures": 7
+    },
+    "S2": {
+     "note": -0.71,
+     "mesures": 7
+    },
+    "O5": {
+     "note": 0.0,
+     "mesures": 2
+    },
+    "H1": {
+     "note": null,
+     "mesures": 9
+    },
+    "H2": {
+     "note": null,
+     "mesures": 7
+    }
+   }
+  }
+ ],
+ "distances": {
+  "benoit-mathieu": {
+   "benoit-mathieu": 0.0,
+   "bernard-cazeneuve": 0.96,
+   "clara-egger": 0.78,
+   "david-lisnard": 1.81,
+   "edouard-philippe": 1.44,
+   "emmanuel-dubuisson": 1.42,
+   "emmanuel-macron-2017": 0.65,
+   "florian-philippot": 2.73,
+   "francis-lalanne": 2.37,
+   "francois-ruffin": 1.98,
+   "jean-luc-melenchon": 2.22,
+   "juan-branco": 2.1,
+   "karim-bouamrane": 0.32,
+   "olivier-becht": 0.83
+  },
+  "bernard-cazeneuve": {
+   "benoit-mathieu": 0.96,
+   "bernard-cazeneuve": 0.0,
+   "clara-egger": 1.53,
+   "david-lisnard": 2.62,
+   "edouard-philippe": 2.11,
+   "emmanuel-dubuisson": 2.12,
+   "emmanuel-macron-2017": 1.21,
+   "florian-philippot": 3.27,
+   "francis-lalanne": 2.94,
+   "francois-ruffin": 1.74,
+   "jean-luc-melenchon": 1.82,
+   "juan-branco": 2.39,
+   "karim-bouamrane": 0.76,
+   "olivier-becht": 1.06
+  },
+  "clara-egger": {
+   "benoit-mathieu": 0.78,
+   "bernard-cazeneuve": 1.53,
+   "clara-egger": 0.0,
+   "david-lisnard": 2.09,
+   "edouard-philippe": 1.87,
+   "emmanuel-dubuisson": 1.74,
+   "emmanuel-macron-2017": 1.35,
+   "florian-philippot": 2.82,
+   "francis-lalanne": 1.97,
+   "francois-ruffin": 2.06,
+   "jean-luc-melenchon": 2.34,
+   "juan-branco": 2.14,
+   "karim-bouamrane": 0.82,
+   "olivier-becht": 1.58
+  },
+  "david-lisnard": {
+   "benoit-mathieu": 1.81,
+   "bernard-cazeneuve": 2.62,
+   "clara-egger": 2.09,
+   "david-lisnard": 0.0,
+   "edouard-philippe": 0.77,
+   "emmanuel-dubuisson": 1.2,
+   "emmanuel-macron-2017": 1.43,
+   "florian-philippot": 2.58,
+   "francis-lalanne": 2.97,
+   "francois-ruffin": 3.48,
+   "jean-luc-melenchon": 3.79,
+   "juan-branco": 2.86,
+   "karim-bouamrane": 2.12,
+   "olivier-becht": 1.7
+  },
+  "edouard-philippe": {
+   "benoit-mathieu": 1.44,
+   "bernard-cazeneuve": 2.11,
+   "clara-egger": 1.87,
+   "david-lisnard": 0.77,
+   "edouard-philippe": 0.0,
+   "emmanuel-dubuisson": 1.46,
+   "emmanuel-macron-2017": 0.91,
+   "florian-philippot": 3.02,
+   "francis-lalanne": 3.22,
+   "francois-ruffin": 3.31,
+   "jean-luc-melenchon": 3.56,
+   "juan-branco": 3.0,
+   "karim-bouamrane": 1.75,
+   "olivier-becht": 1.11
+  },
+  "emmanuel-dubuisson": {
+   "benoit-mathieu": 1.42,
+   "bernard-cazeneuve": 2.12,
+   "clara-egger": 1.74,
+   "david-lisnard": 1.2,
+   "edouard-philippe": 1.46,
+   "emmanuel-dubuisson": 0.0,
+   "emmanuel-macron-2017": 1.33,
+   "florian-philippot": 1.58,
+   "francis-lalanne": 2.11,
+   "francois-ruffin": 2.47,
+   "jean-luc-melenchon": 2.8,
+   "juan-branco": 1.7,
+   "karim-bouamrane": 1.61,
+   "olivier-becht": 1.55
+  },
+  "emmanuel-macron-2017": {
+   "benoit-mathieu": 0.65,
+   "bernard-cazeneuve": 1.21,
+   "clara-egger": 1.35,
+   "david-lisnard": 1.43,
+   "edouard-philippe": 0.91,
+   "emmanuel-dubuisson": 1.33,
+   "emmanuel-macron-2017": 0.0,
+   "florian-philippot": 2.84,
+   "francis-lalanne": 2.83,
+   "francois-ruffin": 2.48,
+   "jean-luc-melenchon": 2.7,
+   "juan-branco": 2.46,
+   "karim-bouamrane": 0.91,
+   "olivier-becht": 0.35
+  },
+  "florian-philippot": {
+   "benoit-mathieu": 2.73,
+   "bernard-cazeneuve": 3.27,
+   "clara-egger": 2.82,
+   "david-lisnard": 2.58,
+   "edouard-philippe": 3.02,
+   "emmanuel-dubuisson": 1.58,
+   "emmanuel-macron-2017": 2.84,
+   "florian-philippot": 0.0,
+   "francis-lalanne": 1.79,
+   "francois-ruffin": 2.7,
+   "jean-luc-melenchon": 3.06,
+   "juan-branco": 1.33,
+   "karim-bouamrane": 2.79,
+   "olivier-becht": 3.02
+  },
+  "francis-lalanne": {
+   "benoit-mathieu": 2.37,
+   "bernard-cazeneuve": 2.94,
+   "clara-egger": 1.97,
+   "david-lisnard": 2.97,
+   "edouard-philippe": 3.22,
+   "emmanuel-dubuisson": 2.11,
+   "emmanuel-macron-2017": 2.83,
+   "florian-philippot": 1.79,
+   "francis-lalanne": 0.0,
+   "francois-ruffin": 2.08,
+   "jean-luc-melenchon": 2.46,
+   "juan-branco": 1.27,
+   "karim-bouamrane": 2.33,
+   "olivier-becht": 3.07
+  },
+  "francois-ruffin": {
+   "benoit-mathieu": 1.98,
+   "bernard-cazeneuve": 1.74,
+   "clara-egger": 2.06,
+   "david-lisnard": 3.48,
+   "edouard-philippe": 3.31,
+   "emmanuel-dubuisson": 2.47,
+   "emmanuel-macron-2017": 2.48,
+   "florian-philippot": 2.7,
+   "francis-lalanne": 2.08,
+   "francois-ruffin": 0.0,
+   "jean-luc-melenchon": 0.4,
+   "juan-branco": 1.4,
+   "karim-bouamrane": 1.71,
+   "olivier-becht": 2.48
+  },
+  "jean-luc-melenchon": {
+   "benoit-mathieu": 2.22,
+   "bernard-cazeneuve": 1.82,
+   "clara-egger": 2.34,
+   "david-lisnard": 3.79,
+   "edouard-philippe": 3.56,
+   "emmanuel-dubuisson": 2.8,
+   "emmanuel-macron-2017": 2.7,
+   "florian-philippot": 3.06,
+   "francis-lalanne": 2.46,
+   "francois-ruffin": 0.4,
+   "jean-luc-melenchon": 0.0,
+   "juan-branco": 1.76,
+   "karim-bouamrane": 1.93,
+   "olivier-becht": 2.66
+  },
+  "juan-branco": {
+   "benoit-mathieu": 2.1,
+   "bernard-cazeneuve": 2.39,
+   "clara-egger": 2.14,
+   "david-lisnard": 2.86,
+   "edouard-philippe": 3.0,
+   "emmanuel-dubuisson": 1.7,
+   "emmanuel-macron-2017": 2.46,
+   "florian-philippot": 1.33,
+   "francis-lalanne": 1.27,
+   "francois-ruffin": 1.4,
+   "jean-luc-melenchon": 1.76,
+   "juan-branco": 0.0,
+   "karim-bouamrane": 2.02,
+   "olivier-becht": 2.58
+  },
+  "karim-bouamrane": {
+   "benoit-mathieu": 0.32,
+   "bernard-cazeneuve": 0.76,
+   "clara-egger": 0.82,
+   "david-lisnard": 2.12,
+   "edouard-philippe": 1.75,
+   "emmanuel-dubuisson": 1.61,
+   "emmanuel-macron-2017": 0.91,
+   "florian-philippot": 2.79,
+   "francis-lalanne": 2.33,
+   "francois-ruffin": 1.71,
+   "jean-luc-melenchon": 1.93,
+   "juan-branco": 2.02,
+   "karim-bouamrane": 0.0,
+   "olivier-becht": 1.0
+  },
+  "olivier-becht": {
+   "benoit-mathieu": 0.83,
+   "bernard-cazeneuve": 1.06,
+   "clara-egger": 1.58,
+   "david-lisnard": 1.7,
+   "edouard-philippe": 1.11,
+   "emmanuel-dubuisson": 1.55,
+   "emmanuel-macron-2017": 0.35,
+   "florian-philippot": 3.02,
+   "francis-lalanne": 3.07,
+   "francois-ruffin": 2.48,
+   "jean-luc-melenchon": 2.66,
+   "juan-branco": 2.58,
+   "karim-bouamrane": 1.0,
+   "olivier-becht": 0.0
+  }
+ }
+}

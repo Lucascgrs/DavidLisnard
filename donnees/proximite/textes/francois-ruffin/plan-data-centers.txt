@@ -1,0 +1,145 @@
+Plan DATA CENTERS
+
+Avant-propos
+
+En 2025, la France a attiré 69 milliards de dollars d’investissements étrangers dans les data centers. Notre électricité décarbonée, notre réseau robuste et notre position de carrefour des câbles sous-marins ont fait de nous l’eldorado du secteur. Mais en matière de progrès technologique, ce sont toujours les mêmes questions qui se posent : qui y gagne ? qui y perd ?
+
+Derrière le « nuage », il y a du béton, des serveurs et des pylônes : ces infrastructures consomment notre électricité, notre eau et nos terres, et l’essentiel de la valeur qu’elles créent repart aux États-Unis , là où sont conçus et vendus les services qui tournent sur ces machines. Il n’y en a que pour le gigantisme, les data centers géants, les milliards et les hectares.
+
+L’État leur déroule le tapis rouge sans rien demander en échange : statut d’exception, raccordements accélérés, tarifs de faveur, communes mises devant le fait accompli, abaissement de leur accise sur l’électricité. Il est nécessaire pour la France d’avoir ses propres capacités de calcul pour ses chercheurs, son administration et ses entreprises. Mais elle n’a pas à payer le prix écologique et démocratique pour les dividendes des actionnaires étrangers des hyperscalers d’intelligence artificielle qui font la une des journaux.
+
+Nos ressources sont précieuses, elles doivent d’abord aller à nos besoins. Et pour cela, comme pour toute ressource disponible en quantité limitée, il faut faire des arbitrages. Ces derniers ne peuvent être faits sans un processus de concertation citoyenne. Car les choix technologiques sont des choix politiques. Laissés entre les mains du capital, comme c’est le cas aujourd’hui, ils servent d’abord les profits et les dividendes des actionnaires.
+
+Ce n’est pas l’affaire des patrons, c’est l’affaire de tous.
+
+Les data centers en chiffres
+
+• 69 Md$ d’investissements étrangers attirés en 2025 dans les data centers en France.
+
+• 10 TWh consommés par an par les data centers installés en France en 2024.
+
+• 18 GW de raccordement au réseau déjà contractualisés par les projets futurs.
+
+• 212 hectares de terres promis à Google dans l’Indre, expropriées il y a quinze ans au nom de 4 000 emplois jamais créés.
+
+• 50 Md€ partent chaque année vers les États-Unis pour payer nos logiciels et nos services cloud, plus que notre facture pétrolière.
+
+• 1 emploi pour vingt millions d’euros investis : c’est le ratio annoncé pour le projet de Dugny, en Seine-Saint-Denis.
+
+Partie I : maîtriser l’empreinte écologique des data centers
+
+En 2024, les data centers installés en France consommaient 10 térawattheures par an. Les projets futurs ont déjà contractualisé 18 gigawatts de raccordement au réseau. RTE prévoit un triplement d’ici 2035. Dans le même temps, nous devons électrifier nos transports, nos usines et le chauffage de nos logements.
+
+Le conflit d’usage n’est pas devant nous, il a commencé : la file d’attente de raccordement est saturée, et ce sont les autres secteurs qui attendent.
+
+1. Un couloir énergétique dédié au numérique
+
+Reprenant la trajectoire plafond recommandée par le Shift Project et le modèle belge des « couloirs énergétiques » du gestionnaire de réseau Elia, nous réserverons au numérique une fraction déterminée de notre électricité , inscrite dans la Stratégie nationale bas carbone. Ni plus, ni moins.
+
+Cette fraction ne sera pas fixée dans un cabinet ministériel : une assemblée citoyenne tirée au sort et informée l’arbitrera , parce que c’est un choix entre nos usages, combien pour l’IA, combien pour nos trains, nos pompes à chaleur, nos usines. Nos industriels y gagneront la visibilité qui leur manque.
+
+2. Fin du « premier arrivé, premier servi » au profit d’un ordre de priorité des raccordements et effacement obligatoire
+
+Aujourd’hui, celui qui demande le premier obtient la capacité, quel que soit l’intérêt du projet pour le pays. Les géants de la tech préemptent le réseau et bloquent l’électrification de nos ports et de nos usines.
+
+RTE mettra en place des files d’attente prioritaires : les besoins fondamentaux (hôpitaux, logements, écoles etc.), l’électrification, l’industrie française et européenne d’abord, les data centers non stratégiques ensuite. Et un data center n’est pas un hôpital : lors des pics de consommation nationaux, la loi imposera de mettre en pause les tâches non critiques , à commencer par l’entraînement des modèles d’IA.
+
+3. Des friches, pas nos champs
+
+À Fouju, en Seine-et-Marne, un data center artificialisera 70 hectares de terres agricoles de la Brie. À Ozans, dans l’Indre, les 212 hectares promis à Google sont des terres expropriées il y a quinze ans, au nom de 4 000 emplois jamais créés pour un autre projet, et cultivées depuis en céréales.
+
+Aucune terre agricole ou naturelle ne sera artificialisée pour un data center tant qu’une friche adaptée existe. Le porteur de projet devra démontrer l’absence de site alternatif, dans une analyse vérifiée par un tiers indépendant ; un inventaire public des friches raccordables sera tenu par territoire ; et aucune terre expropriée restée inutilisée ne sera réaffectée sans un bilan public de ce qui avait été promis et de ce qui a été fait.
+
+4. La chaleur des serveurs chauffera nos villes
+
+Cent pour cent de l’électricité consommée par un serveur ressort sous forme de chaleur. Le potentiel récupérable en France équivaut à la consommation électrique de 500 000 personnes ; presque rien n’est récupéré.
+
+La loi impose depuis janvier 2026 d’en réutiliser 20 %, mais exonère l’opérateur quand aucun réseau de chaleur n’existe à proximité : à Wissous, CyrusOne a simplement refusé de cofinancer le réseau urbain. Aucun permis de construire ne sera délivré sans obligation stricte de valoriser la chaleur (chauffage urbain, piscines, bâtiments publics) et d’en financer l’intégralité de la chaîne, création du réseau comprise. La clause d’exemption disparaîtra.
+
+Partie II : un intérêt national démontré, pas décrété
+
+Un data center accapare des ressources qui appartiennent à un territoire : de la puissance de raccordement, du foncier, de l’électricité, de l’eau. Il serait logique que ceux qui vivent là aient leur mot à dire. C’est l’inverse qui se produit pour les projets annoncés depuis février 2025 au sommet pour l’action sur l’IA. La loi du 26 mai 2026 a étendu aux data centers le statut de « projet d’intérêt national majeur » : procédures accélérées, consultations allégées, permis délivré par l’État, plan d’urbanisme mis en compatibilité d’office. Des maires découvrent dans la presse des projets décidés sans eux.
+
+Étrechet, dans l’Indre
+
+Ce que vivent les élus d’Étrechet, dans l’Indre, le résume. La promesse de vente de 212 hectares à Google date du 5 juillet 2025 ; la concertation publique est prévue pour novembre 2026. Seize mois pendant lesquels une sous-préfète dédiée a été nommée pour accélérer les procédures et RTE a été autorisé à entrer sur les terrains de six communes pour préparer le projet.
+
+Nos mesures s’appliqueront à tout projet de plus de 50 hectares ou 100 mégawatts, projets liés cumulés.
+
+1. Fin du statut d’exception
+
+Nous mettrons fin au statut de projet d’intérêt national majeur pour les data centers. Les maires et les conseils municipaux retrouveront l’intégralité de leur pouvoir d’urbanisme pour les projets qui engagent les ressources de leur territoire.
+
+2. Un pouvoir réel pour la commune d’implantation
+
+Le plan local d’urbanisme intercommunal est décidé par l’agglomération ; la commune n’a qu’un avis, et la majorité des deux tiers censée la protéger ne vaut rien face aux grandes villes. Étrechet dispose d’un siège sur 53 au conseil communautaire ; Châteauroux, Déols et Le Poinçonnet en détiennent 37 à elles trois.
+
+La commune d’implantation disposera d’un avis conforme sur toute évolution du plan d’urbanisme rendant possible un très grand projet de data center, ou à défaut d’un veto suspensif motivé. Si l’État entend passer outre, il le fera par une décision motivée qui explique en quoi l’intérêt national l’emporte. Celui qui impose doit en répondre.
+
+3. Un débat public avant que tout soit joué
+
+Aujourd’hui, c’est le porteur de projet qui choisit s’il saisit la Commission nationale du débat public ; rien ne le lie à la vente du foncier.
+
+Pour les grands projets, la saisine sera obligatoire dès le premier acte qui engage le territoire , promesse de vente, cession, modification du plan d’urbanisme ; le débat portera sur l’opportunité même du projet ; et tous les actes irréversibles seront gelés pendant la procédure. Un débat organisé quand plus rien n’est négociable n’est pas un débat.
+
+4. Des élus qui votent en connaissance de cause
+
+Le 9 septembre 2026, le président de l’agglomération de Châteauroux a reçu le dossier de concertation de Google quelques minutes avant le début du conseil communautaire. Et les données transmises à la dernière minute ne sont pas fiables. Sur la puissance, les chiffres vont de 500 mégawatts à 1,1 gigawatt ; sur l’emploi, 1 500 postes annoncés, 100 à 200 selon les estimations indépendantes.
+
+Avant toute délibération : un dossier complet remis en même temps à tous les élus concernés et rendu public ; une contre-expertise indépendante financée par le porteur via un fonds commun ; un délai minimal de plusieurs semaines pour lire ; et une évaluation environnementale unique pour les projets liés . À Étrechet, le data center, un méthaniseur et le renforcement de la ligne très haute tension sont instruits séparément, chacun sous ses seuils.
+
+5. Obligation de déclarer tout projet sur un seul dossier ICPE (Installation classée pour la protection de l’environnement)
+
+Sans cela, les sites peuvent être découpés en plusieurs sous-sites et ainsi passer sous les seuils Seveso. Cela est nécessaire pour considérer les risques d’incendies et d’explosion liés à l’utilisation de batteries lithium-ion pouvant entraîner un incendie après court-circuit, surcharge, décharge accidentelle ou emballement thermique.
+
+À Fouju, le projet Campus IA a été découpé en bâtiments chacun dépendant d’un exploitant différent. Selon l’Autorité environnementale il aurait été classé Seveso si l’ensemble du site avait fait l’objet d’un unique dossier ICPE.
+
+6. Une consultation des habitants qui compte
+
+Le droit d’initiative citoyenne exige 10 000 signatures, dix fois la population d’Étrechet. Le référendum local ne porte que sur les compétences de la commune, qui a perdu celle des zones d’activités.
+
+Les habitants des communes impactées seront consultés avant toute décision définitive ; un résultat défavorable ouvrira un réexamen obligatoire et déclenchera le veto suspensif de la commune. Le résultat sera apprécié commune par commune, pour que la plus touchée ne soit pas noyée par les autres.
+
+La proposition de loi Ros
+
+Sans attendre 2027, la proposition de loi du sénateur David Ros, adoptée par le Sénat le 25 mars 2026 et toujours en attente d’examen à l’Assemblée. Elle peut être amendée pour redonner un pouvoir réel à la commune d’implantation.
+
+Ce texte propose de créer un comité de projet où l’État consulte les communes concernées avant de qualifier un data center de projet d’intérêt national majeur. Mais rien ne l’oblige à tenir compte de leur avis. Nous proposerons d’en faire un véritable droit de veto suspensif.
+
+Partie III : des data centers pour notre souveraineté, pas pour les dividendes étrangers
+
+Dans le temps, nous étions précurseurs dans la course au numérique. Nous avions Alcatel, Thomson : des fleurons qui auraient pu être les précurseurs du numérique d’aujourd’hui. Nous les avons laissés filer. Encore aujourd’hui, chaque année, plus de 50 milliards d’euros partent vers les États-Unis pour payer nos logiciels et nos services cloud, plus que notre facture pétrolière.
+
+Les data centers installés sur notre sol n’y changent rien : la valeur des services qui y tournent est conçue, vendue et taxée outre-Atlantique. Et très peu d’emplois sont créés : à Dugny, en Seine-Saint-Denis, le projet annonce 110 emplois permanents, soit un emploi pour vingt millions d’euros investis. Un data center avec une puissance installée de 100 mégawatts crée une trentaine d’emplois liés à l’exploitation.
+
+Nous fournissons le terrain, l’eau et le courant ; ils encaissent la marge.
+
+1. Fin de la niche fiscale sur l’électricité
+
+L’État demande des efforts de sobriété aux ménages et aux PME, et offre aux exploitants de giga-data centers un tarif réduit de 12 euros par mégawattheure sur la taxe électricité, contre 26 euros pour les autres consommateurs. Plus de 50 % de réduction, accordée précisément aux plus gros consommateurs. Nous y mettrons fin pour les projets non stratégiques.
+
+2. La souveraineté de nos données stratégiques
+
+Il aura fallu sept ans de bataille pour que les données de santé de 67 millions de Français quittent Microsoft et rejoignent un hébergeur français. C’est le numérique de connivence : les copains d’abord, américains de préférence. Et le Cloud Act autorise un juge américain à exiger d’une entreprise américaine des données stockées en France.
+
+La qualification SecNumCloud deviendra effectivement obligatoire pour héberger les données de l’État, des secteurs vitaux et des opérateurs de services essentiels. Elle sera renforcée : la coentreprise Thales-Google S3NS a obtenu le label malgré la présence de Google, car SecNumCloud certifie le contrôle des données, pas l’indépendance logicielle. Une qualification renforcée orientera la commande publique vers l’industrie française et européenne.
+
+3. Des capitaux européens pour des besoins européens
+
+Les data centers demandent des capitaux massifs : ces investissements seront européens, et la France cessera d’être la piste d’atterrissage des compagnies américaines. Le programme InvestAI de la Commission mobilise 20 milliards d’euros pour participer au financement de « gigafactories » d’IA, mais ses règles d’accès restent à écrire et rien n’interdit à des acteurs privés étrangers d’en capter la capacité.
+
+Pour tout projet installé en France, nos règles s’appliqueront , et la France pèsera à Bruxelles pour que ses règles produisent une souveraineté réelle, et non un guichet de plus pour les géants de la tech.
+
+Il y a progrès et progrès
+
+Il y a progrès et progrès : celui qui sert le pays, et celui qui se sert du pays. Un progrès qui prend nos terres, notre courant et notre eau, et dont la valeur repart outre-Atlantique, c’est leur progrès, pas le nôtre.
+
+L’État leur déroule le tapis rouge : nous, nous leur poserons des conditions.
+
+Et nous souhaitons les poser dès maintenant. Nous proposons un moratoire de cinq ans sur les projets de centres de données non souverains, l’organisation de débats publics sur les projets existants, avec la garantie d’une information juste.
+
+Partagez le livret
+
+WhatsApp Messenger Facebook Telegram X Email
+
+Télécharger le livret

@@ -2,21 +2,20 @@
 
 Les commentaires et leur classement par le modèle sont dans la table centrale donnees/analyse/corpus.csv (lignes
 Facebook ; colonnes mod_categorie, mod_p_insultant, mod_p_question, mod_p_autre, mod_version, mod_le :
-analyse/corpus.py). Le texte n'est recopié nulle part ailleurs.
+commun/analyse/corpus.py). Le texte n'est recopié nulle part ailleurs.
 
 donnees/moderation/
-- annotations.csv : catégorie donnée à la lecture (cle, categorie, cible, jeu, poids, annote_le, par). Le jeu
+- annotations.csv : catégorie donnée à la lecture (cle, categorie, jeu, poids, annote_le, par). Le jeu
   « test » ne sert qu'à mesurer le modèle ; « poids » ramène ce test à la population (voir mesurer() dans modele.py) ;
-  « cible » (insultants seulement) : L si l'insulte vise David Lisnard, Nouvelle Énergie ou leurs soutiens, A sinon ;
   « par » : qui a lu (vide = Claude ; « gemini » = lu par Gemini, pas encore relu ; « gemini+claude » = relu) ;
 - lots/lot_N.json et lot_N.txt : lots tirés pour l'annotation ;
 - journal.log, avancement.json, EN_COURS (verrou de la tâche « moderation »).
-modeles/moderation/ : le modèle en service et infos.json (version, mesures sur le test, historique).
+donnees/modeles/moderation/ : le modèle en service et infos.json (version, mesures sur le test, historique).
 """
 import random
 import re
 
-from analyse import corpus as cp
+from commun.analyse import corpus as cp
 from commun.config import DONNEES, MODELES
 from commun.fichiers import ecrire_csv, ecrire_json, lire_csv, lire_json
 from commun.textes import maintenant
@@ -31,10 +30,9 @@ MODELE = MODELES / "moderation"
 INFOS = MODELE / "infos.json"
 
 CATEGORIES = ["autre", "insultant", "question"]  # ordre des sorties du modèle
-# Lettres des réponses de lecture : L = insultant visant Lisnard / Nouvelle Énergie, I = insultant visant autre chose,
-# Q = question ; tout le reste du lot est « autre ».
-LETTRES = {"L": ("insultant", "L"), "I": ("insultant", "A"), "Q": ("question", "")}
-CHAMPS_ANNOTATIONS = ["cle", "categorie", "cible", "jeu", "poids", "annote_le", "par"]
+# Lettres des réponses de lecture : I = insultant, Q = question ; tout le reste du lot est « autre ».
+LETTRES = {"I": "insultant", "Q": "question"}
+CHAMPS_ANNOTATIONS = ["cle", "categorie", "jeu", "poids", "annote_le", "par"]
 # Classement du modèle tel que le lit le reste du code → colonne du corpus.
 EN_COLONNE = {"categorie": "mod_categorie", "p_insultant": "mod_p_insultant", "p_question": "mod_p_question",
               "p_autre": "mod_p_autre", "version": "mod_version", "classe_le": "mod_le"}
@@ -178,8 +176,8 @@ def tirer(n: int = TAILLE_LOT, mode: str = "hasard") -> int:
                                           "commentaires": {str(j): c["cle"] for j, c in enumerate(lot, 1)}})
     (LOTS / f"lot_{k}.txt").write_text(texte_du_lot(lot), encoding="utf-8")
     print(f"Lot {k} ({mode}, {len(lot)} commentaires) : {LOTS / f'lot_{k}.txt'}")
-    print("Réponse attendue dans un fichier texte : une ligne « L: numéros » (insultes visant Lisnard / Nouvelle "
-          "Énergie), « I: numéros » (autres insultes) et « Q: numéros » (questions) ; le reste est « autre ». "
+    print("Réponse attendue dans un fichier texte : une ligne « I: numéros » (insultes) et une ligne "
+          "« Q: numéros » (questions) ; le reste est « autre ». "
           "Pour Gemini : moderation/PROMPT_GEMINI.md, puis « noter K fichier --par gemini ».")
     return k
 
@@ -211,12 +209,12 @@ def lots_lus() -> dict[int, dict]:
     return sortie
 
 
-def lire_reponse(fichier: str, numeros: dict) -> dict[str, tuple[str, str]]:
-    """Lit « L: 3, 17 », « I: 4 », « Q: 5, 9 » (une ligne par lettre ; tolère le gras Markdown, « #12 », les
-    espaces et les autres lignes de Gemini). Rend numéro → (catégorie, cible)."""
-    choix: dict[str, tuple[str, str]] = {}
+def lire_reponse(fichier: str, numeros: dict) -> dict[str, str]:
+    """Lit « I: 4, 17 », « Q: 5, 9 » (une ligne par lettre ; tolère le gras Markdown, « #12 », les espaces et les
+    autres lignes de Gemini). Rend numéro → catégorie."""
+    choix: dict[str, str] = {}
     for ligne in open(fichier, encoding="utf-8-sig").read().splitlines():
-        m = re.match(r"\s*[*_`>-]*\s*([LIQ])\s*[*_`]*\s*:\s*[*_`]*(.*)$", ligne)
+        m = re.match(r"\s*[*_`>-]*\s*([IQ])\s*[*_`]*\s*:\s*[*_`]*(.*)$", ligne)
         if not m:
             continue
         reste = re.sub(r"[*_`#.]", " ", m.group(2)).strip()
@@ -234,7 +232,7 @@ def lire_reponse(fichier: str, numeros: dict) -> dict[str, tuple[str, str]]:
 
 
 def noter(k: int, fichier: str, test: bool = False, par: str = "", relire: bool = False) -> None:
-    """Enregistre la lecture du lot k. `fichier` contient « L: … », « I: … » et « Q: … » ; le reste du lot est
+    """Enregistre la lecture du lot k. `fichier` contient « I: … » et « Q: … » ; le reste du lot est
     « autre ». Avec test=True, le lot rejoint le jeu de test (il ne servira qu'à mesurer). par="gemini" : lu par
     Gemini, à relire. relire=True : relecture par Claude d'un lot lu par Gemini ; remplace ses annotations et dit
     combien Gemini en avait jugé autrement."""
@@ -252,17 +250,14 @@ def noter(k: int, fichier: str, test: bool = False, par: str = "", relire: bool 
     qui = "gemini+claude" if relire else par
     nouvelles = []
     for j, cle in numeros.items():
-        cat, cible = choix.get(j, ("autre", ""))
+        cat = choix.get(j, "autre")
         jeu = avant.get(cle, {}).get("jeu", "entrainement") if relire else ("test" if test else "entrainement")
-        nouvelles.append({"cle": cle, "categorie": cat, "cible": cible, "jeu": jeu, "par": qui})
-    ecarts = [x for x in nouvelles if (a := avant.get(x["cle"])) and (a["categorie"], a.get("cible", "")) !=
-              (x["categorie"], x["cible"])]
+        nouvelles.append({"cle": cle, "categorie": cat, "jeu": jeu, "par": qui})
+    ecarts = [x for x in nouvelles if (a := avant.get(x["cle"])) and a["categorie"] != x["categorie"]]
     n = ajouter_annotations(nouvelles, remplacer=relire)
     ecrire_json(f_lot, {**lot, "par": qui, "lu_le": maintenant()})
     nb = {c: sum(x["categorie"] == c for x in nouvelles) for c in CATEGORIES}
-    vises = sum(x["cible"] == "L" for x in nouvelles)
-    print(f"Lot {k} : {n} annotations enregistrées ({nb['insultant']} insultants dont {vises} visant Lisnard / "
-          f"Nouvelle Énergie, {nb['question']} questions, {nb['autre']} autres){' — jeu de test' if test else ''}"
+    print(f"Lot {k} : {n} annotations enregistrées ({nb['insultant']} insultants, {nb['question']} questions, {nb['autre']} autres){' — jeu de test' if test else ''}"
           f"{' — lu par ' + qui if qui else ''}.")
     if relire:
         print(f"Relecture : {len(ecarts)} corrections sur {len(nouvelles)} "

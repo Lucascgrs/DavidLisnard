@@ -155,23 +155,23 @@ function tuile(classe, chiffre, libelle, detail) {
 }
 
 /** L'onglet entier. commentaires : objets préparés par app.js ; suivi : Map code → { etat, par, le } ;
- *  reglages : { periode, sujet } ; changer(cle, valeur) : nouveau réglage. */
+ *  reglages : { periode } ; changer(cle, valeur) : nouveau réglage. */
 export function vueStats(zone, { commentaires, suivi, reglages, changer }) {
   const segments = (cle, options) => el("div", { class: "segments" }, Object.entries(options).map(([v, lib]) =>
     el("button", { type: "button", "aria-pressed": String(reglages[cle] === v), onclick: () => changer(cle, v) }, lib)));
-  const liste = commentaires.filter((c) => !reglages.sujet || c.cible === reglages.sujet);
+  const liste = commentaires;
   const plusAncien = liste.reduce((m, c) => (c.t && c.t < m ? c.t : m), Date.now());
   const cs = cases(reglages.periode, plusAncien);
   const zero = () => cs.liste.map(() => 0);
 
   // 1. Ce que reçoit le groupe : par date du commentaire.
   const ins = zero(), que = zero(), mots = zero(), tous = zero();
-  let nIns = 0, nQue = 0, nMots = 0, nTous = 0, nVises = 0;
+  let nIns = 0, nQue = 0, nMots = 0, nTous = 0;
   for (const c of liste) {
     const i = cs.caseDe(c.t);
     if (i < 0) continue;
     nTous++; tous[i]++;
-    if (c.categorie === "insultant") { ins[i]++; nIns++; if (c.cible === "L") nVises++; }
+    if (c.categorie === "insultant") { ins[i]++; nIns++; }
     if (c.categorie === "question") { que[i]++; nQue++; }
     if (c.mots.length) { mots[i]++; nMots++; }
   }
@@ -214,11 +214,10 @@ export function vueStats(zone, { commentaires, suivi, reglages, changer }) {
 
   zone.replaceChildren(
     el("div", { class: "barre-stats carte" },
-      el("div", {}, el("span", { class: "etiquette" }, "Période"), segments("periode", Object.fromEntries(Object.entries(PERIODES).map(([k, p]) => [k, p.libelle])))),
-      el("div", {}, el("span", { class: "etiquette" }, "Sujet"), segments("sujet", { "": "Tous", L: "David Lisnard et Nouvelle Énergie", A: "Autres sujets" }))),
+      el("div", {}, el("span", { class: "etiquette" }, "Période"), segments("periode", Object.fromEntries(Object.entries(PERIODES).map(([k, p]) => [k, p.libelle]))))),
     el("div", { class: "chiffres-cles" },
       tuile("", nTous, "commentaires sur la période"),
-      tuile("insultant", nIns, "insultants", nTous ? `${(100 * nIns / nTous).toLocaleString("fr-FR", { maximumFractionDigits: 1 })} % des commentaires${reglages.sujet === "A" ? "" : ` · ${nombre(nVises)} visant Lisnard / NE`}` : ""),
+      tuile("insultant", nIns, "insultants", nTous ? `${(100 * nIns / nTous).toLocaleString("fr-FR", { maximumFractionDigits: 1 })} % des commentaires` : ""),
       tuile("question", nQue, "questions", nTous ? `${(100 * nQue / nTous).toLocaleString("fr-FR", { maximumFractionDigits: 1 })} % des commentaires` : ""),
       tuile("mots", nMots, "avec un mot surveillé"),
       tuile("ok", nTraites, "marqués « traité »", `${nombre(nSans)} « sans suite » · ${nombre(aTraiter)} insultants ou questions encore à traiter`)),

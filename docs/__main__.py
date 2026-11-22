@@ -18,7 +18,7 @@ from datetime import date, datetime
 
 from commun.config import DOCS, MODELES, perimetre
 from commun.fichiers import lire_csv, lire_json
-from cloudflare import export as r2_export
+from commun.cloudflare import export as r2_export
 
 SOURCE = DOCS / "FONCTIONNEMENT.html"
 PDF = DOCS / "FONCTIONNEMENT.pdf"
@@ -55,7 +55,7 @@ def puissance(x: float) -> str:
 
 
 def chiffres() -> dict[str, str]:
-    from analyse import stockage, versions
+    from commun.analyse import stockage, versions
 
     with open(stockage.CORPUS, encoding="utf-8-sig", newline="") as f:
         sources = Counter(l["source"] for l in csv.DictReader(f, delimiter=";"))
@@ -70,12 +70,12 @@ def chiffres() -> dict[str, str]:
     px = p.get("x", {})
     figes = int(reseau.get("figes", 4))
     longueurs = reseau.get("longueurs") or [128, 64, 20]
-    from critiques import donnees as critiques
+    from commun.critiques import donnees as critiques
     th_themes = (lire_json(critiques.THEMES, {}) or {}).get("themes", {})
     th_ratt = lire_csv(critiques.RATTACHEMENTS) if critiques.RATTACHEMENTS.exists() else []
     th_lus = lire_csv(critiques.LUS) if critiques.LUS.exists() else []
     th_etat = critiques.resultats()  # sélection d'aujourd'hui et reste à lire
-    from analyse.ton_inverse import mesurer as ton_inverse
+    from commun.analyse.ton_inverse import mesurer as ton_inverse
     inv = ton_inverse()  # carte « Ton inversé » : notes du modèle dans le corpus contre celles de Claude sur le test
     from commun import sauvegarde
     from commun.config import DONNEES
@@ -152,7 +152,7 @@ def chiffres() -> dict[str, str]:
         "n_doublons": entier(doublons),
         "part_doublons": decimal(100 * doublons / max(1, sum(sources.values())), 1) + " %",
         "sauvegarde_mo": f"{archive:.0f} Mo" if archive else "à faire",
-        # Export vers le bucket R2 du groupe sur Cloudflare (cloudflare/export.py, lu sur les lots locaux)
+        # Export vers le bucket R2 du groupe sur Cloudflare (commun/cloudflare/export.py, lu sur les lots locaux)
         **(lambda e: {"r2_exportes": entier(e["exportes"]),
                       "r2_attente": entier(sum(n for _, _, n, depose in e["sources"] if not depose))})(
             r2_export.etat()),
@@ -188,7 +188,40 @@ def chiffres() -> dict[str, str]:
         "constance_cible": pourcent(constance.get("cible", 0)),
         "constance_ton": decimal((constance.get("ecart") or {}).get("tonalite", 0)),
         **moderation_chiffres(),
+        **verification_chiffres(),
+        **proximite_chiffres(),
     }
+
+
+def verification_chiffres() -> dict[str, str]:
+    """Paragraphe « Vérification » : thèmes et affirmations vérifiés pour chaque personne (verification/)."""
+    import csv as _csv
+    from verification.commun.personnes import PERSONNES
+    out = {}
+    for cle, p in PERSONNES.items():
+        themes = [d for d in p.themes.iterdir() if d.is_dir() and (d / "analyse.md").exists()] if p.themes.exists() else []
+        n = 0
+        for d in themes:
+            with open(d / "affirmations.csv", encoding="utf-8", newline="") as f:
+                n += sum(1 for _ in _csv.DictReader(f))
+        out[f"verif_{cle}"] = f"{len(themes)} thèmes, {entier(n)} affirmations"
+    return out
+
+
+def proximite_chiffres() -> dict[str, str]:
+    """Paragraphe « Proximité des candidats » (proximite/) : programmes lus et mesures notées."""
+    from commun.fichiers import lire_json
+    from proximite import CANDIDATS
+    from proximite.mesures import toutes
+    mesures = toutes()
+    c = lire_json(CANDIDATS, {})
+    refs = {x["slug"]: x for x in c.get("candidats", []) if x.get("reference")}
+    avec = {m["candidat"] for m in mesures} - set(refs)
+    return {"prox_programmes": entier(len(avec)),
+            "prox_mesures": entier(sum(m["candidat"] not in refs for m in mesures)),
+            "prox_references": ", ".join(f"{x['prenom']} {x['nom']} en {x['annee']}" for x in refs.values()) or "aucun",
+            "prox_en_lice": entier(sum(bool(x.get("en_lice")) for x in c.get("candidats", []))),
+            "prox_export": jour(c["export_du"][:10]) if c.get("export_du") else "?"}
 
 
 def moderation_chiffres() -> dict[str, str]:

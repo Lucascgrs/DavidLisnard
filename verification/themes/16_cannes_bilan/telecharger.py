@@ -3,8 +3,9 @@ import sys
 from pathlib import Path
 
 from verification.commun.sources import Source, inscrire, telecharger
+from verification.commun.chemins import donnees_de
 
-ICI = Path(__file__).resolve().parent
+ICI = donnees_de(__file__)
 BRUT, CATALOGUE = ICI / "brut", ICI / "sources.csv"
 ECO = "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/"
 LO = "Licence ouverte Etalab 2.0"

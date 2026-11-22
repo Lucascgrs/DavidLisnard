@@ -1,0 +1,4 @@
+affirmation,variante,grandeur,valeur,unite,annee,chiffre_annonce,sources,methode,note
+RET-01,nés de 1963 à mars 1965,Âge légal de départ aujourd'hui,62.75,ans,2026,62 ans puis 60 ans,SP-AGE-RETRAITE,M1,62 ans et 9 mois
+RET-01,nés à partir de 1969,Âge légal de départ aujourd'hui,64.0,ans,2026,62 ans puis 60 ans,SP-AGE-RETRAITE,M1,
+RET-01,nés à partir de 1969,Trimestres exigés pour le taux plein,172.0,trimestres,2026,40 annuités (160 trimestres),SP-TRIMESTRES-TAUX-PLEIN,M1,12 trimestres de plus que 40 annuités

@@ -1,0 +1,39 @@
+affirmation,variante,grandeur,valeur,unite,annee,chiffre_annonce,sources,methode,note
+ECO-01,France,"Hausse du salaire minimum mensuel brut, 1er semestre 2016 → 1er semestre 2026",24.3,%,2016-2026,27 %,EUROSTAT-SMIC-PAYS,M1,"1467 € → 1823 € par mois (Eurostat, sur 12 mois)"
+ECO-01,Espagne,"Hausse du salaire minimum mensuel brut, 1er semestre 2016 → 1er semestre 2026",86.5,%,2016-2026,"86,5 %",EUROSTAT-SMIC-PAYS,M1,"764 € → 1425 € par mois (Eurostat, sur 12 mois)"
+ECO-01,Portugal,"Hausse du salaire minimum mensuel brut, 1er semestre 2016 → 1er semestre 2026",73.6,%,2016-2026,73 %,EUROSTAT-SMIC-PAYS,M1,"618 € → 1073 € par mois (Eurostat, sur 12 mois)"
+ECO-01,Allemagne,"Hausse du salaire minimum mensuel brut, 1er semestre 2016 → 1er semestre 2026",62.3,%,2016-2026,62 %,EUROSTAT-SMIC-PAYS,M1,"1444 € → 2343 € par mois (Eurostat, sur 12 mois)"
+ECO-01,Pays-Bas,"Hausse du salaire minimum mensuel brut, 1er semestre 2016 → 1er semestre 2026",50.5,%,2016-2026,52 %,EUROSTAT-SMIC-PAYS,M1,"1525 € → 2295 € par mois (Eurostat, sur 12 mois)"
+ECO-01,Belgique,"Hausse du salaire minimum mensuel brut, 1er semestre 2016 → 1er semestre 2026",40.6,%,2016-2026,45 %,EUROSTAT-SMIC-PAYS,M1,"1502 € → 2112 € par mois (Eurostat, sur 12 mois)"
+ECO-01,"France, autre période","Hausse du SMIC brut, 2e semestre 2015 → 2e semestre 2025",23.6,%,2015-2025,27 %,EUROSTAT-SMIC-PAYS,M1,
+ECO-02,"Espagne, 2024",Croissance du PIB en volume,3.7,%,2024,"3,8 %, « le plus fort taux de croissance de toute l'Europe »",EUROSTAT-CROISSANCE,M2,"rang 5 sur 27 pays de l'UE ; en tête : CY 6.6, MT 5.3, DK 3.9, HR 3.9, ES 3.7"
+ECO-02,"Espagne, 2025",Croissance du PIB en volume,2.6,%,2025,"3,8 %, « le plus fort taux de croissance de toute l'Europe »",EUROSTAT-CROISSANCE,M2,"rang 10 sur 27 pays de l'UE ; en tête : IE 8.0, CY 4.8, MT 4.7, PL 3.8, DK 3.5"
+ECO-03,"2025-Q1 → 2025-Q4, toutes entreprises",Chômeurs (BIT) par emploi vacant,5.2,chômeurs,2025,17 chômeurs pour 1 offre,EUROSTAT-CHOMEURS; EUROSTAT-EMPLOIS-VACANTS,M3,"moyenne de quatre trimestres : 2451000 chômeurs, 472882 emplois vacants"
+ECO-03,"2025-Q1 → 2025-Q4, entreprises de 10 salariés ou plus",Chômeurs (BIT) par emploi vacant,8.5,chômeurs,2025,17 chômeurs pour 1 offre,EUROSTAT-CHOMEURS; EUROSTAT-EMPLOIS-VACANTS,M3,289761 emplois vacants dans les entreprises de 10 salariés ou plus
+ECO-03,chômeurs nécessaires,Chômeurs qu'il faudrait pour 17 par emploi vacant (toutes entreprises),8.0,millions,2025,17 chômeurs pour 1 offre,EUROSTAT-EMPLOIS-VACANTS,M3,contre 2.45 millions de chômeurs au sens du BIT
+ECO-04,"2019, tous CDD",Part des CDD dans les déclarations d'embauche (hors intérim),83.4,%,2019,87 %,URSSAF-DPAE,M4,25.4 millions de déclarations
+ECO-04,"2019, CDD de moins d'un mois",Part des CDD de moins d'un mois dans les déclarations d'embauche,68.5,%,2019,87 %,URSSAF-DPAE,M4,
+ECO-04,"2024, tous CDD",Part des CDD dans les déclarations d'embauche (hors intérim),82.7,%,2024,87 %,URSSAF-DPAE,M4,26.8 millions de déclarations
+ECO-04,"2024, CDD de moins d'un mois",Part des CDD de moins d'un mois dans les déclarations d'embauche,67.6,%,2024,87 %,URSSAF-DPAE,M4,
+ECO-04,"2025, tous CDD",Part des CDD dans les déclarations d'embauche (hors intérim),83.7,%,2025,87 %,URSSAF-DPAE,M4,27.2 millions de déclarations
+ECO-04,"2025, CDD de moins d'un mois",Part des CDD de moins d'un mois dans les déclarations d'embauche,69.3,%,2025,87 %,URSSAF-DPAE,M4,
+ECO-05,Industrie (hors construction),Production industrielle 2025 par rapport à 2019,-3.8,%,2025,pas retrouvé son niveau d'avant Covid-19,EUROSTAT-PROD-INDUS,M5,"indice 2021 = 100 : 106.5 en 2019, 102.4 en 2025"
+ECO-05,Industrie manufacturière,Production industrielle 2025 par rapport à 2019,-3.8,%,2025,pas retrouvé son niveau d'avant Covid-19,EUROSTAT-PROD-INDUS,M5,"indice 2021 = 100 : 107.5 en 2019, 103.4 en 2025"
+ECO-06,Doing Business 2020 (données 2019),Rang de la France,33.0,rang,2019,dans les 15 % de pays,BM-DOING-BUSINESS-2019,M6,sur 190 économies classées
+ECO-06,Doing Business 2020 (données 2019),Part des pays classés devant ou au même rang,17.4,%,2019,15 %,BM-DOING-BUSINESS-2019,M6,classement arrêté en 2021
+ECO-07,"France, 2023",Accidents du travail mortels,811.0,décès,2023,« pays record d'Europe des morts au travail »,EUROSTAT-AT-MORTELS,M7,rang 1 sur 27 pays de l'UE ; premier autre pays : IT (473.0)
+ECO-07,"France, 2023",Taux d'accidents mortels pour 100 000 travailleurs,3.6,pour 100 000,2023,« pays record d'Europe des morts au travail »,EUROSTAT-AT-MORTELS,M7,rang 1 sur 27 pays de l'UE ; premier autre pays : BG (3.51)
+ECO-07,"France, 2024",Accidents du travail mortels,830.0,décès,2024,« pays record d'Europe des morts au travail »,EUROSTAT-AT-MORTELS,M7,rang 1 sur 27 pays de l'UE ; premier autre pays : IT (482.0)
+ECO-07,"France, 2024",Taux d'accidents mortels pour 100 000 travailleurs,3.61,pour 100 000,2024,« pays record d'Europe des morts au travail »,EUROSTAT-AT-MORTELS,M7,rang 1 sur 27 pays de l'UE ; premier autre pays : BG (3.08)
+ECO-08,"2024, accidents du travail seuls",Décès reconnus après un accident du travail,764.0,décès,2024,1 000 décès par an,REPSS-ATMP-2026,M8,plus de la moitié sont des malaises
+ECO-08,"2024, accidents du travail et maladies professionnelles",Décès reconnus (accidents du travail + maladies professionnelles),979.0,décès,2024,1 000 décès par an,REPSS-ATMP-2026,M8,
+ECO-08,"2024, avec les accidents de trajet","Décès reconnus, tous risques professionnels",1295.0,décès,2024,1 000 décès par an,REPSS-ATMP-2026,M8,accidents de trajet : 316
+ECO-09,2017-05 → 2026-08,"Hausse des prix de l'alimentation (IPCH, produits alimentaires et boissons non alcoolisées)",34.4,%,2026,plus de 30 %,EUROSTAT-IPCH,M9,ensemble des prix sur la même période : 27.1 %
+ECO-09,2021-01 → 2026-08,"Hausse des prix de l'alimentation (IPCH, produits alimentaires et boissons non alcoolisées)",25.8,%,2026,plus de 30 %,EUROSTAT-IPCH,M9,ensemble des prix sur la même période : 21.8 %
+ECO-09,2022-01 → 2026-08,"Hausse des prix de l'alimentation (IPCH, produits alimentaires et boissons non alcoolisées)",23.5,%,2026,plus de 30 %,EUROSTAT-IPCH,M9,ensemble des prix sur la même période : 17.9 %
+ECO-09,"sur un an, août 2026",Hausse de l'ensemble des prix sur un an,2.6,%,2026,« 3 % »,EUROSTAT-IPCH,M9,
+ECO-10,2025,"Consommation des ménages, en % du PIB",51.7,% du PIB,2025,55 % du PIB,EUROSTAT-PIB-EMPLOIS,M10,
+ECO-10,2025,"Consommation des ménages et des institutions sans but lucratif, en % du PIB",54.0,% du PIB,2025,55 % du PIB,EUROSTAT-PIB-EMPLOIS,M10,
+ECO-10,2025,"Rémunération des salariés, en % du PIB",51.4,% du PIB,2025,55 % du PIB,EUROSTAT-PIB-EMPLOIS,M10,
+ECO-11,"Allemagne, 2024",Robots industriels pour 10 000 salariés de l'industrie manufacturière,449.0,robots,2024,400 robots pour 10 000 salariés,IFR-DENSITE-2025,M11,moyenne de l'UE : 231
+ECO-12,2026,"SMIC mensuel net (estimation : brut Eurostat moins 20,95 % de cotisations salariales)",1441.0,€,2026,1 700 € net,EUROSTAT-SMIC-PAYS,M12,"ESTIMATION, non fiable à 100 % : SMIC brut 1823 € ; 1 700 € net = hausse d'environ 18 %"
