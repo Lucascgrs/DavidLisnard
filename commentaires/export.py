@@ -4,8 +4,8 @@ corrections.csv).
 - les commentaires notés de YouTube, d'Instagram, de Bluesky, des groupes Facebook publics et de X, sans auteur ni doublon (même auteur, même texte,
   même source : commun/analyse/corpus.py) ;
 - les publications (vidéos, posts) auxquelles ils répondent, pour le lien vers l'original ;
-- « meta » : chiffres du projet, comptes suivis, qualité du modèle (page Le projet, listes de filtres) ;
-- « cube » : les comptages par semaine × compte × type × cible × exploitable, d'où les pages Le projet et Commentaires
+- « meta » : chiffres du projet, comptes suivis, qualité du modèle (en-tête des pages, listes de filtres) ;
+- « cube » : les comptages par semaine × compte × type × cible × exploitable, d'où la frise de la page Commentaires
   recalculent leurs chiffres dans le navigateur. Chaque comptage existe deux fois : une voix par commentaire,
   et pondéré par les « j'aime » (colonnes « p_… » : un commentaire pèse 1 + ses « j'aime », lui-même et ceux qui
   l'approuvent) ;

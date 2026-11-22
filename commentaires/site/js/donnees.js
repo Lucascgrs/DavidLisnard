@@ -56,12 +56,17 @@ export function synthese(nom) {
 /** Une page de commentaires de la sélection. tri : « date.desc », « pertinence.desc »… */
 export async function selection(filtre, { tri = "date.desc.nullslast", limite = 30, decalage = 0, compter = false, signal } = {}) {
   const ordre = tri.includes("date") ? tri : `${tri},likes.desc,date.desc.nullslast`;
+  // Le total se demande à part (fonction selection_total) : compté par PostgREST, il dépassait les 8 s permises.
+  // Il est rendu comme une promesse : la liste s'affiche sans l'attendre, et son échec ne bloque pas la page.
+  const total = compter
+    ? demander("rpc/selection_total", { methode: "POST", corps: filtre, signal }).then((t) => t.json()).then(Number)
+    : null;
+  total?.catch(() => {});  // un échec est traité par la page ; on évite l'alerte « promesse non traitée »
   const r = await demander(`rpc/selection?select=${CHAMPS}&order=${ordre}&limit=${limite}&offset=${decalage}`, {
-    methode: "POST", corps: filtre, signal, entetes: compter ? { Prefer: "count=exact" } : {},
+    methode: "POST", corps: filtre, signal,
   });
   const lignes = (await r.json()).map(remettre);
-  const plage = r.headers.get("Content-Range");
-  return { lignes, total: plage ? Number(plage.split("/")[1]) : null };
+  return { lignes, total };
 }
 
 export async function evolution(filtre, signal) {

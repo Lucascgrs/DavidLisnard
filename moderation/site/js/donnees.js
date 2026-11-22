@@ -73,10 +73,10 @@ async function pages(construire, suite, avancement) {
 }
 
 async function lignesDepuis(maj, code, avancement) {
-  const filtre = (m, c) => (m ? `&or=${enc(`(maj.gt."${m}",and(maj.eq."${m}",code.gt."${c}"))`)}` : "");
   let m = maj, c = code;
   const ls = await pages(
-    (cur) => { if (cur) [m, c] = cur; return `moderation_lignes?select=*${filtre(m, c)}&order=maj.asc,code.asc&limit=${PAGE}`; },
+    // Fonction moderation_page de la base (commentaires/schema.sql) : la vue triée dépassait les 8 s permises (2026-11-23).
+    (cur) => { if (cur) [m, c] = cur; return `rpc/moderation_page?_n=${PAGE}${m ? `&_maj=${enc(m)}&_code=${enc(c)}` : ""}`; },
     (l) => [l.maj, l.code], avancement);
   for (const l of ls) etat.lignes.set(l.code, l);
   if (ls.length) { etat.curseurs.maj = ls[ls.length - 1].maj; etat.curseurs.code = ls[ls.length - 1].code; }
@@ -174,7 +174,7 @@ export async function actualiser({ avancement } = {}) {
     change = 1;
   } else {
     change += await pubsDepuis(etat.curseurs.pub);
-    change += await lignesDepuis(etat.curseurs.maj, etat.curseurs.code);
+    change += await lignesDepuis(etat.curseurs.maj, etat.curseurs.code, avancement);
     change += await retiresDepuis(etat.curseurs.retires);
     change += (await suiviDepuis(etat.curseurs.suivi)).length;
     change += await bibliotheque();

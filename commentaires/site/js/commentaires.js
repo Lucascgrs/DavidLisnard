@@ -202,6 +202,7 @@ function synchroniser() {
 // ---------- Résultats ----------
 
 let page = 0, total = null, fini = false, enCours = null, generation = 0;
+const nombreDe = (n) => (n === 1 ? "1 commentaire" : `${nombre(n ?? 0)} commentaires`);
 const observateur = new IntersectionObserver((e) => { if (e[0].isIntersecting) suite(); }, { rootMargin: "600px" });
 
 function changer() {
@@ -232,10 +233,12 @@ async function suite(premiere = false) {
     });
     if (g !== generation) return;
     if (page === 0) {
-      total = t;
       $("liste").replaceChildren();
       $("liste").style.opacity = "";
-      $("total").textContent = total === 1 ? "1 commentaire" : `${nombre(total ?? 0)} commentaires`;
+      // Le total arrive à part (donnees.js) : « … » en attendant ; s'il échoue, la liste reste affichée.
+      $("total").textContent = lignes.length < PAR_PAGE ? nombreDe(lignes.length) : "… commentaires";
+      t?.then((n) => { if (g === generation) { total = n; $("total").textContent = nombreDe(n); } })
+        .catch(() => { if (g === generation && lignes.length >= PAR_PAGE) $("total").textContent = "Nombre de commentaires indisponible"; });
       if (!lignes.length) $("liste").append(el("div", { class: "vide" }, "Aucun commentaire ne correspond. Élargir la période ou retirer un filtre."));
     }
     $("liste").append(...lignes.map((c) => carte(c, { critere: triCritere() })));

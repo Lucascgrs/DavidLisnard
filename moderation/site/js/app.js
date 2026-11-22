@@ -187,7 +187,8 @@ async function synchroniser() {
   const premiere = !etat.complet;
   try {
     const change = await actualiser({
-      avancement: premiere ? (n) => { $("etat-donnees").textContent = `Premier chargement : ${nombre(n)} commentaires…`; } : null,
+      // Reste affiché pendant tout le chargement (majEtatDonnees ne l'efface plus tant qu'il dure).
+      avancement: (n) => { $("etat-donnees").textContent = `${premiere ? "Premier chargement" : "Mise à jour"} : ${nombre(n)} commentaires…`; },
     });
     if (change || premiere) { preparer(); afficher({ garderPosition: !premiere }); }
   } catch (e) {
@@ -199,6 +200,7 @@ async function synchroniser() {
   }
 }
 function majEtatDonnees() {
+  if (enCours) return;  // un chargement est en cours : son compteur reste affiché
   $("etat-donnees").textContent = etat.synchro ? `À jour ${quand(etat.synchro)}` : "";
 }
 $("actualiser").addEventListener("click", () => synchroniser());

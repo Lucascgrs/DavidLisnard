@@ -83,7 +83,7 @@ DavidLisnard/
 │   ├── supabase.py, vercel.py       les deux services (API, sans Node)
 │   ├── acces.py, comptes.py         jetons et clés (config/web.json, privé), comptes de connexion
 │   ├── schema.sql                   tables, recherche en français, filtres, droits de lecture (aussi pour la modération)
-│   └── site/                        les pages : index (le projet), commentaires, thèmes ; css/, js/
+│   └── site/                        les pages : commentaires, thèmes (l'accueil y renvoie) ; css/, js/
 ├── moderation/                      le site de modération, « python -m moderation » (voir « Modération »)
 │   ├── __main__.py                  commandes (etat, classer, tirer, noter, entrainer…)
 │   ├── donnees.py                   commentaires Facebook, annotations, notes, lots
@@ -489,8 +489,10 @@ commentaires filtrables (curseurs, puces) avec la vidéo d'origine, thèmes des 
   inscriptions fermées) et lit en lecture seule (règles RLS, `peut_lire()`) ; changer le mot de passe recrée le compte
   et ferme les sessions ; seuls `python -m commentaires publier` et `python -m moderation publier` écrivent, avec la clé secrète. Les filtres de
   la page Commentaires sont appliqués par la base (fonctions `selection` et `evolution`, qui prennent le filtre jsonb
-  comme paramètre unique et sans nom ; `commentaire` lit un commentaire par sa clé « source:code ») ;
-  la page Le projet et la frise de la page Commentaires lisent le « cube » (comptages par semaine et par compte).
+  comme paramètre unique et sans nom ; `selection_total` en donne le nombre, demandé à part car le comptage de
+  PostgREST dépassait 8 s ; `commentaire` lit un commentaire par sa clé « source:code ») ;
+  la frise de la page Commentaires lit le « cube » (comptages par semaine et par compte). Deux pages seulement,
+  Commentaires et Thèmes : la page « Le projet » est retirée (2026-11-23), l'adresse d'accueil mène à Commentaires.
 - **Pas d'API à héberger** (ni Railway ni autre) : les pages interrogent Supabase directement. Les deux offres
   gratuites suffisent (base d'environ 115 Mo sur 500).
 - **Ce qui est publié** : les commentaires notés de YouTube, d'Instagram, de Bluesky et de Facebook, sans

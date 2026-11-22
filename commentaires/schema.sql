@@ -153,6 +153,7 @@ create table if not exists moderation (
 create index if not exists moderation_publication on moderation (publication);
 -- « Qui est visé » (cible L/A, 2026-11-14) retiré de la modération le 2026-11-19 : les vues qui le lisaient sont
 -- supprimées d'abord (recréées plus bas), puis les deux colonnes.
+drop function if exists public.moderation_page(timestamptz, text, integer);  -- dépend de la vue, recréée plus bas
 drop view if exists moderation_complete, moderation_lignes;
 alter table moderation drop column if exists cible, drop column if exists annotation_cible;
 
@@ -327,11 +328,10 @@ as $$
 $$;
 revoke execute on function public.moderation_publications() from public, anon;
 grant execute on function public.moderation_publications() to authenticated;
-create policy moderateurs on moderation for select to authenticated using (
-  (select public.est_moderateur())
-  and coalesce(publication, (select c.publication from public.commentaires c
-                             where c.source = moderation.source and c.code = moderation.code))
-      in (select public.moderation_publications()));
+-- La table ne contient que des commentaires Facebook, et tous les groupes sont montrés (2026-11-22) : la règle se
+-- limite au rôle. Le filtre par publication, recalculé ligne à ligne (la publication est souvent dans commentaires),
+-- faisait dépasser les 8 s permises à la première page du site (erreur 57014, 2026-11-23).
+create policy moderateurs on moderation for select to authenticated using ((select public.est_moderateur()));
 create policy moderateurs on utilisateurs for select to authenticated using ((select public.est_moderateur()));
 create policy moderateurs on moderation_retires for select to authenticated using ((select public.est_moderateur()));
 create policy moderateurs on moderation_suivi for all to authenticated
@@ -362,8 +362,12 @@ select m.code,
        coalesce(u.nom, u.identifiant) as auteur, u.identifiant as auteur_id,
        m.maj,
        m.themes  -- thèmes du commentaire, pour les réponses préparées (2026-11-19)
+-- Jointures latérales (2026-11-23) : le site lit 1 000 lignes à la fois dans l'ordre (maj, code) ; ainsi la base suit
+-- l'index moderation_maj et ne cherche commentaire et auteur que pour ces lignes, au lieu de tout joindre puis trier
+-- (6 à 9 s, au-delà des 8 s permises). « limit 1 » empêche Postgres de remettre à plat celle des commentaires.
 from public.moderation m
-left join public.commentaires c on c.source = m.source and c.code = m.code
+left join lateral (select c.publication, c.parent, c.date, c.texte, c.utilisateur from public.commentaires c
+                   where c.source = m.source and c.code = m.code limit 1) c on true
 left join public.utilisateurs u on u.id = coalesce(m.utilisateur, c.utilisateur);
 
 -- Les publications Facebook : titre, lien, groupe et chemin du groupe dans l'adresse (fiche de membre).
@@ -376,6 +380,41 @@ where k.source = (select id from public.sources where nom = 'facebook')
   and (select public.est_moderateur());
 
 revoke all on moderation_lignes, moderation_pubs from anon;
+
+-- La page suivante des lignes, après (_maj, _code), dans l'ordre (maj, code) : c'est ce que lit le site (2026-11-23).
+-- Les lignes sont choisies d'abord dans l'index moderation_maj, puis seulement complétées par le commentaire et
+-- l'auteur : la vue, elle, joignait tout avant de trier et dépassait les 8 s permises. Mêmes colonnes que la vue.
+create or replace function public.moderation_page(_maj timestamptz default null, _code text default null,
+                                                  _n integer default 1000)
+returns setof public.moderation_lignes
+language sql stable
+as $$
+  with k as (
+    select m.* from public.moderation m
+    where _maj is null or (m.maj, m.code) > (_maj, _code)
+    order by m.maj, m.code
+    limit least(coalesce(_n, 1000), 1000)
+  )
+  select k.code,
+         coalesce(k.annotation, case when k.p_autre is null then null
+                when k.p_autre >= k.p_insultant and k.p_autre >= k.p_question then 'autre'
+                when k.p_insultant >= k.p_question then 'insultant' else 'question' end),
+         k.annotation is not null,
+         k.p_insultant, k.p_question, k.p_autre,
+         coalesce(k.publication, c.publication),
+         coalesce(k.parent, c.parent),
+         coalesce(k.date, c.date),
+         coalesce(k.texte, c.texte),
+         coalesce(u.nom, u.identifiant), u.identifiant,
+         k.maj,
+         k.themes
+  from k
+  left join public.commentaires c on c.source = k.source and c.code = k.code
+  left join public.utilisateurs u on u.id = coalesce(k.utilisateur, c.utilisateur)
+  order by k.maj, k.code
+$$;
+revoke execute on function public.moderation_page(timestamptz, text, integer) from public, anon;
+grant execute on function public.moderation_page(timestamptz, text, integer) to authenticated;
 grant select on moderation_complete, moderation_lignes, moderation_pubs to authenticated;
 
 -- Marquer un commentaire : « traite », « sans_suite », ou « a_traiter » (retire la marque). Rend l'heure
@@ -434,6 +473,15 @@ as $$
     and ($1->>'mots_min' is null or c.mots >= ($1->>'mots_min')::int)
     and (coalesce($1->>'q', '') = ''
          or to_tsvector('public.fr'::regconfig, c.texte) @@ websearch_to_tsquery('public.fr'::regconfig, $1->>'q'))
+$$;
+
+-- Nombre de commentaires de la sélection (2026-11-23). Le site le demande à part : le comptage fait par PostgREST
+-- (« Prefer: count=exact ») relisait publication et compte de chaque commentaire et dépassait les 8 s permises.
+create or replace function selection_total(jsonb)
+returns bigint
+language sql stable
+as $$
+  select count(*) from public.selection($1)
 $$;
 
 -- Un commentaire par sa clé « source:code » (adresse partageable du site, commentaire parent).
@@ -529,8 +577,8 @@ revoke all on reponses_themes, reponses from anon;
 revoke delete, truncate on reponses_themes, reponses from authenticated;
 grant select, insert, update on reponses_themes, reponses to authenticated;
 
-revoke execute on function selection(jsonb), evolution(jsonb), commentaire(text) from public, anon;
-grant execute on function selection(jsonb), evolution(jsonb), commentaire(text) to authenticated;
+revoke execute on function selection(jsonb), selection_total(jsonb), evolution(jsonb), commentaire(text) from public, anon;
+grant execute on function selection(jsonb), selection_total(jsonb), evolution(jsonb), commentaire(text) to authenticated;
 revoke execute on function correspondances() from public, anon, authenticated;
 grant execute on function correspondances() to service_role;
 
